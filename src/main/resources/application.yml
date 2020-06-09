@@ -5,3 +5,8 @@ management:
   server:
     port: 9001
     address: 127.0.0.1
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  packagesToScan: com.xxAMIDOxx.xxSTACKSxx, com.xxAMIDOxx.xxSTACKSxx.api.v1.menu
