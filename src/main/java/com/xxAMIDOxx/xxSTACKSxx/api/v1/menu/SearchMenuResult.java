@@ -14,15 +14,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SearchMenuResult {
-  @JsonProperty("pageSize")
-  private Integer pageSize = null;
 
-  @JsonProperty("pageNumber")
-  private Integer pageNumber = null;
+    @JsonProperty("pageSize")
+    private Integer pageSize = null;
 
-  @JsonProperty("results")
-  @Valid
-  private List<SearchMenuResultItem> results = null;
+    @JsonProperty("pageNumber")
+    private Integer pageNumber = null;
 
-
+    @JsonProperty("results")
+    @Valid
+    private List<SearchMenuResultItem> results = null;
 }
