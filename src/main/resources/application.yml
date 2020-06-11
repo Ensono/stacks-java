@@ -2,13 +2,13 @@ server:
   port: 9000
 
 management:
-  server:
-    port: 9001
-    address: 127.0.0.1
+  endpoints:
+    web:
+      base-path: /
 
 springdoc:
   api-docs:
-    path: /api-docs
+    path: /swagger/index.html
   packagesToScan: com.xxAMIDOxx.xxSTACKSxx, com.xxAMIDOxx.xxSTACKSxx.api.v1.menu
 
 azure:

@@ -11,8 +11,9 @@ Java Web API Application Scaffolding for Amido Stacks
 
 ## Swagger/OAS
 
-Automatically generated. Go to: http://localhost:9000/api-docs
+Automatically generated. Go to: http://localhost:9000/swagger/index.html
 
 ## Health check
 
-Available at: http://localhost:9001/actuator/health
+Available at: http://localhost:9000/health
+(This can also be configured to run on another port)
