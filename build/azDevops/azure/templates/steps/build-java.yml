@@ -41,6 +41,11 @@ parameters:
   git_release_tag: ""
 
 steps:
+  - bash: |
+      ls -la /
+      cat /etc/lsb-release
+    displayName: Test which OS we're running on
+
   # Login to Azure/AKS
   - template: azDevOps/azure/templates/v2/steps/login-services.yml@templates
     parameters:

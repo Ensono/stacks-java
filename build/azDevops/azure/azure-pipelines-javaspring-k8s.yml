@@ -47,7 +47,7 @@ variables:
   # SelfConfig
   # If you haven't specified source_repo at cli runtime please ensure you replace it here
   # It is case sensitive for TFS based repos
-  self_repo: java
+  self_repo: stacks-java
   self_repo_src: java
   self_repo_tf_src: deploy/azure/app
   self_generic_name: stacks-api
