@@ -8,3 +8,4 @@ java/target/
 java/build/
 
 lombok.config
+.terraform

@@ -46,9 +46,9 @@ variables:
   # SelfConfig
   # If you haven't specified source_repo at cli runtime please ensure you replace it here
   # It is case sensitive for TFS based repos
-  self_repo: stacks-webapp-template/packages/scaffolding-cli/templates
-  self_repo_src: src/api
-  self_repo_tf_src: deploy/azure/app/kube
+  self_repo: java
+  self_repo_src: java
+  self_repo_tf_src: deploy/azure/app
   self_generic_name: stacks-api
   # TF STATE CONFIG
   tf_state_rg: amido-stacks-rg-uks
@@ -61,7 +61,7 @@ variables:
   # **`terraform_state_workspace: `**
   # avoid running anything past dev that is not on master
   # sample value: company-webapp
-  tf_state_key: stacks-api
+  tf_state_key: stacks-api-java
   # Versioning
   version_major: 0
   version_minor: 0
