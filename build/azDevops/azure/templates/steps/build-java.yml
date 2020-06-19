@@ -42,8 +42,7 @@ parameters:
 
 steps:
   - bash: |
-      ls -la /
-      cat /etc/lsb-release
+      uname -a
     displayName: Test which OS we're running on
 
   # Login to Azure/AKS
