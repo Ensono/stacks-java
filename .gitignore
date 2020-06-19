@@ -4,7 +4,8 @@
 
 .gradle
 
-target/
-build/
+java/target/
+java/build/
 
 lombok.config
+.terraform
