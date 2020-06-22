@@ -41,10 +41,6 @@ parameters:
   git_release_tag: ""
 
 steps:
-  - bash: |
-      uname -a
-    displayName: Test which OS we're running on
-
   # Login to Azure/AKS
   - template: azDevOps/azure/templates/v2/steps/login-services.yml@templates
     parameters:
