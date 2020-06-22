@@ -124,27 +124,28 @@ stages:
               docker_build: true
               # TODO: normalize this
               docker_build_additional_args: "."
-              docker_workdir: $(Agent.BuildDirectory)/s/$(self_repo)/$(self_repo_src)
-              docker_imagename: $(docker_image_name)
-              docker_imagetag: $(docker_image_tag)
+              docker_workdir: "$(Agent.BuildDirectory)/s/$(self_repo)/$(self_repo_src)"
+              docker_imagename: "$(docker_image_name)"
+              docker_imagetag: "$(docker_image_tag)"
               docker_containerregistryname: $(docker_container_registry_name)
               # Vulnerability Scanning
               vulnerability_scan: false
               vulnerability_workdir: "$(Build.ArtifactStagingDirectory)"
               # Sonar settings
-              static_code_analysis: false
+              static_code_analysis: true
+              sonar_container: sonar_scanner
               #Linting and formatting validation
               lint_formatting: false
               shared_eslint_config: "@amidostacks/eslint-config@latest"
               # Should be hardcoded in your sonar-project.properties file
               unit_test: false
-              project_root_dir: $(Agent.BuildDirectory)/s/$(self_repo)/$(self_repo_src)
+              project_root_dir: "$(Agent.BuildDirectory)/s/$(self_repo)/$(self_repo_src)"
               unit_test_project: "$(Test.UnitTestProjectPath)"
               # Build Output File
               # files to be persisted across stages
               build_file: true
-              build_file_path: $(build_artifact_deploy_path)
-              build_file_artefact: $(build_artifact_deploy_name)
+              build_file_path: "$(build_artifact_deploy_path)"
+              build_file_artefact: "$(build_artifact_deploy_name)"
               # Git Tag release
               git_do_tag_release: false
               git_release_tag: "$(version_major).$(version_minor).$(version_revision)-$(build.sourcebranchname)"
