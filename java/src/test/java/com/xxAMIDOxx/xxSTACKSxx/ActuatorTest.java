@@ -30,7 +30,7 @@ public class ActuatorTest {
     public void shouldReturn200WhenSendingRequestToHealthEndpoint() {
 
         var entity = this.testRestTemplate.getForEntity(
-                getBaseURL(this.mgt) + "/actuator/health", Map.class);
+                getBaseURL(this.mgt) + "/health", Map.class);
         then(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
@@ -38,7 +38,7 @@ public class ActuatorTest {
     public void shouldReturn200WhenSendingRequestToManagementEndpoint() {
 
         var entity = this.testRestTemplate.getForEntity(
-                getBaseURL(this.mgt) + "/actuator/info", Map.class);
+                getBaseURL(this.mgt) + "/info", Map.class);
         then(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 }

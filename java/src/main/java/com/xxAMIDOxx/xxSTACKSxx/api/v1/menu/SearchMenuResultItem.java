@@ -1,17 +1,9 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.UUID;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class SearchMenuResultItem {
 
   @JsonProperty("id")
@@ -28,4 +20,55 @@ public class SearchMenuResultItem {
 
   @JsonProperty("enabled")
   private Boolean enabled = null;
+
+  public SearchMenuResultItem() {
+  }
+
+  public SearchMenuResultItem(UUID id, UUID restaurantId, String name, String description, Boolean enabled) {
+    this.id = id;
+    this.restaurantId = restaurantId;
+    this.name = name;
+    this.description = description;
+    this.enabled = enabled;
+  }
+
+  public UUID getId() {
+    return id;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+  public UUID getRestaurantId() {
+    return restaurantId;
+  }
+
+  public void setRestaurantId(UUID restaurantId) {
+    this.restaurantId = restaurantId;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public Boolean getEnabled() {
+    return enabled;
+  }
+
+  public void setEnabled(Boolean enabled) {
+    this.enabled = enabled;
+  }
 }

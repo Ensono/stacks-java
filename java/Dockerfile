@@ -1,23 +1,24 @@
 FROM azul/zulu-openjdk-alpine:11 as build
 WORKDIR /workspace/app
 
-COPY gradlew .
-COPY gradle gradle
-COPY build.gradle .
-RUN ./gradlew dependencies
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+RUN ./mvnw dependency:go-offline
 
 COPY src src
-RUN ./gradlew build -x test
-RUN mkdir -p build/dependency && (cd build/dependency; ${JAVA_HOME}/bin/jar -xf ../libs/*.jar)
+RUN ./mvnw package -DskipTests
+RUN mkdir -p target/dependency && (cd target/dependency; ${JAVA_HOME}/bin/jar -xf ../*.jar)
 
 FROM azul/zulu-openjdk-alpine:11-jre
 
 VOLUME /tmp
-
-ARG DEPENDENCY=/workspace/app/build/dependency
+ARG DEPENDENCY=/workspace/app/target/dependency
 COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
-
 ENTRYPOINT ["java","-cp","app:app/lib/*","com.xxAMIDOxx.xxSTACKSxx.Application"]
-EXPOSE 9000 9001
+
+EXPOSE 9000
+
+

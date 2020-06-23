@@ -1,12 +1,8 @@
 package com.xxAMIDOxx.xxSTACKSxx.repository.azure;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-@Getter
-@Setter
 @Configuration
 @ConfigurationProperties(prefix = "azure.cosmosdb")
 public class CosmosDbProperties {
@@ -17,4 +13,44 @@ public class CosmosDbProperties {
     private String database;
 
     private boolean populateQueryMetrics;
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getSecondaryKey() {
+        return secondaryKey;
+    }
+
+    public void setSecondaryKey(String secondaryKey) {
+        this.secondaryKey = secondaryKey;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+
+    public boolean isPopulateQueryMetrics() {
+        return populateQueryMetrics;
+    }
+
+    public void setPopulateQueryMetrics(boolean populateQueryMetrics) {
+        this.populateQueryMetrics = populateQueryMetrics;
+    }
 }
