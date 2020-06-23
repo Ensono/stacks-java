@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.IOException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,5 +27,5 @@ public interface MenuController {
             @RequestParam(value = "searchTerm", required = false) String searchTerm,
             @RequestParam(value = "restaurantId", required = false) UUID restaurantId,
             @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
-            @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber) throws JsonProcessingException;
+            @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber) throws IOException;
 }
