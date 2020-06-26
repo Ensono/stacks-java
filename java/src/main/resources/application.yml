@@ -1,3 +1,7 @@
+spring:
+  application:
+    name:
+
 server:
   port: 9000
 
@@ -13,8 +17,11 @@ springdoc:
 
 azure:
   cosmosdb:
-    uri: http://your-cosmosDb-uri
-    key: your-cosmosDb-key
-    secondaryKey: your-cosmosDb-secondary-key
-    database: your-cosmosDb-dbName
+    uri: https://amidostacksmenucdauksdev.documents.azure.com:443/
+    key: <cosmos_key>
+    secondaryKey: YYY
+    database: Stacks
     populateQueryMetrics: false
+  application-insights:
+    instrumentation-key: <appinsights_key>
+    enabled: true

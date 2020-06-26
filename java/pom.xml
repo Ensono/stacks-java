@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.2.RELEASE</version>
+        <version>2.3.0.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -18,7 +18,12 @@
 
     <properties>
         <java.version>11</java.version>
+        <org.projectlombok.version>1.18.0</org.projectlombok.version>
         <org.springdoc-openapi.version>1.2.32</org.springdoc-openapi.version>
+        <applicationinsights.version>2.6.1</applicationinsights.version>
+        <cosmosdb.version>2.3.0</cosmosdb.version>
+        <azure.springboot.version>2.3.2</azure.springboot.version>
+        <jackson.version>2.11.0</jackson.version>
     </properties>
 
     <dependencies>
@@ -44,6 +49,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>azure-spring-boot</artifactId>
+            <version>${azure.springboot.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>${org.springdoc-openapi.version}</version>
@@ -58,7 +69,25 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.8</version>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>spring-data-cosmosdb</artifactId>
+            <version>${cosmosdb.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>applicationinsights-spring-boot-starter</artifactId>
+            <version>${applicationinsights.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>applicationinsights-logging-logback</artifactId>
+            <version>${applicationinsights.version}</version>
         </dependency>
 
     </dependencies>
