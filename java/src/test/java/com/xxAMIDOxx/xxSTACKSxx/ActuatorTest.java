@@ -1,6 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +28,7 @@ public class ActuatorTest {
     }
 
     @Test
+    @Tag("Component")
     public void shouldReturn200WhenSendingRequestToHealthEndpoint() {
 
         var entity = this.testRestTemplate.getForEntity(
@@ -35,6 +37,7 @@ public class ActuatorTest {
     }
 
     @Test
+    @Tag("Component")
     public void shouldReturn200WhenSendingRequestToManagementEndpoint() {
 
         var entity = this.testRestTemplate.getForEntity(
