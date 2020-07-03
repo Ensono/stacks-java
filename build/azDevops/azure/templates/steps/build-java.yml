@@ -50,6 +50,48 @@ steps:
       azure_client_secret: "$(azure_client_secret)"
       login_azure: true
 
+  - bash: |
+      ./mvnw dependency:go-offline --no-transfer-progress
+      ./mvnw process-resources --no-transfer-progress
+    workingDirectory: "${{ parameters.project_root_dir }}"
+    target:
+      container: azul_java
+    displayName: "Maven: Install Packages"
+
+  - bash: |
+      ./mvnw compile --no-transfer-progress
+      ./mvnw process-test-resources --no-transfer-progress
+      ./mvnw test-compile --no-transfer-progress
+    workingDirectory: "${{ parameters.project_root_dir }}"
+    target:
+      container: azul_java
+    displayName: "Maven: Compile Application"
+
+  - bash: |
+      ./mvnw test -Dgroups=Unit
+    workingDirectory: "${{ parameters.project_root_dir }}"
+    target:
+      container: azul_java
+    displayName: "Test: Unit tests"
+
+  - bash: |
+      ./mvnw test -Dgroups=Component
+    workingDirectory: "${{ parameters.project_root_dir }}"
+    target:
+      container: azul_java
+    displayName: "Test: Component tests"
+
+  - bash: |
+      ./mvnw test -Dgroups=Integration
+    workingDirectory: "${{ parameters.project_root_dir }}"
+    target:
+      container: azul_java
+    displayName: "Test: Integration tests"
+
+
+  - bash: |
+      ls -la ${{ parameters.project_root_dir }}
+
   # Build Docker Image, Scan and Push to Repository
   - ${{ if eq(parameters.docker_build, true) }}:
       - template: azDevOps/azure/templates/v2/steps/build-container-image.yml@templates
