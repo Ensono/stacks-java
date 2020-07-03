@@ -4,10 +4,10 @@ WORKDIR /workspace/app
 COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
-RUN ./mvnw dependency:go-offline
+RUN ./mvnw dependency:go-offline --no-transfer-progress
 
 COPY src src
-RUN ./mvnw package -DskipTests
+RUN ./mvnw package -DskipTests --no-transfer-progress
 RUN mkdir -p target/dependency && (cd target/dependency; ${JAVA_HOME}/bin/jar -xf ../*.jar)
 
 FROM azul/zulu-openjdk-alpine:11-jre
@@ -20,5 +20,3 @@ COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
 ENTRYPOINT ["java","-cp","app:app/lib/*","com.xxAMIDOxx.xxSTACKSxx.Application"]
 
 EXPOSE 9000
-
-
