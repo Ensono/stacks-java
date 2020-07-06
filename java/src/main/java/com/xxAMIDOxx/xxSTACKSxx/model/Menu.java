@@ -8,6 +8,9 @@ import org.springframework.data.annotation.Id;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * @author James Peet
+ */
 @Document(collection = "Menu")
 public class Menu implements Comparable<Menu> {
 
