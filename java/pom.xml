@@ -24,6 +24,12 @@
         <cosmosdb.version>2.3.0</cosmosdb.version>
         <azure.springboot.version>2.3.2</azure.springboot.version>
         <jackson.version>2.11.0</jackson.version>
+
+        <sonar.projectKey>amido_stacks-java</sonar.projectKey>
+        <sonar.organization>amido</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.login>e043dc58bf944b18d56fe4a15df1d0b111ee91ea</sonar.login>
+
     </properties>
 
     <dependencies>
@@ -88,6 +94,13 @@
             <groupId>com.microsoft.azure</groupId>
             <artifactId>applicationinsights-logging-logback</artifactId>
             <version>${applicationinsights.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>azure-keyvault-secrets-spring-boot-starter</artifactId>
+            <version>2.3.2</version>
+            <scope>runtime</scope>
         </dependency>
 
     </dependencies>

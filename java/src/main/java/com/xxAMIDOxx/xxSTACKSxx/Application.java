@@ -31,11 +31,12 @@ public class Application {
                         .description("APIs used to interact and manage menus for a restaurant")
                         .contact(new Contact()
                                 .name("Amido")
-                                .url(PROJECT_URL).email("stacks@amido.com"))
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org")));
-/*                .components(new Components().addSecuritySchemes("basicScheme",
-                new SecurityScheme().type(SecurityScheme.Type.HTTP)
-                        .scheme("basic")))*/
+                                .url(PROJECT_URL)
+                                .email("stacks@amido.com"))
+                        .license(new License()
+                                .name("Apache 2.0")
+                                .url("http://springdoc.org")));
+
     }
 }
 

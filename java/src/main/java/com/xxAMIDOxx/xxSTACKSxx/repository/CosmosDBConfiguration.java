@@ -43,7 +43,8 @@ public class CosmosDBConfiguration extends AbstractCosmosConfiguration {
         CosmosDBConfig cosmosdbConfig = CosmosDBConfig.builder(uri,
                 this.cosmosKeyCredential, dbName).build();
         cosmosdbConfig.setPopulateQueryMetrics(populateQueryMetrics);
-        cosmosdbConfig.setResponseDiagnosticsProcessor(new ResponseDiagnosticsProcessorImplementation());
+        cosmosdbConfig.setResponseDiagnosticsProcessor(
+                new ResponseDiagnosticsProcessorImplementation());
         return cosmosdbConfig;
     }
 
