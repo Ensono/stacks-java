@@ -20,6 +20,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-data-rest:1.2.32'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'org.projectlombok:lombok:1.18.12'
+    implementation 'org.hamcrest:hamcrest:2.2'
 
     compile 'com.microsoft.azure:applicationinsights-spring-boot-starter:2.6.1'
     compile 'com.microsoft.azure:applicationinsights-logging-logback:2.6.1'
