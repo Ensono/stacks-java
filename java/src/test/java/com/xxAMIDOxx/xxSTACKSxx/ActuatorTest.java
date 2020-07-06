@@ -10,7 +10,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.util.Map;
 
-import static com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.utilities.HelperMethods.getBaseURL;
+import static com.xxAMIDOxx.xxSTACKSxx.util.UtilityMethods.getBaseURL;
 import static org.assertj.core.api.BDDAssertions.then;
 
 /**

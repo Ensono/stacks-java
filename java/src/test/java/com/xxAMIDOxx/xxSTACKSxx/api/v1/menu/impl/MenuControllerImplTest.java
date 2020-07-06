@@ -21,8 +21,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.utilities.HelperMethods.getBaseURL;
-import static com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.utilities.HelperMethods.toJson;
+import static com.xxAMIDOxx.xxSTACKSxx.util.UtilityMethods.getBaseURL;
+import static com.xxAMIDOxx.xxSTACKSxx.util.UtilityMethods.toJson;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.Mockito.when;
