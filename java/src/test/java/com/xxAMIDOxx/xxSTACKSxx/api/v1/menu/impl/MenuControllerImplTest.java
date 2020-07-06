@@ -44,7 +44,7 @@ public class MenuControllerImplTest {
     @Test
     public void whenCalledForMenuReturnsOK() {
         var entity = this.testRestTemplate.getForEntity(
-                getBaseURL(port) + "/v1/menu/", Map.class);
+                getBaseURL(port) + "/v1/menu/", SearchMenuResult.class);
         then(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
@@ -75,7 +75,7 @@ public class MenuControllerImplTest {
         // When
         var entity = this.testRestTemplate.getForEntity(
                 getBaseURL(port) + "/v1/menu?restaurantId=" + restaurantId,
-                Map.class);
+                SearchMenuResult.class);
         // Then
         SearchMenuResult actual = mapper.convertValue(entity.getBody(),
                                                       SearchMenuResult.class);
@@ -107,10 +107,10 @@ public class MenuControllerImplTest {
                 menuList.get(0));
 
         // When
-        ResponseEntity<Map> entity = this.testRestTemplate.getForEntity(
+        ResponseEntity<SearchMenuResult> entity = this.testRestTemplate.getForEntity(
                 getBaseURL(port) + "/v1/menu/" + expectedMenuList.get(0)
                                                                  .getId(),
-                Map.class);
+                SearchMenuResult.class);
 
         // Then
         Menu actual = mapper.convertValue(entity.getBody(), Menu.class);
