@@ -109,7 +109,8 @@ steps:
   - bash: |
       cp "${{ parameters.project_root_dir }}/../build/azDevops/azure/coverage/"* .
       npm i
-      ./node_modules/.bin/gulp inlinesource
+      ./node_modules/.bin/gulp inline-css-images
+      ./node_modules/.bin/gulp inline-sources
     workingDirectory: "${{ parameters.project_root_dir }}/target/site/"
     target:
       container: node
