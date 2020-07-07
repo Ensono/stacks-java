@@ -2,6 +2,7 @@ package com.xxAMIDOxx.xxSTACKSxx.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Item {
@@ -62,5 +63,22 @@ public class Item {
 
   public void setAvailable(Boolean available) {
     this.available = available;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Item)) return false;
+    Item item = (Item) o;
+    return Objects.equals(id, item.id) &&
+            Objects.equals(name, item.name) &&
+            Objects.equals(description, item.description) &&
+            Objects.equals(price, item.price) &&
+            Objects.equals(available, item.available);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, description, price, available);
   }
 }

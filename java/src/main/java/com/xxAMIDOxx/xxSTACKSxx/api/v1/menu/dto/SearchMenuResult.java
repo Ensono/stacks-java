@@ -1,9 +1,12 @@
-package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu;
+package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class SearchMenuResult {
 
@@ -49,5 +52,21 @@ public class SearchMenuResult {
   public void setResults(List<SearchMenuResultItem> results) {
     this.results = results;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof SearchMenuResult)) return false;
+    SearchMenuResult that = (SearchMenuResult) o;
+    return Objects.equals(pageSize, that.pageSize) &&
+            Objects.equals(pageNumber, that.pageNumber) &&
+            Objects.equals(results, that.results);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(pageSize, pageNumber, results);
+  }
+
 }
 

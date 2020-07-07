@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -27,7 +28,6 @@ public class MenuServiceImpl implements MenuService {
 
     public List<Menu> all(int pageNumber, int pageSize) {
 
-        logger.info("pageNumber: {}, pageSize: {}", pageNumber, pageSize);
         final Sort sort = Sort.by(Sort.Direction.ASC, "Name");
         final CosmosPageRequest pageRequest = new CosmosPageRequest(0, pageSize, null, sort);
 
@@ -36,14 +36,13 @@ public class MenuServiceImpl implements MenuService {
 
         while (currentPage < pageNumber && page.hasNext()) {
             currentPage++;
-            logger.info("Getting page {}", currentPage);
             Pageable nextPageable = page.nextPageable();
             page = this.menuRepository.findAll(nextPageable);
         }
         return page.getContent();
     }
 
-    public Menu findById(UUID id) {
-        return this.menuRepository.findById(id.toString()).orElse(null);
+    public Optional<Menu> findById(UUID id) {
+        return this.menuRepository.findById(id.toString());
     }
 }

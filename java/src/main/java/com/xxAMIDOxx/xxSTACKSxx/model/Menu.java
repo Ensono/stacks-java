@@ -7,7 +7,11 @@ import org.springframework.data.annotation.Id;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
+/**
+ * @author James Peet
+ */
 @Document(collection = "Menu")
 public class Menu implements Comparable<Menu> {
 
@@ -75,5 +79,22 @@ public class Menu implements Comparable<Menu> {
   @Override
   public int compareTo(Menu o) {
     return this.getId().compareTo(o.getId());
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Menu)) return false;
+    Menu menu = (Menu) o;
+    return Objects.equals(id, menu.id) &&
+            Objects.equals(name, menu.name) &&
+            Objects.equals(description, menu.description) &&
+            Objects.equals(categories, menu.categories) &&
+            Objects.equals(enabled, menu.enabled);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, description, categories, enabled);
   }
 }

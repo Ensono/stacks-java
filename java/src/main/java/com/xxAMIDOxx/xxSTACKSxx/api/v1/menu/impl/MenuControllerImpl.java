@@ -1,13 +1,12 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.impl;
 
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.MenuController;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.SearchMenuResult;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.SearchMenuResultItem;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,24 +32,17 @@ public class MenuControllerImpl implements MenuController {
                                                        final Integer pageNumber) {
 
         List<Menu> menus = repository.all(pageNumber, pageSize);
-
-        List<SearchMenuResultItem> menuSummary = menus.stream()
-                .map(m -> new SearchMenuResultItem(
-                        UUID.fromString(m.getId()),
-                        restaurantId,
-                        m.getName(),
-                        m.getDescription(),
-                        m.getEnabled()))
+        List<SearchMenuResultItem> menuResultItems = menus.stream()
+                .map(SearchMenuResultItem::new)
                 .collect(Collectors.toList());
 
-        SearchMenuResult result = new SearchMenuResult(pageSize, pageNumber, menuSummary);
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return ResponseEntity.ok(
+                new SearchMenuResult(pageSize, pageNumber, menuResultItems));
     }
 
     @Override
     public ResponseEntity<Menu> getMenu(UUID id) {
-        return new ResponseEntity<>(this.repository.findById(id), HttpStatus.OK);
+        return ResponseEntity.of(this.repository.findById(id));
     }
 }
 

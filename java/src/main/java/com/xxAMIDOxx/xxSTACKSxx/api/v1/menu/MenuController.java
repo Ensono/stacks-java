@@ -1,5 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu;
 
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

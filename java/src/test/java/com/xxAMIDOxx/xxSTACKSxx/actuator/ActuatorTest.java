@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx;
+package com.xxAMIDOxx.xxSTACKSxx.actuator;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +10,12 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.util.Map;
 
+import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
 import static org.assertj.core.api.BDDAssertions.then;
 
+/**
+ * @author James Peet
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = {"management.port=0"})
 public class ActuatorTest {
@@ -21,10 +25,6 @@ public class ActuatorTest {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
-
-    private String getBaseURL(final int port) {
-        return "http://localhost:" + port;
-    }
 
     @Test
     public void shouldReturn200WhenSendingRequestToHealthEndpoint() {
