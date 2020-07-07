@@ -111,32 +111,36 @@ steps:
       npm i
       ./node_modules/.bin/gulp inline-css-images
       ./node_modules/.bin/gulp inline-sources
+      # ./node_modules/.bin/jacoco-html-asset-bundle \
+      #   -d jacoco \
+      #   -r jacoco/jacoco-resources \
+      #   -o jacoco-inline
     workingDirectory: "${{ parameters.project_root_dir }}/target/site/"
     target:
       container: node
     displayName: "Gulp: Inline Jacoco report assets"
 
-  # Build Docker Image, Scan and Push to Repository
-  - ${{ if eq(parameters.docker_build, true) }}:
-      - template: azDevOps/azure/templates/v2/steps/build-container-image.yml@templates
-        parameters:
-          workingDirectory: ${{ parameters.docker_workdir }}
-          docker_build_additional_args: ${{ parameters.docker_build_additional_args }}
-          docker_imagename: ${{ parameters.docker_imagename }}
-          docker_imagetag: ${{ parameters.docker_imagetag }}
-          docker_containerregistryname: ${{ parameters.docker_containerregistryname }}
+  # # Build Docker Image, Scan and Push to Repository
+  # - ${{ if eq(parameters.docker_build, true) }}:
+  #     - template: azDevOps/azure/templates/v2/steps/build-container-image.yml@templates
+  #       parameters:
+  #         workingDirectory: ${{ parameters.docker_workdir }}
+  #         docker_build_additional_args: ${{ parameters.docker_build_additional_args }}
+  #         docker_imagename: ${{ parameters.docker_imagename }}
+  #         docker_imagetag: ${{ parameters.docker_imagetag }}
+  #         docker_containerregistryname: ${{ parameters.docker_containerregistryname }}
 
-  # Set PR SonarCloud
-  - bash: |
-      ##vso[task.setvariable variable=SONAR_PULL_REQUEST]$(System.PullRequest.PullRequestNumber)
-    displayName: "Setting SonarCloud PR value from Github PR"
+  # # Set PR SonarCloud
+  # - bash: |
+  #     ##vso[task.setvariable variable=SONAR_PULL_REQUEST]$(System.PullRequest.PullRequestNumber)
+  #   displayName: "Setting SonarCloud PR value from Github PR"
 
-  # SonarCloud
-  - ${{ if eq(parameters.static_code_analysis, true) }}:
-      - template: azDevOps/azure/templates/v2/steps/test-static-code-sonar.yml@templates
-        parameters:
-          working_directory: ${{ parameters.project_root_dir }}
-          target_container: ${{ parameters.sonar_container }}
+  # # SonarCloud
+  # - ${{ if eq(parameters.static_code_analysis, true) }}:
+  #     - template: azDevOps/azure/templates/v2/steps/test-static-code-sonar.yml@templates
+  #       parameters:
+  #         working_directory: ${{ parameters.project_root_dir }}
+  #         target_container: ${{ parameters.sonar_container }}
 
   - task: PublishTestResults@2
 
