@@ -41,6 +41,10 @@ parameters:
   git_release_tag: ""
 
 steps:
+  - bash: |
+      echo '##vso[build.updatebuildnumber]${{ parameters.docker_imagetag }}'
+    displayName: 'Update: Build Number'
+
   # Login to Azure/AKS
   - template: azDevOps/azure/templates/v2/steps/login-services.yml@templates
     parameters:
@@ -95,6 +99,13 @@ steps:
       container: azul_java
     displayName: "Test: Integration tests"
 
+  - bash: |
+      ./mvnw jacoco:report --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
+    workingDirectory: "${{ parameters.project_root_dir }}"
+    target:
+      container: azul_java
+    displayName: "Generate Jacoco coverage reports"
+
   # Build Docker Image, Scan and Push to Repository
   - ${{ if eq(parameters.docker_build, true) }}:
       - template: azDevOps/azure/templates/v2/steps/build-container-image.yml@templates
@@ -116,6 +127,13 @@ steps:
         parameters:
           working_directory: ${{ parameters.project_root_dir }}
           target_container: ${{ parameters.sonar_container }}
+
+  - task: PublishTestResults@2
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: 'JaCoCo'
+      summaryFileLocation: "${{ parameters.project_root_dir }}/target/site/jacoco.xml"
 
   # Publish Artefacts if required
   - ${{ if eq(parameters.functional_test, true) }}:
