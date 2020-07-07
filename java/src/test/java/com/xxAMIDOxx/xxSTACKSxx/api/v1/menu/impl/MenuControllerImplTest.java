@@ -49,14 +49,10 @@ public class MenuControllerImplTest {
         final int PAGE_SIZE = 20;
         final UUID RESTAURANT_ID = randomUUID();
 
-        List<Menu> menuList = createMenus();
-
-        List<SearchMenuResultItem> expectedMenuList = menuList.stream().map(
-                m -> new SearchMenuResultItem(UUID.fromString(m.getId()),
-                        null, m.getName(),
-                        m.getDescription(),
-                        m.getEnabled())).collect(
-                Collectors.toList());
+        List<Menu> menuList = createMenus(3);
+        List<SearchMenuResultItem> expectedMenuList = menuList.stream()
+                .map(SearchMenuResultItem::new)
+                .collect(Collectors.toList());
 
         SearchMenuResult expectedMenu = new SearchMenuResult(PAGE_SIZE, PAGE_NUMBER, expectedMenuList);
 
@@ -74,7 +70,8 @@ public class MenuControllerImplTest {
     public void returnMenuWhenSearchById() {
         // Given
         Menu menu = createMenu(0);
-        when(service.findById(UUID.fromString(menu.getId()))).thenReturn(Optional.of(menu));
+        when(service.findById(UUID.fromString(menu.getId())))
+                .thenReturn(Optional.of(menu));
 
         // When
         var response = this.testRestTemplate.getForEntity(
@@ -85,10 +82,9 @@ public class MenuControllerImplTest {
         then(response.getBody()).isEqualTo(menu);
     }
 
-    private List<Menu> createMenus() {
+    private List<Menu> createMenus(int count) {
         List<Menu> menuList = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-
+        for (int i = 0; i < count; i++) {
             menuList.add(createMenu(i));
         }
         return menuList;

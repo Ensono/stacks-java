@@ -13,9 +13,6 @@ import java.util.Map;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
 import static org.assertj.core.api.BDDAssertions.then;
 
-/**
- * @author James Peet
- */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = {"management.port=0"})
 public class ActuatorTest {
