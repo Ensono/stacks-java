@@ -1,14 +1,13 @@
 package com.xxAMIDOxx.xxSTACKSxx.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
-import java.util.UUID;
+
 
 public class Item {
 
   @JsonProperty("Id")
-  private UUID id = null;
+  private String id = null;
 
   @JsonProperty("Name")
   private String name = null;
@@ -25,11 +24,11 @@ public class Item {
   public Item() {
   }
 
-  public UUID getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(UUID id) {
+  public void setId(String id) {
     this.id = id;
   }
 

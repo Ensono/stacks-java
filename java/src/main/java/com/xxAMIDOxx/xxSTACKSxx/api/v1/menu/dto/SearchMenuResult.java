@@ -1,12 +1,10 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 public class SearchMenuResult {
 
