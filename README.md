@@ -17,3 +17,11 @@ Automatically generated. Go to: http://localhost:9000/swagger/index.html
 
 Available at: http://localhost:9000/health
 (This can also be configured to run on another port)
+
+## CONFIGURATION
+
+The following environment variables are required:
+
+- AZURE_COSMOSDB_KEY
+- AZURE_APPLICATION_INSIGHTS_INSTRUMENTATION_KEY
+
