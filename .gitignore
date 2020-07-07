@@ -2,7 +2,7 @@
 
 .DS_Store
 
-.m2
+.m2/
 
 .gradle
 
@@ -11,3 +11,5 @@ java/build/
 
 lombok.config
 .terraform
+
+node_modules/
