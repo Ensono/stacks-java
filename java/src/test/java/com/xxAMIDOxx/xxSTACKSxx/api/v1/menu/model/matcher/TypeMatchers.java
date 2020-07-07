@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.is;
 
 /**
  * Hamcrest Type Matchers for objects
+ * @author ArathyKrishnas
  */
 public
 class TypeMatchers {

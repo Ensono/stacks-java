@@ -38,7 +38,7 @@ public class MenuControllerImplTest {
     @Test
     public void whenCalledForMenuReturnsOK() {
         var entity = this.testRestTemplate.getForEntity(
-                getBaseURL(port) + "/v1/menu/", SearchMenuResult.class);
+                getBaseURL(port) + "/v1/menu", SearchMenuResult.class);
         then(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
