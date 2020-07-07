@@ -23,6 +23,6 @@ var inlinesource = require('gulp-inline-source');
 
 gulp.task('inline-sources', function () {
     return gulp.src('./jacoco/**/*.html')
-        .pipe(inlinesource({attribute: false}))
+        .pipe(inlinesource({attribute: false, compress: false}))
         .pipe(gulp.dest('./jacoco-inline'));
 });
