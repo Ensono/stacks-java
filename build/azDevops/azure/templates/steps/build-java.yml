@@ -133,7 +133,7 @@ steps:
   - task: PublishCodeCoverageResults@1
     inputs:
       codeCoverageTool: 'JaCoCo'
-      summaryFileLocation: "${{ parameters.project_root_dir }}/target/site/jacoco.xml"
+      summaryFileLocation: "${{ parameters.project_root_dir }}/target/site/jacoco/jacoco.xml"
 
   # Publish Artefacts if required
   - ${{ if eq(parameters.functional_test, true) }}:
