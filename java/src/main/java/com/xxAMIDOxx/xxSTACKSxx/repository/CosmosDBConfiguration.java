@@ -26,36 +26,30 @@ public class CosmosDBConfiguration extends AbstractCosmosConfiguration {
     @Value("${azure.cosmosdb.key}")
     private String key;
 
-    @Value("${azure.cosmosdb.secondaryKey}")
-    private String secondaryKey;
-
     @Value("${azure.cosmosdb.database}")
     private String dbName;
 
     @Value("${azure.cosmosdb.populateQueryMetrics}")
     private boolean populateQueryMetrics;
 
-    private CosmosKeyCredential cosmosKeyCredential;
-
     @Bean
     public CosmosDBConfig getConfig() {
-        this.cosmosKeyCredential = new CosmosKeyCredential(key);
-        CosmosDBConfig cosmosdbConfig = CosmosDBConfig.builder(uri,
-                this.cosmosKeyCredential, dbName).build();
+        CosmosKeyCredential cosmosKeyCredential = new CosmosKeyCredential(key);
+        CosmosDBConfig cosmosdbConfig = CosmosDBConfig.builder(
+                uri,
+                cosmosKeyCredential,
+                dbName)
+                .build();
         cosmosdbConfig.setPopulateQueryMetrics(populateQueryMetrics);
         cosmosdbConfig.setResponseDiagnosticsProcessor(
                 new ResponseDiagnosticsProcessorImplementation());
         return cosmosdbConfig;
     }
 
-    public void switchToSecondaryKey() {
-        this.cosmosKeyCredential.key(secondaryKey);
-    }
-
     private static class ResponseDiagnosticsProcessorImplementation implements ResponseDiagnosticsProcessor {
         @Override
         public void processResponseDiagnostics(@Nullable ResponseDiagnostics responseDiagnostics) {
-            logger.info("Response Diagnostics {}", responseDiagnostics);
+            logger.debug("Response Diagnostics {}", responseDiagnostics);
         }
     }
 }

@@ -18,7 +18,7 @@ import java.util.UUID;
 @Service
 public class MenuServiceImpl implements MenuService {
 
-    Logger logger = LoggerFactory.getLogger(MenuService.class);
+    private static Logger logger = LoggerFactory.getLogger(MenuServiceImpl.class);
 
     private final MenuRepository menuRepository;
 
@@ -28,11 +28,15 @@ public class MenuServiceImpl implements MenuService {
 
     public List<Menu> all(int pageNumber, int pageSize) {
 
+        int currentPage = 0;
         final Sort sort = Sort.by(Sort.Direction.ASC, "Name");
-        final CosmosPageRequest pageRequest = new CosmosPageRequest(0, pageSize, null, sort);
+
+        final CosmosPageRequest pageRequest = new CosmosPageRequest(
+                currentPage, pageSize, null, sort);
 
         Page<Menu> page = this.menuRepository.findAll(pageRequest);
-        int currentPage = 0;
+        logger.debug("Total Records: {}", page.getTotalElements());
+        logger.debug("Total Pages: {}", page.getTotalPages());
 
         while (currentPage < pageNumber && page.hasNext()) {
             currentPage++;

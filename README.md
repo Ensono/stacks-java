@@ -5,10 +5,6 @@ Java Web API Application Scaffolding for Amido Stacks
 
 > ./mvnw spring-boot:run
 
-OR
-
-> ./gradlew bootRun
-
 ## Build Docker Image
 
 > docker build -t image-tag .

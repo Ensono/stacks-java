@@ -13,7 +13,7 @@
     <artifactId>xxSTACKSxx-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>stacks-api</name>
+    <name>xxSTACKSxx-api</name>
     <description>Demo project for Java</description>
 
     <properties>
