@@ -1,6 +1,9 @@
 spring:
   application:
-    name:
+    name: xxSTACKSxx-api
+  data:
+    rest:
+      detection-strategy: annotated
 
 server:
   port: 9000
@@ -16,6 +19,7 @@ springdoc:
   swagger-ui:
     path: /swagger/index.html
   packagesToScan: com.xxAMIDOxx.xxSTACKSxx, com.xxAMIDOxx.xxSTACKSxx.api.v1.menu
+
 
 azure:
   cosmosdb:
