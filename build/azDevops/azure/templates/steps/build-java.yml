@@ -101,7 +101,12 @@ steps:
     displayName: "Test: Unit tests"
 
   - bash: |
+      env
+
+  - bash: |
       set -euxo pipefail
+      env
+      echo $AZURE_COSMOSDB_KEY
       ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 -Dgroups=Component
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
