@@ -165,6 +165,7 @@ steps:
             SONAR_PULL_REQUEST: "$(System.PullRequest.PullRequestNumber)",
             SONAR_BRANCH_NAME: "$(System.PullRequest.SourceBranch)",
             SONAR_PR_PROVIDER: "GitHub",
+            SONAR_GITHUB_REPO: "amido/stacks-java",
           }
 
   - task: PublishTestResults@2
