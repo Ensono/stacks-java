@@ -46,6 +46,16 @@ steps:
       echo '##vso[build.updatebuildnumber]${{ parameters.docker_imagetag }}'
     displayName: 'Update: Build Number'
 
+
+  - task: Cache@2
+    inputs:
+      key: 'maven | "$(Agent.OS)" | ${{ parameters.project_root_dir }}/pom.xml'
+      restoreKeys: |
+        maven | "$(Agent.OS)"
+        maven
+      path: "${{ parameters.project_root_dir }}/.m2"
+    displayName: Cache Maven packages
+
   # Login to Azure/AKS
   - template: azDevOps/azure/templates/v2/steps/login-services.yml@templates
     parameters:
@@ -101,6 +111,7 @@ steps:
     displayName: "Test: Unit tests"
   - bash: |
       set -euxo pipefail
+      # TODO: Remove CosmosDB Key when Component tests are no longer talking to a real DB.
       AZURE_COSMOSDB_KEY=$(AZURE_COSMOSDB_KEY) ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Component
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
@@ -151,7 +162,8 @@ steps:
           working_directory: "${{ parameters.project_root_dir }}"
           target_container: "${{ parameters.sonar_container }}"
           env_vars: {
-            SONAR_PULL_REQUEST: "$(System.PullRequest.PullRequestNumber)"
+            SONAR_PULL_REQUEST: "$(System.PullRequest.PullRequestNumber)",
+            SONAR_BRANCH_NAME: "$(System.PullRequest.SourceBranch)",
           }
 
   - task: PublishTestResults@2
