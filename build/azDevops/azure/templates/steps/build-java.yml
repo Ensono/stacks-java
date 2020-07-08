@@ -45,7 +45,6 @@ steps:
       echo '##vso[build.updatebuildnumber]${{ parameters.docker_imagetag }}'
     displayName: 'Update: Build Number'
 
-
   - task: Cache@2
     inputs:
       key: 'maven | "$(Agent.OS)" | ${{ parameters.project_root_dir }}/pom.xml'
@@ -144,16 +143,6 @@ steps:
       container: node
     displayName: "Gulp: Inline Jacoco report assets"
 
-  # Build Docker Image, Scan and Push to Repository
-  - ${{ if eq(parameters.docker_build, true) }}:
-      - template: azDevOps/azure/templates/v2/steps/build-container-image.yml@templates
-        parameters:
-          workingDirectory: ${{ parameters.docker_workdir }}
-          docker_build_additional_args: ${{ parameters.docker_build_additional_args }}
-          docker_imagename: ${{ parameters.docker_imagename }}
-          docker_imagetag: ${{ parameters.docker_imagetag }}
-          docker_containerregistryname: ${{ parameters.docker_containerregistryname }}
-
   # SonarCloud
   - ${{ if eq(parameters.static_code_analysis, true) }}:
       - template: azDevOps/azure/templates/v2/steps/test-static-code-sonar.yml@templates
@@ -166,6 +155,15 @@ steps:
             SONAR_PR_PROVIDER: "GitHub",
             SONAR_GITHUB_REPO: "amido/stacks-java",
           }
+
+  - ${{ if eq(parameters.docker_build, true) }}:
+      - template: azDevOps/azure/templates/v2/steps/build-container-image.yml@templates
+        parameters:
+          workingDirectory: ${{ parameters.docker_workdir }}
+          docker_build_additional_args: ${{ parameters.docker_build_additional_args }}
+          docker_imagename: ${{ parameters.docker_imagename }}
+          docker_imagetag: ${{ parameters.docker_imagetag }}
+          docker_containerregistryname: ${{ parameters.docker_containerregistryname }}
 
   - task: PublishTestResults@2
 
