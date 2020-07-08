@@ -1,6 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx;
 
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
+import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
@@ -9,11 +10,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-@SpringBootApplication(exclude = {CosmosAutoConfiguration.class})
+@SpringBootApplication(exclude = {
+        CosmosDbRepositoriesAutoConfiguration.class,
+        CosmosAutoConfiguration.class
+})
 public class Application {
 
     private static final String PROJECT_URL = "https://github.com/amido/stacks-java";
-
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
