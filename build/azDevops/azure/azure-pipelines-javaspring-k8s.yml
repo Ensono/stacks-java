@@ -62,6 +62,7 @@ variables:
   self_repo_src: java
   self_repo_tf_src: deploy/azure/app
   self_generic_name: stacks-api
+  project_root_dir: "$(Agent.BuildDirectory)/s/$(self_repo)/$(self_repo_src)"
   # TF STATE CONFIG
   tf_state_rg: amido-stacks-rg-uks
   tf_state_storage: amidostackstfstategbl
@@ -132,7 +133,7 @@ stages:
               build_on_server: false
               docker_build: true
               # TODO: normalize this
-              docker_build_additional_args: "."
+              docker_build_additional_args: "-v $(project_root_dir)/.m2:/root/.m2 ."
               docker_workdir: "$(Agent.BuildDirectory)/s/$(self_repo)/$(self_repo_src)"
               docker_imagename: "$(docker_image_name)"
               docker_imagetag: "$(docker_image_tag)"
@@ -148,7 +149,7 @@ stages:
               shared_eslint_config: "@amidostacks/eslint-config@latest"
               # Should be hardcoded in your sonar-project.properties file
               unit_test: false
-              project_root_dir: "$(Agent.BuildDirectory)/s/$(self_repo)/$(self_repo_src)"
+              project_root_dir: "$(project_root_dir)"
               unit_test_project: "$(Test.UnitTestProjectPath)"
               # Build Output File
               # files to be persisted across stages
@@ -157,7 +158,7 @@ stages:
               build_file_artefact: "$(build_artifact_deploy_name)"
               # Git Tag release
               git_do_tag_release: false
-              git_release_tag: "$(version_major).$(version_minor).$(version_revision)-$(build.sourcebranchname)"
+              git_release_tag: "$(version_major).$(version_minor).$(version_revision)-$(Build.SourceBranchName)"
           # you can define additional steps here
       # you can define additional jobs here
 
