@@ -164,6 +164,7 @@ steps:
           env_vars: {
             SONAR_PULL_REQUEST: "$(System.PullRequest.PullRequestNumber)",
             SONAR_BRANCH_NAME: "$(System.PullRequest.SourceBranch)",
+            SONAR_PR_PROVIDER: "GitHub",
           }
 
   - task: PublishTestResults@2
