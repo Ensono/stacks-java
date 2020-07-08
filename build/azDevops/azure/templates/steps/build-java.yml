@@ -55,17 +55,27 @@ steps:
       login_azure: true
 
   - bash: |
+      echo "##[group]dependency:go-offline"
       ./mvnw dependency:go-offline -Dmaven.repo.local=./.m2 --no-transfer-progress
+      echo "##[endgroup]"
+      echo "##[group]process-resources"
       ./mvnw process-resources --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
+      echo "##[endgroup]"
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: azul_java
     displayName: "Maven: Install Packages"
 
   - bash: |
+      echo "##[group]compile"
       ./mvnw compile --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
+      echo "##[endgroup]"
+      echo "##[group]process-test-resources"
       ./mvnw process-test-resources --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
+      echo "##[endgroup]"
+      echo "##[group]test-compile"
       ./mvnw test-compile --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
+      echo "##[endgroup]"
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: azul_java
