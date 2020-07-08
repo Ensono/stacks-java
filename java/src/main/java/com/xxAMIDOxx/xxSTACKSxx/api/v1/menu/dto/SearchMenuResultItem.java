@@ -1,7 +1,9 @@
-package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu;
+package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class SearchMenuResultItem {
@@ -30,6 +32,14 @@ public class SearchMenuResultItem {
     this.name = name;
     this.description = description;
     this.enabled = enabled;
+  }
+
+  public SearchMenuResultItem(Menu menu) {
+    this.id = UUID.fromString(menu.getId());
+    this.restaurantId = null;
+    this.name = menu.getName();
+    this.description = menu.getDescription();
+    this.enabled = menu.getEnabled();
   }
 
   public UUID getId() {
@@ -70,5 +80,22 @@ public class SearchMenuResultItem {
 
   public void setEnabled(Boolean enabled) {
     this.enabled = enabled;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof SearchMenuResultItem)) return false;
+    SearchMenuResultItem that = (SearchMenuResultItem) o;
+    return Objects.equals(id, that.id) &&
+            Objects.equals(restaurantId, that.restaurantId) &&
+            Objects.equals(name, that.name) &&
+            Objects.equals(description, that.description) &&
+            Objects.equals(enabled, that.enabled);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, restaurantId, name, description, enabled);
   }
 }

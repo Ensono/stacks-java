@@ -1,3 +1,10 @@
+spring:
+  application:
+    name: xxSTACKSxx-api
+  data:
+    rest:
+      detection-strategy: annotated
+
 server:
   port: 9000
 
@@ -8,13 +15,25 @@ management:
 
 springdoc:
   api-docs:
+    path: /swagger/oas.json
+  swagger-ui:
     path: /swagger/index.html
   packagesToScan: com.xxAMIDOxx.xxSTACKSxx, com.xxAMIDOxx.xxSTACKSxx.api.v1.menu
 
+
 azure:
   cosmosdb:
-    uri: http://your-cosmosDb-uri
-    key: your-cosmosDb-key
-    secondaryKey: your-cosmosDb-secondary-key
-    database: your-cosmosDb-dbName
+    uri: https://amidostacksmenucdauksdev.documents.azure.com:443/
+    database: Stacks
+    key: aaa
+    secondaryKey:
     populateQueryMetrics: false
+  application-insights:
+    instrumentation-key: bbb
+    enabled: true
+  keyvault:
+    enabled: false
+    uri: https://amido-stacks-tmp.vault.azure.net/
+    client-id: xxx
+    client-key: yyy
+    tenant-id: zzz
