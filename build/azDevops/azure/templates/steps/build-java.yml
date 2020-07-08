@@ -42,7 +42,6 @@ parameters:
 
 steps:
   - bash: |
-      set -euxo pipefail
       echo '##vso[build.updatebuildnumber]${{ parameters.docker_imagetag }}'
     displayName: 'Update: Build Number'
 
@@ -154,8 +153,6 @@ steps:
           docker_imagename: ${{ parameters.docker_imagename }}
           docker_imagetag: ${{ parameters.docker_imagetag }}
           docker_containerregistryname: ${{ parameters.docker_containerregistryname }}
-
-  - bash: "echo :$(System.PullRequest.SourceBranch):"
 
   # SonarCloud
   - ${{ if eq(parameters.static_code_analysis, true) }}:
