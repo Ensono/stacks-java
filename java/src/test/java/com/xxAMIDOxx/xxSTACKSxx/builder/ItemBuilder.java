@@ -2,14 +2,12 @@ package com.xxAMIDOxx.xxSTACKSxx.builder;
 
 import com.xxAMIDOxx.xxSTACKSxx.model.Item;
 
-import java.util.UUID;
-
 /**
  * Builder class for Category Item
  * @author ArathyKrishna
  */
 public final class ItemBuilder {
-    private UUID id = null;
+    private String id = null;
     private String name = null;
     private String description = null;
     private Double price = null;
@@ -22,7 +20,7 @@ public final class ItemBuilder {
         return new ItemBuilder();
     }
 
-    public ItemBuilder withId(UUID id) {
+    public ItemBuilder withId(String id) {
         this.id = id;
         return this;
     }

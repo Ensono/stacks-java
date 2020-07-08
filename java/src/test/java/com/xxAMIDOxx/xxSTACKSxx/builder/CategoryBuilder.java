@@ -5,14 +5,13 @@ import com.xxAMIDOxx.xxSTACKSxx.model.Item;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Builder class for Category
  * @author ArathyKrishna
  */
 public final class CategoryBuilder {
-    private UUID id = null;
+    private String id = null;
     private String name = null;
     private String description = null;
     private List<Item> items = new ArrayList<>();
@@ -24,7 +23,7 @@ public final class CategoryBuilder {
         return new CategoryBuilder();
     }
 
-    public CategoryBuilder withId(UUID id) {
+    public CategoryBuilder withId(String id) {
         this.id = id;
         return this;
     }

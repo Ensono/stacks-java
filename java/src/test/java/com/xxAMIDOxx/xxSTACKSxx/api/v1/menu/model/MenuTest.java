@@ -26,10 +26,10 @@ public class MenuTest {
         // Given
         Item item = anItem().withAvailable(true).withDescription(
                 "Some Description").withName("1st Item").withPrice(12.34d)
-                            .withId(UUID.randomUUID()).build();
+                            .withId(UUID.randomUUID().toString()).build();
         Category category = aCategory().withDescription(
                 "1st Category Description").withName("1st Category").withItems(
-                List.of(item)).withId(UUID.randomUUID()).build();
+                List.of(item)).withId(UUID.randomUUID().toString()).build();
         Menu menu = aMenu().withCategories(List.of(category)).withDescription(
                 "1st Menu Description").withEnabled(true).withName("1st Menu")
                            .withId(UUID.randomUUID().toString()).build();

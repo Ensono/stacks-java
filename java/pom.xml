@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.0.RELEASE</version>
+        <version>2.3.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -27,6 +27,7 @@
         <mockito.version>2.23.0</mockito.version>
         <lombok.version>1.18.12</lombok.version>
         <hamcrest.version>2.2</hamcrest.version>
+        <pitest.version>1.5.2</pitest.version>
     </properties>
 
     <dependencies>
@@ -152,7 +153,7 @@
         <dependency>
             <groupId>org.pitest</groupId>
             <artifactId>pitest-parent</artifactId>
-            <version>1.5.2</version>
+            <version>${pitest.version}</version>
             <type>pom</type>
         </dependency>
 
@@ -167,7 +168,7 @@
             <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
-                <version>1.5.2</version>
+                <version>${pitest.version}</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.pitest</groupId>
@@ -186,9 +187,6 @@
                 </executions>
                 <configuration>
                     <threads>4</threads>
-                    <includedClasses>
-                        <value>com.xxAMIDOxx.xxSTACKSxx.*</value>
-                    </includedClasses>
                     <timestampedReports>false</timestampedReports>
                     <mutators>
                         <value>STRONGER</value>

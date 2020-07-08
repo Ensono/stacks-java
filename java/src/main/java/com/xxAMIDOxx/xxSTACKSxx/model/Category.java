@@ -11,7 +11,7 @@ import java.util.UUID;
 public class Category {
 
   @JsonProperty("Id")
-  private UUID id = null;
+  private String id = null;
 
   @JsonProperty("Name")
   private String name = null;
@@ -26,11 +26,11 @@ public class Category {
   public Category() {
   }
 
-  public UUID getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(UUID id) {
+  public void setId(String id) {
     this.id = id;
   }
 
