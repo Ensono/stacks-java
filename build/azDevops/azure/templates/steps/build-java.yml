@@ -41,6 +41,10 @@ parameters:
   git_release_tag: ""
 
 steps:
+  - bash: |
+      echo '##vso[build.updatebuildnumber]${{ parameters.docker_imagetag }}'
+    displayName: 'Update: Build Number'
+
   # Login to Azure/AKS
   - template: azDevOps/azure/templates/v2/steps/login-services.yml@templates
     parameters:
@@ -51,63 +55,100 @@ steps:
       login_azure: true
 
   - bash: |
-      ./mvnw dependency:go-offline --no-transfer-progress
-      ./mvnw process-resources --no-transfer-progress
+      ./mvnw dependency:go-offline -Dmaven.repo.local=./.m2 --no-transfer-progress
+      ./mvnw process-resources --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: azul_java
     displayName: "Maven: Install Packages"
 
   - bash: |
-      ./mvnw compile --no-transfer-progress
-      ./mvnw process-test-resources --no-transfer-progress
-      ./mvnw test-compile --no-transfer-progress
+      ./mvnw compile --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
+      ./mvnw process-test-resources --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
+      ./mvnw test-compile --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: azul_java
     displayName: "Maven: Compile Application"
 
   - bash: |
-      ./mvnw test -Dgroups=Unit
+      ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 -Dgroups=DOWNLOADDEPS
+    workingDirectory: "${{ parameters.project_root_dir }}"
+    target:
+      container: azul_java
+    displayName: "Test: Download Test Deps"
+
+  - bash: |
+      ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Unit
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: azul_java
     displayName: "Test: Unit tests"
 
   - bash: |
-      ./mvnw test -Dgroups=Component
+      ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Component
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: azul_java
     displayName: "Test: Component tests"
 
   - bash: |
-      ./mvnw test -Dgroups=Integration
+      ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Integration
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: azul_java
     displayName: "Test: Integration tests"
 
+  - bash: |
+      ./mvnw jacoco:report --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
+    workingDirectory: "${{ parameters.project_root_dir }}"
+    target:
+      container: azul_java
+    displayName: "Generate Jacoco coverage reports"
 
   - bash: |
-      ls -la ${{ parameters.project_root_dir }}
+      cp "${{ parameters.project_root_dir }}/../build/azDevops/azure/coverage/"* .
+      npm i
+      ./node_modules/.bin/gulp inline-css-images
+      ./node_modules/.bin/gulp inline-sources
+      # ./node_modules/.bin/jacoco-html-asset-bundle \
+      #   -d jacoco \
+      #   -r jacoco/jacoco-resources \
+      #   -o jacoco-inline
+    workingDirectory: "${{ parameters.project_root_dir }}/target/site/"
+    target:
+      container: node
+    displayName: "Gulp: Inline Jacoco report assets"
 
-  # Build Docker Image, Scan and Push to Repository
-  - ${{ if eq(parameters.docker_build, true) }}:
-      - template: azDevOps/azure/templates/v2/steps/build-container-image.yml@templates
-        parameters:
-          workingDirectory: ${{ parameters.docker_workdir }}
-          docker_build_additional_args: ${{ parameters.docker_build_additional_args }}
-          docker_imagename: ${{ parameters.docker_imagename }}
-          docker_imagetag: ${{ parameters.docker_imagetag }}
-          docker_containerregistryname: ${{ parameters.docker_containerregistryname }}
+  # # Build Docker Image, Scan and Push to Repository
+  # - ${{ if eq(parameters.docker_build, true) }}:
+  #     - template: azDevOps/azure/templates/v2/steps/build-container-image.yml@templates
+  #       parameters:
+  #         workingDirectory: ${{ parameters.docker_workdir }}
+  #         docker_build_additional_args: ${{ parameters.docker_build_additional_args }}
+  #         docker_imagename: ${{ parameters.docker_imagename }}
+  #         docker_imagetag: ${{ parameters.docker_imagetag }}
+  #         docker_containerregistryname: ${{ parameters.docker_containerregistryname }}
 
-  # SonarCloud
-  - ${{ if eq(parameters.static_code_analysis, true) }}:
-      - template: azDevOps/azure/templates/v2/steps/test-static-code-sonar.yml@templates
-        parameters:
-          working_directory: ${{ parameters.project_root_dir }}
-          target_container: ${{ parameters.sonar_container }}
+  # # Set PR SonarCloud
+  # - bash: |
+  #     ##vso[task.setvariable variable=SONAR_PULL_REQUEST]$(System.PullRequest.PullRequestNumber)
+  #   displayName: "Setting SonarCloud PR value from Github PR"
+
+  # # SonarCloud
+  # - ${{ if eq(parameters.static_code_analysis, true) }}:
+  #     - template: azDevOps/azure/templates/v2/steps/test-static-code-sonar.yml@templates
+  #       parameters:
+  #         working_directory: ${{ parameters.project_root_dir }}
+  #         target_container: ${{ parameters.sonar_container }}
+
+  - task: PublishTestResults@2
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: "JaCoCo"
+      summaryFileLocation: "${{ parameters.project_root_dir }}/target/site/jacoco/jacoco.xml"
+      reportDirectory: "${{ parameters.project_root_dir }}/target/site/jacoco-inline"
 
   # Publish Artefacts if required
   - ${{ if eq(parameters.functional_test, true) }}:
