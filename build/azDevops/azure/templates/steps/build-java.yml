@@ -107,6 +107,7 @@ steps:
     target:
       container: azul_java
     displayName: "Test: Unit tests"
+
   - bash: |
       set -euxo pipefail
       # TODO: Remove CosmosDB Key when Component tests are no longer talking to a real DB.
