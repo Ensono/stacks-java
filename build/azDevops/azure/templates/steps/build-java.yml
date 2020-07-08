@@ -59,7 +59,7 @@ steps:
       ./mvnw dependency:go-offline -Dmaven.repo.local=./.m2 --no-transfer-progress
       echo "##[endgroup]"
       echo "##[group]process-resources"
-      ./mvnw process-resources --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
+      ./mvnw process-resources --no-transfer-progress -Dmaven.repo.local=./.m2
       echo "##[endgroup]"
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
