@@ -42,6 +42,7 @@ parameters:
 
 steps:
   - bash: |
+      set -euxo pipefail
       echo '##vso[build.updatebuildnumber]${{ parameters.docker_imagetag }}'
     displayName: 'Update: Build Number'
 
@@ -55,7 +56,8 @@ steps:
       login_azure: true
 
   - bash: |
-      echo "##[group]dependency:go-offline"
+      set -euxo pipefail
+      echo "dependency:go-offline"
       ./mvnw dependency:go-offline -Dmaven.repo.local=./.m2 --no-transfer-progress
       echo "##[endgroup]"
       echo "##[group]process-resources"
@@ -67,6 +69,7 @@ steps:
     displayName: "Maven: Install Packages"
 
   - bash: |
+      set -euxo pipefail
       echo "##[group]compile"
       ./mvnw compile --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
       echo "##[endgroup]"
@@ -82,6 +85,7 @@ steps:
     displayName: "Maven: Compile Application"
 
   - bash: |
+      set -euxo pipefail
       ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 -Dgroups=DOWNLOADDEPS
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
@@ -89,6 +93,7 @@ steps:
     displayName: "Test: Download Test Deps"
 
   - bash: |
+      set -euxo pipefail
       ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Unit
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
@@ -96,6 +101,7 @@ steps:
     displayName: "Test: Unit tests"
 
   - bash: |
+      set -euxo pipefail
       ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Component
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
@@ -103,6 +109,7 @@ steps:
     displayName: "Test: Component tests"
 
   - bash: |
+      set -euxo pipefail
       ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Integration
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
@@ -110,6 +117,7 @@ steps:
     displayName: "Test: Integration tests"
 
   - bash: |
+      set -euxo pipefail
       ./mvnw jacoco:report --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
@@ -117,6 +125,7 @@ steps:
     displayName: "Generate Jacoco coverage reports"
 
   - bash: |
+      set -euxo pipefail
       cp "${{ parameters.project_root_dir }}/../build/azDevops/azure/coverage/"* .
       npm i
       ./node_modules/.bin/gulp inline-css-images
@@ -138,6 +147,7 @@ steps:
 
   # Set PR SonarCloud
   - bash: |
+      set -euxo pipefail
       ##vso[task.setvariable variable=SONAR_PULL_REQUEST]$(System.PullRequest.PullRequestNumber)
     displayName: "Setting SonarCloud PR value from Github PR"
 
