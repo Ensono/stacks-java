@@ -25,15 +25,13 @@ azure:
   cosmosdb:
     uri: https://amidostacksmenucdauksdev.documents.azure.com:443/
     database: Stacks
-    key: aaa
-    secondaryKey:
-    populateQueryMetrics: false
+    key: xxxxxx
   application-insights:
-    instrumentation-key: bbb
+    instrumentation-key: xxxxxx
     enabled: true
   keyvault:
     enabled: false
     uri: https://amido-stacks-tmp.vault.azure.net/
-    client-id: xxx
-    client-key: yyy
-    tenant-id: zzz
+    client-id: xxxxxx
+    client-key: xxxxxx
+    tenant-id: xxxxxx

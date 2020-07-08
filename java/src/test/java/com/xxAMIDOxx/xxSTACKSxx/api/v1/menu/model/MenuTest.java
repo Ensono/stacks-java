@@ -5,8 +5,10 @@ import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.model.matcher.TypeMatchers;
 import com.xxAMIDOxx.xxSTACKSxx.model.Category;
 import com.xxAMIDOxx.xxSTACKSxx.model.Item;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +22,9 @@ import static org.hamcrest.Matchers.notNullValue;
 
 @SpringBootTest
 public class MenuTest {
+
+    @MockBean
+    private MenuRepository menuRepository;
 
     @Test
     public void testMenusBuilder() {
