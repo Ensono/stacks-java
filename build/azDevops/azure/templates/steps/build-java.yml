@@ -45,6 +45,16 @@ steps:
       echo '##vso[build.updatebuildnumber]${{ parameters.docker_imagetag }}'
     displayName: 'Update: Build Number'
 
+
+  - task: Cache@2
+    inputs:
+      key: 'maven | "$(Agent.OS)" | ${{ parameters.project_root_dir }}/pom.xml'
+      restoreKeys: |
+        maven | "$(Agent.OS)"
+        maven
+      path: "${{ parameters.project_root_dir }}/.m2"
+    displayName: Cache Maven packages
+
   # Login to Azure/AKS
   - template: azDevOps/azure/templates/v2/steps/login-services.yml@templates
     parameters:
@@ -55,23 +65,36 @@ steps:
       login_azure: true
 
   - bash: |
+      set -euxo pipefail
+      set +x; echo "dependency:go-offline"; set -x
       ./mvnw dependency:go-offline -Dmaven.repo.local=./.m2 --no-transfer-progress
-      ./mvnw process-resources --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
+      set +x; echo "##[endgroup]"; set -x
+      set +x; echo "##[group]process-resources"; set -x
+      ./mvnw process-resources --no-transfer-progress -Dmaven.repo.local=./.m2
+      set +x; echo "##[endgroup]"; set -x
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: azul_java
     displayName: "Maven: Install Packages"
 
   - bash: |
+      set -euxo pipefail
+      set +x; echo "##[group]compile"; set -x
       ./mvnw compile --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
+      set +x; echo "##[endgroup]"; set -x
+      set +x; echo "##[group]process-test-resources"
       ./mvnw process-test-resources --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
+      set +x; echo "##[endgroup]"; set -x
+      set +x; echo "##[group]test-compile"; set -x
       ./mvnw test-compile --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
+      set +x; echo "##[endgroup]"; set -x
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: azul_java
     displayName: "Maven: Compile Application"
 
   - bash: |
+      set -euxo pipefail
       ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 -Dgroups=DOWNLOADDEPS
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
@@ -79,20 +102,23 @@ steps:
     displayName: "Test: Download Test Deps"
 
   - bash: |
+      set -euxo pipefail
       ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Unit
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: azul_java
     displayName: "Test: Unit tests"
-
   - bash: |
-      ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Component
+      set -euxo pipefail
+      # TODO: Remove CosmosDB Key when Component tests are no longer talking to a real DB.
+      AZURE_COSMOSDB_KEY=$(AZURE_COSMOSDB_KEY) ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Component
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: azul_java
     displayName: "Test: Component tests"
 
   - bash: |
+      set -euxo pipefail
       ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Integration
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
@@ -100,6 +126,7 @@ steps:
     displayName: "Test: Integration tests"
 
   - bash: |
+      set -euxo pipefail
       ./mvnw jacoco:report --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
     workingDirectory: "${{ parameters.project_root_dir }}"
     target:
@@ -107,40 +134,38 @@ steps:
     displayName: "Generate Jacoco coverage reports"
 
   - bash: |
+      set -euxo pipefail
       cp "${{ parameters.project_root_dir }}/../build/azDevops/azure/coverage/"* .
       npm i
       ./node_modules/.bin/gulp inline-css-images
       ./node_modules/.bin/gulp inline-sources
-      # ./node_modules/.bin/jacoco-html-asset-bundle \
-      #   -d jacoco \
-      #   -r jacoco/jacoco-resources \
-      #   -o jacoco-inline
     workingDirectory: "${{ parameters.project_root_dir }}/target/site/"
     target:
       container: node
     displayName: "Gulp: Inline Jacoco report assets"
 
-  # # Build Docker Image, Scan and Push to Repository
-  # - ${{ if eq(parameters.docker_build, true) }}:
-  #     - template: azDevOps/azure/templates/v2/steps/build-container-image.yml@templates
-  #       parameters:
-  #         workingDirectory: ${{ parameters.docker_workdir }}
-  #         docker_build_additional_args: ${{ parameters.docker_build_additional_args }}
-  #         docker_imagename: ${{ parameters.docker_imagename }}
-  #         docker_imagetag: ${{ parameters.docker_imagetag }}
-  #         docker_containerregistryname: ${{ parameters.docker_containerregistryname }}
+  # Build Docker Image, Scan and Push to Repository
+  - ${{ if eq(parameters.docker_build, true) }}:
+      - template: azDevOps/azure/templates/v2/steps/build-container-image.yml@templates
+        parameters:
+          workingDirectory: ${{ parameters.docker_workdir }}
+          docker_build_additional_args: ${{ parameters.docker_build_additional_args }}
+          docker_imagename: ${{ parameters.docker_imagename }}
+          docker_imagetag: ${{ parameters.docker_imagetag }}
+          docker_containerregistryname: ${{ parameters.docker_containerregistryname }}
 
-  # # Set PR SonarCloud
-  # - bash: |
-  #     ##vso[task.setvariable variable=SONAR_PULL_REQUEST]$(System.PullRequest.PullRequestNumber)
-  #   displayName: "Setting SonarCloud PR value from Github PR"
-
-  # # SonarCloud
-  # - ${{ if eq(parameters.static_code_analysis, true) }}:
-  #     - template: azDevOps/azure/templates/v2/steps/test-static-code-sonar.yml@templates
-  #       parameters:
-  #         working_directory: ${{ parameters.project_root_dir }}
-  #         target_container: ${{ parameters.sonar_container }}
+  # SonarCloud
+  - ${{ if eq(parameters.static_code_analysis, true) }}:
+      - template: azDevOps/azure/templates/v2/steps/test-static-code-sonar.yml@templates
+        parameters:
+          working_directory: "${{ parameters.project_root_dir }}"
+          target_container: "${{ parameters.sonar_container }}"
+          env_vars: {
+            SONAR_PULL_REQUEST: "$(System.PullRequest.PullRequestNumber)",
+            SONAR_BRANCH_NAME: "$(System.PullRequest.SourceBranch)",
+            SONAR_PR_PROVIDER: "GitHub",
+            SONAR_GITHUB_REPO: "amido/stacks-java",
+          }
 
   - task: PublishTestResults@2
 

@@ -114,6 +114,8 @@ stages:
       # You can find notes in the READMEs around which values to use for each ENV variable group
       - group: amido-stacks-infra-credentials-nonprod
       - group: amido-stacks-java-api
+      # TODO: Remove CosmosDB Key when Component tests are no longer talking to a real DB.
+      - group: amido-stacks-java-api-temp-component
     jobs:
       - job: ApiBuild
         pool:
