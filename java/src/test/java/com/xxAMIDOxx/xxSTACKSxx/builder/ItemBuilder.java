@@ -2,6 +2,8 @@ package com.xxAMIDOxx.xxSTACKSxx.builder;
 
 import com.xxAMIDOxx.xxSTACKSxx.model.Item;
 
+import java.util.UUID;
+
 /**
  * Builder class for Category Item
  * @author ArathyKrishna
@@ -53,5 +55,15 @@ public final class ItemBuilder {
         item.setPrice(price);
         item.setAvailable(available);
         return item;
+    }
+
+    public static Item aDefaultItem() {
+        return anItem()
+                .withAvailable(true)
+                .withDescription("Some Description")
+                .withName("1st Item")
+                .withPrice(12.34d)
+                .withId(UUID.randomUUID().toString())
+                .build();
     }
 }
