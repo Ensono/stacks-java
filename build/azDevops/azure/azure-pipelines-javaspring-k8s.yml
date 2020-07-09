@@ -32,12 +32,20 @@ resources:
       endpoint: amidostacks
 
   containers:
+    # Container for Java Build and Testing
     - container: azul_java
       image: azul/zulu-openjdk-debian:11
+    # Container for inlining Jacoco assets as Azure DevOps strips them
+    # https://github.com/microsoft/azure-pipelines-tasks/issues/3027
+    - container: node
+      image: amidostacks/node:0.0.3
+    # Container for Sonar Scanner
     - container: sonar_scanner
       image: amidostacks/ci-sonarscanner:0.0.1
+    # Container for Kubernetes Deployment
     - container: k8s_deploy
       image: amidostacks/ci-k8s:0.0.6
+    # Container for Terraform deployments
     - container: terraform_custom
       image: amidostacks/ci-tf:0.0.3
 
@@ -147,7 +155,7 @@ stages:
               build_file_artefact: "$(build_artifact_deploy_name)"
               # Git Tag release
               git_do_tag_release: false
-              git_release_tag: "$(version_major).$(version_minor).$(version_revision)-$(build.sourcebranchname)"
+              git_release_tag: "$(version_major).$(version_minor).$(version_revision)-$(Build.SourceBranchName)"
           # you can define additional steps here
       # you can define additional jobs here
 

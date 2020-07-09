@@ -3,6 +3,7 @@ package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.impl;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +40,13 @@ public class MenuControllerImplTest {
     @MockBean
     private MenuService service;
 
+    @MockBean
+    private MenuRepository menuRepository;
+
     @Test
     public void whenCalledForMenuReturnsOK() {
         var entity = this.testRestTemplate.getForEntity(
-                getBaseURL(port) + "/v1/menu", SearchMenuResult.class);
+                getBaseURL(port) + "/v1/menu/", SearchMenuResult.class);
         then(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 

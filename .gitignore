@@ -1,8 +1,10 @@
-.idea
+*/.idea
 *.iml
 
 .DS_Store
 *.bu
+
+.m2/
 
 .gradle
 
@@ -11,3 +13,5 @@ java/build/
 
 lombok.config
 .terraform
+
+node_modules/
