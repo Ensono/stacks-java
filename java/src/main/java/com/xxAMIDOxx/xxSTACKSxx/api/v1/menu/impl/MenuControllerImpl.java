@@ -15,7 +15,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@Validated
 public class MenuControllerImpl implements MenuController {
 
     Logger logger = LoggerFactory.getLogger(MenuControllerImpl.class);
