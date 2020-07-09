@@ -1,0 +1,12 @@
+{
+  "description": "N/A",
+  "license": "Apache-2.0",
+  "repository": "N/A",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-inline-source": "^4.0.0",
+    "gulp-postcss": "^8.0.0",
+    "jacoco-html-asset-bundle": "^0.2.0",
+    "postcss-image-inliner": "^4.0.2"
+  }
+}
