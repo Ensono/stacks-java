@@ -1,8 +1,8 @@
-package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.model;
+package com.xxAMIDOxx.xxSTACKSxx.model;
 
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.model.matcher.TypeMatchers;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.matcher.TypeMatchers;
 import com.xxAMIDOxx.xxSTACKSxx.model.Category;
 import com.xxAMIDOxx.xxSTACKSxx.model.Item;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.xxAMIDOxx.xxSTACKSxx.builder.CategoryBuilder.aCategory;
+import static com.xxAMIDOxx.xxSTACKSxx.builder.ItemBuilder.aDefaultItem;
 import static com.xxAMIDOxx.xxSTACKSxx.builder.ItemBuilder.anItem;
 import static com.xxAMIDOxx.xxSTACKSxx.builder.MenuBuilder.aMenu;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,9 +37,7 @@ public class MenuTest {
     @Test
     public void testMenusBuilder() {
         // Given
-        Item item = anItem().withAvailable(true).withDescription(
-                "Some Description").withName("1st Item").withPrice(12.34d)
-                            .withId(UUID.randomUUID().toString()).build();
+        Item item = aDefaultItem();
         Category category = aCategory().withDescription(
                 "1st Category Description").withName("1st Category").withItems(
                 List.of(item)).withId(UUID.randomUUID().toString()).build();

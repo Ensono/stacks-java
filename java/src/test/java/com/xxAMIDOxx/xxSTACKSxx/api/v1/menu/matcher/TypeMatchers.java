@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.model.matcher;
+package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.matcher;
 
 import com.xxAMIDOxx.xxSTACKSxx.model.Category;
 import com.xxAMIDOxx.xxSTACKSxx.model.Item;

@@ -19,10 +19,10 @@ public class MenuControllerImpl implements MenuController {
 
     Logger logger = LoggerFactory.getLogger(MenuControllerImpl.class);
 
-    private MenuService repository;
+    private MenuService menuService;
 
-    public MenuControllerImpl(MenuService repository) {
-        this.repository = repository;
+    public MenuControllerImpl(MenuService menuService) {
+        this.menuService = menuService;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class MenuControllerImpl implements MenuController {
                                                        final Integer pageSize,
                                                        final Integer pageNumber) {
 
-        List<Menu> menus = repository.all(pageNumber, pageSize);
+        List<Menu> menus = menuService.all(pageNumber, pageSize);
         List<SearchMenuResultItem> menuResultItems = menus.stream()
                 .map(SearchMenuResultItem::new)
                 .collect(Collectors.toList());
@@ -42,7 +42,7 @@ public class MenuControllerImpl implements MenuController {
 
     @Override
     public ResponseEntity<Menu> getMenu(UUID id) {
-        return ResponseEntity.of(this.repository.findById(id));
+        return ResponseEntity.of(this.menuService.findById(id));
     }
 }
 
