@@ -1,7 +1,5 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.impl;
 
-import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
-import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
@@ -9,7 +7,6 @@ import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -22,17 +19,16 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.xxAMIDOxx.xxSTACKSxx.builder.MenuBuilder.aMenu;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@EnableAutoConfiguration(
-        exclude = {
-                CosmosDbRepositoriesAutoConfiguration.class,
-                CosmosAutoConfiguration.class
-        })
 public class MenuControllerImplTest {
 
     @LocalServerPort
@@ -103,11 +99,80 @@ public class MenuControllerImplTest {
     }
 
     private Menu createMenu(int counter) {
-        Menu item = new Menu();
-        item.setDescription("Some item " + counter);
-        item.setEnabled(true);
-        item.setName("some Name " + counter);
-        item.setId(randomUUID().toString());
-        return item;
+        return aMenu()
+                .withDescription(counter + " Menu Description")
+                .withEnabled(true)
+                .withName(counter + " Menu")
+                .withId(UUID.randomUUID().toString())
+                .build();
+    }
+
+    @Test
+    public void testWhenPageSizeAndNoGetsDefaultedWhenNoValueGiven() {
+        // Given
+        Menu menu = createMenu(1);
+        // When
+        var response =
+                this.testRestTemplate.getForEntity(getBaseURL(port) + "/v1/menu", SearchMenuResult.class);
+
+        // Then
+        then(response.getBody()).isInstanceOf(SearchMenuResult.class);
+        SearchMenuResult actual = response.getBody();
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.getPageNumber(), is(1));
+        assertThat(actual.getPageSize(), is(20));
+    }
+
+    @Test
+    public void testWhenPageSizeGivenReturnsResultsMatchingPageSize() {
+        // Given
+        Menu menu = createMenu(30);
+
+        // When
+        var response =
+                this.testRestTemplate.getForEntity(
+                        String.format("%s/v1/menu?pageSize=%s", getBaseURL(port), 10), SearchMenuResult.class);
+
+        // Then
+        then(response.getBody()).isInstanceOf(SearchMenuResult.class);
+        SearchMenuResult actual = response.getBody();
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.getPageNumber(), is(1));
+        assertThat(actual.getPageSize(), is(10));
+    }
+
+    @Test
+    public void testWhenNoSearchTermGivenReturnsAllResults() {
+        // Given
+        Menu menu = createMenu(30);
+        // When
+        var response =
+                this.testRestTemplate.getForEntity(
+                        String.format("%s/v1/menu?pageSize=%s", getBaseURL(port), 10), SearchMenuResult.class);
+
+        // Then
+        then(response.getBody()).isInstanceOf(SearchMenuResult.class);
+        SearchMenuResult actual = response.getBody();
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.getPageNumber(), is(1));
+        assertThat(actual.getPageSize(), is(10));
+        assertThat(actual.getResults(), is(notNullValue()));
+    }
+
+    @Test
+    public void testWhenNoRestaurantIdGivenReturnsAllResults() {
+        // Given
+        Menu menu = createMenu(30);
+        // When
+        var response =
+                this.testRestTemplate.getForEntity(getBaseURL(port) + "/v1/menu", SearchMenuResult.class);
+
+        // Then
+        then(response.getBody()).isInstanceOf(SearchMenuResult.class);
+        SearchMenuResult actual = response.getBody();
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.getPageNumber(), is(1));
+        assertThat(actual.getPageSize(), is(20));
+        assertThat(actual.getResults(), is(notNullValue()));
     }
 }
