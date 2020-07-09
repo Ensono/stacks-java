@@ -4,12 +4,14 @@ WORKDIR /workspace/app
 # Copy the m2 directory if it exists to re-use an external cache.
 # The `mvnw` file is also copied so that if an `.m2` directory isn't present
 # the command won't fail.
-COPY mvnw .m2/ /root/.m2/repository/
+COPY mvnw .m2* /root/.m2/repository/
 
 COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
 COPY src src
+
+RUN ls -la /root/.m2/repository
 
 # RUN ./mvnw help:evaluate -Dexpression=settings.localRepository -q -DforceStdout
 
