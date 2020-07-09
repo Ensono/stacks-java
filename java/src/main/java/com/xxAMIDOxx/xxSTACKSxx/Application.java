@@ -10,10 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-@SpringBootApplication(exclude = {
-        CosmosDbRepositoriesAutoConfiguration.class,
-        CosmosAutoConfiguration.class
-})
+@SpringBootApplication
 public class Application {
 
     private static final String PROJECT_URL = "https://github.com/amido/stacks-java";

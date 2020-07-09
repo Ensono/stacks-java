@@ -1,12 +1,14 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.model;
 
-
+import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
+import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.model.matcher.TypeMatchers;
 import com.xxAMIDOxx.xxSTACKSxx.model.Category;
 import com.xxAMIDOxx.xxSTACKSxx.model.Item;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -21,6 +23,11 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 @SpringBootTest
+@EnableAutoConfiguration(
+        exclude = {
+                CosmosDbRepositoriesAutoConfiguration.class,
+                CosmosAutoConfiguration.class
+        })
 public class MenuTest {
 
     @MockBean
