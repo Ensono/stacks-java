@@ -48,13 +48,7 @@ public final class ItemBuilder {
     }
 
     public Item build() {
-        Item item = new Item();
-        item.setId(id);
-        item.setName(name);
-        item.setDescription(description);
-        item.setPrice(price);
-        item.setAvailable(available);
-        return item;
+        return new Item(id, name, description, price, available);
     }
 
     public static Item aDefaultItem() {

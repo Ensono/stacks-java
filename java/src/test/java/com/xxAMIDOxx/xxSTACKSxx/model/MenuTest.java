@@ -1,10 +1,9 @@
 package com.xxAMIDOxx.xxSTACKSxx.model;
 
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.matcher.TypeMatchers;
-import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,15 +22,13 @@ public class MenuTest {
   public void testMenusBuilder() {
     // Given
     Item item = aDefaultItem();
-    Category category =
-        aCategory()
+    Category category = aCategory()
             .withDescription("1st Category Description")
             .withName("1st Category")
             .withItems(List.of(item))
             .withId(UUID.randomUUID().toString())
             .build();
-    Menu menu =
-        aMenu()
+    Menu menu = aMenu()
             .withCategories(List.of(category))
             .withDescription("1st Menu Description")
             .withEnabled(true)
@@ -42,5 +39,10 @@ public class MenuTest {
     assertThat(item, is(notNullValue()));
     assertThat(category, is(notNullValue()));
     assertThat(menu, TypeMatchers.matchesMenu(menu));
+  }
+
+  @Test
+  public void equalsContract() {
+    EqualsVerifier.simple().forClass(Menu.class).verify();
   }
 }

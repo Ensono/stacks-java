@@ -5,7 +5,6 @@ import com.microsoft.azure.spring.data.cosmosdb.core.mapping.Document;
 import com.microsoft.azure.spring.data.cosmosdb.core.mapping.PartitionKey;
 import org.springframework.data.annotation.Id;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,72 +12,62 @@ import java.util.Objects;
  * @author James Peet
  */
 @Document(collection = "Menu")
-public class Menu implements Comparable<Menu> {
+public class Menu {
 
   @Id
   @PartitionKey
   @JsonProperty("id")
-  private String id = null;
+  private String id;
 
   @JsonProperty("Name")
-  private String name = null;
+  private String name;
 
   @JsonProperty("Description")
-  private String description = null;
+  private String description;
+
+  @JsonProperty("TenantId")
+  private String restaurantId;
 
   @JsonProperty("Categories")
-  @Valid
-  private List<Category> categories = null;
+  private List<Category> categories;
 
   @JsonProperty("Enabled")
-  private Boolean enabled = null;
+  private Boolean enabled;
 
   public Menu() {
+  }
+
+  public Menu(String id, String name, String description, String restaurantId, List<Category> categories, Boolean enabled) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.restaurantId = restaurantId;
+    this.categories = categories;
+    this.enabled = enabled;
   }
 
   public String getId() {
     return id;
   }
 
-  public void setId(String id) {
-    this.id = id;
-  }
-
   public String getName() {
     return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
   public String getDescription() {
     return description;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public String getRestaurantId() {
+    return restaurantId;
   }
 
   public List<Category> getCategories() {
     return categories;
   }
 
-  public void setCategories(List<Category> categories) {
-    this.categories = categories;
-  }
-
   public Boolean getEnabled() {
     return enabled;
-  }
-
-  public void setEnabled(Boolean enabled) {
-    this.enabled = enabled;
-  }
-
-  @Override
-  public int compareTo(Menu o) {
-    return this.getId().compareTo(o.getId());
   }
 
   @Override
@@ -89,12 +78,13 @@ public class Menu implements Comparable<Menu> {
     return Objects.equals(id, menu.id) &&
             Objects.equals(name, menu.name) &&
             Objects.equals(description, menu.description) &&
+            Objects.equals(restaurantId, menu.restaurantId) &&
             Objects.equals(categories, menu.categories) &&
             Objects.equals(enabled, menu.enabled);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, description, categories, enabled);
+    return Objects.hash(id, name, description, restaurantId, categories, enabled);
   }
 }

@@ -1,27 +1,24 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
 public class SearchMenuResult {
 
   @JsonProperty("pageSize")
-  private Integer pageSize = null;
+  private Integer pageSize;
 
   @JsonProperty("pageNumber")
-  private Integer pageNumber = null;
+  private Integer pageNumber;
 
   @JsonProperty("results")
-  @Valid
-  private List<SearchMenuResultItem> results = null;
+  private List<SearchMenuResultItem> results;
 
   public SearchMenuResult() {
   }
 
-  public SearchMenuResult(Integer pageSize, Integer pageNumber, @Valid List<SearchMenuResultItem> results) {
+  public SearchMenuResult(Integer pageSize, Integer pageNumber, List<SearchMenuResultItem> results) {
     this.pageSize = pageSize;
     this.pageNumber = pageNumber;
     this.results = results;
@@ -31,24 +28,12 @@ public class SearchMenuResult {
     return pageSize;
   }
 
-  public void setPageSize(Integer pageSize) {
-    this.pageSize = pageSize;
-  }
-
   public Integer getPageNumber() {
     return pageNumber;
   }
 
-  public void setPageNumber(Integer pageNumber) {
-    this.pageNumber = pageNumber;
-  }
-
   public List<SearchMenuResultItem> getResults() {
     return results;
-  }
-
-  public void setResults(List<SearchMenuResultItem> results) {
-    this.results = results;
   }
 
   @Override
@@ -65,6 +50,5 @@ public class SearchMenuResult {
   public int hashCode() {
     return Objects.hash(pageSize, pageNumber, results);
   }
-
 }
 
