@@ -1,0 +1,17 @@
+*/.idea
+*.iml
+
+.DS_Store
+*.bu
+
+.m2/
+
+.gradle
+
+java/target/
+java/build/
+
+lombok.config
+.terraform
+
+node_modules/
