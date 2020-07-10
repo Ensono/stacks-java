@@ -7,6 +7,7 @@ import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -37,6 +38,7 @@ import static org.mockito.Mockito.when;
                 CosmosDbRepositoriesAutoConfiguration.class,
                 CosmosAutoConfiguration.class
         })
+@Tag("Integration")
 public class MenuControllerImplTest {
 
     @LocalServerPort
@@ -107,12 +109,12 @@ public class MenuControllerImplTest {
     }
 
     private Menu createMenu(int counter) {
-      return aMenu()
-          .withDescription(counter + " Menu Description")
-          .withEnabled(true)
-          .withName(counter + " Menu")
-          .withId(UUID.randomUUID().toString())
-          .build();
+        return aMenu()
+                .withDescription(counter + " Menu Description")
+                .withEnabled(true)
+                .withName(counter + " Menu")
+                .withId(UUID.randomUUID().toString())
+                .build();
     }
 
     @Test
@@ -121,7 +123,7 @@ public class MenuControllerImplTest {
         Menu menu = createMenu(1);
         // When
         var response =
-            this.testRestTemplate.getForEntity(getBaseURL(port) + "/v1/menu", SearchMenuResult.class);
+                this.testRestTemplate.getForEntity(getBaseURL(port) + "/v1/menu", SearchMenuResult.class);
 
         // Then
         then(response.getBody()).isInstanceOf(SearchMenuResult.class);
@@ -138,8 +140,8 @@ public class MenuControllerImplTest {
 
         // When
         var response =
-          this.testRestTemplate.getForEntity(
-              String.format("%s/v1/menu?pageSize=%s", getBaseURL(port), 10), SearchMenuResult.class);
+                this.testRestTemplate.getForEntity(
+                        String.format("%s/v1/menu?pageSize=%s", getBaseURL(port), 10), SearchMenuResult.class);
 
         // Then
         then(response.getBody()).isInstanceOf(SearchMenuResult.class);
@@ -155,8 +157,8 @@ public class MenuControllerImplTest {
         Menu menu = createMenu(30);
         // When
         var response =
-          this.testRestTemplate.getForEntity(
-              String.format("%s/v1/menu?pageSize=%s", getBaseURL(port), 10), SearchMenuResult.class);
+                this.testRestTemplate.getForEntity(
+                        String.format("%s/v1/menu?pageSize=%s", getBaseURL(port), 10), SearchMenuResult.class);
 
         // Then
         then(response.getBody()).isInstanceOf(SearchMenuResult.class);
@@ -173,7 +175,7 @@ public class MenuControllerImplTest {
         Menu menu = createMenu(30);
         // When
         var response =
-            this.testRestTemplate.getForEntity(getBaseURL(port) + "/v1/menu", SearchMenuResult.class);
+                this.testRestTemplate.getForEntity(getBaseURL(port) + "/v1/menu", SearchMenuResult.class);
 
         // Then
         then(response.getBody()).isInstanceOf(SearchMenuResult.class);

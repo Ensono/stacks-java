@@ -57,13 +57,13 @@ public final class ItemBuilder {
         return item;
     }
 
-  public static Item aDefaultItem() {
-    return anItem()
-        .withAvailable(true)
-        .withDescription("Some Description")
-        .withName("1st Item")
-        .withPrice(12.34d)
-        .withId(UUID.randomUUID().toString())
-        .build();
-  }
+    public static Item aDefaultItem() {
+        return anItem()
+                .withAvailable(true)
+                .withDescription("Some Description")
+                .withName("1st Item")
+                .withPrice(12.34d)
+                .withId(UUID.randomUUID().toString())
+                .build();
+    }
 }

@@ -1,8 +1,10 @@
 package com.xxAMIDOxx.xxSTACKSxx.model;
 
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.matcher.TypeMatchers;
+import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,7 +16,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
-@SpringBootTest
+@Tag("Unit")
 public class MenuTest {
 
   @Test
