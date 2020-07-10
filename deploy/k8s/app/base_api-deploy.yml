@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   name: ${namespace}
   labels:
-    app.kubernetes.io/component: ${component}
+    app.kubernetes.io/domain: ${domain}
     app.kubernetes.io/name: ${resource_def_name}
     app.kubernetes.io/part-of: ${project}
 
@@ -26,7 +26,7 @@ metadata:
     projectID: ${project}
     version: ${version}
   labels:
-    app.kubernetes.io/component: ${component}
+    app.kubernetes.io/domain: ${domain}
     app.kubernetes.io/name: ${resource_def_name}
     app.kubernetes.io/part-of: ${project}
     environment: ${environment}
@@ -60,7 +60,7 @@ metadata:
     projectID: ${project}
     version: ${version}
   labels:
-    app.kubernetes.io/component: ${component}
+    app.kubernetes.io/domain: ${domain}
     app.kubernetes.io/name: ${resource_def_name}
     app.kubernetes.io/part-of: ${project}
     environment: ${environment}
@@ -73,7 +73,7 @@ spec:
     protocol: TCP
     targetPort: http
   selector:
-    app.kubernetes.io/component: ${component}
+    app.kubernetes.io/domain: ${domain}
     app.kubernetes.io/name: ${resource_def_name}
     app.kubernetes.io/part-of: ${project}
     environment: ${environment}
@@ -93,6 +93,7 @@ stringData:
 
 ---
 
+# Java won't need this as is
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -100,49 +101,7 @@ metadata:
   namespace: ${namespace}
 data:
   appsettings.json: |
-    {
-      "Serilog": {
-          "Using": [
-              "Serilog.Sinks.Console",
-              "Serilog.Sinks.ApplicationInsights"
-          ],
-          "MinimumLevel": {
-              "Default": "${log_level}",
-              "Override": {}
-          },
-          "WriteTo": [
-              { "Name": "Console" },
-              {
-                  "Name": "ApplicationInsights",
-                  "Args": {
-                      "telemetryConverter": "Serilog.Sinks.ApplicationInsights.Sinks.ApplicationInsights.TelemetryConverters.TraceTelemetryConverter, Serilog.Sinks.ApplicationInsights"
-                  }
-              }
-          ],
-          "Enrich": [ "FromLogContext", "WithMachineName", "WithThreadId" ],
-          "Destructure": [],
-          "Properties": {
-              "Application": "Menu API"
-          }
-      },
-      "AllowedHosts": "*",
-      "CosmosDb": {
-          "DatabaseAccountUri": "${cosmosdb_endpoint}",
-          "DatabaseName": "${cosmosdb_name}",
-          "SecurityKeySecret": {
-              "Identifier": "COSMOSDB_KEY",
-              "Source": "Environment"
-          }
-      },
-      "TestConfig": "Test value from file",
-      "Values": {
-        "Items": [
-          "Item A from config",
-          "Item B from congig",
-          "Item C from config"
-        ]
-      }
-    }
+    {}
 
 ---
 
@@ -160,7 +119,7 @@ metadata:
     version: ${version}
   labels:
     aadpodidbinding: ${aadpodidentitybinding}
-    app.kubernetes.io/component: ${component}
+    app.kubernetes.io/domain: ${domain}
     app.kubernetes.io/name: ${resource_def_name}
     app.kubernetes.io/part-of: ${project}
     environment: ${environment}
@@ -172,7 +131,7 @@ spec:
   revisionHistoryLimit: 1
   selector:
     matchLabels:
-      app.kubernetes.io/component: ${component}
+      app.kubernetes.io/domain: ${domain}
       app.kubernetes.io/name: ${resource_def_name}
       app.kubernetes.io/part-of: ${project}
       environment: ${environment}
@@ -194,7 +153,7 @@ spec:
         version: ${version}
       labels:
         aadpodidbinding: ${aadpodidentitybinding}
-        app.kubernetes.io/component: ${component}
+        app.kubernetes.io/domain: ${domain}
         app.kubernetes.io/name: ${resource_def_name}
         app.kubernetes.io/part-of: ${project}
         environment: ${environment}
