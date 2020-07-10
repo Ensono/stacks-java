@@ -100,23 +100,6 @@ public class MenuControllerImplTest {
         then(response.getBody()).isEqualTo(menu);
     }
 
-    private List<Menu> createMenus(int count) {
-        List<Menu> menuList = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            menuList.add(createMenu(i));
-        }
-        return menuList;
-    }
-
-    private Menu createMenu(int counter) {
-        return aMenu()
-                .withDescription(counter + " Menu Description")
-                .withEnabled(true)
-                .withName(counter + " Menu")
-                .withId(UUID.randomUUID().toString())
-                .build();
-    }
-
     @Test
     public void testWhenPageSizeAndNoGetsDefaultedWhenNoValueGiven() {
         // Given
@@ -184,5 +167,22 @@ public class MenuControllerImplTest {
         assertThat(actual.getPageNumber(), is(1));
         assertThat(actual.getPageSize(), is(20));
         assertThat(actual.getResults(), is(notNullValue()));
+    }
+
+    private List<Menu> createMenus(int count) {
+        List<Menu> menuList = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            menuList.add(createMenu(i));
+        }
+        return menuList;
+    }
+
+    private Menu createMenu(int counter) {
+        return aMenu()
+                .withDescription(counter + " Menu Description")
+                .withEnabled(true)
+                .withName(counter + " Menu")
+                .withId(UUID.randomUUID().toString())
+                .build();
     }
 }
