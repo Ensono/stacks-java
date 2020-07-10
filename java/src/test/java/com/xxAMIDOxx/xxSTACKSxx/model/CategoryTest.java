@@ -4,6 +4,7 @@ import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.matcher.TypeMatchers;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
                 CosmosDbRepositoriesAutoConfiguration.class,
                 CosmosAutoConfiguration.class
         })
+@Tag("Unit")
 public class CategoryTest {
 
     @MockBean
