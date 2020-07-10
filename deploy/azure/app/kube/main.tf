@@ -5,12 +5,12 @@
 
 data "azurerm_client_config" "current" {}
 
-# Naming convention 
+# Naming convention
 module "default_label" {
   source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.16.0"
   namespace  = "${var.name_company}-${var.name_project}"
   stage      = var.stage
-  name       = "${lookup(var.location_name_map, var.resource_group_location, "uksouth")}-${var.name_component}"
+  name       = "${lookup(var.location_name_map, var.resource_group_location, "euw")}-${var.name_domain}"
   attributes = var.attributes
   delimiter  = "-"
   tags       = var.tags
@@ -18,7 +18,7 @@ module "default_label" {
 
 locals {
   create_resource_group = var.use_existing_resource_group && var.resource_group_name != "" ? false : true
-  resource_group_name = var.use_existing_resource_group && var.resource_group_name != "" ? var.resource_group_name : module.default_label.id
+  resource_group_name   = var.use_existing_resource_group && var.resource_group_name != "" ? var.resource_group_name : module.default_label.id
 }
 
 resource "azurerm_resource_group" "default" {
@@ -32,7 +32,7 @@ resource "azurerm_resource_group" "default" {
 # app level DNS can/should be controlled from here
 # an alternative way of managing this would be through K8s operators
 # [TODO]: examples can be found in the deploy folders
-#### 
+####
 resource "azurerm_dns_a_record" "default" {
   name                = var.dns_record
   zone_name           = var.dns_zone_name
@@ -48,7 +48,7 @@ module "cosmosdb" {
   name_environment                     = "dev-feature"
   name_project                         = var.name_project
   name_company                         = var.name_company
-  name_component                       = var.name_component
+  name_component                       = var.name_domain
   resource_group_name                  = local.resource_group_name
   cosmosdb_sql_container               = "Menu"
   cosmosdb_sql_container_partition_key = "/id"
@@ -58,11 +58,11 @@ module "cosmosdb" {
 
 ####
 # Additional modules need to go here as they can be re-used across app deployments
-#### 
+####
 # module "observability" {
-#   source = "git://...." 
+#   source = "git://...."
 # }
 
-#### 
+####
 # Additional user defined resources or modules can go here
 ####

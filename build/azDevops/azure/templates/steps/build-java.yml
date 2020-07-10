@@ -151,6 +151,14 @@ steps:
           working_directory: "${{ parameters.project_root_dir }}"
           target_container: "${{ parameters.sonar_container }}"
           env_vars: {
+            SONAR_HOST_URL: "https://sonarcloud.io",
+            SONAR_TOKEN: $SONAR_TOKEN,
+            SONAR_PROJECT_KEY: $SONAR_PROJECT_KEY,
+            SONAR_ORGANIZATION: $SONAR_ORGANIZATION,
+            SONAR_PROJECT_NAME: $SONAR_PROJECT_NAME,
+            BUILD_NUMBER: $(docker_image_tag),
+            SONAR_SCANNER_OPTS: "",
+            # PR Sonar Variables
             SONAR_PULL_REQUEST: "$(System.PullRequest.PullRequestNumber)",
             SONAR_BRANCH_NAME: "$(System.PullRequest.SourceBranch)",
             SONAR_PR_PROVIDER: "GitHub",
