@@ -26,6 +26,7 @@ import static org.assertj.core.api.BDDAssertions.then;
                 CosmosDbRepositoriesAutoConfiguration.class,
                 CosmosAutoConfiguration.class
         })
+@Tag("Component")
 public class ActuatorTest {
 
     @Value("${local.management.port}")
@@ -38,7 +39,6 @@ public class ActuatorTest {
     private MenuRepository menuRepository;
 
     @Test
-    @Tag("Component")
     public void shouldReturn200WhenSendingRequestToHealthEndpoint() {
 
         var entity = this.testRestTemplate.getForEntity(
@@ -47,7 +47,6 @@ public class ActuatorTest {
     }
 
     @Test
-    @Tag("Component")
     public void shouldReturn200WhenSendingRequestToManagementEndpoint() {
 
         var entity = this.testRestTemplate.getForEntity(
