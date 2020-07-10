@@ -13,6 +13,7 @@ public final class MenuBuilder {
     private String id = null;
     private String name = null;
     private String description = null;
+    private String restaurantId = null;
     private List<Category> categories = null;
     private Boolean enabled = null;
 
@@ -38,6 +39,10 @@ public final class MenuBuilder {
         return this;
     }
 
+    public MenuBuilder withRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
+        return this;
+    }
     public MenuBuilder withCategories(List<Category> categories) {
         this.categories = categories;
         return this;
@@ -49,12 +54,6 @@ public final class MenuBuilder {
     }
 
     public Menu build() {
-        Menu menu = new Menu();
-        menu.setId(id);
-        menu.setName(name);
-        menu.setDescription(description);
-        menu.setCategories(categories);
-        menu.setEnabled(enabled);
-        return menu;
+        return new Menu(id, name, description, restaurantId, categories, enabled);
     }
 }

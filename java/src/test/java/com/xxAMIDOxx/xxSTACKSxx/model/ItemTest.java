@@ -1,6 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.model;
 
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.matcher.TypeMatchers;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -15,8 +16,7 @@ public class ItemTest {
   @Test
   public void testItem() {
     // Given
-    Item item =
-        anItem()
+    Item item = anItem()
             .withAvailable(true)
             .withDescription("Some Description")
             .withName("1st Item")
@@ -26,5 +26,10 @@ public class ItemTest {
 
     // When // Then
     assertThat(item, TypeMatchers.matchesItem(item));
+  }
+
+  @Test
+  public void equalsContract() {
+    EqualsVerifier.simple().forClass(Item.class).verify();
   }
 }
