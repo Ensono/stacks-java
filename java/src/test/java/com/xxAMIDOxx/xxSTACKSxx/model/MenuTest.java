@@ -7,6 +7,7 @@ import com.xxAMIDOxx.xxSTACKSxx.model.Category;
 import com.xxAMIDOxx.xxSTACKSxx.model.Item;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +30,7 @@ import static org.hamcrest.Matchers.notNullValue;
                 CosmosDbRepositoriesAutoConfiguration.class,
                 CosmosAutoConfiguration.class
         })
+@Tag("Unit")
 public class MenuTest {
 
     @MockBean
