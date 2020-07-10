@@ -1,4 +1,4 @@
-# stacks-java
+# stacks-java [![Build Status](https://dev.azure.com/amido-dev/Amido-Stacks/_apis/build/status/amido-stacks-java-springboot-aks?branchName=master)](https://dev.azure.com/amido-dev/Amido-Stacks/_build/latest?definitionId=101&branchName=master)
 Java Web API Application Scaffolding for Amido Stacks
 
 ## Run Locally
