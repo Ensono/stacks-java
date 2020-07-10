@@ -19,7 +19,7 @@ trigger:
       - '*'
   paths:
     include:
-      - 'packages/scaffolding-cli/templates/*'
+      - '*'
 
 resources:
   repositories:
