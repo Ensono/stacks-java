@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * @author James Peet
@@ -19,6 +20,9 @@ public class Menu implements Comparable<Menu> {
   @PartitionKey
   @JsonProperty("id")
   private String id = null;
+
+  @JsonProperty("TenantId")
+  private UUID restaurantId;
 
   @JsonProperty("Name")
   private String name = null;
@@ -76,6 +80,14 @@ public class Menu implements Comparable<Menu> {
     this.enabled = enabled;
   }
 
+  public UUID getRestaurantId() {
+    return restaurantId;
+  }
+
+  public void setRestaurantId(UUID restaurantId) {
+    this.restaurantId = restaurantId;
+  }
+
   @Override
   public int compareTo(Menu o) {
     return this.getId().compareTo(o.getId());
@@ -87,6 +99,7 @@ public class Menu implements Comparable<Menu> {
     if (!(o instanceof Menu)) return false;
     Menu menu = (Menu) o;
     return Objects.equals(id, menu.id) &&
+            Objects.equals(restaurantId, menu.restaurantId) &&
             Objects.equals(name, menu.name) &&
             Objects.equals(description, menu.description) &&
             Objects.equals(categories, menu.categories) &&
@@ -95,6 +108,6 @@ public class Menu implements Comparable<Menu> {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, description, categories, enabled);
+    return Objects.hash(id, restaurantId, name, description, categories, enabled);
   }
 }
