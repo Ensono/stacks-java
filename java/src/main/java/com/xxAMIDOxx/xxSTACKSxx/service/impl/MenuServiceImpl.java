@@ -27,6 +27,7 @@ public class MenuServiceImpl implements MenuService {
     public List<Menu> all(int pageNumber, int pageSize) {
 
         int currentPage = 0;
+        //TODO:  Validate all UUID's in DB and change "Name" back to "name"
         final Sort sort = Sort.by(Sort.Direction.ASC, "Name");
 
         final CosmosPageRequest pageRequest = new CosmosPageRequest(

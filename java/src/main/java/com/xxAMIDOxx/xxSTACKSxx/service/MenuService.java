@@ -11,6 +11,8 @@ import java.util.UUID;
 public interface MenuService {
 
     /**
+     * Retrieve list of all available Menus
+     *
      * @param pageNumber
      * @param pageSize
      * @return
@@ -18,12 +20,17 @@ public interface MenuService {
     List<Menu> all(int pageNumber, int pageSize);
 
     /**
+     * Retrieve Menu by Menu Id
+     *
      * @param id
      * @return
      */
     Optional<Menu> findById(UUID id);
 
     /**
+     * Retrieve Menu by Restaurant Id
+     * Pagination and sorting is done by spring data JPA.
+     *
      * @param restaurantId
      * @param pageable
      * @return
@@ -32,6 +39,9 @@ public interface MenuService {
 
 
     /**
+     * Retrieve Menu's by matching the name (Contains operation)
+     * Pagination and sorting is done by spring data JPA.
+     *
      * @param searchTerm
      * @param pageable
      * @return
@@ -39,6 +49,9 @@ public interface MenuService {
     Page<Menu> findAllByNameContaining(String searchTerm, Pageable pageable);
 
     /**
+     * Retrieve Menu's by matching the name and the restaurantId (Contains operation)
+     * Pagination and sorting is done by spring data JPA.
+     *
      * @param restaurantId
      * @param searchTerm
      * @param pageable
