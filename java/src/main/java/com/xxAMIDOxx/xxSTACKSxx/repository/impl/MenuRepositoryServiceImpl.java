@@ -19,6 +19,7 @@ import java.util.UUID;
 /**
  * MenuRepositoryServiceImpl class
  */
+
 public class MenuRepositoryServiceImpl extends SimpleCosmosRepository<Menu, String> implements MenuRepository {
 
     @Autowired
@@ -30,14 +31,14 @@ public class MenuRepositoryServiceImpl extends SimpleCosmosRepository<Menu, Stri
 
     @Override
     public Page<Menu> findAllByRestaurantId(UUID restaurantId, Pageable pageable) {
-        DocumentQuery query = new DocumentQuery(Criteria.getInstance(CriteriaType.IS_EQUAL, "restaurantId",
+        DocumentQuery query = new DocumentQuery(Criteria.getInstance(CriteriaType.IS_EQUAL, "RestaurantId",
                 Collections.singletonList(restaurantId))).with(pageable);
         return cosmosTemplate.paginationQuery(query, Menu.class, cosmosTemplate.getContainerName(Menu.class));
     }
 
     @Override
     public Page<Menu> findAllByNameContaining(String searchTerm, Pageable pageable) {
-        DocumentQuery query = new DocumentQuery(Criteria.getInstance(CriteriaType.CONTAINING, "name",
+        DocumentQuery query = new DocumentQuery(Criteria.getInstance(CriteriaType.CONTAINING, "Name",
                 Collections.singletonList(searchTerm))).with(pageable);
         return cosmosTemplate.paginationQuery(query, Menu.class, cosmosTemplate.getContainerName(Menu.class));
     }
@@ -45,6 +46,11 @@ public class MenuRepositoryServiceImpl extends SimpleCosmosRepository<Menu, Stri
 
     @Override
     public Page<Menu> findAllByRestaurantIdAndNameContaining(UUID restaurantId, String searchTerm, Pageable pageable) {
+//        DocumentQuery query = new DocumentQuery(Criteria.getInstance(CriteriaType, "Name", "RestaurantId"));
+//        DocumentQuery query = new DocumentQuery(Criteria.getInstance(CriteriaType.CONTAINING, , );
+//
+//               // Collections.singletonList(searchTerm))).with(pageable);
+//        return cosmosTemplate.paginationQuery(query, Menu.class, cosmosTemplate.getContainerName(Menu.class));
         return null;
     }
 }

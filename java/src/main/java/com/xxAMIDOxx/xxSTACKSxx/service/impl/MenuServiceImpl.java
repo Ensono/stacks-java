@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@SuppressWarnings("checkstyle:Indentation")
 @Service
 public class MenuServiceImpl implements MenuService {
 
@@ -62,7 +61,12 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public Page<Menu> findAllByRestaurantId(UUID restaurantId, Pageable pageable) {
-        return this.menuRepository.findAllByRestaurantId(restaurantId,pageable);
+        DocumentQuery query = new DocumentQuery(Criteria.getInstance(CriteriaType.IS_EQUAL, "RestaurantId",
+                Collections.singletonList(restaurantId))).with(pageable);
+        Page<Menu> menus = cosmosTemplate.paginationQuery(query, Menu.class, cosmosTemplate.getContainerName(Menu.class));
+        return menus;
+
+        //return this.menuRepository.findAllByRestaurantId(restaurantId,pageable);
     }
 
 //    @Override
