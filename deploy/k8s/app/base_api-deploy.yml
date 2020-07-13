@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   name: ${namespace}
   labels:
-    app.kubernetes.io/domain: ${domain}
+    app.kubernetes.io/component: ${component}
     app.kubernetes.io/name: ${resource_def_name}
     app.kubernetes.io/part-of: ${project}
 
@@ -20,13 +20,13 @@ metadata:
     customerID: ${company}
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/rewrite-target: /$$2
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     owner: ${company}/${project}
     projectID: ${project}
     version: ${version}
   labels:
-    app.kubernetes.io/domain: ${domain}
+    app.kubernetes.io/component: ${component}
     app.kubernetes.io/name: ${resource_def_name}
     app.kubernetes.io/part-of: ${project}
     environment: ${environment}
@@ -60,7 +60,7 @@ metadata:
     projectID: ${project}
     version: ${version}
   labels:
-    app.kubernetes.io/domain: ${domain}
+    app.kubernetes.io/component: ${component}
     app.kubernetes.io/name: ${resource_def_name}
     app.kubernetes.io/part-of: ${project}
     environment: ${environment}
@@ -73,7 +73,7 @@ spec:
     protocol: TCP
     targetPort: http
   selector:
-    app.kubernetes.io/domain: ${domain}
+    app.kubernetes.io/component: ${component}
     app.kubernetes.io/name: ${resource_def_name}
     app.kubernetes.io/part-of: ${project}
     environment: ${environment}
@@ -91,17 +91,16 @@ stringData:
   cosmos_key: ${cosmosdb_key}
   app_insights: ${app_insights_key}
 
----
+# ---
 
-# Java won't need this as is
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: appsettings
-  namespace: ${namespace}
-data:
-  appsettings.json: |
-    {}
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: appsettings
+#   namespace: ${namespace}
+# data:
+#   appsettings.json: |
+#     {
 
 ---
 
@@ -119,7 +118,7 @@ metadata:
     version: ${version}
   labels:
     aadpodidbinding: ${aadpodidentitybinding}
-    app.kubernetes.io/domain: ${domain}
+    app.kubernetes.io/component: ${component}
     app.kubernetes.io/name: ${resource_def_name}
     app.kubernetes.io/part-of: ${project}
     environment: ${environment}
@@ -131,7 +130,7 @@ spec:
   revisionHistoryLimit: 1
   selector:
     matchLabels:
-      app.kubernetes.io/domain: ${domain}
+      app.kubernetes.io/component: ${component}
       app.kubernetes.io/name: ${resource_def_name}
       app.kubernetes.io/part-of: ${project}
       environment: ${environment}
@@ -153,7 +152,7 @@ spec:
         version: ${version}
       labels:
         aadpodidbinding: ${aadpodidentitybinding}
-        app.kubernetes.io/domain: ${domain}
+        app.kubernetes.io/component: ${component}
         app.kubernetes.io/name: ${resource_def_name}
         app.kubernetes.io/part-of: ${project}
         environment: ${environment}
