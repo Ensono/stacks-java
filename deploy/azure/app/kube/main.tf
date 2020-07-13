@@ -31,6 +31,7 @@ module "app" {
   dns_zone_name                        = var.dns_zone_name
   dns_zone_resource_group              = var.dns_zone_resource_group != "" ? var.dns_zone_resource_group : var.core_resource_group
   dns_a_records                        = [data.azurerm_public_ip.app_gateway.ip_address]
+  create_cdn_endpoint                  = false
   # Alternatively if you want you can pass in the IP directly and remove the need for a lookup
   # dns_a_records                        = ["0.1.23.45"]
 }
