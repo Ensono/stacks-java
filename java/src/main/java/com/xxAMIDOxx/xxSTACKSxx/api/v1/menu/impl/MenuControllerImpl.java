@@ -10,7 +10,6 @@ import io.micrometer.core.instrument.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,15 +35,19 @@ public class MenuControllerImpl implements MenuController {
                                                        final Integer pageNumber) {
 
         List<SearchMenuResultItem> menuResultItems;
+        if (StringUtils.isNotEmpty(searchTerm) && Objects.nonNull(restaurantId) ) {
+            return ResponseEntity.ok(
+                    new SearchMenuResult(pageSize, pageNumber, getResultsByRestaurantIdAndNameContaining(searchTerm,restaurantId, pageSize, pageNumber)));
+        }
 
         if (StringUtils.isNotEmpty(searchTerm)) {
             return ResponseEntity.ok(
-                    new SearchMenuResult(pageSize, pageNumber, getSearchMenuBySearchTermAndPage(searchTerm, pageSize, pageNumber)));
+                    new SearchMenuResult(pageSize, pageNumber, getResultsByNameContaining(searchTerm, pageSize, pageNumber)));
         }
 
         if (Objects.nonNull(restaurantId)) {
             return ResponseEntity.ok(
-                    new SearchMenuResult(pageSize, pageNumber, getSearchMenuByRestaurantIdAndPage(restaurantId, pageSize, pageNumber)));
+                    new SearchMenuResult(pageSize, pageNumber, getAllResultsByRestaurantId(restaurantId, pageSize, pageNumber)));
         }
 
         List<Menu> menus = menuService.all(pageNumber, pageSize);
@@ -56,22 +59,32 @@ public class MenuControllerImpl implements MenuController {
                 new SearchMenuResult(pageSize, pageNumber, menuResultItems));
     }
 
-    private List<SearchMenuResultItem> getSearchMenuByRestaurantIdAndPage(UUID restaurantId, Integer pageSize, Integer pageNumber) {
-        final Sort sort = Sort.by(Sort.Direction.ASC, "RestaurantId");
+    private List<SearchMenuResultItem> getAllResultsByRestaurantId(UUID restaurantId, Integer pageSize, Integer pageNumber) {
+        final Sort sort = Sort.by(Sort.Direction.ASC, "restaurantId");
         final CosmosPageRequest pageRequest = new CosmosPageRequest(pageNumber, pageSize, null, sort);
-        Optional<Page<Menu>> pages = Optional.ofNullable(menuService.findAllByRestaurantId(restaurantId, pageRequest));
+        Optional<Page<Menu>> pages = Optional.ofNullable(this.menuService.findAllByRestaurantId(restaurantId, pageRequest));
         return pages.map(menus -> menus.stream().map(SearchMenuResultItem::new)
                 .collect(Collectors.toList())).orElse(Collections.emptyList());
     }
 
 
-    private List<SearchMenuResultItem> getSearchMenuBySearchTermAndPage(String searchTerm, Integer pageSize, Integer pageNumber) {
-        final Sort sort = Sort.by(Sort.Direction.ASC, "Name");
+    private List<SearchMenuResultItem> getResultsByNameContaining(String searchTerm, Integer pageSize, Integer pageNumber) {
+        final Sort sort = Sort.by(Sort.Direction.ASC, "name");
         final CosmosPageRequest pageRequest = new CosmosPageRequest(pageNumber, pageSize, null, sort);
-        Optional<Page<Menu>> pages = Optional.ofNullable(menuService.findAllByNameContaining(searchTerm, pageRequest));
+        Optional<Page<Menu>> pages = Optional.ofNullable(this.menuService.findAllByNameContaining(searchTerm, pageRequest));
         return pages.map(menus -> menus.stream().map(SearchMenuResultItem::new)
                 .collect(Collectors.toList())).orElse(Collections.emptyList());
     }
+
+    private List<SearchMenuResultItem> getResultsByRestaurantIdAndNameContaining(String searchTerm, UUID restaurantId , Integer pageSize, Integer pageNumber) {
+        final Sort sort = Sort.by(Sort.Direction.ASC, "name");
+        final CosmosPageRequest pageRequest = new CosmosPageRequest(pageNumber, pageSize, null, sort);
+        Optional<Page<Menu>> pages = Optional.ofNullable(this.menuService.findAllByRestaurantIdAndNameContaining(restaurantId,searchTerm, pageRequest));
+        return pages.map(menus -> menus.stream().map(SearchMenuResultItem::new)
+                .collect(Collectors.toList())).orElse(Collections.emptyList());
+    }
+
+
 
     @Override
     public ResponseEntity<Menu> getMenu(UUID id) {

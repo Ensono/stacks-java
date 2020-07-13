@@ -20,18 +20,18 @@ public class Menu {
   @JsonProperty("id")
   private String id;
 
-  @JsonProperty("RestaurantId")
+  @JsonProperty("restaurantId")
   private UUID restaurantId;
 
-  @JsonProperty("Name")
+  @JsonProperty("name")
   private String name;
 
-  @JsonProperty("Description")
+  @JsonProperty("description")
   private String description;
   @JsonProperty("Categories")
   private List<Category> categories;
 
-  @JsonProperty("Enabled")
+  @JsonProperty("enabled")
   private Boolean enabled;
 
   public Menu() {
@@ -63,7 +63,7 @@ public class Menu {
   }
 
   public void setRestaurantId(UUID restaurantId) {
-  this.restaurantId=restaurantId;
+  this.restaurantId = restaurantId;
   }
 
   public List<Category> getCategories() {
