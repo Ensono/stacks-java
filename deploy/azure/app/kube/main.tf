@@ -18,6 +18,7 @@ module "default_label" {
 
 module "app" {
   source                               = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-server-side-app?ref=master"
+  create_cdn_endpoint                  = var.create_cdn_endpoint
   create_cosmosdb                      = var.create_cosmosdb
   resource_namer                       = module.default_label.id
   resource_tags                        = module.default_label.tags
@@ -33,7 +34,6 @@ module "app" {
   dns_zone_resource_group              = var.dns_zone_resource_group != "" ? var.dns_zone_resource_group : var.core_resource_group
   dns_a_records                        = [data.azurerm_public_ip.app_gateway.ip_address]
   subscription_id                      = data.azurerm_client_config.current.subscription_id
-  create_cdn_endpoint                  = var.create_cdn_endpoint
   # Alternatively if you want you can pass in the IP directly and remove the need for a lookup
   # dns_a_records                        = ["0.1.23.45"]
 }
