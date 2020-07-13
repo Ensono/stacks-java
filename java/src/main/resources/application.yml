@@ -25,9 +25,10 @@ azure:
   cosmosdb:
     uri: https://amidostacksmenucdauksdev.documents.azure.com:443/
     database: Stacks
-    key: xxxxxx
+    key: xxxx
+    populateQueryMetrics:false
   application-insights:
-    instrumentation-key: xxxxxx
+    instrumentation-key: xxxx
     enabled: true
   keyvault:
     enabled: false
