@@ -55,6 +55,6 @@ public final class MenuBuilder {
     }
 
     public Menu build() {
-        return new Menu(id, name, description, restaurantId, categories, enabled);
+        return new Menu(id, restaurantId, name, description, categories, enabled);
     }
 }
