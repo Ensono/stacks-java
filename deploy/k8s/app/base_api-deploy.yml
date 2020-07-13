@@ -88,8 +88,8 @@ metadata:
   namespace: ${namespace}
 type: Opaque
 stringData:
-  cosmos_key: ${cosmosdb_key}
-  app_insights: ${app_insights_key}
+  AZURE_COSMOSDB_KEY: ${cosmosdb_key}
+  AZURE_APPLICATION_INSIGHTS_INSTRUMENTATION_KEY: ${app_insights_key}
 
 # ---
 
@@ -163,10 +163,10 @@ spec:
           # this we need to pass from the pipeline to the deployment steps
           image: ${k8s_image}
           imagePullPolicy: IfNotPresent
-          volumeMounts:
-          - name: appsettings
-            # this can either be configured if you are re-using this for many services or should be changed here
-            mountPath: /app/config
+          # volumeMounts:
+          # - name: appsettings
+          #   # this can either be configured if you are re-using this for many services or should be changed here
+          #   mountPath: /app/config
           env:
             - name: POD_NAME
               valueFrom:
