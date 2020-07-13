@@ -46,4 +46,3 @@ public interface MenuService {
      */
     Page<Menu> findAllByRestaurantIdAndNameContaining(UUID restaurantId, String searchTerm, Pageable pageable);
 }
-

@@ -32,5 +32,4 @@ public interface MenuRepository extends CosmosRepository<Menu, String> {
      * @return
      */
     Page<Menu> findAllByRestaurantIdAndNameContaining(UUID restaurantId, String searchTerm, Pageable pageable);
-
 }

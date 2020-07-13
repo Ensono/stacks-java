@@ -28,7 +28,7 @@ public class SearchMenuResultItem {
 
   public SearchMenuResultItem(Menu menu) {
     this.id = UUID.fromString(menu.getId());
-    this.restaurantId = null;
+    this.restaurantId = menu.getRestaurantId();
     this.name = menu.getName();
     this.description = menu.getDescription();
     this.enabled = menu.getEnabled();
