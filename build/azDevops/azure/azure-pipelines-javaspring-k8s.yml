@@ -311,3 +311,4 @@ stages:
                     kubectl_check_deployment: true
                     resource_def_name: "stacks-java-api"
                     namespace: "dev-java-api"
+                    deployment_status_timeout: "30s"
