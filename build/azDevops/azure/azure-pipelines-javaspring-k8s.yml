@@ -237,73 +237,73 @@ stages:
                 readarray -t outputs <<<"$raw_tf"
                 for i in "${outputs[@]}"; do echo "$i"; done
 
-      # - deployment: DeployDev
-      #   dependsOn: AppInfraDev
-      #   container: k8s_deploy
-      #   variables:
-      #     cosmosdb_database_name: $[ dependencies.AppInfraDev.outputs['tfoutputs.cosmosdb_database_name'] ]
-      #     cosmosdb_endpoint: $[ dependencies.AppInfraDev.outputs['tfoutputs.cosmosdb_endpoint'] ]
-      #     cosmosdb_primary_master_key: $[ dependencies.AppInfraDev.outputs['tfoutputs.cosmosdb_primary_master_key'] ]
-      #   pool:
-      #     vmImage: ubuntu-18.04
-      #   environment: dev
-      #   strategy:
-      #     runOnce:
-      #       deploy:
-      #         steps:
-      #           - checkout: self
-      #           - checkout: templates
-      #             persistCredentials: true
-      #           # Deploy Dev
-      #           - template: azDevOps/azure/templates/v2/steps/yaml-k8s-templater.yml@templates
-      #             parameters:
-      #               scripts_dir: $(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts
-      #               shared_env_vars: {
-      #                 namespace: dev-api,
-      #                 role: $(role),
-      #                 company: $(company),
-      #                 project: $(project),
-      #                 domain: $(domain),
-      #                 component: api,
-      #                 app_name: java-api-menu-v2,
-      #                 resource_def_name: stacks-java-api,
-      #                 version: $(docker_image_tag),
-      #                 environment: dev
-      #               }
-      #               enable_debug: "yes" # uncomment for debug and if you want to see the templated out file in the STDOUT of pipeline
-      #               template_input: [
-      #                 {
-      #                   base: $(Agent.BuildDirectory)/s/$(self_repo)/deploy/k8s/app/base_api-deploy.yml,
-      #                   displayName: AppDeployment,
-      #                   env_vars: {
-      #                     dns_pointer: netcore-api.$(base_domain),
-      #                     tls_domain: $(base_domain),
-      #                     k8s_app_path: /api/menu,
-      #                     log_level: "Debug",
-      #                     k8s_image: '$(k8s_docker_registry)/$(docker_image_name):$(docker_image_tag)',
-      #                     aadpodidentitybinding: stacks-webapp-identity,
-      #                     app_insights_key: $(APPINSIGHTS_INSTRUMENTATIONKEY),
-      #                     cosmosdb_key: $(cosmosdb_primary_master_key),
-      #                     cosmosdb_endpoint: $(cosmosdb_endpoint),
-      #                     cosmosdb_name: $(cosmosdb_database_name)
-      #                   },
-      #                   args: "-no-empty", # -no-unset is present by default
-      #                 }
-      #               ]
+      - deployment: DeployDev
+        dependsOn: AppInfraDev
+        container: k8s_deploy
+        variables:
+          cosmosdb_database_name: $[ dependencies.AppInfraDev.outputs['tfoutputs.cosmosdb_database_name'] ]
+          cosmosdb_endpoint: $[ dependencies.AppInfraDev.outputs['tfoutputs.cosmosdb_endpoint'] ]
+          cosmosdb_primary_master_key: $[ dependencies.AppInfraDev.outputs['tfoutputs.cosmosdb_primary_master_key'] ]
+        pool:
+          vmImage: ubuntu-18.04
+        environment: dev
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - checkout: templates
+                  persistCredentials: true
+                # Deploy Dev
+                - template: azDevOps/azure/templates/v2/steps/yaml-k8s-templater.yml@templates
+                  parameters:
+                    scripts_dir: $(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts
+                    shared_env_vars: {
+                      namespace: dev-api,
+                      role: $(role),
+                      company: $(company),
+                      project: $(project),
+                      domain: $(domain),
+                      component: api,
+                      app_name: java-api-menu-v2,
+                      resource_def_name: stacks-java-api,
+                      version: $(docker_image_tag),
+                      environment: dev
+                    }
+                    enable_debug: "yes" # uncomment for debug and if you want to see the templated out file in the STDOUT of pipeline
+                    template_input: [
+                      {
+                        base: $(Agent.BuildDirectory)/s/$(self_repo)/deploy/k8s/app/base_api-deploy.yml,
+                        displayName: AppDeployment,
+                        env_vars: {
+                          dns_pointer: netcore-api.$(base_domain),
+                          tls_domain: $(base_domain),
+                          k8s_app_path: /api/menu,
+                          log_level: "Debug",
+                          k8s_image: '$(k8s_docker_registry)/$(docker_image_name):$(docker_image_tag)',
+                          aadpodidentitybinding: stacks-webapp-identity,
+                          app_insights_key: $(APPINSIGHTS_INSTRUMENTATIONKEY),
+                          cosmosdb_key: $(cosmosdb_primary_master_key),
+                          cosmosdb_endpoint: $(cosmosdb_endpoint),
+                          cosmosdb_name: $(cosmosdb_database_name)
+                        },
+                        args: "-no-empty", # -no-unset is present by default
+                      }
+                    ]
 
-      #           - template: azDevOps/azure/templates/v2/steps/deploy-k8s-app-kubectl.yml@templates
-      #             parameters:
-      #               scripts_dir: $(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts
-      #               test_artefact: "tests"
-      #               test_baseurl: ""
-      #               functional_test: false
-      #               performance_test: false
-      #               smoke_test: false
-      #               # Kubernetes Config
-      #               kubernetes_clusterrg: amido-stacks-nonprod-eun-core
-      #               kubernetes_clustername: amido-stacks-nonprod-eun-core
-      #               # Mutation Information
-      #               kubectl_filepath:
-      #                 - $(Agent.BuildDirectory)/s/$(self_repo)/deploy/k8s/app/api-deploy.yml
-      #               # ReleaseNote Information
-      #               releasenote: false
+                - template: azDevOps/azure/templates/v2/steps/deploy-k8s-app-kubectl.yml@templates
+                  parameters:
+                    scripts_dir: $(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts
+                    test_artefact: "tests"
+                    test_baseurl: ""
+                    functional_test: false
+                    performance_test: false
+                    smoke_test: false
+                    # Kubernetes Config
+                    kubernetes_clusterrg: amido-stacks-nonprod-eun-core
+                    kubernetes_clustername: amido-stacks-nonprod-eun-core
+                    # Mutation Information
+                    kubectl_filepath:
+                      - $(Agent.BuildDirectory)/s/$(self_repo)/deploy/k8s/app/api-deploy.yml
+                    # ReleaseNote Information
+                    releasenote: false
