@@ -63,8 +63,7 @@ public class MenuControllerImpl implements MenuController {
         final Sort sort = Sort.by(Sort.Direction.ASC, "restaurantId");
         final CosmosPageRequest pageRequest = new CosmosPageRequest(pageNumber, pageSize, null, sort);
         Optional<Page<Menu>> pages = Optional.ofNullable(this.menuService.findAllByRestaurantId(restaurantId, pageRequest));
-        return pages.map(menus -> menus.stream().map(SearchMenuResultItem::new)
-                .collect(Collectors.toList())).orElse(Collections.emptyList());
+        return getSearchMenuResultItems(pages);
     }
 
 
@@ -72,18 +71,20 @@ public class MenuControllerImpl implements MenuController {
         final Sort sort = Sort.by(Sort.Direction.ASC, "name");
         final CosmosPageRequest pageRequest = new CosmosPageRequest(pageNumber, pageSize, null, sort);
         Optional<Page<Menu>> pages = Optional.ofNullable(this.menuService.findAllByNameContaining(searchTerm, pageRequest));
-        return pages.map(menus -> menus.stream().map(SearchMenuResultItem::new)
-                .collect(Collectors.toList())).orElse(Collections.emptyList());
+        return getSearchMenuResultItems(pages);
     }
 
     private List<SearchMenuResultItem> getResultsByRestaurantIdAndNameContaining(String searchTerm, UUID restaurantId , Integer pageSize, Integer pageNumber) {
         final Sort sort = Sort.by(Sort.Direction.ASC, "name");
         final CosmosPageRequest pageRequest = new CosmosPageRequest(pageNumber, pageSize, null, sort);
         Optional<Page<Menu>> pages = Optional.ofNullable(this.menuService.findAllByRestaurantIdAndNameContaining(restaurantId,searchTerm, pageRequest));
+        return getSearchMenuResultItems(pages);
+    }
+
+    private List<SearchMenuResultItem> getSearchMenuResultItems(Optional<Page<Menu>> pages) {
         return pages.map(menus -> menus.stream().map(SearchMenuResultItem::new)
                 .collect(Collectors.toList())).orElse(Collections.emptyList());
     }
-
 
 
     @Override
