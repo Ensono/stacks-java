@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * @author James Peet
@@ -26,7 +27,7 @@ public class Menu {
   private String description;
 
   @JsonProperty("TenantId")
-  private String restaurantId;
+  private UUID restaurantId;
 
   @JsonProperty("Categories")
   private List<Category> categories;
@@ -37,7 +38,7 @@ public class Menu {
   public Menu() {
   }
 
-  public Menu(String id, String name, String description, String restaurantId, List<Category> categories, Boolean enabled) {
+  public Menu(String id, String name, String description, UUID restaurantId, List<Category> categories, Boolean enabled) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -58,7 +59,7 @@ public class Menu {
     return description;
   }
 
-  public String getRestaurantId() {
+  public UUID getRestaurantId() {
     return restaurantId;
   }
 

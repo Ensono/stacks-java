@@ -4,6 +4,7 @@ import com.xxAMIDOxx.xxSTACKSxx.model.Category;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Builder class for Menu
@@ -13,7 +14,7 @@ public final class MenuBuilder {
     private String id = null;
     private String name = null;
     private String description = null;
-    private String restaurantId = null;
+    private UUID restaurantId = null;
     private List<Category> categories = null;
     private Boolean enabled = null;
 
@@ -39,7 +40,7 @@ public final class MenuBuilder {
         return this;
     }
 
-    public MenuBuilder withRestaurantId(String restaurantId) {
+    public MenuBuilder withRestaurantId(UUID restaurantId) {
         this.restaurantId = restaurantId;
         return this;
     }
