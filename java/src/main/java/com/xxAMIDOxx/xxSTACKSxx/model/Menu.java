@@ -28,7 +28,6 @@ public class Menu {
 
   @JsonProperty("Description")
   private String description;
-
   @JsonProperty("Categories")
   private List<Category> categories;
 
@@ -62,7 +61,7 @@ public class Menu {
   public UUID getRestaurantId() {
     return restaurantId;
   }
-  
+
   public void setRestaurantId(UUID restaurantId) {
   this.restaurantId=restaurantId;
   }

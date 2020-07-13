@@ -26,7 +26,6 @@ azure:
     uri: https://amidostacksmenucdauksdev.documents.azure.com:443/
     database: Stacks
     key: xxxx
-    populateQueryMetrics:false
   application-insights:
     instrumentation-key: xxxx
     enabled: true
