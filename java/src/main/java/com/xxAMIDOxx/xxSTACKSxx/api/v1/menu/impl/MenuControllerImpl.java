@@ -57,7 +57,7 @@ public class MenuControllerImpl implements MenuController {
     }
 
     private List<SearchMenuResultItem> getSearchMenuByRestaurantIdAndPage(UUID restaurantId, Integer pageSize, Integer pageNumber) {
-        final Sort sort = Sort.by(Sort.Direction.ASC, "Name");
+        final Sort sort = Sort.by(Sort.Direction.ASC, "RestaurantId");
         final CosmosPageRequest pageRequest = new CosmosPageRequest(pageNumber, pageSize, null, sort);
         Optional<Page<Menu>> pages = Optional.ofNullable(menuService.findAllByRestaurantId(restaurantId, pageRequest));
         return pages.map(menus -> menus.stream().map(SearchMenuResultItem::new)
@@ -78,4 +78,3 @@ public class MenuControllerImpl implements MenuController {
         return ResponseEntity.of(this.menuService.findById(id));
     }
 }
-

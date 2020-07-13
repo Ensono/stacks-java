@@ -5,7 +5,6 @@ import com.microsoft.azure.spring.data.cosmosdb.core.mapping.Document;
 import com.microsoft.azure.spring.data.cosmosdb.core.mapping.PartitionKey;
 import org.springframework.data.annotation.Id;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -14,85 +13,67 @@ import java.util.UUID;
  * @author James Peet
  */
 @Document(collection = "Menu")
-public class Menu implements Comparable<Menu> {
+public class Menu {
 
   @Id
   @PartitionKey
   @JsonProperty("id")
-  private String id = null;
+  private String id;
 
   @JsonProperty("TenantId")
   private UUID restaurantId;
 
   @JsonProperty("Name")
-  private String name = null;
+  private String name;
 
   @JsonProperty("Description")
-  private String description = null;
+  private String description;
 
   @JsonProperty("Categories")
-  @Valid
-  private List<Category> categories = null;
+  private List<Category> categories;
 
   @JsonProperty("Enabled")
-  private Boolean enabled = null;
+  private Boolean enabled;
 
   public Menu() {
+  }
+
+  public Menu(String id, UUID restaurantId, String name, String description, List<Category> categories, Boolean enabled) {
+    this.id = id;
+    this.restaurantId = restaurantId;
+    this.name = name;
+    this.description = description;
+    this.categories = categories;
+    this.enabled = enabled;
   }
 
   public String getId() {
     return id;
   }
 
-  public void setId(String id) {
-    this.id = id;
-  }
-
   public String getName() {
     return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
   public String getDescription() {
     return description;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public UUID getRestaurantId() {
+    return restaurantId;
+  }
+  
+  public void setRestaurantId(UUID restaurantId) {
+  this.restaurantId=restaurantId;
   }
 
   public List<Category> getCategories() {
     return categories;
   }
 
-  public void setCategories(List<Category> categories) {
-    this.categories = categories;
-  }
-
   public Boolean getEnabled() {
     return enabled;
   }
-
-  public void setEnabled(Boolean enabled) {
-    this.enabled = enabled;
-  }
-
-  public UUID getRestaurantId() {
-    return restaurantId;
-  }
-
-  public void setRestaurantId(UUID restaurantId) {
-    this.restaurantId = restaurantId;
-  }
-
-  @Override
-  public int compareTo(Menu o) {
-    return this.getId().compareTo(o.getId());
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

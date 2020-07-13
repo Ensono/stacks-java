@@ -44,11 +44,6 @@ public final class CategoryBuilder {
     }
 
     public Category build() {
-        Category category = new Category();
-        category.setId(id);
-        category.setName(name);
-        category.setDescription(description);
-        category.setItems(items);
-        return category;
+        return new Category(id, name, description, items);
     }
 }

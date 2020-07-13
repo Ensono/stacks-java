@@ -1,61 +1,48 @@
 package com.xxAMIDOxx.xxSTACKSxx.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Category {
 
   @JsonProperty("Id")
-  private String id = null;
+  private String id;
 
   @JsonProperty("Name")
-  private String name = null;
+  private String name;
 
   @JsonProperty("Description")
-  private String description = null;
+  private String description;
 
   @JsonProperty("Items")
-  @Valid
   private List<Item> items = new ArrayList<>();
 
   public Category() {
+  }
+
+  public Category(String id, String name, String description, List<Item> items) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.items = items;
   }
 
   public String getId() {
     return id;
   }
 
-  public void setId(String id) {
-    this.id = id;
-  }
-
   public String getName() {
     return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
   public String getDescription() {
     return description;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
   public List<Item> getItems() {
     return items;
-  }
-
-  public void setItems(List<Item> items) {
-    this.items = items;
   }
 
   @Override
