@@ -8,7 +8,7 @@
 #  ==> `$company$project$stage$componenet`                                                                                  #
 
 #############################################################################################################################
-name: "$(build.sourcebranchname)-init"
+name: "$(Build.SourceBranchName)-init"
 
 pr:
   - master
@@ -77,7 +77,7 @@ variables:
   # Versioning
   version_major: 0
   version_minor: 0
-  version_revision: $[counter(variables['version_minor'], 0)]
+  version_revision: "$[counter(join(variables['version_major'], join('-', variables['version_minor'])), 0)]"
   # Docker Config
   docker_dockerfile_path: "."
   docker_image_name: $(self_generic_name)
