@@ -36,5 +36,5 @@ jobs:
           pip3 install -I 'yamllint==${{ variables.yaml_lint_version }}'
         displayName: 'Install `yamllint`'
       - bash: |
-          python3 -m yamllint -c ./validate-yaml.conf . ./validate-yaml.conf
+          python3 -m yamllint -c ./yamllint.conf . ./yamllint.conf
         displayName: 'Validates YAML files in the repo'
