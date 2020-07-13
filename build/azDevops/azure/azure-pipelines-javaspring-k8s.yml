@@ -281,9 +281,9 @@ stages:
                         base: $(Agent.BuildDirectory)/s/$(self_repo)/deploy/k8s/app/base_api-deploy.yml,
                         displayName: AppDeployment,
                         env_vars: {
-                          dns_pointer: java-api.$(base_domain),
+                          dns_pointer: dev-java-api.$(base_domain),
                           tls_domain: $(base_domain),
-                          k8s_app_path: /api/menu,
+                          k8s_app_path: /,
                           log_level: "Debug",
                           k8s_image: '$(k8s_docker_registry)/$(docker_image_name):$(docker_image_tag)',
                           aadpodidentitybinding: stacks-webapp-identity,
