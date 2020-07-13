@@ -20,7 +20,7 @@ public class Menu {
   @JsonProperty("id")
   private String id;
 
-  @JsonProperty("TenantId")
+  @JsonProperty("RestaurantId")
   private UUID restaurantId;
 
   @JsonProperty("Name")
