@@ -69,7 +69,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 80
+  - port: 9000
     protocol: TCP
     targetPort: http
   selector:
@@ -88,8 +88,8 @@ metadata:
   namespace: ${namespace}
 type: Opaque
 stringData:
-  AZURE_COSMOSDB_KEY: ${cosmosdb_key}
-  AZURE_APPLICATION_INSIGHTS_INSTRUMENTATION_KEY: ${app_insights_key}
+  cosmos_key: ${cosmosdb_key}
+  app_insights: ${app_insights_key}
 
 # ---
 
@@ -190,14 +190,14 @@ spec:
                   fieldPath: metadata.annotations['release']
             - name: API_BASEPATH
               value: ${k8s_app_path}
-            - name: COSMOSDB_KEY
+            - name: LOG_LEVEL
+              value: debug
+            - name: AZURE_COSMOSDB_KEY
               valueFrom:
                 secretKeyRef:
                   name: appsecrets
                   key: cosmos_key
-            - name: LOG_LEVEL
-              value: debug
-            - name: APPINSIGHTS_INSTRUMENTATIONKEY
+            - name: AZURE_APPLICATION_INSIGHTS_INSTRUMENTATION_KEY
               valueFrom:
                 secretKeyRef:
                   name: appsecrets
@@ -205,12 +205,12 @@ spec:
 
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 9000
           livenessProbe:
             failureThreshold: 10
             httpGet:
               path: /health
-              port: 80
+              port: 9000
               scheme: HTTP
             initialDelaySeconds: 45
             periodSeconds: 30
@@ -220,12 +220,8 @@ spec:
             failureThreshold: 10
             httpGet:
               path: /health
-              port: 80
+              port: 9000
               scheme: HTTP
             periodSeconds: 30
             successThreshold: 1
             timeoutSeconds: 25
-      volumes:
-        - name: appsettings
-          configMap:
-            name: appsettings
