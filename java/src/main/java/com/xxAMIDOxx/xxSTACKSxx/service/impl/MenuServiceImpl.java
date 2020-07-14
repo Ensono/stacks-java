@@ -27,7 +27,7 @@ public class MenuServiceImpl implements MenuService {
     @Autowired
     private MenuRepository menuRepository;
 
-    public List<Menu> all(int pageNumber, int pageSize) {
+    public List<SearchMenuResultItem> all(int pageNumber, int pageSize) {
 
         int currentPage = 0;
         //TODO:  Validate all UUID's in DB and change "Name" back to "name"
@@ -45,7 +45,7 @@ public class MenuServiceImpl implements MenuService {
             Pageable nextPageable = page.nextPageable();
             page = menuRepository.findAll(nextPageable);
         }
-        return page.getContent();
+        return getSearchMenuResultItems(Optional.of(page));
     }
 
     public Optional<Menu> findById(UUID id) {

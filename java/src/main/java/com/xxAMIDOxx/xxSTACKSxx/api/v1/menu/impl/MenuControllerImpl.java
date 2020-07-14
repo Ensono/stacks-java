@@ -2,7 +2,6 @@ package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.impl;
 
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.MenuController;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
 import io.micrometer.core.instrument.util.StringUtils;
@@ -12,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.Objects;
 
 /**
@@ -36,7 +33,6 @@ public class MenuControllerImpl implements MenuController {
                                                        final Integer pageSize,
                                                        final Integer pageNumber) {
 
-        List<SearchMenuResultItem> menuResultItems;
         if (StringUtils.isNotEmpty(searchTerm) && Objects.nonNull(restaurantId)) {
             return ResponseEntity.ok(
                     new SearchMenuResult(pageSize, pageNumber, this.menuService.findAllByRestaurantIdAndNameContaining(restaurantId, searchTerm, pageSize, pageNumber)));
@@ -52,13 +48,8 @@ public class MenuControllerImpl implements MenuController {
                     new SearchMenuResult(pageSize, pageNumber, this.menuService.findAllByRestaurantId(restaurantId, pageSize, pageNumber)));
         }
 
-        List<Menu> menus = menuService.all(pageNumber, pageSize);
-        menuResultItems = menus.stream()
-                .map(SearchMenuResultItem::new)
-                .collect(Collectors.toList());
-
         return ResponseEntity.ok(
-                new SearchMenuResult(pageSize, pageNumber, menuResultItems));
+                new SearchMenuResult(pageSize, pageNumber, this.menuService.all(pageNumber, pageSize)));
     }
 
 

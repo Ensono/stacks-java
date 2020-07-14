@@ -74,7 +74,7 @@ public class MenuControllerImplTest {
 
         SearchMenuResult expectedMenu = new SearchMenuResult(PAGE_SIZE, PAGE_NUMBER, expectedMenuList);
 
-        when(service.all(PAGE_NUMBER, PAGE_SIZE)).thenReturn(menuList);
+        when(service.all(PAGE_NUMBER, PAGE_SIZE)).thenReturn(expectedMenuList);
 
         // When
         var result = this.testRestTemplate.getForEntity(
