@@ -23,6 +23,8 @@ public class MenuServiceImpl implements MenuService {
     private static final String NAME = "name";
     private static Logger logger = LoggerFactory.getLogger(MenuServiceImpl.class);
 
+    private static int currentPage = 0;
+
     private MenuRepository menuRepository;
 
     public MenuServiceImpl(MenuRepository menuRepository) {
@@ -30,18 +32,12 @@ public class MenuServiceImpl implements MenuService {
     }
 
     public List<Menu> findAll(int pageNumber, int pageSize) {
-        int currentPage = 0;
-        //TODO:  Validate all UUID's in DB and change "Name" back to "name"
 
+        //TODO:  Validate all UUID's in DB and change "Name" back to "name"
         Page<Menu> page = menuRepository.findAll(pageRequestWithSort(Sort.Direction.ASC, "Name", currentPage, pageSize));
         logger.debug("Total Records: {}", page.getTotalElements());
         logger.debug("Total Pages: {}", page.getTotalPages());
-
-        while (currentPage < pageNumber && page.hasNext()) {
-            currentPage++;
-            Pageable nextPageable = page.nextPageable();
-            page = menuRepository.findAll(nextPageable);
-        }
+        page = getPagination(pageNumber, page);
         return page.getContent();
     }
 
@@ -51,14 +47,17 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<Menu> findAllByRestaurantId(UUID restaurantId,
-                                                            Integer pageSize,
-                                                            Integer pageNumber) {
-        final Page<Menu> allByRestaurantId =
+                                            Integer pageSize,
+                                            Integer pageNumber) {
+        Page<Menu> page =
                 menuRepository.findAllByRestaurantId(
                         restaurantId.toString(), pageRequestWithSort(Sort.Direction.ASC,
                                 RESTAURANT_ID, pageNumber, pageSize));
 
-        return allByRestaurantId.getContent();
+        logger.debug("Total Records: {}", page.getTotalElements());
+        logger.debug("Total Pages: {}", page.getTotalPages());
+        page = getPagination(pageNumber, page);
+        return page.getContent();
     }
 
     @Override
@@ -66,20 +65,37 @@ public class MenuServiceImpl implements MenuService {
                                               Integer pageSize,
                                               Integer pageNumber) {
 
-        final Page<Menu> name = menuRepository.findAllByNameContaining(
+        Page<Menu> page = menuRepository.findAllByNameContaining(
                 searchTerm, pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize));
 
-        return name.getContent();
+        logger.debug("Total Records: {}", page.getTotalElements());
+        logger.debug("Total Pages: {}", page.getTotalPages());
+        page = getPagination(pageNumber, page);
+        return page.getContent();
     }
 
     @Override
     public List<Menu> findAllByRestaurantIdAndNameContaining(
             UUID restaurantId, String searchTerm, Integer pageSize,
             Integer pageNumber) {
-        final Page<Menu> allByRestaurantIdAndNameContaining =
+
+        Page<Menu> page =
                 menuRepository.findAllByRestaurantIdAndNameContaining(
                         restaurantId.toString(), searchTerm, pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize));
-        return allByRestaurantIdAndNameContaining.getContent();
+        logger.debug("Total Records: {}", page.getTotalElements());
+        logger.debug("Total Pages: {}", page.getTotalPages());
+        page = getPagination(pageNumber, page);
+        return page.getContent();
+    }
+
+
+    private Page<Menu> getPagination(int pageNumber, Page<Menu> page) {
+        while (currentPage < pageNumber && page.hasNext()) {
+            currentPage++;
+            Pageable nextPageable = page.nextPageable();
+            page = menuRepository.findAll(nextPageable);
+        }
+        return page;
     }
 
 }
