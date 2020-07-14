@@ -36,13 +36,18 @@ public class MenuControllerImpl implements MenuController {
         SearchMenuResult searchMenuResult;
 
         if (StringUtils.isNotEmpty(searchTerm) && Objects.nonNull(restaurantId)) {
-            searchMenuResult = new SearchMenuResult(pageSize, pageNumber, this.menuService.findAllByRestaurantIdAndNameContaining(restaurantId, searchTerm, pageSize, pageNumber));
+            searchMenuResult = new SearchMenuResult(pageSize, pageNumber,
+                    this.menuService.findAllByRestaurantIdAndNameContaining(
+                            restaurantId, searchTerm, pageSize, pageNumber));
         } else if (StringUtils.isNotEmpty(searchTerm)) {
-            searchMenuResult = new SearchMenuResult(pageSize, pageNumber, this.menuService.findAllByNameContaining(searchTerm, pageSize, pageNumber));
+            searchMenuResult = new SearchMenuResult(pageSize, pageNumber,
+                    this.menuService.findAllByNameContaining(searchTerm, pageSize, pageNumber));
         } else if (Objects.nonNull(restaurantId)) {
-            searchMenuResult = new SearchMenuResult(pageSize, pageNumber, this.menuService.findAllByRestaurantId(restaurantId, pageSize, pageNumber));
+            searchMenuResult = new SearchMenuResult(pageSize, pageNumber,
+                    this.menuService.findAllByRestaurantId(restaurantId, pageSize, pageNumber));
         } else {
-            searchMenuResult = new SearchMenuResult(pageSize, pageNumber, this.menuService.all(pageNumber, pageSize));
+            searchMenuResult = new SearchMenuResult(pageSize, pageNumber,
+                    this.menuService.all(pageNumber, pageSize));
         }
 
         return ResponseEntity.ok(searchMenuResult);
