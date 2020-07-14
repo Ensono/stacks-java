@@ -14,9 +14,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.List;
+import java.util.Collections;
 import java.util.stream.Collectors;
+import java.util.Objects;
 
+/**
+ * MenuControllerImpl - Menu Controller used to interact and manage menus API for a restaurant.
+ */
 @RestController
 public class MenuControllerImpl implements MenuController {
 
