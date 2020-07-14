@@ -1,6 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.service.impl;
 
 import com.microsoft.azure.spring.data.cosmosdb.core.query.CosmosPageRequest;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
@@ -12,9 +13,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class MenuServiceImpl implements MenuService {
@@ -50,20 +53,35 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public Page<Menu> findAllByRestaurantId(UUID restaurantId, Pageable pageable) {
-        return menuRepository.findAllByRestaurantId(restaurantId.toString(), pageable);
+    public List<SearchMenuResultItem> findAllByRestaurantId(UUID restaurantId, Integer pageSize, Integer pageNumber) {
+        final Sort sort = Sort.by(Sort.Direction.ASC, "restaurantId");
+        final CosmosPageRequest pageRequest = new CosmosPageRequest(pageNumber, pageSize, null, sort);
+        final Page<Menu> allByRestaurantId = menuRepository.findAllByRestaurantId(restaurantId.toString(), pageRequest);
+        return getSearchMenuResultItems(Optional.of(allByRestaurantId));
+    }
+
+    @Override
+    public List<SearchMenuResultItem> findAllByNameContaining(String searchTerm, Integer pageSize, Integer pageNumber) {
+        final Sort sort = Sort.by(Sort.Direction.ASC, "name");
+        final CosmosPageRequest pageRequest = new CosmosPageRequest(pageNumber, pageSize, null, sort);
+        final Page<Menu> allByNameContaining = menuRepository.findAllByNameContaining(searchTerm, pageRequest);
+        return getSearchMenuResultItems(Optional.of(allByNameContaining));
     }
 
 
     @Override
-    public Page<Menu> findAllByNameContaining(String searchTerm, Pageable pageable) {
-        return this.menuRepository.findAllByNameContaining(searchTerm, pageable);
+    public List<SearchMenuResultItem> findAllByRestaurantIdAndNameContaining(UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber) {
+        final Sort sort = Sort.by(Sort.Direction.ASC, "name");
+        final CosmosPageRequest pageRequest = new CosmosPageRequest(pageNumber, pageSize, null, sort);
+        final Page<Menu> allByRestaurantIdAndNameContaining = menuRepository.findAllByRestaurantIdAndNameContaining(restaurantId.toString(), searchTerm, pageRequest);
+        return getSearchMenuResultItems(Optional.of(allByRestaurantIdAndNameContaining));
     }
 
 
-    @Override
-    public Page<Menu> findAllByRestaurantIdAndNameContaining(UUID restaurantId, String searchTerm, Pageable pageable) {
-       return menuRepository.findAllByRestaurantIdAndNameContaining(restaurantId.toString(), searchTerm, pageable);
+    private List<SearchMenuResultItem> getSearchMenuResultItems(Optional<Page<Menu>> pages) {
+        return pages.map(menus -> menus.stream().map(SearchMenuResultItem::new)
+                .collect(Collectors.toList())).orElse(Collections.emptyList());
     }
+
 
 }

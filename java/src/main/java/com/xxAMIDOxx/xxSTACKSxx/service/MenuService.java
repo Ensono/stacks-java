@@ -1,5 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.service;
 
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,8 @@ public interface MenuService {
      *
      * @param pageNumber
      * @param pageSize
-     * @return
+     *
+     * @return List of Menu's
      */
     List<Menu> all(int pageNumber, int pageSize);
 
@@ -23,7 +25,8 @@ public interface MenuService {
      * Retrieve Menu by Menu Id
      *
      * @param id
-     * @return
+     *
+     * @return Optional Menu
      */
     Optional<Menu> findById(UUID id);
 
@@ -32,10 +35,12 @@ public interface MenuService {
      * Pagination and sorting is done by spring data JPA.
      *
      * @param restaurantId
-     * @param pageable
-     * @return
+     * @param pageSize
+     * @param pageNumber
+     *
+     * @return List of SearchMenuResultItem
      */
-    Page<Menu> findAllByRestaurantId(UUID restaurantId, Pageable pageable);
+    public List<SearchMenuResultItem> findAllByRestaurantId(UUID restaurantId, Integer pageSize, Integer pageNumber);
 
 
     /**
@@ -43,10 +48,13 @@ public interface MenuService {
      * Pagination and sorting is done by spring data JPA.
      *
      * @param searchTerm
-     * @param pageable
-     * @return
+     * @param pageSize
+     * @param pageNumber
+     *
+     *
+     * @return List of SearchMenuResultItem
      */
-    Page<Menu> findAllByNameContaining(String searchTerm, Pageable pageable);
+    public List<SearchMenuResultItem> findAllByNameContaining(String searchTerm, Integer pageSize, Integer pageNumber);
 
     /**
      * Retrieve Menu's by matching the name and the restaurantId (Contains operation)
@@ -54,8 +62,10 @@ public interface MenuService {
      *
      * @param restaurantId
      * @param searchTerm
-     * @param pageable
-     * @return
+     * @param pageSize
+     * @param pageNumber
+     *
+     * @return List of SearchMenuResultItem
      */
-    Page<Menu> findAllByRestaurantIdAndNameContaining(UUID restaurantId, String searchTerm, Pageable pageable);
+    List<SearchMenuResultItem> findAllByRestaurantIdAndNameContaining(UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber);
 }
