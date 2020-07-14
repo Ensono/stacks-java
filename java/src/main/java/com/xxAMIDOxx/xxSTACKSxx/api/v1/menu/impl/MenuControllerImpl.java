@@ -4,8 +4,8 @@ import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.MenuController;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
-import com.xxAMIDOxx.xxSTACKSxx.utils.MenuResultUtil;
-import io.micrometer.core.instrument.util.StringUtils;
+import com.xxAMIDOxx.xxSTACKSxx.utils.MenuResultUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +48,7 @@ public class MenuControllerImpl implements MenuController {
             menuList = this.menuService.findAll(pageNumber, pageSize);
         }
 
-        return ResponseEntity.ok(new SearchMenuResult(pageSize, pageNumber, MenuResultUtil.getSearchMenuResultItems(Optional.ofNullable(menuList))));
+        return ResponseEntity.ok(new SearchMenuResult(pageSize, pageNumber, MenuResultUtils.getSearchMenuResultItems(Optional.ofNullable(menuList))));
     }
 
 

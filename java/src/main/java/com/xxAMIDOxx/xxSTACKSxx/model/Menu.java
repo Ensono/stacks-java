@@ -28,7 +28,7 @@ public class Menu {
 
   @JsonProperty("description")
   private String description;
-  
+
   @JsonProperty("categories")
   private List<Category> categories;
 

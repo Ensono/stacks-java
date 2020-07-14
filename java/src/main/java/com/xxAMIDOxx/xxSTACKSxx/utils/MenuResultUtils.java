@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  *
  * @author ArathyKrishna
  */
-public class MenuResultUtil {
+public class MenuResultUtils {
 
     public static CosmosPageRequest pageRequestWithSort(Sort.Direction direction, String variable, int pageNo, int pageSize) {
         final Sort sort = Sort.by(direction, variable);
