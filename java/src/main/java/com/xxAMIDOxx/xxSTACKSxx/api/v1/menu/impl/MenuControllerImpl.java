@@ -17,7 +17,7 @@ import java.util.UUID;
 import java.util.Objects;
 
 /**
- * MenuControllerImpl - Menu Controller used to interact and manage menus API for a restaurant.
+ * MenuControllerImpl - Menu Controller used to interact and manage menus API.
  */
 @RestController
 public class MenuControllerImpl implements MenuController {
