@@ -117,7 +117,7 @@ stages:
             persistCredentials: true
 
           - bash: |
-              echo '##vso[build.updatebuildnumber]${{ parameters.docker_imagetag }}'
+              echo '##vso[build.updatebuildnumber]$(docker_image_tag)'
             displayName: 'Update: Build Number'
 
           # TODO: Refactor these steps out into a template
