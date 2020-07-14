@@ -17,7 +17,7 @@ module "default_label" {
 }
 
 module "app" {
-  source                               = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-server-side-app?ref=fix/cosmos-outputs"
+  source                               = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-server-side-app?ref=v1.3.1"
   create_cdn_endpoint                  = var.create_cdn_endpoint
   create_cosmosdb                      = var.create_cosmosdb
   resource_namer                       = module.default_label.id
