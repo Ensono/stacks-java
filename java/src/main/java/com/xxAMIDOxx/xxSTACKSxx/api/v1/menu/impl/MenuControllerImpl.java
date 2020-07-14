@@ -4,7 +4,7 @@ import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.MenuController;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
-import com.xxAMIDOxx.xxSTACKSxx.utils.UtilityMethods;
+import com.xxAMIDOxx.xxSTACKSxx.utils.MenuResultUtil;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +48,7 @@ public class MenuControllerImpl implements MenuController {
             menuList = this.menuService.findAll(pageNumber, pageSize);
         }
 
-        return ResponseEntity.ok(new SearchMenuResult(pageSize, pageNumber, UtilityMethods.getSearchMenuResultItems(Optional.ofNullable(menuList))));
+        return ResponseEntity.ok(new SearchMenuResult(pageSize, pageNumber, MenuResultUtil.getSearchMenuResultItems(Optional.ofNullable(menuList))));
     }
 
 
