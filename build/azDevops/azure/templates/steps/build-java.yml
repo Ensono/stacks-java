@@ -5,6 +5,9 @@ parameters:
   project_root_dir: ""
   dependsOn: "GetPackage"
   download_devops: true
+  # PR / Branch vars
+  branch_ref: ""
+  pull_request_number: ""
   # Custom registry (eg. private)
   customRegistry: ""
   # Docker Config
@@ -51,15 +54,9 @@ steps:
     displayName: Cache Maven packages
 
   - bash: |
-      echo "$FOO"
-      echo "$BAR"
-
-      echo '$[coalesce(variables["System.PullRequest.PullRequestNumber"], "")]'
-      echo '$[coalesce(variables["System.PullRequest.SourceBranch"], variables["Build.SourceBranch"])]'
+      echo "${{ parameters.branch_ref }}"
+      echo "${{ parameters.pull_request_name }}"
     displayName: "Test"
-    env:
-      FOO: $[coalesce(variables['System.PullRequest.PullRequestNumber'], '')]
-      BAR: $[coalesce(variables['System.PullRequest.SourceBranch'], variables['Build.SourceBranch'])]
 
   # Login to Azure/AKS
   - template: azDevOps/azure/templates/v2/steps/login-services.yml@templates
@@ -166,8 +163,8 @@ steps:
             BUILD_NUMBER: $(docker_image_tag),
             SONAR_SCANNER_OPTS: "",
             # PR Sonar Variables
-            SONAR_PULL_REQUEST: "$[coalesce(variables['System.PullRequest.PullRequestNumber'], '')]",
-            SONAR_BRANCH_NAME: "$[coalesce(variables['System.PullRequest.SourceBranch'], variables['Build.SourceBranch'])]",
+            SONAR_BRANCH_NAME: "${{ parameters.branch_ref }}",
+            SONAR_PULL_REQUEST: "${{ parameters.pull_request_number }}",
             SONAR_PR_PROVIDER: "GitHub",
             SONAR_GITHUB_REPO: "amido/stacks-java",
           }

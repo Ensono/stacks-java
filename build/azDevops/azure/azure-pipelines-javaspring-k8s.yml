@@ -77,6 +77,9 @@ variables:
   version_major: 0
   version_minor: 0
   version_revision: "$[counter(join(variables['version_major'], join('-', variables['version_minor'])), 0)]"
+  # PR / Branch vars
+  branch_ref: "$[coalesce(variables['System.PullRequest.SourceBranch'], variables['Build.SourceBranch'])]"
+  pull_request_number: "$[coalesce(variables['System.PullRequest.PullRequestNumber'], '')]"
   # Docker Config
   docker_dockerfile_path: "."
   docker_image_name: $(self_generic_name)
@@ -142,6 +145,9 @@ stages:
               # Docker Config
               build_on_server: false
               docker_build: true
+              # PR / Branch vars
+              branch_ref: "$(branch_ref)"
+              pull_request_number: "$(pull_request_number)"
               # TODO: normalize this
               docker_build_additional_args: "."
               docker_workdir: "$(Agent.BuildDirectory)/s/$(self_repo)/$(self_repo_src)"
