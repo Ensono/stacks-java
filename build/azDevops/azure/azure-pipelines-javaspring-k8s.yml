@@ -283,7 +283,7 @@ stages:
                         env_vars: {
                           dns_pointer: dev-java-api.$(base_domain),
                           tls_domain: $(base_domain),
-                          k8s_app_path: /,
+                          k8s_app_path: "/api/menu",
                           log_level: "Debug",
                           k8s_image: '$(k8s_docker_registry)/$(docker_image_name):$(docker_image_tag)',
                           aadpodidentitybinding: stacks-webapp-identity,
