@@ -33,8 +33,7 @@ public class MenuServiceImpl implements MenuService {
 
     public List<Menu> findAll(int pageNumber, int pageSize) {
 
-        //TODO:  Validate all UUID's in DB and change "Name" back to "name"
-        Page<Menu> page = menuRepository.findAll(pageRequestWithSort(Sort.Direction.ASC, "Name", currentPage, pageSize));
+        Page<Menu> page = menuRepository.findAll(pageRequestWithSort(Sort.Direction.ASC, NAME, currentPage, pageSize));
         logger.debug("Total Records: {}", page.getTotalElements());
         logger.debug("Total Pages: {}", page.getTotalPages());
         page = getPagination(pageNumber, page);
