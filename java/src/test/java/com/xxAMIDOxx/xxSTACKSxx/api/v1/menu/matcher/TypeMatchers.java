@@ -13,9 +13,9 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 
 /**
- * Hamcrest Type Matchers for objects
+ * Hamcrest Matchers for objects
  *
- * @author ArathyKrishnas
+ * @author ArathyKrishna
  */
 public class TypeMatchers {
 
@@ -47,6 +47,7 @@ public class TypeMatchers {
         hasProperty("name", is(expected.getName())),
         hasProperty("description", is(expected.getDescription())),
         hasProperty("enabled", is(expected.getEnabled())),
+        hasProperty("restaurantId", is(expected.getRestaurantId())),
         hasProperty(
             "categories",
             containsInAnyOrder(

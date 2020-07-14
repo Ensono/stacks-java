@@ -17,13 +17,13 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.xxAMIDOxx.xxSTACKSxx.builder.MenuBuilder.aMenu;
+import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.createMenu;
+import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.createMenus;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -167,22 +167,5 @@ public class MenuControllerImplTest {
         assertThat(actual.getPageNumber(), is(1));
         assertThat(actual.getPageSize(), is(20));
         assertThat(actual.getResults(), is(notNullValue()));
-    }
-
-    private List<Menu> createMenus(int count) {
-        List<Menu> menuList = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            menuList.add(createMenu(i));
-        }
-        return menuList;
-    }
-
-    private Menu createMenu(int counter) {
-        return aMenu()
-                .withDescription(counter + " Menu Description")
-                .withEnabled(true)
-                .withName(counter + " Menu")
-                .withId(UUID.randomUUID().toString())
-                .build();
     }
 }
