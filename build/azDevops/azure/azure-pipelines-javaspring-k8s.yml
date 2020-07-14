@@ -58,6 +58,7 @@ variables:
   # If you haven't specified source_repo at cli runtime please ensure you replace it here
   # It is case sensitive for TFS based repos
   self_repo: stacks-java
+  self_remote_repo: "amido/$(self_repo)"
   self_repo_src: java
   self_repo_tf_src: deploy/azure/app/kube
   self_generic_name: stacks-api
@@ -78,8 +79,9 @@ variables:
   version_minor: 0
   version_revision: "$[counter(join(variables['version_major'], join('-', variables['version_minor'])), 0)]"
   # PR / Branch vars
-  branch_ref: "$[coalesce(variables['System.PullRequest.SourceBranch'], variables['Build.SourceBranch'])]"
-  pull_request_number: "$[coalesce(variables['System.PullRequest.PullRequestNumber'], '')]"
+  source_branch_ref: "$[coalesce(variables['System.PullRequest.SourceBranch'], variables['Build.SourceBranch'])]"
+  target_branch_ref: "$[coalesce(variables['System.PullRequest.TargetBranch'], '')]"
+  pullrequest_number: "$[coalesce(variables['System.PullRequest.PullRequestNumber'], variables['System.PullRequest.PullRequestId'], '')]"
   # Docker Config
   docker_dockerfile_path: "."
   docker_image_name: $(self_generic_name)
@@ -146,8 +148,9 @@ stages:
               build_on_server: false
               docker_build: true
               # PR / Branch vars
-              branch_ref: "$(branch_ref)"
-              pull_request_number: "$(pull_request_number)"
+              source_branch_ref: "$(source_branch_ref)"
+              target_branch_ref: "$(target_branch_ref)"
+              pullrequest_number: "$(pullrequest_number)"
               # TODO: normalize this
               docker_build_additional_args: "."
               docker_workdir: "$(Agent.BuildDirectory)/s/$(self_repo)/$(self_repo_src)"
@@ -160,6 +163,8 @@ stages:
               # Sonar settings
               static_code_analysis: true
               sonar_container: sonar_scanner
+              sonar_pullrequest_provider: "GitHub" # Probably `GitHub` or `vsts`
+              sonar_remote_repo: "$(self_remote_repo)"
               #Linting and formatting validation
               lint_formatting: false
               shared_eslint_config: "@amidostacks/eslint-config@latest"
