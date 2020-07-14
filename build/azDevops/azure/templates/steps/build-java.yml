@@ -50,6 +50,11 @@ steps:
       path: "${{ parameters.project_root_dir }}/.m2"
     displayName: Cache Maven packages
 
+  - bash: |
+      echo $[coalesce(variables['System.PullRequest.PullRequestNumber'], '')]
+      echo $[coalesce(variables['System.PullRequest.SourceBranch'], variables['Build.SourceBranch'])]
+    displayName: "Test"
+
   # Login to Azure/AKS
   - template: azDevOps/azure/templates/v2/steps/login-services.yml@templates
     parameters:
@@ -155,8 +160,8 @@ steps:
             BUILD_NUMBER: $(docker_image_tag),
             SONAR_SCANNER_OPTS: "",
             # PR Sonar Variables
-            SONAR_PULL_REQUEST: "$(coalesce(variables['System.PullRequest.PullRequestNumber'], ''))",
-            SONAR_BRANCH_NAME: "$(coalesce(variables['System.PullRequest.SourceBranch'], variables['Build.SourceBranch']))",
+            SONAR_PULL_REQUEST: "$[coalesce(variables['System.PullRequest.PullRequestNumber'], '')]",
+            SONAR_BRANCH_NAME: "$[coalesce(variables['System.PullRequest.SourceBranch'], variables['Build.SourceBranch'])]",
             SONAR_PR_PROVIDER: "GitHub",
             SONAR_GITHUB_REPO: "amido/stacks-java",
           }
