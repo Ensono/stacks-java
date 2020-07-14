@@ -1,6 +1,5 @@
 package com.xxAMIDOxx.xxSTACKSxx.service;
 
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 
 import java.util.List;
@@ -15,9 +14,9 @@ public interface MenuService {
      * @param pageNumber
      * @param pageSize
      *
-     * @return List of SearchMenuResultItem's
+     * @return List of Menu
      */
-    List<SearchMenuResultItem> all(int pageNumber, int pageSize);
+    List<Menu> all(int pageNumber, int pageSize);
 
     /**
      * Retrieve Menu by Menu Id
@@ -36,9 +35,9 @@ public interface MenuService {
      * @param pageSize
      * @param pageNumber
      *
-     * @return List of SearchMenuResultItem
+     * @return List of Menu
      */
-    public List<SearchMenuResultItem> findAllByRestaurantId(UUID restaurantId, Integer pageSize, Integer pageNumber);
+    public List<Menu> findAllByRestaurantId(UUID restaurantId, Integer pageSize, Integer pageNumber);
 
 
     /**
@@ -50,9 +49,9 @@ public interface MenuService {
      * @param pageNumber
      *
      *
-     * @return List of SearchMenuResultItem
+     * @return List of Menu
      */
-    public List<SearchMenuResultItem> findAllByNameContaining(String searchTerm, Integer pageSize, Integer pageNumber);
+    public List<Menu> findAllByNameContaining(String searchTerm, Integer pageSize, Integer pageNumber);
 
     /**
      * Retrieve Menu's by matching the name and the restaurantId (Contains operation)
@@ -63,7 +62,7 @@ public interface MenuService {
      * @param pageSize
      * @param pageNumber
      *
-     * @return List of SearchMenuResultItem
+     * @return List of Menu
      */
-    List<SearchMenuResultItem> findAllByRestaurantIdAndNameContaining(UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber);
+    List<Menu> findAllByRestaurantIdAndNameContaining(UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber);
 }

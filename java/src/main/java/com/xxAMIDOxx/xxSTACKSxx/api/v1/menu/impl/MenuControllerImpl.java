@@ -4,12 +4,15 @@ import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.MenuController;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
+import com.xxAMIDOxx.xxSTACKSxx.utils.UtilityMethods;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.Objects;
 
@@ -33,24 +36,19 @@ public class MenuControllerImpl implements MenuController {
                                                        final Integer pageSize,
                                                        final Integer pageNumber) {
 
-        SearchMenuResult searchMenuResult;
+        List<Menu> menuList;
 
         if (StringUtils.isNotEmpty(searchTerm) && Objects.nonNull(restaurantId)) {
-            searchMenuResult = new SearchMenuResult(pageSize, pageNumber,
-                    this.menuService.findAllByRestaurantIdAndNameContaining(
-                            restaurantId, searchTerm, pageSize, pageNumber));
+            menuList = this.menuService.findAllByRestaurantIdAndNameContaining(restaurantId, searchTerm, pageSize, pageNumber);
         } else if (StringUtils.isNotEmpty(searchTerm)) {
-            searchMenuResult = new SearchMenuResult(pageSize, pageNumber,
-                    this.menuService.findAllByNameContaining(searchTerm, pageSize, pageNumber));
+            menuList = this.menuService.findAllByNameContaining(searchTerm, pageSize, pageNumber);
         } else if (Objects.nonNull(restaurantId)) {
-            searchMenuResult = new SearchMenuResult(pageSize, pageNumber,
-                    this.menuService.findAllByRestaurantId(restaurantId, pageSize, pageNumber));
+            menuList = this.menuService.findAllByRestaurantId(restaurantId, pageSize, pageNumber);
         } else {
-            searchMenuResult = new SearchMenuResult(pageSize, pageNumber,
-                    this.menuService.all(pageNumber, pageSize));
+            menuList = this.menuService.all(pageNumber, pageSize);
         }
 
-        return ResponseEntity.ok(searchMenuResult);
+        return ResponseEntity.ok(new SearchMenuResult(pageSize, pageNumber, UtilityMethods.getSearchMenuResultItems(Optional.ofNullable(menuList))));
     }
 
 

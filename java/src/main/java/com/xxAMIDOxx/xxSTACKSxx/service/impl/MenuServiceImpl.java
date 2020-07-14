@@ -1,6 +1,5 @@
 package com.xxAMIDOxx.xxSTACKSxx.service.impl;
 
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
@@ -11,17 +10,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static com.xxAMIDOxx.xxSTACKSxx.utils.UtilityMethods.pageRequestWithSort;
 
 @Service
 public class MenuServiceImpl implements MenuService {
 
+    private static final String RESTAURANT_ID = "restaurantId";
+    private static final String NAME = "name";
     private static Logger logger = LoggerFactory.getLogger(MenuServiceImpl.class);
 
     private MenuRepository menuRepository;
@@ -30,8 +29,7 @@ public class MenuServiceImpl implements MenuService {
         this.menuRepository = menuRepository;
     }
 
-    public List<SearchMenuResultItem> all(int pageNumber, int pageSize) {
-
+    public List<Menu> all(int pageNumber, int pageSize) {
         int currentPage = 0;
         //TODO:  Validate all UUID's in DB and change "Name" back to "name"
 
@@ -44,7 +42,7 @@ public class MenuServiceImpl implements MenuService {
             Pageable nextPageable = page.nextPageable();
             page = menuRepository.findAll(nextPageable);
         }
-        return getSearchMenuResultItems(Optional.of(page));
+        return page.getContent();
     }
 
     public Optional<Menu> findById(UUID id) {
@@ -52,39 +50,36 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public List<SearchMenuResultItem> findAllByRestaurantId(UUID restaurantId,
+    public List<Menu> findAllByRestaurantId(UUID restaurantId,
                                                             Integer pageSize,
                                                             Integer pageNumber) {
         final Page<Menu> allByRestaurantId =
                 menuRepository.findAllByRestaurantId(
                         restaurantId.toString(), pageRequestWithSort(Sort.Direction.ASC,
-                                "restaurantId", pageNumber, pageSize));
-        return getSearchMenuResultItems(Optional.of(allByRestaurantId));
+                                RESTAURANT_ID, pageNumber, pageSize));
+
+        return allByRestaurantId.getContent();
     }
 
     @Override
-    public List<SearchMenuResultItem> findAllByNameContaining(String searchTerm,
-                                                              Integer pageSize,
-                                                              Integer pageNumber) {
-        final Page<Menu> allByNameContaining =
-                menuRepository.findAllByNameContaining(
-                        searchTerm, pageRequestWithSort(Sort.Direction.ASC, "Name", pageNumber, pageSize));
-        return getSearchMenuResultItems(Optional.of(allByNameContaining));
+    public List<Menu> findAllByNameContaining(String searchTerm,
+                                              Integer pageSize,
+                                              Integer pageNumber) {
+
+        final Page<Menu> name = menuRepository.findAllByNameContaining(
+                searchTerm, pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize));
+
+        return name.getContent();
     }
 
     @Override
-    public List<SearchMenuResultItem> findAllByRestaurantIdAndNameContaining(
+    public List<Menu> findAllByRestaurantIdAndNameContaining(
             UUID restaurantId, String searchTerm, Integer pageSize,
             Integer pageNumber) {
         final Page<Menu> allByRestaurantIdAndNameContaining =
                 menuRepository.findAllByRestaurantIdAndNameContaining(
-                        restaurantId.toString(), searchTerm, pageRequestWithSort(Sort.Direction.ASC, "Name", pageNumber, pageSize));
-        return getSearchMenuResultItems(Optional.of(allByRestaurantIdAndNameContaining));
+                        restaurantId.toString(), searchTerm, pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize));
+        return allByRestaurantIdAndNameContaining.getContent();
     }
 
-    private List<SearchMenuResultItem> getSearchMenuResultItems(
-            Optional<Page<Menu>> pages) {
-        return pages.map(menus -> menus.stream().map(SearchMenuResultItem::new)
-                .collect(Collectors.toList())).orElse(Collections.emptyList());
-    }
 }
