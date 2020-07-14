@@ -24,8 +24,11 @@ public class MenuServiceImpl implements MenuService {
 
     private static Logger logger = LoggerFactory.getLogger(MenuServiceImpl.class);
 
-    @Autowired
     private MenuRepository menuRepository;
+
+    public MenuServiceImpl(MenuRepository menuRepository) {
+        this.menuRepository = menuRepository;
+    }
 
     public List<SearchMenuResultItem> all(int pageNumber, int pageSize) {
 
