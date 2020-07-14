@@ -116,6 +116,10 @@ stages:
           - checkout: templates
             persistCredentials: true
 
+          - bash: |
+              echo '##vso[build.updatebuildnumber]${{ parameters.docker_imagetag }}'
+            displayName: 'Update: Build Number'
+
           # TODO: Refactor these steps out into a template
           - bash: |
               terraform fmt -diff -check -recursive
@@ -321,4 +325,4 @@ stages:
                     kubectl_check_deployment: true
                     resource_def_name: "$(resource_def_name)"
                     namespace: "$(namespace)"
-                    deployment_status_timeout: "45s"
+                    deployment_status_timeout: "60s"
