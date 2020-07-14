@@ -244,13 +244,17 @@ stages:
         container: k8s_deploy
         variables:
           - name: cosmosdb_database_name
-            value: $[ dependencies.AppInfraDev.outputs['tfoutputs.cosmosdb_database_name'] ]
+            value: "$[ dependencies.AppInfraDev.outputs['tfoutputs.cosmosdb_database_name'] ]"
           - name: cosmosdb_endpoint
-            value: $[ dependencies.AppInfraDev.outputs['tfoutputs.cosmosdb_endpoint'] ]
+            value: "$[ dependencies.AppInfraDev.outputs['tfoutputs.cosmosdb_endpoint'] ]"
           - name: cosmosdb_primary_master_key
             value: $[ dependencies.AppInfraDev.outputs['tfoutputs.cosmosdb_primary_master_key'] ]
           - name: app_insights_instrumentation_key
             value: $[ dependencies.AppInfraDev.outputs['tfoutputs.app_insights_instrumentation_key'] ]
+          - name: resource_def_name
+            value: "stacks-java-api"
+          - name: namespace
+            value: "dev-java-api"
           # - group: amido-stacks-java-api
         pool:
           vmImage: ubuntu-18.04
@@ -267,14 +271,14 @@ stages:
                   parameters:
                     scripts_dir: $(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts
                     shared_env_vars: {
-                      namespace: dev-java-api,
+                      namespace: $(namespace),
                       role: $(role),
                       company: $(company),
                       project: $(project),
                       domain: $(domain),
                       component: api,
                       app_name: java-api,
-                      resource_def_name: stacks-java-api,
+                      resource_def_name: "$(resource_def_name)",
                       version: $(docker_image_tag),
                       environment: dev
                     }
@@ -303,7 +307,7 @@ stages:
                   parameters:
                     scripts_dir: $(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts
                     test_artefact: "tests"
-                    test_baseurl: ""
+                    test_baseurl: "/"
                     functional_test: false
                     performance_test: false
                     smoke_test: false
@@ -316,6 +320,6 @@ stages:
                     # ReleaseNote Information
                     releasenote: false
                     kubectl_check_deployment: true
-                    resource_def_name: "stacks-java-api"
-                    namespace: "dev-java-api"
-                    deployment_status_timeout: "30s"
+                    resource_def_name: "$(resource_def_name)"
+                    namespace: "$(namespace)"
+                    deployment_status_timeout: "45s"
