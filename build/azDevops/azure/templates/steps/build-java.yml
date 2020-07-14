@@ -159,7 +159,7 @@ steps:
       - bash: |
           set -euxo pipefail
           if [ -z "${{ parameters.pullrequest_number }}" ]; then
-            EXTRA_SONAR_ARGUMENTS=""
+            EXTRA_SONAR_ARGUMENTS="-Dsonar.branch.target='${{ parameters.target_branch_ref }}'"
           else
             PROVIDER_LOWERCASED="$(echo "${{ parameters.sonar_pullrequest_provider }}" | tr '[:upper:]' '[:lower:]')"
 
@@ -180,7 +180,7 @@ steps:
         parameters:
           working_directory: "${{ parameters.project_root_dir }}"
           target_container: "${{ parameters.sonar_container }}"
-          extra_arguments: "-Dsonar.branch.name='${{ parameters.source_branch_ref }}' -Dsonar.branch.target='${{ parameters.target_branch_ref }}' $(bash_extra_sonar_arguments)"
+          extra_arguments: "-Dsonar.branch.name='${{ parameters.source_branch_ref }}' $(bash_extra_sonar_arguments)"
           env_vars: {
             SONAR_HOST_URL: "https://sonarcloud.io",
             SONAR_TOKEN: $SONAR_TOKEN,
