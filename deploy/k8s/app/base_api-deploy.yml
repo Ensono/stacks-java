@@ -40,7 +40,7 @@ spec:
       - backend:
           serviceName: ${resource_def_name}
           servicePort: 80
-        path: ${k8s_app_path}(.*)(.*)
+        path: ${k8s_app_path}(/|$)(.*)
   tls:
   - hosts:
     - ${tls_domain}

@@ -255,7 +255,6 @@ stages:
             value: "stacks-java-api"
           - name: namespace
             value: "dev-java-api"
-          # - group: amido-stacks-java-api
         pool:
           vmImage: ubuntu-18.04
         environment: dev
