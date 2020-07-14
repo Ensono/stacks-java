@@ -29,7 +29,7 @@ public class MenuServiceImpl implements MenuService {
         this.menuRepository = menuRepository;
     }
 
-    public List<Menu> all(int pageNumber, int pageSize) {
+    public List<Menu> findAll(int pageNumber, int pageSize) {
         int currentPage = 0;
         //TODO:  Validate all UUID's in DB and change "Name" back to "name"
 

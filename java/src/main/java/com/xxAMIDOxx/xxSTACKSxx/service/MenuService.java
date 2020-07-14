@@ -16,7 +16,7 @@ public interface MenuService {
      *
      * @return List of Menu
      */
-    List<Menu> all(int pageNumber, int pageSize);
+    List<Menu> findAll(int pageNumber, int pageSize);
 
     /**
      * Retrieve Menu by Menu Id

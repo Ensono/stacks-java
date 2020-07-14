@@ -45,7 +45,7 @@ public class MenuControllerImpl implements MenuController {
         } else if (Objects.nonNull(restaurantId)) {
             menuList = this.menuService.findAllByRestaurantId(restaurantId, pageSize, pageNumber);
         } else {
-            menuList = this.menuService.all(pageNumber, pageSize);
+            menuList = this.menuService.findAll(pageNumber, pageSize);
         }
 
         return ResponseEntity.ok(new SearchMenuResult(pageSize, pageNumber, UtilityMethods.getSearchMenuResultItems(Optional.ofNullable(menuList))));
