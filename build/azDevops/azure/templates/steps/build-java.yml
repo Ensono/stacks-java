@@ -51,8 +51,8 @@ steps:
     displayName: Cache Maven packages
 
   - bash: |
-      echo $[coalesce(variables['System.PullRequest.PullRequestNumber'], '')]
-      echo $[coalesce(variables['System.PullRequest.SourceBranch'], variables['Build.SourceBranch'])]
+      echo "$[coalesce(variables['System.PullRequest.PullRequestNumber'], '')]"
+      echo "$[coalesce(variables['System.PullRequest.SourceBranch'], variables['Build.SourceBranch'])]"
     displayName: "Test"
 
   # Login to Azure/AKS
