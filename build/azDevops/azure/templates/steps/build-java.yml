@@ -41,10 +41,6 @@ parameters:
   git_release_tag: ""
 
 steps:
-  - bash: |
-      echo '##vso[build.updatebuildnumber]${{ parameters.docker_imagetag }}'
-    displayName: 'Update: Build Number'
-
   - task: Cache@2
     inputs:
       key: 'maven | "$(Agent.OS)" | ${{ parameters.project_root_dir }}/pom.xml'
@@ -159,8 +155,8 @@ steps:
             BUILD_NUMBER: $(docker_image_tag),
             SONAR_SCANNER_OPTS: "",
             # PR Sonar Variables
-            SONAR_PULL_REQUEST: "$(System.PullRequest.PullRequestNumber)",
-            SONAR_BRANCH_NAME: "$(System.PullRequest.SourceBranch)",
+            SONAR_PULL_REQUEST: "$[coalesce(variables['System.PullRequest.PullRequestNumber'], '']",
+            SONAR_BRANCH_NAME: "$[coalesce(variables['System.PullRequest.SourceBranch'], variables['Build.SourceBranch']]",
             SONAR_PR_PROVIDER: "GitHub",
             SONAR_GITHUB_REPO: "amido/stacks-java",
           }
