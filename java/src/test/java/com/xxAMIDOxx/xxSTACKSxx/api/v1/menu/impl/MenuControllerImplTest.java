@@ -17,9 +17,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.createMenu;
@@ -68,20 +66,26 @@ public class MenuControllerImplTest {
         final UUID RESTAURANT_ID = randomUUID();
 
         List<Menu> menuList = createMenus(3);
-        List<SearchMenuResultItem> expectedMenuList = menuList.stream()
+        Menu match = menuList.get(0);
+        match.setRestaurantId(RESTAURANT_ID);
+        menuList.add(match);
+        List<Menu> matching = Collections.singletonList(match);
+
+        List<SearchMenuResultItem> expectedMenuList = matching.stream()
                 .map(SearchMenuResultItem::new)
                 .collect(Collectors.toList());
 
-        SearchMenuResult expectedMenu = new SearchMenuResult(PAGE_SIZE, PAGE_NUMBER, expectedMenuList);
+        SearchMenuResult expectedResponse = new SearchMenuResult(
+                PAGE_SIZE, PAGE_NUMBER, expectedMenuList);
 
-        when(service.findAll(PAGE_NUMBER, PAGE_SIZE)).thenReturn(menuList);
+    when(service.findAllByRestaurantId(RESTAURANT_ID, PAGE_SIZE, PAGE_NUMBER)).thenReturn(matching);
 
         // When
         var result = this.testRestTemplate.getForEntity(
                 String.format("%s/v1/menu?restaurantId=%s", getBaseURL(port), RESTAURANT_ID),
                 SearchMenuResult.class);
         // Then
-        then(result.getBody()).isEqualTo(expectedMenu);
+        then(result.getBody()).isEqualTo(expectedResponse);
     }
 
     @Test

@@ -14,16 +14,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.xxAMIDOxx.xxSTACKSxx.utils.MenuResultUtils.pageRequestWithSort;
+import static com.xxAMIDOxx.xxSTACKSxx.service.CosmosHelper.pageRequestWithSort;
 
 @Service
 public class MenuServiceImpl implements MenuService {
 
-    private static final String RESTAURANT_ID = "restaurantId";
     private static final String NAME = "name";
     private static Logger logger = LoggerFactory.getLogger(MenuServiceImpl.class);
-
-    private static int currentPage = 0;
 
     private MenuRepository menuRepository;
 
@@ -31,32 +28,38 @@ public class MenuServiceImpl implements MenuService {
         this.menuRepository = menuRepository;
     }
 
-    public List<Menu> findAll(int pageNumber, int pageSize) {
-
-        Page<Menu> page = menuRepository.findAll(pageRequestWithSort(Sort.Direction.ASC, NAME, currentPage, pageSize));
-        logger.debug("Total Records: {}", page.getTotalElements());
-        logger.debug("Total Pages: {}", page.getTotalPages());
-        page = getPagination(pageNumber, page);
-        return page.getContent();
-    }
-
     public Optional<Menu> findById(UUID id) {
         return menuRepository.findById(id.toString());
+    }
+
+    public List<Menu> findAll(int pageNumber, int pageSize) {
+
+        Page<Menu> page = menuRepository.findAll(
+                pageRequestWithSort(Sort.Direction.ASC, NAME, 0, pageSize));
+
+        int currentPage = 0;
+
+        // This is specific and needed due to the way in which CosmosDB handles pagination
+        // using a continuationToken and a limitation in the Swagger Specification.
+        // See https://github.com/Azure/azure-sdk-for-java/issues/12726
+        while (currentPage < pageNumber && page.hasNext()) {
+            currentPage++;
+            Pageable nextPageable = page.nextPageable();
+            page = menuRepository.findAll(nextPageable);
+        }
+
+        return page.getContent();
     }
 
     @Override
     public List<Menu> findAllByRestaurantId(UUID restaurantId,
                                             Integer pageSize,
                                             Integer pageNumber) {
-        Page<Menu> page =
-                menuRepository.findAllByRestaurantId(
-                        restaurantId.toString(), pageRequestWithSort(Sort.Direction.ASC,
-                                RESTAURANT_ID, pageNumber, pageSize));
 
-        logger.debug("Total Records: {}", page.getTotalElements());
-        logger.debug("Total Pages: {}", page.getTotalPages());
-        page = getPagination(pageNumber, page);
-        return page.getContent();
+        return menuRepository.findAllByRestaurantId(
+                restaurantId.toString(),
+                pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize))
+                .getContent();
     }
 
     @Override
@@ -64,37 +67,21 @@ public class MenuServiceImpl implements MenuService {
                                               Integer pageSize,
                                               Integer pageNumber) {
 
-        Page<Menu> page = menuRepository.findAllByNameContaining(
-                searchTerm, pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize));
-
-        logger.debug("Total Records: {}", page.getTotalElements());
-        logger.debug("Total Pages: {}", page.getTotalPages());
-        page = getPagination(pageNumber, page);
-        return page.getContent();
+        return menuRepository.findAllByNameContaining(
+                searchTerm,
+                pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize))
+                .getContent();
     }
 
     @Override
-    public List<Menu> findAllByRestaurantIdAndNameContaining(
-            UUID restaurantId, String searchTerm, Integer pageSize,
-            Integer pageNumber) {
+    public List<Menu> findAllByRestaurantIdAndNameContaining(UUID restaurantId,
+                                                             String searchTerm,
+                                                             Integer pageSize,
+                                                             Integer pageNumber) {
 
-        Page<Menu> page =
-                menuRepository.findAllByRestaurantIdAndNameContaining(
-                        restaurantId.toString(), searchTerm, pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize));
-        logger.debug("Total Records: {}", page.getTotalElements());
-        logger.debug("Total Pages: {}", page.getTotalPages());
-        page = getPagination(pageNumber, page);
-        return page.getContent();
+        return menuRepository.findAllByRestaurantIdAndNameContaining(
+                restaurantId.toString(), searchTerm,
+                pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize))
+                .getContent();
     }
-
-
-    private Page<Menu> getPagination(int pageNumber, Page<Menu> page) {
-        while (currentPage < pageNumber && page.hasNext()) {
-            currentPage++;
-            Pageable nextPageable = page.nextPageable();
-            page = menuRepository.findAll(nextPageable);
-        }
-        return page;
-    }
-
 }
