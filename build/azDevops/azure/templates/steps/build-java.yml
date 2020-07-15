@@ -56,25 +56,6 @@ steps:
       path: "${{ parameters.project_root_dir }}/.m2"
     displayName: Cache Maven packages
 
-  - bash: |
-      set -euxo pipefail
-
-      function strip_refs()
-      {
-        local BRANCH_REF=$1
-
-        RETURN_BRANCH="$(sed -e "s%^refs/\(heads\|tags\)/%%" <<< $BRANCH_REF)"
-      }
-
-      strip_refs "${{ parameters.source_branch_ref }}"
-      echo "Source Branch :$RETURN_BRANCH:"
-      strip_refs "${{ parameters.target_branch_ref }}"
-      echo "Target Branch :$RETURN_BRANCH:"
-      echo "PR Number :${{ parameters.pullrequest_number }}:"
-      echo "PR Provider :${{ parameters.sonar_pullrequest_provider }}:"
-      echo "Sonar Remote Repo :${{ parameters.sonar_remote_repo }}:"
-    displayName: "Test"
-
   # Login to Azure/AKS
   - template: azDevOps/azure/templates/v2/steps/login-services.yml@templates
     parameters:

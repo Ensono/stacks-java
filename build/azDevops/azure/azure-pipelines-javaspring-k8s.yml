@@ -25,7 +25,7 @@ resources:
     - repository: templates
       type: github
       name: amido/stacks-pipeline-templates
-      ref: refs/heads/add/kubectl-rollout
+      ref: refs/tags/v1.4.5
       # EXCHANGE THIS FOR YOUR OWN ENDPOINT CONNECTION TO GITHUB
       # REPOSITORY IS PUBLIC
       endpoint: amidostacks
