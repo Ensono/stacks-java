@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.createMenus;
+import static com.xxAMIDOxx.xxSTACKSxx.model.MenuHelper.createMenus;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -23,14 +23,14 @@ public class MenuServiceImplTest {
 
     @Test
     void findAll() {
+
         // Given
         MenuRepository repository = mock(MenuRepository.class);
         MenuService menuServiceImpl = new MenuServiceImpl(repository);
 
-
         List<Menu> results = createMenus(2);
         Page<Menu> page1 = mock(Page.class);
-        Page<Menu> page2 = new PageImpl(results);
+        Page<Menu> page2 = new PageImpl<>(results);
         Pageable pageable = mock(Pageable.class);
 
         when(repository.findAll(any(Pageable.class))).thenReturn(page1);

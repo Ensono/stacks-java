@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.xxAMIDOxx.xxSTACKSxx.model.MenuHelper.*;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.*;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.BDDAssertions.then;
