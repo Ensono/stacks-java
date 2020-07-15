@@ -8,9 +8,9 @@ variable "name_project" {
   default = "stacks"
 }
 
-variable "name_component" {
+variable "name_domain" {
   type    = string
-  default = "node-app"
+  default = "java"
 }
 
 variable "stage" {

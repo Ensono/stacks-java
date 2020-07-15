@@ -1,9 +1,9 @@
-# Naming convention 
+# Naming convention
 module "default_label" {
   source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.16.0"
   namespace  = format("%s-%s", var.name_company, var.name_project)
   stage      = var.stage
-  name       = var.name_component
+  name       = var.name_domain
   attributes = var.attributes
   delimiter  = "-"
   tags       = var.tags
@@ -21,11 +21,11 @@ data "google_compute_global_address" "default" {
 
 
 module "node_app" {
-  source             = "git::https://github.com/amido/stacks-webapp-template//libs/orchestration/terraform-gcp-amido-k8s-app?ref=master"
+  source             = "git::https://github.com/amido/stacks-webapp-template//libs/orchestration/terraform-gcp-amido-k8s-app?ref=v1.3.1"
   stage              = var.stage
   name_project       = var.name_project
   name_company       = var.name_company
-  name_component     = var.name_component
+  name_component     = var.name_domain
   location           = var.location
   project            = var.project
   region             = var.region

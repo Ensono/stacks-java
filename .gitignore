@@ -10,6 +10,9 @@
 
 java/target/
 java/build/
+java/.classpath
+java/.project
+java/.settings/
 
 lombok.config
 .terraform

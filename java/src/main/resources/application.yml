@@ -20,10 +20,9 @@ springdoc:
     path: /swagger/index.html
   packagesToScan: com.xxAMIDOxx.xxSTACKSxx, com.xxAMIDOxx.xxSTACKSxx.api.v1.menu
 
-
 azure:
   cosmosdb:
-    uri: https://amidostacksmenucdauksdev.documents.azure.com:443/
+    uri: https://amido-stacks-dev-eun-java-api.documents.azure.com:443/
     database: Stacks
     key: xxxxxx
   application-insights:

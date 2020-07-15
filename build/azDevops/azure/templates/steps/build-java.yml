@@ -5,6 +5,10 @@ parameters:
   project_root_dir: ""
   dependsOn: "GetPackage"
   download_devops: true
+  # PR / Branch vars
+  source_branch_ref: ""
+  target_branch_ref: ""
+  pullrequest_number: ""
   # Custom registry (eg. private)
   customRegistry: ""
   # Docker Config
@@ -20,6 +24,8 @@ parameters:
   #  Static Code Analysis
   static_code_analysis: false
   sonar_container: ""
+  sonar_pullrequest_provider: ""
+  sonar_remote_repo: ""
   # Linting and formatting validation
   lint_formatting: ""
   shared_eslint_config: ""
@@ -41,10 +47,6 @@ parameters:
   git_release_tag: ""
 
 steps:
-  - bash: |
-      echo '##vso[build.updatebuildnumber]${{ parameters.docker_imagetag }}'
-    displayName: 'Update: Build Number'
-
   - task: Cache@2
     inputs:
       key: 'maven | "$(Agent.OS)" | ${{ parameters.project_root_dir }}/pom.xml'
@@ -146,15 +148,58 @@ steps:
 
   # SonarCloud
   - ${{ if eq(parameters.static_code_analysis, true) }}:
+      - bash: |
+          set -euxo pipefail
+          function strip_refs()
+          {
+            local BRANCH_REF="$1"
+
+            RETURN_BRANCH="$(sed -e "s%^refs/\(heads\|tags\)/%%" <<< $BRANCH_REF)"
+          }
+
+          strip_refs "${{ parameters.source_branch_ref }}"
+          SOURCE_BRANCH=$RETURN_BRANCH
+
+          strip_refs "${{ parameters.target_branch_ref }}"
+          TARGET_BRANCH=$RETURN_BRANCH
+
+          if [ -z "${{ parameters.pullrequest_number }}" ]; then
+            EXTRA_SONAR_ARGUMENTS="-Dsonar.branch.name='$SOURCE_BRANCH'"
+            EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.branch.target='$TARGET_BRANCH'"
+          else
+            PROVIDER_LOWERCASED="$(tr '[:upper:]' '[:lower:]' <<< "${{ parameters.sonar_pullrequest_provider }}")"
+
+            EXTRA_SONAR_ARGUMENTS="-Dsonar.pullrequest.key='${{ parameters.pullrequest_number }}'"
+            EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.branch='$SOURCE_BRANCH'"
+            EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.provider='$PROVIDER_LOWERCASED'"
+            EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.base='$TARGET_BRANCH'"
+
+            if [ "$PROVIDER_LOWERCASED" == 'github' ]; then
+              EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.github.repository='${{ parameters.sonar_remote_repo }}'"
+            fi
+          fi
+
+          echo "##vso[task.setvariable variable=bash_extra_sonar_arguments]$EXTRA_SONAR_ARGUMENTS"
+        displayName: "Sonar: Extra Sonar Arguments"
+
       - template: azDevOps/azure/templates/v2/steps/test-static-code-sonar.yml@templates
         parameters:
           working_directory: "${{ parameters.project_root_dir }}"
           target_container: "${{ parameters.sonar_container }}"
+          extra_arguments: "$(bash_extra_sonar_arguments)"
           env_vars: {
-            SONAR_PULL_REQUEST: "$(System.PullRequest.PullRequestNumber)",
-            SONAR_BRANCH_NAME: "$(System.PullRequest.SourceBranch)",
-            SONAR_PR_PROVIDER: "GitHub",
-            SONAR_GITHUB_REPO: "amido/stacks-java",
+            SONAR_HOST_URL: "https://sonarcloud.io",
+            SONAR_TOKEN: $SONAR_TOKEN,
+            SONAR_PROJECT_KEY: $SONAR_PROJECT_KEY,
+            SONAR_ORGANIZATION: $SONAR_ORGANIZATION,
+            SONAR_PROJECT_NAME: $SONAR_PROJECT_NAME,
+            BUILD_NUMBER: $(docker_image_tag),
+            SONAR_SCANNER_OPTS: "",
+            # PR Sonar Variables
+            # SONAR_BRANCH_NAME: "${{ parameters.branch_ref }}",
+            # SONAR_PULL_REQUEST: "${{ parameters.pull_request_number }}",
+            # SONAR_PR_PROVIDER: "GitHub",
+            # SONAR_GITHUB_REPO: "amido/stacks-java",
           }
 
   - ${{ if eq(parameters.docker_build, true) }}:
