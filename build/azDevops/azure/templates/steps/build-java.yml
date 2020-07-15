@@ -61,7 +61,7 @@ steps:
 
       function strip_refs()
       {
-        local BRANCH_REF = $1
+        local BRANCH_REF=$1
 
         RETURN_BRANCH="$(sed -e "s%^refs/\(heads\|tags\)/%%" <<< $BRANCH_REF)"
       }
@@ -171,7 +171,7 @@ steps:
           set -euxo pipefail
           function strip_refs()
           {
-            local BRANCH_REF = $1
+            local BRANCH_REF=$1
 
             RETURN_BRANCH="$(sed -e "s%^refs/\(heads\|tags\)/%%" <<< $BRANCH_REF)"
           }
