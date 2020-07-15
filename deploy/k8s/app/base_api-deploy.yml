@@ -20,7 +20,7 @@ metadata:
     customerID: ${company}
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/rewrite-target: /$$2
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     owner: ${company}/${project}
     projectID: ${project}
@@ -71,7 +71,7 @@ spec:
   ports:
   - port: 80
     protocol: TCP
-    targetPort: http
+    targetPort: 9000
   selector:
     app.kubernetes.io/component: ${component}
     app.kubernetes.io/name: ${resource_def_name}
@@ -91,62 +91,20 @@ stringData:
   cosmos_key: ${cosmosdb_key}
   app_insights: ${app_insights_key}
 
----
+# ---
 
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: appsettings
-  namespace: ${namespace}
-data:
-  appsettings.json: |
-    {
-      "Serilog": {
-          "Using": [
-              "Serilog.Sinks.Console",
-              "Serilog.Sinks.ApplicationInsights"
-          ],
-          "MinimumLevel": {
-              "Default": "${log_level}",
-              "Override": {}
-          },
-          "WriteTo": [
-              { "Name": "Console" },
-              {
-                  "Name": "ApplicationInsights",
-                  "Args": {
-                      "telemetryConverter": "Serilog.Sinks.ApplicationInsights.Sinks.ApplicationInsights.TelemetryConverters.TraceTelemetryConverter, Serilog.Sinks.ApplicationInsights"
-                  }
-              }
-          ],
-          "Enrich": [ "FromLogContext", "WithMachineName", "WithThreadId" ],
-          "Destructure": [],
-          "Properties": {
-              "Application": "Menu API"
-          }
-      },
-      "AllowedHosts": "*",
-      "CosmosDb": {
-          "DatabaseAccountUri": "${cosmosdb_endpoint}",
-          "DatabaseName": "${cosmosdb_name}",
-          "SecurityKeySecret": {
-              "Identifier": "COSMOSDB_KEY",
-              "Source": "Environment"
-          }
-      },
-      "TestConfig": "Test value from file",
-      "Values": {
-        "Items": [
-          "Item A from config",
-          "Item B from congig",
-          "Item C from config"
-        ]
-      }
-    }
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: appsettings
+#   namespace: ${namespace}
+# data:
+#   appsettings.json: |
+#     {
 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
@@ -205,10 +163,10 @@ spec:
           # this we need to pass from the pipeline to the deployment steps
           image: ${k8s_image}
           imagePullPolicy: IfNotPresent
-          volumeMounts:
-          - name: appsettings
-            # this can either be configured if you are re-using this for many services or should be changed here
-            mountPath: /app/config
+          # volumeMounts:
+          # - name: appsettings
+          #   # this can either be configured if you are re-using this for many services or should be changed here
+          #   mountPath: /app/config
           env:
             - name: POD_NAME
               valueFrom:
@@ -232,14 +190,14 @@ spec:
                   fieldPath: metadata.annotations['release']
             - name: API_BASEPATH
               value: ${k8s_app_path}
-            - name: COSMOSDB_KEY
+            - name: LOG_LEVEL
+              value: debug
+            - name: AZURE_COSMOSDB_KEY
               valueFrom:
                 secretKeyRef:
                   name: appsecrets
                   key: cosmos_key
-            - name: LOG_LEVEL
-              value: debug
-            - name: APPINSIGHTS_INSTRUMENTATIONKEY
+            - name: AZURE_APPLICATION_INSIGHTS_INSTRUMENTATION_KEY
               valueFrom:
                 secretKeyRef:
                   name: appsecrets
@@ -247,12 +205,12 @@ spec:
 
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 9000
           livenessProbe:
             failureThreshold: 10
             httpGet:
               path: /health
-              port: 80
+              port: 9000
               scheme: HTTP
             initialDelaySeconds: 45
             periodSeconds: 30
@@ -262,12 +220,8 @@ spec:
             failureThreshold: 10
             httpGet:
               path: /health
-              port: 80
+              port: 9000
               scheme: HTTP
             periodSeconds: 30
             successThreshold: 1
             timeoutSeconds: 25
-      volumes:
-        - name: appsettings
-          configMap:
-            name: appsettings
