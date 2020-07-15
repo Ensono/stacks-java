@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.xxAMIDOxx.xxSTACKSxx.utils.MenuResultUtils.pageRequestWithSort;
+import static com.xxAMIDOxx.xxSTACKSxx.service.CosmosHelper.pageRequestWithSort;
 
 @Service
 public class MenuServiceImpl implements MenuService {

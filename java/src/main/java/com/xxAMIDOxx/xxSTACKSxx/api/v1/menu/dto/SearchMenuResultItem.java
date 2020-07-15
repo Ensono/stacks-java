@@ -70,4 +70,15 @@ public class SearchMenuResultItem {
   public int hashCode() {
     return Objects.hash(id, restaurantId, name, description, enabled);
   }
+
+  @Override
+  public String toString() {
+    return "SearchMenuResultItem{" +
+            "id=" + id +
+            ", restaurantId=" + restaurantId +
+            ", name='" + name + '\'' +
+            ", description='" + description + '\'' +
+            ", enabled=" + enabled +
+            '}';
+  }
 }
