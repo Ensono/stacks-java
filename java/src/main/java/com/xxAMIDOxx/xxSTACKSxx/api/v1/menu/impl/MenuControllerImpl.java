@@ -14,6 +14,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.nonNull;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
+/**
+ * MenuControllerImpl - Menu Controller used to interact and manage menus API.
+ */
 @RestController
 public class MenuControllerImpl implements MenuController {
 
@@ -30,14 +36,21 @@ public class MenuControllerImpl implements MenuController {
                                                        final UUID restaurantId,
                                                        final Integer pageSize,
                                                        final Integer pageNumber) {
+        List<Menu> menuList;
 
-        List<Menu> menus = menuService.all(pageNumber, pageSize);
-        List<SearchMenuResultItem> menuResultItems = menus.stream()
-                .map(SearchMenuResultItem::new)
-                .collect(Collectors.toList());
+        if (isNotEmpty(searchTerm) && nonNull(restaurantId)) {
+            menuList = this.menuService.findAllByRestaurantIdAndNameContaining(
+                    restaurantId, searchTerm, pageSize, pageNumber);
+        } else if (isNotEmpty(searchTerm)) {
+            menuList = this.menuService.findAllByNameContaining(searchTerm, pageSize, pageNumber);
+        } else if (nonNull(restaurantId)) {
+            menuList = this.menuService.findAllByRestaurantId(restaurantId, pageSize, pageNumber);
+        } else {
+            menuList = this.menuService.findAll(pageNumber, pageSize);
+        }
 
-        return ResponseEntity.ok(
-                new SearchMenuResult(pageSize, pageNumber, menuResultItems));
+        return ResponseEntity.ok(new SearchMenuResult(pageSize, pageNumber,
+                menuList.stream().map(SearchMenuResultItem::new).collect(Collectors.toList())));
     }
 
     @Override
@@ -45,4 +58,3 @@ public class MenuControllerImpl implements MenuController {
         return ResponseEntity.of(this.menuService.findById(id));
     }
 }
-
