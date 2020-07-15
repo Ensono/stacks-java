@@ -22,10 +22,10 @@ public class MenuServiceImpl implements MenuService {
 
     private static final String RESTAURANT_ID = "restaurantId";
     private static final String NAME = "name";
-    private static Logger logger =
-            LoggerFactory.getLogger(MenuServiceImpl.class);
-
-    private static int currentPage = 0;
+    private static final String TOTAL_PAGES = "Total Pages: {}" ;
+    private static final String TOTAL_RECORDS = "Total Records: {}" ;
+    private static Logger logger = LoggerFactory.getLogger(MenuServiceImpl.class);
+    private int currentPage = 0;
 
     private MenuRepository menuRepository;
 
@@ -42,7 +42,6 @@ public class MenuServiceImpl implements MenuService {
             return getMenusFromPage(page, pageNumber);
         }
         return Collections.emptyList();
-
     }
 
     public Optional<Menu> findById(UUID id) {
@@ -103,8 +102,8 @@ public class MenuServiceImpl implements MenuService {
     }
 
     public List<Menu> getMenusFromPage(Page<Menu> page, Integer pageNumber) {
-        logger.debug("Total Records: {}", page.getTotalElements());
-        logger.debug("Total Pages: {}", page.getTotalPages());
+        logger.debug(TOTAL_RECORDS, page.getTotalElements());
+        logger.debug(TOTAL_PAGES, page.getTotalPages());
         page = getPagination(pageNumber, page);
         return page.getContent();
     }
