@@ -1,52 +1,48 @@
 package com.xxAMIDOxx.xxSTACKSxx.service.impl;
 
-import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
-import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.createMenus;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-
-@SpringBootTest
-@EnableAutoConfiguration(
-        exclude = {
-                CosmosDbRepositoriesAutoConfiguration.class,
-                CosmosAutoConfiguration.class
-        })
-@Tag("Service")
+@Tag("Unit")
 public class MenuServiceImplTest {
 
-    @Mock
-    private MenuRepository repository;
-
-    @MockBean
-    private MenuService service;
-
     @Test
-    public void testService() {
+    void findAll() {
         // Given
-        List<Menu> menuList = createMenus(10);
-        List<SearchMenuResultItem> expectedMenuList = menuList.stream()
-                .map(SearchMenuResultItem::new)
-                .collect(Collectors.toList());
+        MenuRepository repository = mock(MenuRepository.class);
+        MenuService menuServiceImpl = new MenuServiceImpl(repository);
+
+
+        List<Menu> results = createMenus(2);
+        Page<Menu> page1 = mock(Page.class);
+        Page<Menu> page2 = new PageImpl(results);
+        Pageable pageable = mock(Pageable.class);
+
+        when(repository.findAll(any(Pageable.class))).thenReturn(page1);
+        when(page1.hasNext()).thenReturn(true);
+        when(page1.nextPageable()).thenReturn(pageable);
+        when(repository.findAll(eq(pageable))).thenReturn(page2);
+
         // When
-        List<Menu> all = service.findAll(1, 5);
+        List<Menu> actualResults = menuServiceImpl.findAll(2, 5);
 
         // Then
-        assertThat(all, hasSize(0));
+        then(actualResults).isEqualTo(results);
+
     }
 }

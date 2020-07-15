@@ -110,9 +110,9 @@ public class MenuControllerImplTest {
                 String.format("%s/v1/menu?restaurantId=%s", getBaseURL(port), restaurantId),
                 SearchMenuResult.class);
         // Then
-        then(result.getBody().getPageNumber().equals(expectedMenu.getPageNumber()));
-        then(result.getBody().getPageSize().equals(expectedMenu.getPageSize()));
-        then(result.getBody().getResults().containsAll(expectedMenu.getResults()));
+        then(result.getBody().getPageNumber().equals(expectedResponse.getPageNumber()));
+        then(result.getBody().getPageSize().equals(expectedResponse.getPageSize()));
+        then(result.getBody().getResults().containsAll(expectedResponse.getResults()));
     }
 
     @Test
@@ -149,7 +149,7 @@ public class MenuControllerImplTest {
                 menuRepository.findAllByNameContaining(
                         eq(searchTerm),
                         any(Pageable.class))
-        ).thenReturn(new PageImpl<>(Collections.emptyList()));
+        ).thenReturn(new PageImpl<>(createMenus(0)));
 
         // When
         this.testRestTemplate.getForEntity(
@@ -177,7 +177,7 @@ public class MenuControllerImplTest {
     }
 
     @Test
-    public void listMenusAndDefaultPagination() {
+    public void listMenusWithDefaultPagination() {
         // Given
         when(
                 menuRepository.findAll(any(Pageable.class))
@@ -195,17 +195,4 @@ public class MenuControllerImplTest {
         assertThat(actual.getPageSize(), is(DEFAULT_PAGE_SIZE));
     }
 
-    @Test
-    public void testWhenSearchTermGivenReturnResultsMatchingTerm() {
-        // Given
-        List<Menu> menus = createMenus(20);
-
-        // When
-        var result = this.testRestTemplate.getForEntity(
-                String.format("%s/v1/menu?searchTerm=%s", getBaseURL(port), "menu"),
-                SearchMenuResult.class);
-
-        // Then
-        then(result.getBody()).isInstanceOf(SearchMenuResult.class);
-    }
 }
