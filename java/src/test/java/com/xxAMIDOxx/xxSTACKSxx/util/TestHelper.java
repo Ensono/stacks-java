@@ -37,6 +37,7 @@ public class TestHelper {
                 .withEnabled(true)
                 .withName(counter + " Menu")
                 .withId(UUID.randomUUID().toString())
+                .withRestaurantId(UUID.randomUUID())
                 .build();
     }
 }
