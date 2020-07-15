@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.impl;
 
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.MenuController;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.QueryMenuController;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
@@ -21,13 +21,13 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
  * MenuControllerImpl - Menu Controller used to interact and manage menus API.
  */
 @RestController
-public class MenuControllerImpl implements MenuController {
+public class QueryMenuControllerImpl implements QueryMenuController {
 
-    Logger logger = LoggerFactory.getLogger(MenuControllerImpl.class);
+    Logger logger = LoggerFactory.getLogger(QueryMenuControllerImpl.class);
 
     private MenuService menuService;
 
-    public MenuControllerImpl(MenuService menuService) {
+    public QueryMenuControllerImpl(MenuService menuService) {
         this.menuService = menuService;
     }
 

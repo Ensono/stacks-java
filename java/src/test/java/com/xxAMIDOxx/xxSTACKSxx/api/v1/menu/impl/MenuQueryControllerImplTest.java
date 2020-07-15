@@ -42,7 +42,7 @@ import static org.mockito.Mockito.*;
                 CosmosAutoConfiguration.class
         })
 @Tag("Integration")
-public class MenuControllerImplTest {
+public class MenuQueryControllerImplTest {
 
     @LocalServerPort
     private int port;
@@ -111,9 +111,9 @@ public class MenuControllerImplTest {
                 String.format("%s/v1/menu?restaurantId=%s", getBaseURL(port), restaurantId),
                 SearchMenuResult.class);
         // Then
-        then(result.getBody().getPageNumber().equals(expectedResponse.getPageNumber()));
-        then(result.getBody().getPageSize().equals(expectedResponse.getPageSize()));
-        then(result.getBody().getResults().containsAll(expectedResponse.getResults()));
+        then(result.getBody().getPageNumber()).isEqualTo(expectedResponse.getPageNumber());
+        then(result.getBody().getPageSize()).isEqualTo(expectedResponse.getPageSize());
+        then(result.getBody().getResults()).containsAll(expectedResponse.getResults());
     }
 
     @Test
