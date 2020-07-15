@@ -23,7 +23,7 @@
         <applicationinsights.version>2.6.1</applicationinsights.version>
         <cosmosdb.version>2.3.2</cosmosdb.version>
         <azure.springboot.version>2.3.2</azure.springboot.version>
-        <jackson.version>2.11.0</jackson.version>
+        <jackson.version>2.11.1</jackson.version>
         <mockito.version>2.23.0</mockito.version>
         <lombok.version>1.18.12</lombok.version>
         <hamcrest.version>2.2</hamcrest.version>
