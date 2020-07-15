@@ -158,15 +158,27 @@ steps:
   - ${{ if eq(parameters.static_code_analysis, true) }}:
       - bash: |
           set -euxo pipefail
+          function strip_refs()
+          {
+            local BRANCH_REF = $1
+
+            RETURN_BRANCH="$(sed -e "s%^refs/\(heads\|tags\)/%%" <<< $BRANCH_REF)"
+          }
+
           if [ -z "${{ parameters.pullrequest_number }}" ]; then
-            EXTRA_SONAR_ARGUMENTS="-Dsonar.branch.target='${{ parameters.target_branch_ref }}'"
+            strip_refs "${{ parameters.source_branch_ref }}"
+            EXTRA_SONAR_ARGUMENTS="-Dsonar.branch.name='$RETURN_BRANCH'"
+            strip_refs "${{ parameters.target_branch_ref }}"
+            EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS}-Dsonar.branch.target='$RETURN_BRANCH'"
           else
-            PROVIDER_LOWERCASED="$(echo "${{ parameters.sonar_pullrequest_provider }}" | tr '[:upper:]' '[:lower:]')"
+            PROVIDER_LOWERCASED="$(tr '[:upper:]' '[:lower:]' <<< "${{ parameters.sonar_pullrequest_provider }}")"
 
             EXTRA_SONAR_ARGUMENTS="-Dsonar.pullrequest.key='${{ parameters.pullrequest_number }}'"
-            EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.branch='${{ parameters.source_branch_ref }}'"
+            strip_refs "${{ parameters.source_branch_ref }}"
+            EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.branch='$RETURN_BRANCH'"
             EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.provider='$PROVIDER_LOWERCASED'"
-            EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.base'${{ parameters.target_branch_ref }}'"
+            strip_refs "${{ parameters.target_branch_ref }}"
+            EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.base'$RETURN_BRANCH'"
 
             if [ "$PROVIDER_LOWERCASED" == 'github' ]; then
               EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.github.repository='${{ parameters.sonar_remote_repo }}'"
@@ -180,7 +192,7 @@ steps:
         parameters:
           working_directory: "${{ parameters.project_root_dir }}"
           target_container: "${{ parameters.sonar_container }}"
-          extra_arguments: "-Dsonar.branch.name='${{ parameters.source_branch_ref }}' $(bash_extra_sonar_arguments)"
+          extra_arguments: "$(bash_extra_sonar_arguments)"
           env_vars: {
             SONAR_HOST_URL: "https://sonarcloud.io",
             SONAR_TOKEN: $SONAR_TOKEN,
