@@ -81,7 +81,9 @@ public class MenuControllerImplTest {
                 String.format("%s/v1/menu?restaurantId=%s", getBaseURL(port), RESTAURANT_ID),
                 SearchMenuResult.class);
         // Then
-        then(result.getBody()).isEqualTo(expectedMenu);
+        then(result.getBody().getPageNumber().equals(expectedMenu.getPageNumber()));
+        then(result.getBody().getPageSize().equals(expectedMenu.getPageSize()));
+        then(result.getBody().getResults().containsAll(expectedMenu.getResults()));
     }
 
     @Test
@@ -167,5 +169,19 @@ public class MenuControllerImplTest {
         assertThat(actual.getPageNumber(), is(1));
         assertThat(actual.getPageSize(), is(20));
         assertThat(actual.getResults(), is(notNullValue()));
+    }
+
+    @Test
+    public void testWhenSearchTermGivenReturnResultsMatchingTerm() {
+        // Given
+        List<Menu> menus = createMenus(20);
+
+        // When
+        var result = this.testRestTemplate.getForEntity(
+                String.format("%s/v1/menu?searchTerm=%s", getBaseURL(port), "menu"),
+                SearchMenuResult.class);
+
+        // Then
+        then(result.getBody()).isInstanceOf(SearchMenuResult.class);
     }
 }

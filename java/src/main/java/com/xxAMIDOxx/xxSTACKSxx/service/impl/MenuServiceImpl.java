@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,7 +22,8 @@ public class MenuServiceImpl implements MenuService {
 
     private static final String RESTAURANT_ID = "restaurantId";
     private static final String NAME = "name";
-    private static Logger logger = LoggerFactory.getLogger(MenuServiceImpl.class);
+    private static Logger logger =
+            LoggerFactory.getLogger(MenuServiceImpl.class);
 
     private static int currentPage = 0;
 
@@ -33,11 +35,14 @@ public class MenuServiceImpl implements MenuService {
 
     public List<Menu> findAll(int pageNumber, int pageSize) {
 
-        Page<Menu> page = menuRepository.findAll(pageRequestWithSort(Sort.Direction.ASC, NAME, currentPage, pageSize));
-        logger.debug("Total Records: {}", page.getTotalElements());
-        logger.debug("Total Pages: {}", page.getTotalPages());
-        page = getPagination(pageNumber, page);
-        return page.getContent();
+        Page<Menu> page =
+                menuRepository.findAll(pageRequestWithSort(Sort.Direction.ASC, NAME, currentPage, pageSize));
+
+        if (page != null) {
+            return getMenusFromPage(page, pageNumber);
+        }
+        return Collections.emptyList();
+
     }
 
     public Optional<Menu> findById(UUID id) {
@@ -53,10 +58,10 @@ public class MenuServiceImpl implements MenuService {
                         restaurantId.toString(), pageRequestWithSort(Sort.Direction.ASC,
                                 RESTAURANT_ID, pageNumber, pageSize));
 
-        logger.debug("Total Records: {}", page.getTotalElements());
-        logger.debug("Total Pages: {}", page.getTotalPages());
-        page = getPagination(pageNumber, page);
-        return page.getContent();
+        if (page != null) {
+            return getMenusFromPage(page, pageNumber);
+        }
+        return Collections.emptyList();
     }
 
     @Override
@@ -67,10 +72,10 @@ public class MenuServiceImpl implements MenuService {
         Page<Menu> page = menuRepository.findAllByNameContaining(
                 searchTerm, pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize));
 
-        logger.debug("Total Records: {}", page.getTotalElements());
-        logger.debug("Total Pages: {}", page.getTotalPages());
-        page = getPagination(pageNumber, page);
-        return page.getContent();
+        if (page != null) {
+            return getMenusFromPage(page, pageNumber);
+        }
+        return Collections.emptyList();
     }
 
     @Override
@@ -81,20 +86,27 @@ public class MenuServiceImpl implements MenuService {
         Page<Menu> page =
                 menuRepository.findAllByRestaurantIdAndNameContaining(
                         restaurantId.toString(), searchTerm, pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize));
-        logger.debug("Total Records: {}", page.getTotalElements());
-        logger.debug("Total Pages: {}", page.getTotalPages());
-        page = getPagination(pageNumber, page);
-        return page.getContent();
+        if (page != null) {
+            return getMenusFromPage(page, pageNumber);
+        }
+        return Collections.emptyList();
     }
 
 
-    private Page<Menu> getPagination(int pageNumber, Page<Menu> page) {
+    public Page<Menu> getPagination(int pageNumber, Page<Menu> page) {
         while (currentPage < pageNumber && page.hasNext()) {
             currentPage++;
             Pageable nextPageable = page.nextPageable();
             page = menuRepository.findAll(nextPageable);
         }
         return page;
+    }
+
+    public List<Menu> getMenusFromPage(Page<Menu> page, Integer pageNumber) {
+        logger.debug("Total Records: {}", page.getTotalElements());
+        logger.debug("Total Pages: {}", page.getTotalPages());
+        page = getPagination(pageNumber, page);
+        return page.getContent();
     }
 
 }
