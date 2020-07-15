@@ -336,4 +336,4 @@ stages:
                     kubectl_check_deployment: true
                     resource_def_name: "$(resource_def_name)"
                     namespace: "$(namespace)"
-                    deployment_status_timeout: "60s"
+                    deployment_status_timeout: "90s"
