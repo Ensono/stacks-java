@@ -184,7 +184,7 @@ steps:
 
           if [ -z "${{ parameters.pullrequest_number }}" ]; then
             strip_refs "${{ parameters.source_branch_ref }}"
-            EXTRA_SONAR_ARGUMENTS="-Dsonar.branch.name='$TARGET_BRANCH'"
+            EXTRA_SONAR_ARGUMENTS="-Dsonar.branch.name='$SOURCE_BRANCH'"
             strip_refs "${{ parameters.target_branch_ref }}"
             EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.branch.target='$TARGET_BRANCH'"
           else
