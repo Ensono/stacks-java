@@ -17,7 +17,7 @@ import java.util.UUID;
 
 
 @RequestMapping("/v1/menu")
-public interface MenuController {
+public interface QueryMenuController {
 
     @GetMapping(value = "", produces = "application/json")
     @Operation(
