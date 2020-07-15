@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * @author James Peet
@@ -19,29 +20,29 @@ public class Menu {
   @JsonProperty("id")
   private String id;
 
-  @JsonProperty("Name")
+  @JsonProperty("restaurantId")
+  private UUID restaurantId;
+
+  @JsonProperty("name")
   private String name;
 
-  @JsonProperty("Description")
+  @JsonProperty("description")
   private String description;
 
-  @JsonProperty("TenantId")
-  private String restaurantId;
-
-  @JsonProperty("Categories")
+  @JsonProperty("categories")
   private List<Category> categories;
 
-  @JsonProperty("Enabled")
+  @JsonProperty("enabled")
   private Boolean enabled;
 
   public Menu() {
   }
 
-  public Menu(String id, String name, String description, String restaurantId, List<Category> categories, Boolean enabled) {
+  public Menu(String id, UUID restaurantId, String name, String description, List<Category> categories, Boolean enabled) {
     this.id = id;
+    this.restaurantId = restaurantId;
     this.name = name;
     this.description = description;
-    this.restaurantId = restaurantId;
     this.categories = categories;
     this.enabled = enabled;
   }
@@ -58,8 +59,12 @@ public class Menu {
     return description;
   }
 
-  public String getRestaurantId() {
+  public UUID getRestaurantId() {
     return restaurantId;
+  }
+
+  public void setRestaurantId(UUID restaurantId) {
+  this.restaurantId = restaurantId;
   }
 
   public List<Category> getCategories() {
@@ -69,22 +74,21 @@ public class Menu {
   public Boolean getEnabled() {
     return enabled;
   }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof Menu)) return false;
     Menu menu = (Menu) o;
     return Objects.equals(id, menu.id) &&
+            Objects.equals(restaurantId, menu.restaurantId) &&
             Objects.equals(name, menu.name) &&
             Objects.equals(description, menu.description) &&
-            Objects.equals(restaurantId, menu.restaurantId) &&
             Objects.equals(categories, menu.categories) &&
             Objects.equals(enabled, menu.enabled);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, description, restaurantId, categories, enabled);
+    return Objects.hash(id, restaurantId, name, description, categories, enabled);
   }
 }

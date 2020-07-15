@@ -50,5 +50,14 @@ public class SearchMenuResult {
   public int hashCode() {
     return Objects.hash(pageSize, pageNumber, results);
   }
+
+  @Override
+  public String toString() {
+    return "SearchMenuResult{" +
+            "pageSize=" + pageSize +
+            ", pageNumber=" + pageNumber +
+            ", results=" + results +
+            '}';
+  }
 }
 

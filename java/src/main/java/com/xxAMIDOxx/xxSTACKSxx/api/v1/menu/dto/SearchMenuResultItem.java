@@ -28,7 +28,7 @@ public class SearchMenuResultItem {
 
   public SearchMenuResultItem(Menu menu) {
     this.id = UUID.fromString(menu.getId());
-    this.restaurantId = null;
+    this.restaurantId = menu.getRestaurantId();
     this.name = menu.getName();
     this.description = menu.getDescription();
     this.enabled = menu.getEnabled();
@@ -69,5 +69,16 @@ public class SearchMenuResultItem {
   @Override
   public int hashCode() {
     return Objects.hash(id, restaurantId, name, description, enabled);
+  }
+
+  @Override
+  public String toString() {
+    return "SearchMenuResultItem{" +
+            "id=" + id +
+            ", restaurantId=" + restaurantId +
+            ", name='" + name + '\'' +
+            ", description='" + description + '\'' +
+            ", enabled=" + enabled +
+            '}';
   }
 }
