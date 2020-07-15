@@ -189,7 +189,7 @@ steps:
             EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.branch='$RETURN_BRANCH'"
             EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.provider='$PROVIDER_LOWERCASED'"
             strip_refs "${{ parameters.target_branch_ref }}"
-            EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.base'$RETURN_BRANCH'"
+            EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.base='$RETURN_BRANCH'"
 
             if [ "$PROVIDER_LOWERCASED" == 'github' ]; then
               EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.github.repository='${{ parameters.sonar_remote_repo }}'"
