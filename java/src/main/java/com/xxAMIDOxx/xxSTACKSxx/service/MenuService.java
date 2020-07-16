@@ -1,5 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.service;
 
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.MenuCreatedDto;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 
 import java.util.List;
@@ -11,8 +13,8 @@ public interface MenuService {
     /**
      * Retrieve list of all available Menus
      *
-     * @param pageNumber
-     * @param pageSize
+     * @param pageNumber pageNo
+     * @param pageSize pageSize
      *
      * @return List of Menu
      */
@@ -21,7 +23,7 @@ public interface MenuService {
     /**
      * Retrieve Menu by Menu Id
      *
-     * @param id
+     * @param id menuId
      *
      * @return Optional Menu
      */
@@ -31,38 +33,45 @@ public interface MenuService {
      * Retrieve Menu by Restaurant Id
      * Pagination and sorting is done by spring data JPA.
      *
-     * @param restaurantId
-     * @param pageSize
-     * @param pageNumber
+     * @param restaurantId tenantID/RestaurantId
+     * @param pageSize pageSize
+     * @param pageNumber pageNo
      *
      * @return List of Menu
      */
-    public List<Menu> findAllByRestaurantId(UUID restaurantId, Integer pageSize, Integer pageNumber);
+    List<Menu> findAllByRestaurantId(UUID restaurantId, Integer pageSize, Integer pageNumber);
 
 
     /**
      * Retrieve Menu's by matching the name (Contains operation)
      * Pagination and sorting is done by spring data JPA.
      *
-     * @param searchTerm
-     * @param pageSize
-     * @param pageNumber
+     * @param searchTerm menu Name
+     * @param pageSize pageSize
+     * @param pageNumber pageNo
      *
      *
      * @return List of Menu
      */
-    public List<Menu> findAllByNameContaining(String searchTerm, Integer pageSize, Integer pageNumber);
+    List<Menu> findAllByNameContaining(String searchTerm, Integer pageSize, Integer pageNumber);
 
     /**
      * Retrieve Menu's by matching the name and the restaurantId (Contains operation)
      * Pagination and sorting is done by spring data JPA.
      *
-     * @param restaurantId
-     * @param searchTerm
-     * @param pageSize
-     * @param pageNumber
+     * @param restaurantId tenantID/RestaurantId
+     * @param searchTerm Menu Name
+     * @param pageSize pageSize
+     * @param pageNumber pageNo
      *
      * @return List of Menu
      */
     List<Menu> findAllByRestaurantIdAndNameContaining(UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber);
+
+    /**
+     * Creates a Menu
+     * @param menuDto dto for creating a menu object
+     * @return created Menu
+     */
+    MenuCreatedDto saveMenu(MenuCreateRequestDto menuDto);
 }
