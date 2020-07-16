@@ -1,8 +1,8 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.matcher;
 
-import com.xxAMIDOxx.xxSTACKSxx.model.Category;
-import com.xxAMIDOxx.xxSTACKSxx.model.Item;
-import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.CategoryDTO;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.ItemDTO;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.MenuDTO;
 import org.hamcrest.Matcher;
 
 import java.util.stream.Collectors;
@@ -19,7 +19,7 @@ import static org.hamcrest.Matchers.is;
  */
 public class TypeMatchers {
 
-  public static Matcher<Item> matchesItem(Item expected) {
+  public static Matcher<ItemDTO> matchesItem(ItemDTO expected) {
     return allOf(
         hasProperty("id", is(expected.getId())),
         hasProperty("name", is(expected.getName())),
@@ -28,7 +28,7 @@ public class TypeMatchers {
         hasProperty("available", is(expected.getAvailable())));
   }
 
-  public static Matcher<Category> matchesCategory(Category expected) {
+  public static Matcher<CategoryDTO> matchesCategory(CategoryDTO expected) {
     return allOf(
         hasProperty("id", is(expected.getId())),
         hasProperty("name", is(expected.getName())),
@@ -41,7 +41,7 @@ public class TypeMatchers {
                         .collect(Collectors.toSet()))));
   }
 
-  public static Matcher<Menu> matchesMenu(Menu expected) {
+  public static Matcher<MenuDTO> matchesMenu(MenuDTO expected) {
     return allOf(
         hasProperty("id", is(expected.getId())),
         hasProperty("name", is(expected.getName())),

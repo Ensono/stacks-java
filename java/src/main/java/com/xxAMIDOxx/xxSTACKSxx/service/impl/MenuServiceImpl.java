@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.service.impl;
 
-import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
 import org.slf4j.Logger;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.xxAMIDOxx.xxSTACKSxx.service.CosmosHelper.pageRequestWithSort;
+import static com.xxAMIDOxx.xxSTACKSxx.core.azure.CosmosHelper.pageRequestWithSort;
 
 @Service
 public class MenuServiceImpl implements MenuService {
@@ -33,6 +33,9 @@ public class MenuServiceImpl implements MenuService {
     }
 
     public List<Menu> findAll(int pageNumber, int pageSize) {
+
+        logger.info("findAll: {} {}", pageNumber, pageSize);
+
 
         Page<Menu> page = menuRepository.findAll(
                 pageRequestWithSort(Sort.Direction.ASC, NAME, 0, pageSize));

@@ -1,8 +1,9 @@
-package com.xxAMIDOxx.xxSTACKSxx.model;
+package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.microsoft.azure.spring.data.cosmosdb.core.mapping.Document;
 import com.microsoft.azure.spring.data.cosmosdb.core.mapping.PartitionKey;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.annotation.Id;
 
 import java.util.List;
@@ -12,13 +13,11 @@ import java.util.UUID;
 /**
  * @author James Peet
  */
-@Document(collection = "Menu")
-public class Menu {
+@Schema(name = "Menu")
+public class MenuDTO {
 
-  @Id
-  @PartitionKey
   @JsonProperty("id")
-  private String id;
+  private UUID id;
 
   @JsonProperty("restaurantId")
   private UUID restaurantId;
@@ -30,15 +29,12 @@ public class Menu {
   private String description;
 
   @JsonProperty("categories")
-  private List<Category> categories;
+  private List<CategoryDTO> categories;
 
   @JsonProperty("enabled")
   private Boolean enabled;
 
-  public Menu() {
-  }
-
-  public Menu(String id, UUID restaurantId, String name, String description, List<Category> categories, Boolean enabled) {
+  public MenuDTO(UUID id, UUID restaurantId, String name, String description, List<CategoryDTO> categories, Boolean enabled) {
     this.id = id;
     this.restaurantId = restaurantId;
     this.name = name;
@@ -47,7 +43,7 @@ public class Menu {
     this.enabled = enabled;
   }
 
-  public String getId() {
+  public UUID getId() {
     return id;
   }
 
@@ -67,7 +63,7 @@ public class Menu {
   this.restaurantId = restaurantId;
   }
 
-  public List<Category> getCategories() {
+  public List<CategoryDTO> getCategories() {
     return categories;
   }
 
@@ -77,8 +73,8 @@ public class Menu {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof Menu)) return false;
-    Menu menu = (Menu) o;
+    if (!(o instanceof MenuDTO)) return false;
+    MenuDTO menu = (MenuDTO) o;
     return Objects.equals(id, menu.id) &&
             Objects.equals(restaurantId, menu.restaurantId) &&
             Objects.equals(name, menu.name) &&

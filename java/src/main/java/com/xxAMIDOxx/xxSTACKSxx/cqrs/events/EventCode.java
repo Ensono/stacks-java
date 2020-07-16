@@ -2,7 +2,7 @@ package com.xxAMIDOxx.xxSTACKSxx.cqrs.events;
 
 public enum EventCode {
 
-    // Menu operations
+    // MenuDTO operations
     MENU_CREATED(101),
     MENU_UPDATED(102),
     MENU_DELETED(103),

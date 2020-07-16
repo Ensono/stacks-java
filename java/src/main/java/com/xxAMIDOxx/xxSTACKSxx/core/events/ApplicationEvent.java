@@ -16,4 +16,11 @@ public abstract class ApplicationEvent extends OperationContext {
     public int getEventCode() {
         return eventCode;
     }
+
+    @Override
+    public String toString() {
+        return "ApplicationEvent{" +
+                "eventCode=" + eventCode +
+                "} " + super.toString();
+    }
 }

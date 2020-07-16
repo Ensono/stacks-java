@@ -1,20 +1,20 @@
 package com.xxAMIDOxx.xxSTACKSxx.builder;
 
-import com.xxAMIDOxx.xxSTACKSxx.model.Category;
-import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.domain.Category;
+import com.xxAMIDOxx.xxSTACKSxx.domain.Menu;
 
 import java.util.List;
 import java.util.UUID;
 
 /**
- * Builder class for Menu
+ * Builder class for MenuDTO
  * @author ArathyKrishna
  */
 public final class MenuBuilder {
     private String id = null;
     private String name = null;
     private String description = null;
-    private UUID restaurantId = null;
+    private String restaurantId = null;
     private List<Category> categories = null;
     private Boolean enabled = null;
 
@@ -40,7 +40,7 @@ public final class MenuBuilder {
         return this;
     }
 
-    public MenuBuilder withRestaurantId(UUID restaurantId) {
+    public MenuBuilder withRestaurantId(String restaurantId) {
         this.restaurantId = restaurantId;
         return this;
     }

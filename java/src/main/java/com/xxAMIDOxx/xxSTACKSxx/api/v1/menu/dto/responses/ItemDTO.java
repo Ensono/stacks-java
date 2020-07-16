@@ -1,29 +1,29 @@
-package com.xxAMIDOxx.xxSTACKSxx.model;
+package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.Objects;
 
-public class Item {
+@Schema(name = "Item")
+public class ItemDTO {
 
-  @JsonProperty("Id")
+  @JsonProperty("id")
   private String id;
 
-  @JsonProperty("Name")
+  @JsonProperty("name")
   private String name;
 
-  @JsonProperty("Description")
+  @JsonProperty("description")
   private String description;
 
-  @JsonProperty("Price")
+  @JsonProperty("price")
   private Double price;
 
-  @JsonProperty("Available")
+  @JsonProperty("available")
   private Boolean available;
 
-  public Item() {
-  }
-
-  public Item(String id, String name, String description, Double price, Boolean available) {
+  public ItemDTO(String id, String name, String description, Double price, Boolean available) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -54,8 +54,8 @@ public class Item {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof Item)) return false;
-    Item item = (Item) o;
+    if (!(o instanceof ItemDTO)) return false;
+    ItemDTO item = (ItemDTO) o;
     return Objects.equals(id, item.id) &&
             Objects.equals(name, item.name) &&
             Objects.equals(description, item.description) &&

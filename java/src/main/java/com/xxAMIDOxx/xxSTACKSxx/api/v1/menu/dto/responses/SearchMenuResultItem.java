@@ -1,7 +1,7 @@
-package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto;
+package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.domain.Menu;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -28,7 +28,7 @@ public class SearchMenuResultItem {
 
   public SearchMenuResultItem(Menu menu) {
     this.id = UUID.fromString(menu.getId());
-    this.restaurantId = menu.getRestaurantId();
+    this.restaurantId = UUID.fromString(menu.getRestaurantId());
     this.name = menu.getName();
     this.description = menu.getDescription();
     this.enabled = menu.getEnabled();

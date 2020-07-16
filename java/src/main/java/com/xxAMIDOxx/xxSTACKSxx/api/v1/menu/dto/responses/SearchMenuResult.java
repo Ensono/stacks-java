@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto;
+package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;

@@ -29,4 +29,11 @@ public abstract class MenuEvent extends ApplicationEvent {
     public UUID getMenuId() {
         return menuId;
     }
+
+    @Override
+    public String toString() {
+        return "MenuEvent{" +
+                "menuId=" + menuId +
+                "} " + super.toString();
+    }
 }

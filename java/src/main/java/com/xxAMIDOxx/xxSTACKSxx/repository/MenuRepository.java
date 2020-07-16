@@ -1,11 +1,10 @@
 package com.xxAMIDOxx.xxSTACKSxx.repository;
 
 import com.microsoft.azure.spring.data.cosmosdb.repository.CosmosRepository;
-import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.domain.Menu;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
 
 @Repository
 public interface MenuRepository extends CosmosRepository<Menu, String> {
