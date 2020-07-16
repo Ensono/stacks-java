@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 /**
  * DTO to map Menu Created.
@@ -64,5 +65,30 @@ public class MenuCreateRequestDto {
 
   public void setEnabled(Boolean enabled) {
     this.enabled = enabled;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof MenuCreateRequestDto)) return false;
+    MenuCreateRequestDto requestDto = (MenuCreateRequestDto) o;
+    return Objects.equals(name, requestDto.name)
+            && Objects.equals(description, requestDto.description)
+            && Objects.equals(tenantId, requestDto.tenantId)
+            && Objects.equals(enabled, requestDto.enabled);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, description, tenantId, enabled);
+  }
+
+  @Override
+  public String toString() {
+    return "MenuCreateRequestDto{" + "name=" + name
+            + ", description=" + description
+            + ", tenantId=" + tenantId
+            + ", enabled=" + enabled
+            + '}';
   }
 }
