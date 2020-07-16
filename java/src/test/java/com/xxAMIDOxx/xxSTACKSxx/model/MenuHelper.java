@@ -21,7 +21,6 @@ public class MenuHelper {
 
     public static Menu createMenu(int counter) {
         return aMenu()
-                .withId(UUID.randomUUID().toString())
                 .withDescription(counter + " Menu Description")
                 .withEnabled(true)
                 .withName(counter + " Menu")

@@ -19,12 +19,12 @@
     <properties>
         <java.version>11</java.version>
         <org.projectlombok.version>1.18.0</org.projectlombok.version>
-        <org.springdoc-openapi.version>1.2.32</org.springdoc-openapi.version>
+        <org.springdoc-openapi.version>1.4.3</org.springdoc-openapi.version>
         <applicationinsights.version>2.6.1</applicationinsights.version>
         <cosmosdb.version>2.3.2</cosmosdb.version>
         <azure.springboot.version>2.3.2</azure.springboot.version>
         <jackson.version>2.11.0</jackson.version>
-        <mockito.version>2.23.0</mockito.version>
+        <mockito.version>3.4.0</mockito.version>
         <lombok.version>1.18.12</lombok.version>
         <hamcrest.version>2.2</hamcrest.version>
         <pitest.version>1.5.2</pitest.version>

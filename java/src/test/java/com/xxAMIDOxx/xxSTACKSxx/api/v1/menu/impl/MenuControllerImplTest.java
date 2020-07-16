@@ -4,8 +4,6 @@ import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.MenuCreatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import org.junit.jupiter.api.Tag;
@@ -26,9 +24,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.xxAMIDOxx.xxSTACKSxx.model.MenuHelper.createMenu;
-import static com.xxAMIDOxx.xxSTACKSxx.model.MenuHelper.createMenus;
-import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
+import static com.xxAMIDOxx.xxSTACKSxx.model.MenuHelper.*;
+import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.*;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,9 +33,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(
@@ -62,7 +57,7 @@ public class MenuControllerImplTest {
   final int DEFAULT_PAGE_SIZE = 20;
 
   @Test
-  void listMenusAndPagination() {
+  public void listMenusAndPagination() {
 
     // Given
     when(
@@ -87,7 +82,7 @@ public class MenuControllerImplTest {
   }
 
   @Test
-  void listMenusFilteredByRestaurantId() {
+  public void listMenusFilteredByRestaurantId() {
 
     // Given
     final UUID restaurantId = randomUUID();
@@ -122,7 +117,7 @@ public class MenuControllerImplTest {
   }
 
   @Test
-  void listMenusFilteredByRestaurantIdAndSearchTerm() {
+  public void listMenusFilteredByRestaurantIdAndSearchTerm() {
     // Given
     final UUID restaurantId = randomUUID();
     final String searchTerm = "searchTermString";
@@ -147,7 +142,7 @@ public class MenuControllerImplTest {
   }
 
   @Test
-  void listMenusFilteredBySearchTerm() {
+  public void listMenusFilteredBySearchTerm() {
     // Given
     final String searchTerm = "searchTermString";
 
@@ -168,7 +163,7 @@ public class MenuControllerImplTest {
   }
 
   @Test
-  void getMenuById() {
+  public void getMenuById() {
     // Given
     Menu menu = createMenu(0);
     when(menuRepository.findById(menu.getId())).thenReturn(Optional.of(menu));
@@ -183,16 +178,15 @@ public class MenuControllerImplTest {
   }
 
   @Test
-  void listMenusWithDefaultPagination() {
+  public void listMenusWithDefaultPagination() {
     // Given
     when(
             menuRepository.findAll(any(Pageable.class))
     ).thenReturn(new PageImpl<>(createMenus(1)));
 
     // When
-    var response =
-            this.testRestTemplate.getForEntity(getBaseURL(port) + "/v1/menu",
-                    SearchMenuResult.class);
+    var response = this.testRestTemplate.getForEntity(getBaseURL(port) + "/v1/menu",
+            SearchMenuResult.class);
 
     // Then
     then(response.getBody()).isInstanceOf(SearchMenuResult.class);
@@ -236,6 +230,5 @@ public class MenuControllerImplTest {
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
-
 
 }
