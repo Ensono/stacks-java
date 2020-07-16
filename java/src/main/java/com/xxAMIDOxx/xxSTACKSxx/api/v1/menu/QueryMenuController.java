@@ -1,7 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu;
 
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
-import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.MenuDTO;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.SearchMenuResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,7 +21,7 @@ public interface QueryMenuController {
 
     @GetMapping(value = "", produces = "application/json")
     @Operation(
-            tags = "Menu",
+            tags = "MenuDTO",
             summary = "Get or search a list of menus",
             description =
                     "By passing in the appropriate options, you can search for available menus in the system",
@@ -46,16 +46,16 @@ public interface QueryMenuController {
 
     @GetMapping(value = "/{id}", produces = "application/json")
     @Operation(
-            tags = "Menu",
+            tags = "MenuDTO",
             summary = "Get a menu",
             description = "By passing the menu id, you can get access to available categories and items in the menu",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Menu",
+                            description = "MenuDTO",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Menu.class))),
+                                    schema = @Schema(implementation = MenuDTO.class))),
                     @ApiResponse(
                             responseCode = "404",
                             description = "Not Found",
@@ -65,6 +65,6 @@ public interface QueryMenuController {
                             description = "Bad Request",
                             content = @Content(schema = @Schema(hidden = true)))
             })
-    ResponseEntity<Menu> getMenu(@PathVariable(name = "id") UUID id);
+    ResponseEntity<MenuDTO> getMenu(@PathVariable(name = "id") UUID id);
 }
 

@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx.service;
+package com.xxAMIDOxx.xxSTACKSxx.core.azure;
 
 import com.microsoft.azure.spring.data.cosmosdb.core.query.CosmosPageRequest;
 import org.springframework.data.domain.Sort;

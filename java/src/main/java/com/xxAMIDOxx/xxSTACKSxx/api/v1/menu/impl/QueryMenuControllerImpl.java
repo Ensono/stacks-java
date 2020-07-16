@@ -1,9 +1,11 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.impl;
 
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.QueryMenuController;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
-import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.SearchMenuResult;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.SearchMenuResultItem;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.MenuDTO;
+import com.xxAMIDOxx.xxSTACKSxx.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.mapper.MenuMapper;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -18,7 +21,7 @@ import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
- * MenuControllerImpl - Menu Controller used to interact and manage menus API.
+ * MenuControllerImpl - MenuDTO Controller used to interact and manage menus API.
  */
 @RestController
 public class QueryMenuControllerImpl implements QueryMenuController {
@@ -36,6 +39,9 @@ public class QueryMenuControllerImpl implements QueryMenuController {
                                                        final UUID restaurantId,
                                                        final Integer pageSize,
                                                        final Integer pageNumber) {
+
+        logger.info("Got request: {} {}", searchTerm, restaurantId);
+
         List<Menu> menuList;
 
         if (isNotEmpty(searchTerm) && nonNull(restaurantId)) {
@@ -54,7 +60,9 @@ public class QueryMenuControllerImpl implements QueryMenuController {
     }
 
     @Override
-    public ResponseEntity<Menu> getMenu(UUID id) {
-        return ResponseEntity.of(this.menuService.findById(id));
+    public ResponseEntity<MenuDTO> getMenu(UUID id) {
+        Optional<Menu> menu = this.menuService.findById(id);
+        return ResponseEntity.of(
+                menu.map(MenuMapper.INSTANCE::menuToMenuDto));
     }
 }

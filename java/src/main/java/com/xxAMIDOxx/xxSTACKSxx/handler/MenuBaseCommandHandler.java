@@ -4,7 +4,7 @@ import com.xxAMIDOxx.xxSTACKSxx.core.commands.CommandHandler;
 import com.xxAMIDOxx.xxSTACKSxx.core.events.ApplicationEventPublisher;
 import com.xxAMIDOxx.xxSTACKSxx.cqrs.commands.MenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.cqrs.events.MenuEvent;
-import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 
 import java.util.List;

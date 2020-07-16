@@ -1,25 +1,45 @@
 package com.xxAMIDOxx.xxSTACKSxx.handler;
 
+import com.xxAMIDOxx.xxSTACKSxx.core.commands.CommandHandler;
+import com.xxAMIDOxx.xxSTACKSxx.core.events.ApplicationEventPublisher;
 import com.xxAMIDOxx.xxSTACKSxx.cqrs.commands.CreateMenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.cqrs.events.MenuCreatedEvent;
-import com.xxAMIDOxx.xxSTACKSxx.cqrs.events.MenuEvent;
-import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
+import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
-public class CreateMenuHandler extends MenuBaseCommandHandler<CreateMenuCommand> {
-    @Override
-    Optional<UUID> handleCommand(Menu menu, CreateMenuCommand command) {
-        return Optional.empty();
+@Component
+public class CreateMenuHandler implements CommandHandler<CreateMenuCommand> {
+
+    protected MenuRepository menuRepository;
+
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    public CreateMenuHandler(MenuRepository menuRepository, ApplicationEventPublisher applicationEventPublisher) {
+        this.menuRepository = menuRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
-    List<MenuEvent> raiseApplicationEvents(Menu menu, CreateMenuCommand command) {
-        return Collections.singletonList(
-                new MenuCreatedEvent(command, UUID.fromString(menu.getId()))
-        );
+    public Optional<UUID> handle(CreateMenuCommand command) {
+
+        final UUID id = UUID.randomUUID();
+
+        Menu menu = new Menu(id.toString(),
+                command.getRestaurantId().toString(),
+                command.getName(),
+                command.getDescription(),
+                new ArrayList<>(),
+                command.getEnabled());
+
+        menuRepository.save(menu);
+
+        applicationEventPublisher.publish(new MenuCreatedEvent(command, id));
+
+        return Optional.of(id);
     }
 }

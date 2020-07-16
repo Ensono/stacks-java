@@ -1,11 +1,11 @@
 package com.xxAMIDOxx.xxSTACKSxx.builder;
 
-import com.xxAMIDOxx.xxSTACKSxx.model.Item;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.ItemDTO;
 
 import java.util.UUID;
 
 /**
- * Builder class for Category Item
+ * Builder class for CategoryDTO ItemDTO
  * @author ArathyKrishna
  */
 public final class ItemBuilder {
@@ -47,15 +47,15 @@ public final class ItemBuilder {
         return this;
     }
 
-    public Item build() {
-        return new Item(id, name, description, price, available);
+    public ItemDTO build() {
+        return new ItemDTO(id, name, description, price, available);
     }
 
-    public static Item aDefaultItem() {
+    public static ItemDTO aDefaultItem() {
         return anItem()
                 .withAvailable(true)
                 .withDescription("Some Description")
-                .withName("1st Item")
+                .withName("1st ItemDTO")
                 .withPrice(12.34d)
                 .withId(UUID.randomUUID().toString())
                 .build();

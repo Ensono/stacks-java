@@ -1,20 +1,20 @@
 package com.xxAMIDOxx.xxSTACKSxx.builder;
 
-import com.xxAMIDOxx.xxSTACKSxx.model.Category;
-import com.xxAMIDOxx.xxSTACKSxx.model.Item;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.CategoryDTO;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.ItemDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Builder class for Category
+ * Builder class for CategoryDTO
  * @author ArathyKrishna
  */
 public final class CategoryBuilder {
     private String id = null;
     private String name = null;
     private String description = null;
-    private List<Item> items = new ArrayList<>();
+    private List<ItemDTO> items = new ArrayList<>();
 
     private CategoryBuilder() {
     }
@@ -38,12 +38,12 @@ public final class CategoryBuilder {
         return this;
     }
 
-    public CategoryBuilder withItems(List<Item> items) {
+    public CategoryBuilder withItems(List<ItemDTO> items) {
         this.items = items;
         return this;
     }
 
-    public Category build() {
-        return new Category(id, name, description, items);
+    public CategoryDTO build() {
+        return new CategoryDTO(id, name, description, items);
     }
 }

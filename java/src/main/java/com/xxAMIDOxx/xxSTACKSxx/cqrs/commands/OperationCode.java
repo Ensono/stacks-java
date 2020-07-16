@@ -1,7 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.cqrs.commands;
 
 public enum OperationCode {
-    // Menu operations
+    // MenuDTO operations
     CREATE_MENU(101),
     UPDATE_MENU(102),
     DELETE_MENU(103),

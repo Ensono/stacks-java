@@ -1,5 +1,8 @@
 package com.xxAMIDOxx.xxSTACKSxx.model;
 
+
+import com.xxAMIDOxx.xxSTACKSxx.domain.Menu;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -21,11 +24,11 @@ public class MenuHelper {
 
     public static Menu createMenu(int counter) {
         return aMenu()
-                .withDescription(counter + " Menu Description")
+                .withDescription(counter + " MenuDTO Description")
                 .withEnabled(true)
-                .withName(counter + " Menu")
+                .withName(counter + " MenuDTO")
                 .withId(UUID.randomUUID().toString())
-                .withRestaurantId(UUID.randomUUID())
+                .withRestaurantId(UUID.randomUUID().toString())
                 .build();
     }
 }

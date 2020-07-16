@@ -19,4 +19,16 @@ public abstract class OperationContext {
     public UUID getCorrelationId() {
         return correlationId;
     }
+
+    public void setCorrelationId(UUID correlationId) {
+        this.correlationId = correlationId;
+    }
+
+    @Override
+    public String toString() {
+        return "OperationContext{" +
+                "operationCode=" + operationCode +
+                ", correlationId=" + correlationId +
+                '}';
+    }
 }

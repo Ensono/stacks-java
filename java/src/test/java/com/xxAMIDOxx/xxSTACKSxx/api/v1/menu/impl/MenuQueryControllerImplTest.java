@@ -2,9 +2,11 @@ package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.impl;
 
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
-import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.MenuDTO;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.SearchMenuResult;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.SearchMenuResultItem;
+import com.xxAMIDOxx.xxSTACKSxx.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.mapper.MenuMapper;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -89,7 +91,7 @@ public class MenuQueryControllerImplTest {
 
         List<Menu> menuList = createMenus(3);
         Menu match = menuList.get(0);
-        match.setRestaurantId(restaurantId);
+        match.setRestaurantId(restaurantId.toString());
         menuList.add(match);
         List<Menu> matching = Collections.singletonList(match);
 
@@ -166,15 +168,17 @@ public class MenuQueryControllerImplTest {
     public void getMenuById() {
         // Given
         Menu menu = createMenu(0);
+        MenuDTO expectedResponse = MenuMapper.INSTANCE.menuToMenuDto(menu);
+
         when(menuRepository.findById(menu.getId())).thenReturn(Optional.of(menu));
 
         // When
         var response = this.testRestTemplate.getForEntity(
                 getBaseURL(port) + "/v1/menu/" + menu.getId(),
-                Menu.class);
+                MenuDTO.class);
 
         // Then
-        then(response.getBody()).isEqualTo(menu);
+        then(response.getBody()).isEqualTo(expectedResponse);
     }
 
     @Test

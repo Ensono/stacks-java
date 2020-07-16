@@ -1,26 +1,18 @@
-package com.xxAMIDOxx.xxSTACKSxx.model;
+package com.xxAMIDOxx.xxSTACKSxx.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Category {
 
-  @JsonProperty("Id")
   private String id;
 
-  @JsonProperty("Name")
   private String name;
 
-  @JsonProperty("Description")
   private String description;
 
-  @JsonProperty("Items")
-  private List<Item> items = new ArrayList<>();
-
-  public Category() {
-  }
+  private List<Item> items;
 
   public Category(String id, String name, String description, List<Item> items) {
     this.id = id;
