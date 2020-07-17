@@ -1,19 +1,20 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.impl;
 
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.QueryMenuController;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.SearchMenuResult;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.SearchMenuResultItem;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.MenuDTO;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.MenuDTO;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.SearchMenuResult;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.SearchMenuResultItem;
+import com.xxAMIDOxx.xxSTACKSxx.cqrs.commands.OperationCode;
 import com.xxAMIDOxx.xxSTACKSxx.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.exception.MenuNotFoundException;
 import com.xxAMIDOxx.xxSTACKSxx.mapper.MenuMapper;
-import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
+import com.xxAMIDOxx.xxSTACKSxx.cqrs.handlers.query.QueryMenuHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -28,10 +29,10 @@ public class QueryMenuControllerImpl implements QueryMenuController {
 
     Logger logger = LoggerFactory.getLogger(QueryMenuControllerImpl.class);
 
-    private MenuService menuService;
+    private QueryMenuHandler queryMenuHandler;
 
-    public QueryMenuControllerImpl(MenuService menuService) {
-        this.menuService = menuService;
+    public QueryMenuControllerImpl(QueryMenuHandler queryMenuHandler) {
+        this.queryMenuHandler = queryMenuHandler;
     }
 
     @Override
@@ -39,20 +40,17 @@ public class QueryMenuControllerImpl implements QueryMenuController {
                                                        final UUID restaurantId,
                                                        final Integer pageSize,
                                                        final Integer pageNumber) {
-
-        logger.info("Got request: {} {}", searchTerm, restaurantId);
-
         List<Menu> menuList;
 
         if (isNotEmpty(searchTerm) && nonNull(restaurantId)) {
-            menuList = this.menuService.findAllByRestaurantIdAndNameContaining(
+            menuList = this.queryMenuHandler.findAllByRestaurantIdAndNameContaining(
                     restaurantId, searchTerm, pageSize, pageNumber);
         } else if (isNotEmpty(searchTerm)) {
-            menuList = this.menuService.findAllByNameContaining(searchTerm, pageSize, pageNumber);
+            menuList = this.queryMenuHandler.findAllByNameContaining(searchTerm, pageSize, pageNumber);
         } else if (nonNull(restaurantId)) {
-            menuList = this.menuService.findAllByRestaurantId(restaurantId, pageSize, pageNumber);
+            menuList = this.queryMenuHandler.findAllByRestaurantId(restaurantId, pageSize, pageNumber);
         } else {
-            menuList = this.menuService.findAll(pageNumber, pageSize);
+            menuList = this.queryMenuHandler.findAll(pageNumber, pageSize);
         }
 
         return ResponseEntity.ok(new SearchMenuResult(pageSize, pageNumber,
@@ -60,9 +58,9 @@ public class QueryMenuControllerImpl implements QueryMenuController {
     }
 
     @Override
-    public ResponseEntity<MenuDTO> getMenu(UUID id) {
-        Optional<Menu> menu = this.menuService.findById(id);
-        return ResponseEntity.of(
-                menu.map(MenuMapper.INSTANCE::menuToMenuDto));
+    public ResponseEntity<MenuDTO> getMenu(final UUID id, final String correlationId) {
+        Menu menu = this.queryMenuHandler.findById(id).orElseThrow(
+                () -> new MenuNotFoundException(correlationId, OperationCode.GET_MENU_BY_ID, id));
+        return ResponseEntity.ok(MenuMapper.INSTANCE.menuToMenuDto(menu));
     }
 }

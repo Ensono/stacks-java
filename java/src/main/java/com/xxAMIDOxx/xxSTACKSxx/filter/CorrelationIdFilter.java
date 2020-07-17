@@ -1,21 +1,17 @@
 package com.xxAMIDOxx.xxSTACKSxx.filter;
 
 import com.xxAMIDOxx.xxSTACKSxx.config.CorrelationIdFilterConfiguration;
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.UUID;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import static java.util.Collections.enumeration;
-import static java.util.Collections.singleton;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.UUID;
 
 @Order(1)
 public class CorrelationIdFilter extends OncePerRequestFilter {
@@ -59,13 +55,13 @@ public class CorrelationIdFilter extends OncePerRequestFilter {
     }
 
     private String extractCorrelationId(final HttpServletRequest request) {
-        final String token;
+        final String correlationId;
         if (!StringUtils.isEmpty(requestHeader)
                 && !StringUtils.isEmpty(request.getHeader(requestHeader))) {
-            token = request.getHeader(requestHeader);
+            correlationId = request.getHeader(requestHeader);
         } else {
-            token = UUID.randomUUID().toString();
+            correlationId = UUID.randomUUID().toString();
         }
-        return token;
+        return correlationId;
     }
 }

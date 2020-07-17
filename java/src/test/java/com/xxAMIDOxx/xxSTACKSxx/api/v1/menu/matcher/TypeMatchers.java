@@ -1,8 +1,8 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.matcher;
 
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.CategoryDTO;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.ItemDTO;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.MenuDTO;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.CategoryDTO;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.ItemDTO;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.MenuDTO;
 import org.hamcrest.Matcher;
 
 import java.util.stream.Collectors;

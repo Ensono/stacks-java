@@ -2,9 +2,9 @@ package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.impl;
 
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.MenuDTO;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.SearchMenuResult;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.SearchMenuResultItem;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.MenuDTO;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.SearchMenuResult;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.mapper.MenuMapper;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.xxAMIDOxx.xxSTACKSxx.model.MenuHelper.*;
+import static com.xxAMIDOxx.xxSTACKSxx.domain.MenuHelper.*;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.*;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.BDDAssertions.then;

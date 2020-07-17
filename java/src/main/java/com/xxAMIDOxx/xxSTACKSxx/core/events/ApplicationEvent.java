@@ -1,16 +1,34 @@
 package com.xxAMIDOxx.xxSTACKSxx.core.events;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.xxAMIDOxx.xxSTACKSxx.core.operations.OperationContext;
 
+import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
-public abstract class ApplicationEvent extends OperationContext {
+import static java.time.ZonedDateTime.now;
 
+public abstract class ApplicationEvent extends OperationContext implements Serializable {
+
+    private UUID id;
     private int eventCode;
+    private ZonedDateTime creationDate;
 
-    public ApplicationEvent(int operationCode, UUID correlationId, int eventCode) {
+    public ApplicationEvent(int operationCode, String correlationId, int eventCode) {
         super(operationCode, correlationId);
         this.eventCode = eventCode;
+        this.id = UUID.randomUUID();
+        this.creationDate = now();
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.SSSZ")
+    public ZonedDateTime getCreationDate() {
+        return creationDate;
     }
 
     public int getEventCode() {
@@ -20,7 +38,9 @@ public abstract class ApplicationEvent extends OperationContext {
     @Override
     public String toString() {
         return "ApplicationEvent{" +
-                "eventCode=" + eventCode +
+                "id=" + id +
+                ", eventCode=" + eventCode +
+                ", creationDate=" + creationDate +
                 "} " + super.toString();
     }
 }

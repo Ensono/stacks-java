@@ -1,5 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu;
 
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.request.CreateCategoryRequest;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.request.CreateMenuRequest;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.ResourceCreatedResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,21 +9,19 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
-@RequestMapping("/v1/menu")
-public interface CreateMenuController {
+@RequestMapping("/v1/menu/{id}/category")
+public interface CreateCategoryController {
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @Operation(
-            tags = "Menu",
-            summary = "Create a menu",
-            description = "Adds a menu",
+            tags = "Category",
+            summary = "Create a category in the menu",
+            description = "Adds a category to menu",
             responses = {
                     @ApiResponse(
                             responseCode = "201",
@@ -48,8 +47,9 @@ public interface CreateMenuController {
                             description = "Conflict, an item already exists",
                             content = @Content(schema = @Schema(hidden = true))),
             })
-    ResponseEntity<ResourceCreatedResponse> createMenu(
-            @Valid @RequestBody CreateMenuRequest body,
+    ResponseEntity<ResourceCreatedResponse> addMenuCategory(
+            @Parameter(description = "Menu id",required=true) @PathVariable("id") UUID menuId,
+            @Valid @RequestBody CreateCategoryRequest body,
             @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId
     );
 }
