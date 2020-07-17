@@ -1,16 +1,12 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.MenuController;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.MenuCreatedDto;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.MenuCreatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,15 +24,10 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 @RestController
 public class MenuControllerImpl implements MenuController {
 
-  Logger logger = LoggerFactory.getLogger(MenuControllerImpl.class);
-
-  private final ObjectMapper mapper;
-
   private final MenuService menuService;
 
-  public MenuControllerImpl(MenuService menuService, ObjectMapper mapper) {
+  public MenuControllerImpl(MenuService menuService) {
     this.menuService = menuService;
-    this.mapper = mapper;
   }
 
   @Override
@@ -69,16 +60,14 @@ public class MenuControllerImpl implements MenuController {
   }
 
   /**
-   * @param menuCreateRequestDto menu to be created
-   * @return MenuCreatedDto
+   * @param requestDto menu to be created
+   * @return ResourceCreatedResponse
    */
   @Override
-  public ResponseEntity createMenu(
-          MenuCreateRequestDto menuCreateRequestDto) {
-    MenuCreatedDto menuCreatedDto =
-            this.menuService.saveMenu(menuCreateRequestDto);
-    MenuCreatedResponse menuCreatedResponse =
-            this.mapper.convertValue(menuCreatedDto, MenuCreatedResponse.class);
-    return new ResponseEntity(menuCreatedResponse, HttpStatus.CREATED);
+  public ResponseEntity<ResourceCreatedResponse> createMenu(
+          MenuCreateRequestDto requestDto) {
+    ResourceCreatedResponse createdResponse =
+            this.menuService.saveMenu(requestDto);
+    return new ResponseEntity<>(createdResponse, HttpStatus.CREATED);
   }
 }

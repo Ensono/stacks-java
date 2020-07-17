@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.service.impl;
 
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.MenuCreatedDto;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
@@ -84,7 +84,7 @@ public class MenuServiceImplTest {
     when(repository.save(any(Menu.class))).thenReturn(menu);
 
     // When
-    MenuCreatedDto actualResults = menuServiceImpl.saveMenu(dto);
+    ResourceCreatedResponse actualResults = menuServiceImpl.saveMenu(dto);
 
     // Then
     then(actualResults.getId()).isNotEmpty();

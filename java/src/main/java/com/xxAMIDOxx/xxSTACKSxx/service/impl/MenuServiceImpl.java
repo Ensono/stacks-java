@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.service.impl;
 
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.MenuCreatedDto;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
@@ -91,7 +91,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public MenuCreatedDto saveMenu(MenuCreateRequestDto menuDto) {
+    public ResourceCreatedResponse saveMenu(MenuCreateRequestDto menuDto) {
         Menu menu = new Menu();
         menu.setDescription(menuDto.getDescription());
         menu.setEnabled(menuDto.getEnabled());
@@ -103,7 +103,7 @@ public class MenuServiceImpl implements MenuService {
         menu.setId(UUID.randomUUID().toString());
         Menu save = menuRepository.save(menu);
         logger.info("A new menu is created");
-        MenuCreatedDto dto = new MenuCreatedDto();
+        ResourceCreatedResponse dto = new ResourceCreatedResponse();
         dto.setId(save.getId());
         return dto;
     }

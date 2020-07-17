@@ -1,10 +1,10 @@
-package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto;
+package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto;
 
 /**
  * @author Suresh Krishnan
  * @author ArathyKrishna
  */
-public class MenuCreatedDto {
+public class ResourceCreatedResponse {
 
   private String id;
 

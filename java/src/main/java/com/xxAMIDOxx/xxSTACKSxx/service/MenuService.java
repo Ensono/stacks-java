@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.service;
 
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.MenuCreatedDto;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 
@@ -73,5 +73,5 @@ public interface MenuService {
      * @param menuDto dto for creating a menu object
      * @return created Menu
      */
-    MenuCreatedDto saveMenu(MenuCreateRequestDto menuDto);
+    ResourceCreatedResponse saveMenu(MenuCreateRequestDto menuDto);
 }

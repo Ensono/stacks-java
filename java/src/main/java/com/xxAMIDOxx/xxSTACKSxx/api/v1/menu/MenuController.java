@@ -1,8 +1,8 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu;
 
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.MenuCreatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -104,7 +104,7 @@ public interface MenuController {
                           content = @Content(schema = @Schema(hidden = true)))
 
           })
-  ResponseEntity<MenuCreatedResponse> createMenu(
+  ResponseEntity<ResourceCreatedResponse> createMenu(
           @Valid @RequestBody MenuCreateRequestDto menuCreateRequestDto);
 
 }
