@@ -1,7 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.service.impl;
 
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.MenuCreatedDto;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
+import com.xxAMIDOxx.xxSTACKSxx.model.Category;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.xxAMIDOxx.xxSTACKSxx.model.MenuHelper.createMenus;
@@ -26,13 +26,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Tag("Unit")
-public class MenuServiceImplTest {
+class MenuServiceImplTest {
 
   @Mock
   MenuRepository repository;
 
   @Mock
   Menu menu;
+
+  @Mock
+  Category category;
 
   @InjectMocks
   MenuServiceImpl menuServiceImpl;
@@ -41,11 +44,15 @@ public class MenuServiceImplTest {
   void init_mocks() {
     MockitoAnnotations.initMocks(this);
     menu = new Menu();
-    menu.setId(UUID.randomUUID().toString());
     menu.setEnabled(true);
     menu.setName("testMenu");
     menu.setRestaurantId(UUID.randomUUID());
     menu.setDescription("something");
+
+    category = new Category();
+    category.setId(UUID.randomUUID().toString());
+    category.setName("test Category");
+    category.setDescription("test Category Description");
   }
 
   @Test
@@ -73,20 +80,64 @@ public class MenuServiceImplTest {
   }
 
   @Test
-  void testSaveAll() {
+  void testFindMenuById() {
     // Given
-    MenuCreateRequestDto dto = new MenuCreateRequestDto();
-    dto.setDescription("TestDto");
-    dto.setEnabled(true);
-   // dto.setName("Test1");
-    dto.setTenantId(UUID.randomUUID().toString());
+    when(repository.save(any(Menu.class))).thenReturn(menu);
+    when(repository.findById(any(String.class))).thenReturn(Optional.of(menu));
 
+    // When
+    Menu actualResults = menuServiceImpl.saveMenu(menu);
+
+    // Then
+    Optional<Menu> byId =
+            menuServiceImpl.findById(UUID.fromString(actualResults.getId()));
+    Menu retrieved = byId.get();
+    then(retrieved.getId()).isEqualTo(actualResults.getId());
+    then(retrieved.getDescription()).isEqualTo(actualResults.getDescription());
+    then(retrieved.getEnabled()).isTrue();
+  }
+
+  @Test
+  void testSaveMenu() {
+    // Given
     when(repository.save(any(Menu.class))).thenReturn(menu);
 
     // When
-    MenuCreatedDto actualResults = menuServiceImpl.saveMenu(dto);
+    Menu actualResults = menuServiceImpl.saveMenu(menu);
 
     // Then
+    then(actualResults).isSameAs(menu);
     then(actualResults.getId()).isNotEmpty();
+  }
+
+  @Test
+  void testAddCategory() {
+    // Given
+    when(repository.save(any(Menu.class))).thenReturn(menu);
+    when(repository.findById(any(String.class))).thenReturn(Optional.of(menu));
+    Menu savedMenu = menuServiceImpl.saveMenu(menu);
+
+    // When
+    Category actualResult =
+            menuServiceImpl.saveCategory(UUID.fromString(savedMenu.getId()), category);
+
+    // Then
+    then(actualResult).isSameAs(category);
+    then(menu.getCategories()).hasSize(1);
+    then(actualResult.getId()).isNotEmpty();
+  }
+
+  @Test
+  void testCannotAddCategoryIfMenuDoesNotExist() {
+    // Given
+    when(repository.save(any(Menu.class))).thenReturn(new Menu());
+    when(repository.findById(any(String.class))).thenReturn(Optional.of(new Menu()));
+
+    // When
+    Category actualResult =
+            menuServiceImpl.saveCategory(UUID.randomUUID(), category);
+
+    // Then
+    then(actualResult).isNull();
   }
 }

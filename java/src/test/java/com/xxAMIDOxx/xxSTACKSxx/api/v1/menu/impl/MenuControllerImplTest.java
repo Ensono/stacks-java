@@ -4,12 +4,17 @@ import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.CreateCategoryRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.MenuCreatedResponse;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponseDto;
+import com.xxAMIDOxx.xxSTACKSxx.model.Category;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,6 +44,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(
@@ -58,8 +66,30 @@ public class MenuControllerImplTest {
   @MockBean
   private MenuRepository menuRepository;
 
+  @Mock
+  Menu menu;
+
+  @Mock
+  Category category;
+
   final int DEFAULT_PAGE_NUMBER = 1;
   final int DEFAULT_PAGE_SIZE = 20;
+
+  @BeforeEach
+  void init_mocks() {
+    MockitoAnnotations.initMocks(this);
+    menu = new Menu();
+    menu.setId(randomUUID().toString());
+    menu.setEnabled(true);
+    menu.setName("testMenu");
+    menu.setRestaurantId(UUID.randomUUID());
+    menu.setDescription("something");
+
+    category = new Category();
+    category.setName("test Category");
+    category.setDescription("test Category Description");
+  }
+
 
   @Test
   public void listMenusAndPagination() {
@@ -80,7 +110,7 @@ public class MenuControllerImplTest {
 
     // Then
     verify(menuRepository, times(1)).findAll(any(Pageable.class));
-    then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    then(response.getStatusCode()).isEqualTo(OK);
     assertThat(actual, is(notNullValue()));
     assertThat(actual.getPageNumber(), is(pageNumber));
     assertThat(actual.getPageSize(), is(pageSize));
@@ -190,8 +220,9 @@ public class MenuControllerImplTest {
     ).thenReturn(new PageImpl<>(createMenus(1)));
 
     // When
-    var response = this.testRestTemplate.getForEntity(getBaseURL(port) + "/v1/menu",
-            SearchMenuResult.class);
+    var response =
+            this.testRestTemplate.getForEntity(getBaseURL(port) + "/v1/menu",
+                    SearchMenuResult.class);
 
     // Then
     then(response.getBody()).isInstanceOf(SearchMenuResult.class);
@@ -213,7 +244,7 @@ public class MenuControllerImplTest {
             .thenReturn(new Menu());
     // When
     var response =
-            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu", dto, MenuCreatedResponse.class);
+            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu", dto, ResourceCreatedResponseDto.class);
 
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -225,15 +256,85 @@ public class MenuControllerImplTest {
     MenuCreateRequestDto dto = new MenuCreateRequestDto();
     dto.setDescription("TestDto");
     dto.setEnabled(true);
-    dto.setTenantId(UUID.randomUUID().toString());
-    when(menuRepository.save(any(Menu.class)))
-            .thenReturn(new Menu());
+    dto.setTenantId(randomUUID().toString());
+    when(menuRepository.save(any(Menu.class))).thenReturn(new Menu());
     // When
     var response =
-            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu", dto, MenuCreatedResponse.class);
+            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu", dto, ResourceCreatedResponseDto.class);
 
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
+
+  @Test
+  void testCanNotAddCategoryIfMenuNotPresent() {
+    // Given
+    when(menuRepository.save(any(Menu.class))).thenReturn(new Menu());
+    when(menuRepository.findById(any(String.class))).thenReturn(Optional.of(new Menu()));
+
+    CreateCategoryRequestDto dto = new CreateCategoryRequestDto();
+    dto.setDescription("test Category Description");
+    dto.setName("test Category Name");
+
+    // When
+    var response =
+            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu/" + randomUUID() + "/category", dto, ResourceCreatedResponseDto.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(NOT_FOUND);
+  }
+
+  @Test
+  void testInvalidRequestObjectGivenReturnsBadRequest() {
+    // Given
+    // When
+    var response =
+            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu/"
+                    + randomUUID() + "/category", new CreateCategoryRequestDto(), ResourceCreatedResponseDto.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+  }
+
+  @Test
+  void testInvalidMenuIdWilThrowBadRequest() {
+    // Given
+
+    // When
+    var response =
+            this.testRestTemplate.postForEntity(getBaseURL(port) +
+                    "/v1/menu/something/category", new CreateCategoryRequestDto(), ResourceCreatedResponseDto.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+  }
+
+  @Test
+  void testAddCategory() {
+    // Given
+    when(menuRepository.save(any(Menu.class))).thenReturn(menu);
+    when(menuRepository.findById(any(String.class))).thenReturn(Optional.of(menu));
+
+    CreateCategoryRequestDto dto = new CreateCategoryRequestDto();
+    dto.setDescription("test Category Description");
+    dto.setName("test Category Name");
+
+    Menu initialSave = menuRepository.save(menu);
+    // When
+    var response =
+            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu/" + initialSave.getId() + "/category", dto, ResourceCreatedResponseDto.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(OK);
+    Optional<Menu> byId = menuRepository.findById(initialSave.getId());
+    Menu updated = byId.get();
+    then(updated.getId()).isEqualTo(initialSave.getId());
+    then(updated.getCategories()).hasSize(1);
+    Category savedCategory = updated.getCategories().get(0);
+    then(savedCategory.getId()).isNotEmpty();
+    then(savedCategory.getDescription()).isEqualTo(dto.getDescription());
+    then(savedCategory.getName()).isEqualTo(dto.getName());
+  }
+
 
 }

@@ -2,16 +2,15 @@ package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.MenuController;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.MenuCreatedDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.CreateCategoryRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.MenuCreatedResponse;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponseDto;
+import com.xxAMIDOxx.xxSTACKSxx.model.Category;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,8 +18,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * MenuControllerImpl - Menu Controller used to interact and manage menus API.
@@ -28,11 +32,8 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 @RestController
 public class MenuControllerImpl implements MenuController {
 
-  Logger logger = LoggerFactory.getLogger(MenuControllerImpl.class);
-
-  private final ObjectMapper mapper;
-
   private final MenuService menuService;
+  private final ObjectMapper mapper;
 
   public MenuControllerImpl(MenuService menuService, ObjectMapper mapper) {
     this.menuService = menuService;
@@ -69,16 +70,66 @@ public class MenuControllerImpl implements MenuController {
   }
 
   /**
-   * @param menuCreateRequestDto menu to be created
-   * @return MenuCreatedDto
+   * @param requestDto menu to be created
+   * @return ResourceCreatedResponseDto
    */
   @Override
-  public ResponseEntity createMenu(
-          MenuCreateRequestDto menuCreateRequestDto) {
-    MenuCreatedDto menuCreatedDto =
-            this.menuService.saveMenu(menuCreateRequestDto);
-    MenuCreatedResponse menuCreatedResponse =
-            this.mapper.convertValue(menuCreatedDto, MenuCreatedResponse.class);
-    return new ResponseEntity(menuCreatedResponse, HttpStatus.CREATED);
+  public ResponseEntity<ResourceCreatedResponseDto> createMenu(
+          MenuCreateRequestDto requestDto) {
+    Menu menu = this.menuService.saveMenu(convertMenuDtoToMenu(requestDto));
+    ResourceCreatedResponseDto createdResponse =
+            new ResourceCreatedResponseDto();
+    createdResponse.setId(menu.getId());
+    return new ResponseEntity<>(createdResponse, CREATED);
+  }
+
+  /**
+   * Mapping MenuRequestDto to Menu object
+   *
+   * @param requestDto Menu request dto
+   * @return mapped menu
+   */
+  private Menu convertMenuDtoToMenu(MenuCreateRequestDto requestDto) {
+    Menu newMenu = this.mapper.convertValue(requestDto, Menu.class);
+    if (StringUtils.isNotEmpty(requestDto.getTenantId())) {
+      newMenu.setRestaurantId(UUID.fromString(requestDto.getTenantId()));
+    }
+    return newMenu;
+  }
+
+  /**
+   * @param requestDto dto mapping Create category request
+   * @return CategoryCreateResponse
+   */
+  @Override
+  public ResponseEntity<ResourceCreatedResponseDto>
+  createCategory(UUID id, CreateCategoryRequestDto requestDto) {
+    Category category = convertCategoryDtoToCategory(requestDto);
+
+    if (isNull(category)) {
+      return new ResponseEntity<>(BAD_REQUEST);
+    }
+    category = this.menuService.saveCategory(id, category);
+
+    if (isNull(category)) {
+      return new ResponseEntity<>(NOT_FOUND);
+    }
+
+    ResourceCreatedResponseDto createdResponse =
+            new ResourceCreatedResponseDto();
+    createdResponse.setId(category.getId());
+
+    return new ResponseEntity<>(createdResponse, OK);
+  }
+
+  /**
+   * Mapping MenuRequestDto to Menu object
+   *
+   * @param requestDto Menu request dto
+   * @return mapped menu
+   */
+  private Category convertCategoryDtoToCategory(
+          CreateCategoryRequestDto requestDto) {
+    return this.mapper.convertValue(requestDto, Category.class);
   }
 }

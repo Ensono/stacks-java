@@ -9,33 +9,27 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 /**
- * DTO to map Menu Created.
+ * A DTO to map Create Category request.
  *
- * @author Suresh Krishnan
  * @author ArathyKrishna
  */
-@Schema(name = "CreateMenuRequest")
-public class MenuCreateRequestDto {
+
+@Schema(name = "CreateCategoryRequest")
+public class CreateCategoryRequestDto {
+
   @JsonInclude(JsonInclude.Include.NON_NULL)
   @JsonPropertyOrder({
           "name",
-          "description",
-          "tenantId",
-          "enabled"
+          "description"
   })
 
   @NotNull
   @JsonProperty("name")
   private String name;
+
   @NotNull
   @JsonProperty("description")
   private String description;
-  @NotNull
-  @JsonProperty("tenantId")
-  private String tenantId;
-  @NotNull
-  @JsonProperty("enabled")
-  private Boolean enabled;
 
   public String getName() {
     return name;
@@ -53,44 +47,24 @@ public class MenuCreateRequestDto {
     this.description = description;
   }
 
-  public String getTenantId() {
-    return tenantId;
-  }
-
-  public void setTenantId(String tenantId) {
-    this.tenantId = tenantId;
-  }
-
-  public Boolean getEnabled() {
-    return enabled;
-  }
-
-  public void setEnabled(Boolean enabled) {
-    this.enabled = enabled;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof MenuCreateRequestDto)) return false;
-    MenuCreateRequestDto requestDto = (MenuCreateRequestDto) o;
+    if (!(o instanceof CreateCategoryRequestDto)) return false;
+    CreateCategoryRequestDto requestDto = (CreateCategoryRequestDto) o;
     return Objects.equals(name, requestDto.name)
-            && Objects.equals(description, requestDto.description)
-            && Objects.equals(tenantId, requestDto.tenantId)
-            && Objects.equals(enabled, requestDto.enabled);
+            && Objects.equals(description, requestDto.description);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, description, tenantId, enabled);
+    return Objects.hash(name, description);
   }
 
   @Override
   public String toString() {
-    return "MenuCreateRequestDto{" + "name=" + name
+    return "CreateCategoryRequestDto{" + "name=" + name
             + ", description=" + description
-            + ", tenantId=" + tenantId
-            + ", enabled=" + enabled
             + '}';
   }
 }

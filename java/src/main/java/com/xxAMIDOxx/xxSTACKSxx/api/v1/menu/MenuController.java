@@ -1,8 +1,10 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu;
 
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponseDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.CreateCategoryRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.MenuCreatedResponse;
+import com.xxAMIDOxx.xxSTACKSxx.model.Category;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -102,10 +104,46 @@ public interface MenuController {
                           responseCode = "409",
                           description = "Conflict, an item already exists",
                           content = @Content(schema = @Schema(hidden = true)))
-
           })
-  ResponseEntity<MenuCreatedResponse> createMenu(
+  ResponseEntity<ResourceCreatedResponseDto> createMenu(
           @Valid @RequestBody MenuCreateRequestDto menuCreateRequestDto);
+
+  @Operation(
+          tags = "AddMenuCategory",
+          summary = "Create a category in the menu",
+          description = "Adds a category to a menu",
+          responses = {
+                  @ApiResponse(
+                          responseCode = "20",
+                          description = "Resource created",
+                          content = @Content(
+                                  mediaType = APPLICATION_JSON_VALUE,
+                                  schema = @Schema(implementation = Category.class))),
+                  @ApiResponse(
+                          responseCode = "400",
+                          description = "Bad Request",
+                          content = @Content(schema = @Schema(hidden = true))),
+                  @ApiResponse(
+                          responseCode = "401",
+                          description = "Unauthorized, Access token is missing or invalid",
+                          content = @Content(schema = @Schema(hidden = true))),
+                  @ApiResponse(
+                          responseCode = "403",
+                          description = "Bad RequestForbidden, the user does not have permission to execute this operation",
+                          content = @Content(schema = @Schema(hidden = true))),
+                  @ApiResponse(
+                          responseCode = "403",
+                          description = "Bad RequestForbidden, the user does not have permission to execute this operation",
+                          content = @Content(schema = @Schema(hidden = true))),
+                  @ApiResponse(
+                          responseCode = "404",
+                          description = "Resource not found",
+                          content = @Content(schema = @Schema(hidden = true)))
+          })
+  @PostMapping(value = "/{id}/category", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+  ResponseEntity<ResourceCreatedResponseDto> createCategory(
+          @PathVariable(name = "id") UUID id,
+          @Valid @RequestBody CreateCategoryRequestDto createCategoryRequestDto);
 
 }
 
