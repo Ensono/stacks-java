@@ -24,7 +24,7 @@
         <cosmosdb.version>2.3.2</cosmosdb.version>
         <azure.springboot.version>2.3.2</azure.springboot.version>
         <jackson.version>2.11.0</jackson.version>
-        <mockito.version>3.4.0</mockito.version>
+        <mockito.version>3.4.2</mockito.version>
         <lombok.version>1.18.12</lombok.version>
         <hamcrest.version>2.2</hamcrest.version>
         <pitest.version>1.5.2</pitest.version>
