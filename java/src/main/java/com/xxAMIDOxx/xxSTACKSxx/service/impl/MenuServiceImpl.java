@@ -1,8 +1,10 @@
 package com.xxAMIDOxx.xxSTACKSxx.service.impl;
 
+import com.xxAMIDOxx.xxSTACKSxx.model.Category;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -93,4 +95,28 @@ public class MenuServiceImpl implements MenuService {
     logger.debug("A new menu is created");
     return saved;
   }
+
+  /**
+   * Checks to see if a menu exists for the id provided
+   * if exists then add the category to that menu.
+   *
+   * @param id       id of the menu category to be added to
+   * @param category request Creating a Category and adding that to a Menu
+   * @return category
+   */
+  @Override
+  public Category saveCategory(UUID id, Category category) {
+    Optional<Menu> optionalMenu = menuRepository.findById(id.toString());
+    Menu menu = optionalMenu.get();
+
+    if (StringUtils.isEmpty(menu.getId())) {
+      return null;
+    }
+
+    category.setId(UUID.randomUUID().toString());
+    menu.setCategories(List.of(category));
+    menuRepository.save(menu);
+    return category;
+  }
+
 }

@@ -1,5 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.service;
 
+import com.xxAMIDOxx.xxSTACKSxx.model.Category;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 
 import java.util.List;
@@ -72,4 +73,12 @@ public interface MenuService {
    * @return created Menu
    */
   Menu saveMenu(Menu aMenu);
+
+  /**
+   * creates a Category
+   *
+   * @param category for adding a category to a Menu
+   * @return created Category
+   */
+  Category saveCategory(UUID id, Category category);
 }
