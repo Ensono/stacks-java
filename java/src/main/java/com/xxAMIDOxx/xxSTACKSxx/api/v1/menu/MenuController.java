@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu;
 
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponse;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponseDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
@@ -104,7 +104,7 @@ public interface MenuController {
                           content = @Content(schema = @Schema(hidden = true)))
 
           })
-  ResponseEntity<ResourceCreatedResponse> createMenu(
+  ResponseEntity<ResourceCreatedResponseDto> createMenu(
           @Valid @RequestBody MenuCreateRequestDto menuCreateRequestDto);
 
 }

@@ -2,7 +2,7 @@ package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.impl;
 
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponse;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponseDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
@@ -213,7 +213,7 @@ public class MenuControllerImplTest {
             .thenReturn(new Menu());
     // When
     var response =
-            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu", dto, ResourceCreatedResponse.class);
+            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu", dto, ResourceCreatedResponseDto.class);
 
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -230,7 +230,7 @@ public class MenuControllerImplTest {
             .thenReturn(new Menu());
     // When
     var response =
-            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu", dto, ResourceCreatedResponse.class);
+            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu", dto, ResourceCreatedResponseDto.class);
 
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);

@@ -4,7 +4,7 @@ package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto;
  * @author Suresh Krishnan
  * @author ArathyKrishna
  */
-public class ResourceCreatedResponse {
+public class ResourceCreatedResponseDto {
 
   private String id;
 

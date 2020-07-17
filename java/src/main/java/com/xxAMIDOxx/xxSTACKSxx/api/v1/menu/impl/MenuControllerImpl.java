@@ -1,7 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.impl;
 
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.MenuController;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponse;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponseDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
@@ -61,13 +61,14 @@ public class MenuControllerImpl implements MenuController {
 
   /**
    * @param requestDto menu to be created
-   * @return ResourceCreatedResponse
+   * @return ResourceCreatedResponseDto
    */
   @Override
-  public ResponseEntity<ResourceCreatedResponse> createMenu(
+  public ResponseEntity<ResourceCreatedResponseDto> createMenu(
           MenuCreateRequestDto requestDto) {
-    ResourceCreatedResponse createdResponse =
-            this.menuService.saveMenu(requestDto);
+    Menu menu = this.menuService.saveMenu(requestDto);
+    ResourceCreatedResponseDto createdResponse = new ResourceCreatedResponseDto();
+    createdResponse.setId(menu.getId());
     return new ResponseEntity<>(createdResponse, HttpStatus.CREATED);
   }
 }

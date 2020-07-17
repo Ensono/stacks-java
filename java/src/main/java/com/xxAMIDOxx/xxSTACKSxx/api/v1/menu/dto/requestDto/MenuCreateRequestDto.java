@@ -3,6 +3,7 @@ package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
@@ -13,6 +14,7 @@ import java.util.Objects;
  * @author Suresh Krishnan
  * @author ArathyKrishna
  */
+@Schema(name = "CreateMenuRequest")
 public class MenuCreateRequestDto {
   @JsonInclude(JsonInclude.Include.NON_NULL)
   @JsonPropertyOrder({
