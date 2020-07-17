@@ -24,6 +24,15 @@ public enum OperationCode {
         this.code = code;
     }
 
+    public static OperationCode fromCode(int code) {
+        for (OperationCode e : values()) {
+            if (e.code == code) {
+                return e;
+            }
+        }
+        return null;
+    }
+
     public int getCode() {
         return code;
     }

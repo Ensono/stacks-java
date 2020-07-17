@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.builder;
 
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.ItemDTO;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.ItemDTO;
 
 import java.util.UUID;
 

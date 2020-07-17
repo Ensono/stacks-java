@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.mapper;
 
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.MenuDTO;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.MenuDTO;
 import com.xxAMIDOxx.xxSTACKSxx.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.domain.Menu;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class MenuMapperTest {
 
@@ -31,12 +30,6 @@ class MenuMapperTest {
     assertThat(menuDTO.getName()).isEqualTo(name);
     assertThat(menuDTO.getDescription()).isEqualTo(description);
     assertThat(menuDTO.getCategories()).isEqualTo(Collections.emptyList());
-
-
   }
 
-  @Test
-  void menuDTOToMenu() {
-
-  }
 }

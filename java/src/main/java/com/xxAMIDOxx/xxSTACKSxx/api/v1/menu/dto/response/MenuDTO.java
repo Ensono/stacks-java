@@ -1,36 +1,37 @@
-package com.xxAMIDOxx.xxSTACKSxx.domain;
+package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response;
 
-import com.microsoft.azure.spring.data.cosmosdb.core.mapping.Document;
-import com.microsoft.azure.spring.data.cosmosdb.core.mapping.PartitionKey;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.springframework.data.annotation.Id;
-
 /**
  * @author James Peet
  */
-@Document(collection = "MenuDTO")
-public class Menu {
+@Schema(name = "Menu")
+public class MenuDTO {
 
-  @Id
-  @PartitionKey
-  private String id;
+  @JsonProperty("id")
+  private UUID id;
 
-  private String restaurantId;
+  @JsonProperty("restaurantId")
+  private UUID restaurantId;
 
+  @JsonProperty("name")
   private String name;
 
+  @JsonProperty("description")
   private String description;
 
-  private List<Category> categories;
+  @JsonProperty("categories")
+  private List<CategoryDTO> categories;
 
+  @JsonProperty("enabled")
   private Boolean enabled;
 
-  public Menu(String id, String restaurantId, String name, String description, List<Category> categories, Boolean enabled) {
+  public MenuDTO(UUID id, UUID restaurantId, String name, String description, List<CategoryDTO> categories, Boolean enabled) {
     this.id = id;
     this.restaurantId = restaurantId;
     this.name = name;
@@ -39,7 +40,7 @@ public class Menu {
     this.enabled = enabled;
   }
 
-  public String getId() {
+  public UUID getId() {
     return id;
   }
 
@@ -51,31 +52,26 @@ public class Menu {
     return description;
   }
 
-  public String getRestaurantId() {
+  public UUID getRestaurantId() {
     return restaurantId;
   }
 
-  public void setRestaurantId(String restaurantId) {
-    this.restaurantId = restaurantId;
+  public void setRestaurantId(UUID restaurantId) {
+  this.restaurantId = restaurantId;
   }
 
-  public List<Category> getCategories() {
+  public List<CategoryDTO> getCategories() {
     return categories;
-  }
-
-  public void setCategories(List<Category> categories) {
-    this.categories = categories;
   }
 
   public Boolean getEnabled() {
     return enabled;
   }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof Menu)) return false;
-    Menu menu = (Menu) o;
+    if (!(o instanceof MenuDTO)) return false;
+    MenuDTO menu = (MenuDTO) o;
     return Objects.equals(id, menu.id) &&
             Objects.equals(restaurantId, menu.restaurantId) &&
             Objects.equals(name, menu.name) &&

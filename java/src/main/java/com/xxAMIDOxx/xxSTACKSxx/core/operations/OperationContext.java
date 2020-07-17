@@ -1,13 +1,11 @@
 package com.xxAMIDOxx.xxSTACKSxx.core.operations;
 
-import java.util.UUID;
-
 public abstract class OperationContext {
 
     private int operationCode;
-    private UUID correlationId;
+    private String correlationId;
 
-    public OperationContext(int operationCode, UUID correlationId) {
+    public OperationContext(int operationCode, String correlationId) {
         this.operationCode = operationCode;
         this.correlationId = correlationId;
     }
@@ -16,11 +14,11 @@ public abstract class OperationContext {
         return operationCode;
     }
 
-    public UUID getCorrelationId() {
+    public String getCorrelationId() {
         return correlationId;
     }
 
-    public void setCorrelationId(UUID correlationId) {
+    public void setCorrelationId(String correlationId) {
         this.correlationId = correlationId;
     }
 

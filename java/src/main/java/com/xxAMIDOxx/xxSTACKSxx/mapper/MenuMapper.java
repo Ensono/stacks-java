@@ -1,8 +1,8 @@
 package com.xxAMIDOxx.xxSTACKSxx.mapper;
 
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.CategoryDTO;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.ItemDTO;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responses.MenuDTO;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.CategoryDTO;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.ItemDTO;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.MenuDTO;
 import com.xxAMIDOxx.xxSTACKSxx.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.domain.Menu;
