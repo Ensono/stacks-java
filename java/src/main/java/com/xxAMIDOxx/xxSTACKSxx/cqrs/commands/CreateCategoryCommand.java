@@ -6,7 +6,7 @@ public class CreateCategoryCommand extends MenuCommand {
     private String description;
 
     public CreateCategoryCommand(String correlationId, String name, String description) {
-        super(OperationCode.CREATE_MENU, correlationId, null);
+        super(OperationCode.CREATE_CATEGORY, correlationId, null);
         this.name = name;
         this.description = description;
     }
