@@ -1,7 +1,5 @@
 package com.xxAMIDOxx.xxSTACKSxx.service.impl;
 
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponseDto;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
@@ -12,13 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static com.xxAMIDOxx.xxSTACKSxx.service.CosmosHelper.pageRequestWithSort;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 // TODO need to capture the errors from the repository
 @Service
@@ -91,18 +87,10 @@ public class MenuServiceImpl implements MenuService {
   }
 
   @Override
-  public Menu saveMenu(MenuCreateRequestDto menuDto) {
-    Menu menu = new Menu();
-    menu.setDescription(menuDto.getDescription());
-    menu.setEnabled(menuDto.getEnabled());
-    menu.setName(menuDto.getName());
-    menu.setCategories(Collections.emptyList());
-    if (isNotEmpty(menuDto.getTenantId())) {
-      menu.setRestaurantId(UUID.fromString(menuDto.getTenantId()));
-    }
-    menu.setId(UUID.randomUUID().toString());
-    Menu saved = menuRepository.save(menu);
-    logger.info("A new menu is created");
+  public Menu saveMenu(Menu aMenu) {
+    aMenu.setId(UUID.randomUUID().toString());
+    Menu saved = menuRepository.save(aMenu);
+    logger.debug("A new menu is created");
     return saved;
   }
 }

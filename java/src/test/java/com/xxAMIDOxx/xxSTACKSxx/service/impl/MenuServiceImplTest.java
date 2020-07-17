@@ -1,6 +1,5 @@
 package com.xxAMIDOxx.xxSTACKSxx.service.impl;
 
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
@@ -74,18 +73,11 @@ public class MenuServiceImplTest {
   @Test
   void testSaveMenu() {
     // Given
-    MenuCreateRequestDto dto = new MenuCreateRequestDto();
-    dto.setDescription("TestDto");
-    dto.setEnabled(true);
-    dto.setName("Test1");
-    dto.setTenantId(UUID.randomUUID().toString());
-
     when(repository.save(any(Menu.class))).thenReturn(menu);
-
     // When
-    Menu actualResults = menuServiceImpl.saveMenu(dto);
-
+    Menu actualResults = menuServiceImpl.saveMenu(menu);
     // Then
     then(actualResults).isSameAs(menu);
+    then(actualResults.getId()).isNotEmpty();
   }
 }

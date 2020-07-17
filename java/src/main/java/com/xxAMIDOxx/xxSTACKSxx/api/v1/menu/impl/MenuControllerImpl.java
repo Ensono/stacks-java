@@ -1,12 +1,14 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.MenuController;
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponseDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponseDto;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,9 +27,11 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 public class MenuControllerImpl implements MenuController {
 
   private final MenuService menuService;
+  private final ObjectMapper mapper;
 
-  public MenuControllerImpl(MenuService menuService) {
+  public MenuControllerImpl(MenuService menuService, ObjectMapper mapper) {
     this.menuService = menuService;
+    this.mapper = mapper;
   }
 
   @Override
@@ -66,9 +70,24 @@ public class MenuControllerImpl implements MenuController {
   @Override
   public ResponseEntity<ResourceCreatedResponseDto> createMenu(
           MenuCreateRequestDto requestDto) {
-    Menu menu = this.menuService.saveMenu(requestDto);
-    ResourceCreatedResponseDto createdResponse = new ResourceCreatedResponseDto();
+    Menu menu = this.menuService.saveMenu(convertMenuDtoToMenu(requestDto));
+    ResourceCreatedResponseDto createdResponse =
+            new ResourceCreatedResponseDto();
     createdResponse.setId(menu.getId());
     return new ResponseEntity<>(createdResponse, HttpStatus.CREATED);
+  }
+
+  /**
+   * Mapping MenuRequestDto to Menu object
+   *
+   * @param requestDto Menu request dto
+   * @return mapped menu
+   */
+  private Menu convertMenuDtoToMenu(MenuCreateRequestDto requestDto) {
+    Menu newMenu = this.mapper.convertValue(requestDto, Menu.class);
+    if (StringUtils.isNotEmpty(requestDto.getTenantId())) {
+      newMenu.setRestaurantId(UUID.fromString(requestDto.getTenantId()));
+    }
+    return newMenu;
   }
 }
