@@ -66,8 +66,11 @@ pipeline {
           }
           steps {
             dir('stacks-pipeline-templates') {
-              checkout resolveScm(source: git('https://github.com/amido/stacks-pipeline-templates'), targets: [BRANCH_NAME, 'v1.4.4'])
+              git url: 'https://github.com/amido/stacks-pipeline-templates',
+                  branch: 'v1.4.4',
             }
+
+            sh 'ls -laR'
           }
         }
         // stage('Build') {
