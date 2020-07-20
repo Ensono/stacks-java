@@ -67,7 +67,7 @@ pipeline {
           steps {
             dir('stacks-pipeline-templates') {
               git url: 'https://github.com/amido/stacks-pipeline-templates',
-                  branch: 'v1.4.5'
+                  branch: 'tags/v1.4.5'
             }
 
             sh 'ls -laR'
