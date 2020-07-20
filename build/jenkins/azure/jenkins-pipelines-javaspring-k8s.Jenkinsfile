@@ -66,8 +66,11 @@ pipeline {
           }
           steps {
             dir('stacks-pipeline-templates') {
-              git url: 'https://github.com/amido/stacks-pipeline-templates',
-                  branch: 'tags/v1.4.5'
+              checkout([
+                $class: 'GitSCM',
+                branches: [[name: 'refs/tags/v1.4.5']],
+                userRemoteConfigs: [[url: 'https://github.com/amido/stacks-pipeline-templates']]
+              ])
             }
 
             sh 'ls -laR'
