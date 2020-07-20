@@ -84,35 +84,35 @@ pipeline {
           }
           steps {
             dir("${self_repo_src}") {
-              sh '''
+              bash '''
                 set -euxo pipefail
                 ./mvnw dependency:go-offline -Dmaven.repo.local=./.m2 --no-transfer-progress
                 ./mvnw process-resources --no-transfer-progress -Dmaven.repo.local=./.m2
               '''
 
-              sh '''
+              bash '''
                 set -euxo pipefail
                 ./mvnw compile --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
                 ./mvnw process-test-resources --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
                 ./mvnw test-compile --no-transfer-progress -Dmaven.repo.local=./.m2 # --offline
               '''
 
-              sh '''
+              bash '''
                 set -euxo pipefail
                 ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 -DexcludedGroups='any()'
               '''
 
-              sh '''
+              bash '''
                 set -euxo pipefail
                 ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Unit
               '''
 
-              sh '''
+              bash '''
                 set -euxo pipefail
                 ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Component
               '''
 
-              sh '''
+              bash '''
                 set -euxo pipefail
                 ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Integration
               '''
