@@ -11,12 +11,13 @@ pipeline {
     domain="node"
     role="frontend"
     // SelfConfig"
-    self_repo_src="packages/scaffolding-cli/templates/src/ssr"
-    self_repo_tf_src="packages/scaffolding-cli/templates/deploy/gcp/app/kube"
-    self_repo_k8s_src="packages/scaffolding-cli/templates/deploy/k8s"
-    self_generic_name="stacks-webapp-jenkins"
+    self_repo_src="java"
+    self_repo_tf_src="deploy/gcp/app/kube"
+    self_repo_k8s_src="deploy/k8s"
+    self_generic_name="stacks-java-jenkins"
+    self_pipeline_repo="stacks-webapp-templates"
     // TF STATE CONFIG"
-    tf_state_rg="amido-stacks-rg-uks"
+    tf_state_rg="amido-stacks-rg-eun"
     tf_state_storage="amidostackstfstategbl"
     tf_state_container="tfstate"
     // Stacks operates Terraform states based on workspaces **IT IS VERY IMPORTANT** that you ensure a unique name for each application definition"
@@ -32,7 +33,7 @@ pipeline {
     version_minor="0"
     version_revision="${BUILD_NUMBER}"
     // Docker Config
-    docker_dockerfile_path="src/"
+    docker_dockerfile_path="java/"
     docker_image_name="${self_generic_name}"
     docker_image_tag="${version_major}.${version_minor}.${version_revision}-${GIT_COMMIT}"
     docker_container_registry_name="eu.gcr.io/${gcp_project_id}"
@@ -65,48 +66,61 @@ pipeline {
             }
           }
           steps {
-            dir('stacks-pipeline-templates') {
+            dir("${self_pipeline_repo}") {
               checkout([
                 $class: 'GitSCM',
                 branches: [[name: 'refs/tags/v1.4.5']],
-                userRemoteConfigs: [[url: 'https://github.com/amido/stacks-pipeline-templates']]
+                userRemoteConfigs: [[url: "https://github.com/amido/${self_pipeline_repo}"]]
               ])
             }
-
-            sh 'ls -laR'
           }
         }
-        // stage('Build') {
-        //   agent {
-        //     docker {
-        //       // add additional args if you need to here
-        //       // e.g.:
-        //       // args '-v /var/run/docker.sock:/var/run/docker.sock -u 1000:999'
-        //       // Please check with your admin on any required steps you need to take to ensure a SUDOers access inside the containers
-        //       image "azul/zulu-openjdk-debian:11"
-        //     }
-    //       }
-    //       steps {
-    //         dir("${self_repo_src}") {
-    //           sh '''
-    //             npm audit --audit-level=moderate
-    //           '''
-    //           sh '''
-    //             npm install
-    //           '''
-    //           // Installing peer deps for package
-    //           // can be extended with addtional pacakges
-    //           // npx install-peerdeps -d @amidostacks/eslint-config package2 package3
-    //           sh '''
-    //             npx install-peerdeps -d @amidostacks/eslint-config
-    //           '''
-    //           sh '''
-    //             npm run validate
-    //           '''
-    //           stash includes: "java/.m2", name: "node_modules", allowEmpty: false
-    //         }
-    //       }
-    //     }
+        stage('Build') {
+          agent {
+            docker {
+              // add additional args if you need to here
+              image "azul/zulu-openjdk-debian:11"
+            }
+          }
+          steps {
+            dir("${self_repo_src}") {
+              sh '''
+                set -euxo pipefail
+                ./mvnw dependency:go-offline -Dmaven.repo.local=./.m2 --no-transfer-progress
+                ./mvnw process-resources --no-transfer-progress -Dmaven.repo.local=./.m2
+              '''
+
+              sh '''
+                set -euxo pipefail
+                ./mvnw compile --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
+                ./mvnw process-test-resources --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
+                ./mvnw test-compile --no-transfer-progress -Dmaven.repo.local=./.m2 # --offline
+              '''
+
+              sh '''
+                set -euxo pipefail
+                ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 -DexcludedGroups='any()'
+              '''
+
+              sh '''
+                set -euxo pipefail
+                ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Unit
+              '''
+
+              sh '''
+                set -euxo pipefail
+                ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Component
+              '''
+
+              sh '''
+                set -euxo pipefail
+                ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Integration
+              '''
+
+              stash includes: "java/.m2", name: ".m2", allowEmpty: false
+            }
+          }
+        }
     //     stage('Test') {
     //       // when {
     //       //     branch 'master'
