@@ -4,11 +4,12 @@ import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.QueryMenuController;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.MenuDTO;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.response.SearchMenuResultItem;
+import com.xxAMIDOxx.xxSTACKSxx.cqrs.commands.MenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.cqrs.commands.OperationCode;
+import com.xxAMIDOxx.xxSTACKSxx.cqrs.handlers.query.QueryMenuHandler;
 import com.xxAMIDOxx.xxSTACKSxx.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.exception.MenuNotFoundException;
 import com.xxAMIDOxx.xxSTACKSxx.mapper.MenuMapper;
-import com.xxAMIDOxx.xxSTACKSxx.cqrs.handlers.query.QueryMenuHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +61,8 @@ public class QueryMenuControllerImpl implements QueryMenuController {
     @Override
     public ResponseEntity<MenuDTO> getMenu(final UUID id, final String correlationId) {
         Menu menu = this.queryMenuHandler.findById(id).orElseThrow(
-                () -> new MenuNotFoundException(correlationId, OperationCode.GET_MENU_BY_ID, id));
+                () -> new MenuNotFoundException(
+                        new MenuCommand(OperationCode.GET_MENU_BY_ID, correlationId, id)));
         return ResponseEntity.ok(MenuMapper.INSTANCE.menuToMenuDto(menu));
     }
 }

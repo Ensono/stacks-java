@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.hibernate.validator.internal.util.CollectionHelper.newHashMap;
+import static com.google.common.collect.Maps.newHashMap;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.context.request.RequestAttributes.SCOPE_REQUEST;
 
@@ -49,6 +49,16 @@ public class ApiExceptionAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ResponseBody
+    @ExceptionHandler(MenuAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    ErrorResponse menuAlreadyExistsExceptionHandler(MenuAlreadyExistsException ex) {
+        return new ErrorResponse(ex.exceptionCode.getCode(),
+                ex.operationCode.getCode(),
+                ex.correlationId,
+                ex.getMessage());
+    }
+
+    @ResponseBody
     @ExceptionHandler(MenuNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     ErrorResponse menuNotFoundExceptionHandler(MenuNotFoundException ex) {
@@ -67,4 +77,25 @@ public class ApiExceptionAdvice extends ResponseEntityExceptionHandler {
                 ex.correlationId,
                 ex.getMessage());
     }
+
+    @ResponseBody
+    @ExceptionHandler(CategoryDoesNotExistException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    ErrorResponse categoryNotFoundExceptionHandler(CategoryDoesNotExistException ex) {
+        return new ErrorResponse(ex.exceptionCode.getCode(),
+                ex.operationCode.getCode(),
+                ex.correlationId,
+                ex.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ItemAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    ErrorResponse itemAlreadyExistsExceptionHandler(ItemAlreadyExistsException ex) {
+        return new ErrorResponse(ex.exceptionCode.getCode(),
+                ex.operationCode.getCode(),
+                ex.correlationId,
+                ex.getMessage());
+    }
+
 }

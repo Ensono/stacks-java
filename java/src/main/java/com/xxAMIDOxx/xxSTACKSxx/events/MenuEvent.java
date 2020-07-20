@@ -1,7 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.events;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.events.ApplicationEvent;
-import com.xxAMIDOxx.xxSTACKSxx.core.operations.OperationContext;
+import com.xxAMIDOxx.xxSTACKSxx.cqrs.commands.MenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.cqrs.commands.OperationCode;
 
 import java.util.UUID;
@@ -10,21 +10,21 @@ public abstract class MenuEvent extends ApplicationEvent {
 
     private UUID menuId;
 
-    public MenuEvent(final OperationCode operationCode,
-                     final String correlationId,
+    public MenuEvent(final MenuCommand command,
                      final EventCode eventCode,
                      final UUID menuId) {
-        super(operationCode.getCode(), correlationId, eventCode.getCode());
+        super(command.getOperationCode(),
+                command.getCorrelationId(),
+                eventCode.getCode());
         this.menuId = menuId;
     }
 
-    public MenuEvent(final OperationContext operationContext,
-                     final EventCode eventCode,
-                     final UUID menuId) {
-        super(operationContext.getOperationCode(),
-                operationContext.getCorrelationId(),
+    public MenuEvent(final MenuCommand command,
+                     final EventCode eventCode) {
+        super(command.getOperationCode(),
+                command.getCorrelationId(),
                 eventCode.getCode());
-        this.menuId = menuId;
+        this.menuId = command.getMenuId();
     }
 
     public UUID getMenuId() {

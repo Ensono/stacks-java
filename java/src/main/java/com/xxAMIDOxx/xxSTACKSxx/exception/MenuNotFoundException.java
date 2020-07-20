@@ -1,15 +1,12 @@
 package com.xxAMIDOxx.xxSTACKSxx.exception;
 
-import com.xxAMIDOxx.xxSTACKSxx.cqrs.commands.OperationCode;
+import com.xxAMIDOxx.xxSTACKSxx.cqrs.commands.MenuCommand;
 
-import java.util.UUID;
+public class MenuNotFoundException extends MenuApiException {
 
-public class MenuNotFoundException extends ApiException {
-
-    public MenuNotFoundException(String correlationId, OperationCode operationCode, UUID menuId) {
-        super(String.format("A menu with id '%s' does not exist.", menuId),
+    public MenuNotFoundException(MenuCommand command) {
+        super(String.format("A menu with id '%s' does not exist.", command.getMenuId()),
                 ExceptionCode.MENU_DOES_NOT_EXIST,
-                operationCode,
-                correlationId);
+                command);
     }
 }

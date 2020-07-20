@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.data.annotation.Id;
 
@@ -65,6 +66,18 @@ public class Menu {
 
   public void setCategories(List<Category> categories) {
     this.categories = categories;
+  }
+
+  public Menu updateCategory(Category category) {
+    if (this.categories == null) {
+      this.categories = new ArrayList<>();
+    }
+    this.categories = this.categories
+            .stream()
+            .filter(c -> !c.getId().equals(category.getId()))
+            .collect(Collectors.toList());
+    this.categories.add(category);
+    return this;
   }
 
   public Boolean getEnabled() {

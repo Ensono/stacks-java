@@ -1,24 +1,25 @@
 package com.xxAMIDOxx.xxSTACKSxx.events;
 
-import com.xxAMIDOxx.xxSTACKSxx.core.operations.OperationContext;
-import com.xxAMIDOxx.xxSTACKSxx.cqrs.commands.OperationCode;
+import com.xxAMIDOxx.xxSTACKSxx.cqrs.commands.MenuCommand;
 
 import java.util.UUID;
 
 public abstract class CategoryEvent extends MenuEvent {
     private UUID categoryId;
 
-    public CategoryEvent(OperationCode operationCode, String correlationId, EventCode eventCode, UUID menuId, UUID categoryId) {
-        super(operationCode, correlationId, eventCode, menuId);
-        this.categoryId = categoryId;
-    }
-
-    public CategoryEvent(OperationContext operationContext, EventCode eventCode, UUID menuId, UUID categoryId) {
-        super(operationContext, eventCode, menuId);
+    public CategoryEvent(MenuCommand menuCommand, EventCode eventCode, UUID categoryId) {
+        super(menuCommand, eventCode, menuCommand.getMenuId());
         this.categoryId = categoryId;
     }
 
     public UUID getCategoryId() {
         return categoryId;
+    }
+
+    @Override
+    public String toString() {
+        return "CategoryEvent{" +
+                "categoryId=" + categoryId +
+                "} " + super.toString();
     }
 }
