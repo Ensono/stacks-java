@@ -117,7 +117,7 @@ pipeline {
                 ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Integration
               '''
 
-              stash includes: "java/.m2", name: ".m2", allowEmpty: false
+              stash includes: ".m2", name: ".m2", allowEmpty: false
             }
           }
         }
