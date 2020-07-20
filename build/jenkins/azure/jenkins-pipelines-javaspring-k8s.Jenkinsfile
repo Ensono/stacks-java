@@ -15,7 +15,7 @@ pipeline {
     self_repo_tf_src="deploy/gcp/app/kube"
     self_repo_k8s_src="deploy/k8s"
     self_generic_name="stacks-java-jenkins"
-    self_pipeline_repo="stacks-webapp-templates"
+    self_pipeline_repo="stacks-pipeline-templates"
     // TF STATE CONFIG"
     tf_state_rg="amido-stacks-rg-eun"
     tf_state_storage="amidostackstfstategbl"
