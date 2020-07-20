@@ -2,7 +2,6 @@ package com.xxAMIDOxx.xxSTACKSxx.cqrs.handlers.command;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.events.ApplicationEventPublisher;
 import com.xxAMIDOxx.xxSTACKSxx.cqrs.commands.CreateCategoryCommand;
-import com.xxAMIDOxx.xxSTACKSxx.cqrs.commands.OperationCode;
 import com.xxAMIDOxx.xxSTACKSxx.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.events.CategoryCreatedEvent;
@@ -33,8 +32,8 @@ public class CreateCategoryHandler extends MenuBaseCommandHandler<CreateCategory
     @Override
     List<MenuEvent> raiseApplicationEvents(Menu menu, CreateCategoryCommand command) {
         return Arrays.asList(
-                new MenuUpdatedEvent(command, UUID.fromString(menu.getId())),
-                new CategoryCreatedEvent(command, UUID.fromString(menu.getId()), categoryId)
+                new MenuUpdatedEvent(command),
+                new CategoryCreatedEvent(command, categoryId)
         );
     }
 
@@ -46,9 +45,7 @@ public class CreateCategoryHandler extends MenuBaseCommandHandler<CreateCategory
                 : menu.getCategories();
 
         if (categories.stream().anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
-            throw new CategoryAlreadyExistsException(command.getCorrelationId(),
-                    OperationCode.CREATE_CATEGORY,
-                    UUID.fromString(menu.getId()),
+            throw new CategoryAlreadyExistsException(command,
                     command.getName());
         } else {
             categories.add(new Category(categoryId.toString(),

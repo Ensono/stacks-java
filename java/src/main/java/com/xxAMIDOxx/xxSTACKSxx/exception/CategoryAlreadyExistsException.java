@@ -1,16 +1,14 @@
 package com.xxAMIDOxx.xxSTACKSxx.exception;
 
-import com.xxAMIDOxx.xxSTACKSxx.cqrs.commands.OperationCode;
+import com.xxAMIDOxx.xxSTACKSxx.cqrs.commands.MenuCommand;
 
-import java.util.UUID;
+public class CategoryAlreadyExistsException extends MenuApiException {
 
-public class CategoryAlreadyExistsException extends ApiException {
-
-    public CategoryAlreadyExistsException(String correlationId, OperationCode operationCode, UUID menuId, String name) {
+    public CategoryAlreadyExistsException(MenuCommand command, String name) {
         super(String.format(
-                "A category with the name '%s' already exists for the menu with id '%s'.", name, menuId),
+                "A category with the name '%s' already exists for the menu with id '%s'.", name,
+                command.getMenuId()),
                 ExceptionCode.CATEGORY_ALREADY_EXISTS,
-                operationCode,
-                correlationId);
+                command);
     }
 }

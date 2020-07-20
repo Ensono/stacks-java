@@ -3,16 +3,14 @@ package com.xxAMIDOxx.xxSTACKSxx.cqrs.handlers.command;
 import com.xxAMIDOxx.xxSTACKSxx.core.commands.CommandHandler;
 import com.xxAMIDOxx.xxSTACKSxx.core.events.ApplicationEventPublisher;
 import com.xxAMIDOxx.xxSTACKSxx.cqrs.commands.MenuCommand;
-import com.xxAMIDOxx.xxSTACKSxx.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.exception.MenuNotFoundException;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import static com.xxAMIDOxx.xxSTACKSxx.cqrs.commands.OperationCode.fromCode;
 
 public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements CommandHandler<T> {
 
@@ -30,10 +28,7 @@ public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements C
 
         Menu menu = menuRepository.findById(command.getMenuId().toString())
                 .orElseThrow(
-                        () -> new MenuNotFoundException(
-                                command.getCorrelationId(),
-                                fromCode(command.getOperationCode()),
-                                command.getMenuId()));
+                        () -> new MenuNotFoundException(command));
 
         // TODO: Check if the user owns the resource before any operation
 
