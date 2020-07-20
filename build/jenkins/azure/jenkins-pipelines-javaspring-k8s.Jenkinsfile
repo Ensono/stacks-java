@@ -55,6 +55,15 @@ pipeline {
     stage('CI') {
       stages {
         stage('Checkout Dependencies') {
+          agent {
+            docker {
+              // add additional args if you need to here
+              // e.g.:
+              // args '-v /var/run/docker.sock:/var/run/docker.sock -u 1000:999'
+              // Please check with your admin on any required steps you need to take to ensure a SUDOers access inside the containers
+              image "azul/zulu-openjdk-debian:11"
+            }
+          }
           steps {
             dir('stacks-pipeline-templates') {
               checkout resolveScm(source: git('https://github.com/amido/stacks-pipeline-templates'), targets: [BRANCH_NAME, 'v1.4.4'])
