@@ -1,6 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.service.impl;
 
 import com.xxAMIDOxx.xxSTACKSxx.model.Category;
+import com.xxAMIDOxx.xxSTACKSxx.model.Item;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
@@ -37,6 +38,9 @@ class MenuServiceImplTest {
   @Mock
   Category category;
 
+  @Mock
+  Item item;
+
   @InjectMocks
   MenuServiceImpl menuServiceImpl;
 
@@ -50,9 +54,14 @@ class MenuServiceImplTest {
     menu.setDescription("something");
 
     category = new Category();
-    category.setId(UUID.randomUUID().toString());
     category.setName("test Category");
     category.setDescription("test Category Description");
+
+    item = new Item();
+    item.setDescription("Item Description");
+    item.setName("New Item");
+    item.setAvailable(true);
+    item.setPrice(15.89d);
   }
 
   @Test
@@ -139,5 +148,50 @@ class MenuServiceImplTest {
 
     // Then
     then(actualResult).isNull();
+  }
+
+  @Test
+  void testAddItemToMenu() {
+    // Given
+    when(repository.save(any(Menu.class))).thenReturn(menu);
+    when(repository.findById(any(String.class))).thenReturn(Optional.of(menu));
+    category.setId(UUID.randomUUID().toString());
+    menu.setCategories(List.of(category));
+    Menu savedMenu = menuServiceImpl.saveMenu(menu);
+    // When
+    String itemId =
+            menuServiceImpl.saveItem(item, menu.getId(), category.getId());
+
+    // Then
+    then(itemId).isNotNull();
+  }
+
+  @Test
+  void testCannotAddItemIfMenuDoesNotExist() {
+    // Given
+    when(repository.save(any(Menu.class))).thenReturn(new Menu());
+    when(repository.findById(any(String.class))).thenReturn(Optional.of(new Menu()));
+
+    // When
+    String itemId =
+            menuServiceImpl.saveItem(item, UUID.randomUUID().toString(), category.getId());
+
+    // Then
+    then(itemId).isNull();
+  }
+
+  @Test
+  void testCannotAddItemIfCategoryDoesNotExist() {
+    // Given
+    when(repository.save(any(Menu.class))).thenReturn(menu);
+    when(repository.findById(any(String.class))).thenReturn(Optional.of(menu));
+    Menu savedMenu = menuServiceImpl.saveMenu(menu);
+
+    // When
+    String itemId =
+            menuServiceImpl.saveItem(item, menu.getId(), category.getId());
+
+    // Then
+    then(itemId).isNull();
   }
 }

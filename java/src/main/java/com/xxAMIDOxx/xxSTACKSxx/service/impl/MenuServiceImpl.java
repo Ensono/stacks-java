@@ -1,10 +1,10 @@
 package com.xxAMIDOxx.xxSTACKSxx.service.impl;
 
 import com.xxAMIDOxx.xxSTACKSxx.model.Category;
+import com.xxAMIDOxx.xxSTACKSxx.model.Item;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import com.xxAMIDOxx.xxSTACKSxx.service.MenuService;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.xxAMIDOxx.xxSTACKSxx.service.CosmosHelper.pageRequestWithSort;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 // TODO need to capture the errors from the repository
 @Service
@@ -109,14 +110,38 @@ public class MenuServiceImpl implements MenuService {
     Optional<Menu> optionalMenu = menuRepository.findById(id.toString());
     Menu menu = optionalMenu.get();
 
-    if (StringUtils.isEmpty(menu.getId())) {
+    if (isEmpty(menu.getId())) {
       return null;
     }
 
     category.setId(UUID.randomUUID().toString());
     menu.setCategories(List.of(category));
     menuRepository.save(menu);
+    logger.debug("A new Category is added to the menu");
     return category;
+  }
+
+  @Override
+  public String saveItem(Item item, String menuId, String categoryId) {
+    Optional<Menu> optionalMenu = menuRepository.findById(menuId);
+    Menu menu = optionalMenu.get();
+
+    if (isEmpty(menu.getId()) || menu.getCategories() == null) {
+      return null;
+    }
+    String itemId = null;
+
+    for (Category t : menu.getCategories()) {
+      if (t.getId().equals(categoryId)) {
+        itemId = UUID.randomUUID().toString();
+        item.setId(itemId);
+        t.setItems(List.of(item));
+        logger.debug("A new Item is added to the menu");
+      }
+    }
+    menuRepository.save(menu);
+
+    return itemId;
   }
 
 }

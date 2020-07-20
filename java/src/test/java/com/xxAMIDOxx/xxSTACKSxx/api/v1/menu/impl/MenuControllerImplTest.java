@@ -5,9 +5,11 @@ import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAut
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.CreateCategoryRequestDto;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.CreateItemRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponseDto;
 import com.xxAMIDOxx.xxSTACKSxx.model.Category;
+import com.xxAMIDOxx.xxSTACKSxx.model.Item;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +47,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -55,7 +58,7 @@ import static org.springframework.http.HttpStatus.OK;
                 CosmosAutoConfiguration.class
         })
 @Tag("Integration")
-public class MenuControllerImplTest {
+class MenuControllerImplTest {
 
   @LocalServerPort
   private int port;
@@ -72,6 +75,9 @@ public class MenuControllerImplTest {
   @Mock
   Category category;
 
+  @Mock
+  Item item;
+
   final int DEFAULT_PAGE_NUMBER = 1;
   final int DEFAULT_PAGE_SIZE = 20;
 
@@ -79,20 +85,25 @@ public class MenuControllerImplTest {
   void init_mocks() {
     MockitoAnnotations.initMocks(this);
     menu = new Menu();
-    menu.setId(randomUUID().toString());
     menu.setEnabled(true);
     menu.setName("testMenu");
-    menu.setRestaurantId(UUID.randomUUID());
+    menu.setRestaurantId(randomUUID());
     menu.setDescription("something");
 
     category = new Category();
     category.setName("test Category");
     category.setDescription("test Category Description");
+
+    item = new Item();
+    item.setPrice(1.33d);
+    item.setAvailable(true);
+    item.setName("Item Name");
+    item.setDescription("Item Description");
   }
 
 
   @Test
-  public void listMenusAndPagination() {
+  void listMenusAndPagination() {
 
     // Given
     when(
@@ -117,7 +128,7 @@ public class MenuControllerImplTest {
   }
 
   @Test
-  public void listMenusFilteredByRestaurantId() {
+  void listMenusFilteredByRestaurantId() {
 
     // Given
     final UUID restaurantId = randomUUID();
@@ -152,7 +163,7 @@ public class MenuControllerImplTest {
   }
 
   @Test
-  public void listMenusFilteredByRestaurantIdAndSearchTerm() {
+  void listMenusFilteredByRestaurantIdAndSearchTerm() {
     // Given
     final UUID restaurantId = randomUUID();
     final String searchTerm = "searchTermString";
@@ -177,7 +188,7 @@ public class MenuControllerImplTest {
   }
 
   @Test
-  public void listMenusFilteredBySearchTerm() {
+  void listMenusFilteredBySearchTerm() {
     // Given
     final String searchTerm = "searchTermString";
 
@@ -198,7 +209,7 @@ public class MenuControllerImplTest {
   }
 
   @Test
-  public void getMenuById() {
+  void getMenuById() {
     // Given
     Menu menu = createMenu(0);
     when(menuRepository.findById(menu.getId())).thenReturn(Optional.of(menu));
@@ -213,7 +224,7 @@ public class MenuControllerImplTest {
   }
 
   @Test
-  public void listMenusWithDefaultPagination() {
+  void listMenusWithDefaultPagination() {
     // Given
     when(
             menuRepository.findAll(any(Pageable.class))
@@ -239,7 +250,7 @@ public class MenuControllerImplTest {
     dto.setDescription("TestDto");
     dto.setEnabled(true);
     dto.setName("Test1");
-    dto.setTenantId(UUID.randomUUID().toString());
+    dto.setTenantId(randomUUID().toString());
     when(menuRepository.save(any(Menu.class)))
             .thenReturn(new Menu());
     // When
@@ -319,10 +330,12 @@ public class MenuControllerImplTest {
     dto.setDescription("test Category Description");
     dto.setName("test Category Name");
 
+    menu.setId(randomUUID().toString());
     Menu initialSave = menuRepository.save(menu);
     // When
     var response =
-            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu/" + initialSave.getId() + "/category", dto, ResourceCreatedResponseDto.class);
+            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu/"
+                    + initialSave.getId() + "/category", dto, ResourceCreatedResponseDto.class);
 
     // Then
     then(response.getStatusCode()).isEqualTo(OK);
@@ -336,5 +349,107 @@ public class MenuControllerImplTest {
     then(savedCategory.getName()).isEqualTo(dto.getName());
   }
 
+  @Test
+  void testAddItem() {
+    // Given
+    when(menuRepository.save(any(Menu.class))).thenReturn(menu);
+    when(menuRepository.findById(any(String.class))).thenReturn(Optional.of(menu));
+
+    menu.setId(randomUUID().toString());
+    category.setId(randomUUID().toString());
+    menu.setCategories(List.of(category));
+
+    Menu initialSave = menuRepository.save(menu);
+
+    CreateItemRequestDto requestDto = new CreateItemRequestDto();
+    requestDto.setAvailable(true);
+    requestDto.setDescription("Some Description");
+    requestDto.setName("Some Name");
+    requestDto.setPrice(13.56d);
+
+    // When
+    var response =
+            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu/"
+                    + initialSave.getId() + "/category/" + category.getId() + "/items", requestDto, ResourceCreatedResponseDto.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(CREATED);
+    Optional<Menu> byId = menuRepository.findById(initialSave.getId());
+    Menu updated = byId.get();
+    then(updated.getId()).isEqualTo(initialSave.getId());
+    then(updated.getCategories()).hasSize(1);
+    then(updated.getCategories().get(0).getItems()).hasSize(1);
+    Item savedItem = updated.getCategories().get(0).getItems().get(0);
+    then(savedItem.getId()).isNotEmpty();
+    then(savedItem.getDescription()).isEqualTo(requestDto.getDescription());
+    then(savedItem.getName()).isEqualTo(requestDto.getName());
+    then(savedItem.getPrice()).isEqualTo(requestDto.getPrice());
+  }
+
+  @Test
+  void testAddItemWhenNullMenuIdGiven() {
+    // Given
+    CreateItemRequestDto requestDto = new CreateItemRequestDto();
+    requestDto.setAvailable(true);
+    requestDto.setDescription("Some Description");
+    requestDto.setName("Some Name");
+    requestDto.setPrice(13.56d);
+
+    // When
+    var response =
+            this.testRestTemplate.postForEntity(getBaseURL(port) +
+                    "/v1/menu/" + " /category/" + randomUUID().toString() + "/items",
+                    requestDto, ResourceCreatedResponseDto.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+  }
+
+  @Test
+  void testAddItemWhenNullCategoryIdGiven() {
+    // Given
+    CreateItemRequestDto requestDto = new CreateItemRequestDto();
+    requestDto.setAvailable(true);
+    requestDto.setDescription("Some Description");
+    requestDto.setName("Some Name");
+    requestDto.setPrice(13.56d);
+
+    // When
+    var response =
+            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu/"
+                    + randomUUID().toString() + "/category/" +
+                    " /items", requestDto, ResourceCreatedResponseDto.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+  }
+
+  @Test
+  void testAddItemWhenInvalidCategoryIdGiven() {
+    // Given
+    when(menuRepository.save(any(Menu.class))).thenReturn(menu);
+    when(menuRepository.findById(any(String.class))).thenReturn(Optional.of(menu));
+
+    menu.setId(randomUUID().toString());
+    category.setId(randomUUID().toString());
+    menu.setCategories(List.of(category));
+
+    Menu initialSave = menuRepository.save(menu);
+
+    CreateItemRequestDto requestDto = new CreateItemRequestDto();
+    requestDto.setAvailable(true);
+    requestDto.setDescription("Some Description");
+    requestDto.setName("Some Name");
+    requestDto.setPrice(13.56d);
+
+    // When
+    var response =
+            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu/"
+                    + initialSave.getId() + "/category/" + randomUUID().toString()
+                    + "/items", requestDto, ResourceCreatedResponseDto.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(NOT_FOUND);
+  }
 
 }

@@ -1,29 +1,31 @@
 package com.xxAMIDOxx.xxSTACKSxx.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
 public class Item {
 
-  @JsonProperty("Id")
+  @JsonProperty("id")
   private String id;
 
-  @JsonProperty("Name")
+  @JsonProperty("name")
   private String name;
 
-  @JsonProperty("Description")
+  @JsonProperty("description")
   private String description;
 
-  @JsonProperty("Price")
+  @JsonProperty("price")
   private Double price;
 
-  @JsonProperty("Available")
+  @JsonProperty("available")
   private Boolean available;
 
   public Item() {
   }
 
-  public Item(String id, String name, String description, Double price, Boolean available) {
+  public Item(String id, String name, String description, Double price,
+              Boolean available) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -35,20 +37,40 @@ public class Item {
     return id;
   }
 
+  public void setId(String id) {
+    this.id = id;
+  }
+
   public String getName() {
     return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public String getDescription() {
     return description;
   }
 
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
   public Double getPrice() {
     return price;
   }
 
+  public void setPrice(Double price) {
+    this.price = price;
+  }
+
   public Boolean getAvailable() {
     return available;
+  }
+
+  public void setAvailable(Boolean available) {
+    this.available = available;
   }
 
   @Override
