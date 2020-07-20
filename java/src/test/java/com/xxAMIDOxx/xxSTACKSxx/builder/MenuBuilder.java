@@ -1,10 +1,9 @@
 package com.xxAMIDOxx.xxSTACKSxx.builder;
 
-import com.xxAMIDOxx.xxSTACKSxx.domain.Category;
-import com.xxAMIDOxx.xxSTACKSxx.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Builder class for MenuDTO

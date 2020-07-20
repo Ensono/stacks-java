@@ -18,7 +18,7 @@ springdoc:
     path: /swagger/oas.json
   swagger-ui:
     path: /swagger/index.html
-  packagesToScan: com.xxAMIDOxx.xxSTACKSxx, com.xxAMIDOxx.xxSTACKSxx.api.v1.menu
+  packagesToScan: com.xxAMIDOxx.xxSTACKSxx.menu.api.v1
 
 azure:
   cosmosdb:
