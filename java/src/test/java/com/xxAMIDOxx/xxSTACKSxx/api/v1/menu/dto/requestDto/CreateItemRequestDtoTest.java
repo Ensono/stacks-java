@@ -12,7 +12,7 @@ class CreateItemRequestDtoTest {
 
   @Test
   void testEquals() {
-    EqualsVerifier.simple().forClass(CreateCategoryRequestDto.class).verify();
+    EqualsVerifier.simple().forClass(CreateItemRequestDto.class).verify();
   }
 
 }
