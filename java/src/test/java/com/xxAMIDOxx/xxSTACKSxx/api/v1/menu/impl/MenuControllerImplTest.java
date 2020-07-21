@@ -55,7 +55,7 @@ import static org.springframework.http.HttpStatus.OK;
                 CosmosAutoConfiguration.class
         })
 @Tag("Integration")
-public class MenuControllerImplTest {
+class MenuControllerImplTest {
 
   @LocalServerPort
   private int port;
@@ -92,7 +92,7 @@ public class MenuControllerImplTest {
 
 
   @Test
-  public void listMenusAndPagination() {
+  void listMenusAndPagination() {
 
     // Given
     when(
@@ -117,7 +117,7 @@ public class MenuControllerImplTest {
   }
 
   @Test
-  public void listMenusFilteredByRestaurantId() {
+  void listMenusFilteredByRestaurantId() {
 
     // Given
     final UUID restaurantId = randomUUID();
@@ -152,7 +152,7 @@ public class MenuControllerImplTest {
   }
 
   @Test
-  public void listMenusFilteredByRestaurantIdAndSearchTerm() {
+  void listMenusFilteredByRestaurantIdAndSearchTerm() {
     // Given
     final UUID restaurantId = randomUUID();
     final String searchTerm = "searchTermString";
@@ -177,7 +177,7 @@ public class MenuControllerImplTest {
   }
 
   @Test
-  public void listMenusFilteredBySearchTerm() {
+  void listMenusFilteredBySearchTerm() {
     // Given
     final String searchTerm = "searchTermString";
 
@@ -198,7 +198,7 @@ public class MenuControllerImplTest {
   }
 
   @Test
-  public void getMenuById() {
+  void getMenuById() {
     // Given
     Menu menu = createMenu(0);
     when(menuRepository.findById(menu.getId())).thenReturn(Optional.of(menu));
@@ -213,7 +213,7 @@ public class MenuControllerImplTest {
   }
 
   @Test
-  public void listMenusWithDefaultPagination() {
+  void listMenusWithDefaultPagination() {
     // Given
     when(
             menuRepository.findAll(any(Pageable.class))
@@ -335,6 +335,5 @@ public class MenuControllerImplTest {
     then(savedCategory.getDescription()).isEqualTo(dto.getDescription());
     then(savedCategory.getName()).isEqualTo(dto.getName());
   }
-
 
 }

@@ -18,7 +18,8 @@ public class SearchMenuResult {
   public SearchMenuResult() {
   }
 
-  public SearchMenuResult(Integer pageSize, Integer pageNumber, List<SearchMenuResultItem> results) {
+  public SearchMenuResult(Integer pageSize, Integer pageNumber,
+                          List<SearchMenuResultItem> results) {
     this.pageSize = pageSize;
     this.pageNumber = pageNumber;
     this.results = results;

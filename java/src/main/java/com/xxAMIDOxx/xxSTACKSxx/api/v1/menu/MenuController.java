@@ -1,9 +1,9 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu;
 
-import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponseDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.CreateCategoryRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponseDto;
 import com.xxAMIDOxx.xxSTACKSxx.model.Category;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +33,8 @@ public interface MenuController {
           tags = "Menu",
           summary = "Get or search a list of menus",
           description =
-                  "By passing in the appropriate options, you can search for available menus in the system",
+                  "By passing in the appropriate options, you can search for " +
+                          "available menus in the system",
           responses = {
                   @ApiResponse(
                           responseCode = "200",
@@ -57,7 +58,8 @@ public interface MenuController {
   @Operation(
           tags = "Menu",
           summary = "Get a menu",
-          description = "By passing the menu id, you can get access to available categories and items in the menu",
+          description = "By passing the menu id, you can get access to available " +
+                  "categories and items in the menu",
           responses = {
                   @ApiResponse(
                           responseCode = "200",
@@ -98,7 +100,8 @@ public interface MenuController {
                           content = @Content(schema = @Schema(hidden = true))),
                   @ApiResponse(
                           responseCode = "403",
-                          description = "Bad RequestForbidden, the user does not have permission to execute this operation",
+                          description = "Bad RequestForbidden, the user does not" +
+                                  " have permission to execute this operation",
                           content = @Content(schema = @Schema(hidden = true))),
                   @ApiResponse(
                           responseCode = "409",
@@ -129,11 +132,13 @@ public interface MenuController {
                           content = @Content(schema = @Schema(hidden = true))),
                   @ApiResponse(
                           responseCode = "403",
-                          description = "Bad RequestForbidden, the user does not have permission to execute this operation",
+                          description = "Bad RequestForbidden, the user does not" +
+                                  " have permission to execute this operation",
                           content = @Content(schema = @Schema(hidden = true))),
                   @ApiResponse(
                           responseCode = "403",
-                          description = "Bad RequestForbidden, the user does not have permission to execute this operation",
+                          description = "Bad RequestForbidden, the user does not" +
+                                  " have permission to execute this operation",
                           content = @Content(schema = @Schema(hidden = true))),
                   @ApiResponse(
                           responseCode = "404",

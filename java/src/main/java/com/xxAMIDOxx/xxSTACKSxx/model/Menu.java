@@ -38,7 +38,8 @@ public class Menu {
   public Menu() {
   }
 
-  public Menu(String id, UUID restaurantId, String name, String description, List<Category> categories, Boolean enabled) {
+  public Menu(String id, UUID restaurantId, String name, String description,
+              List<Category> categories, Boolean enabled) {
     this.id = id;
     this.restaurantId = restaurantId;
     this.name = name;
