@@ -51,12 +51,24 @@ public class Menu {
     return id;
   }
 
+  public void setId(String id) {
+    this.id = id;
+  }
+
   public String getName() {
     return name;
   }
 
+  public void setName(String name) {
+    this.name = name;
+  }
+
   public String getDescription() {
     return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public UUID getRestaurantId() {
@@ -64,16 +76,25 @@ public class Menu {
   }
 
   public void setRestaurantId(UUID restaurantId) {
-  this.restaurantId = restaurantId;
+    this.restaurantId = restaurantId;
   }
 
   public List<Category> getCategories() {
     return categories;
   }
 
+  public void setCategories(List<Category> categories) {
+    this.categories = categories;
+  }
+
   public Boolean getEnabled() {
     return enabled;
   }
+
+  public void setEnabled(Boolean enabled) {
+    this.enabled = enabled;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -90,5 +111,15 @@ public class Menu {
   @Override
   public int hashCode() {
     return Objects.hash(id, restaurantId, name, description, categories, enabled);
+  }
+
+  @Override
+  public String toString() {
+    return "Menu{id=" + id + " , name=" + name +
+            ", restaurantId=" + restaurantId +
+            ", description=" + description +
+            ", categories" + categories +
+            ", enabled" + enabled +
+            "}";
   }
 }
