@@ -16,72 +16,81 @@ import java.util.UUID;
 
 import static com.xxAMIDOxx.xxSTACKSxx.service.CosmosHelper.pageRequestWithSort;
 
+// TODO need to capture the errors from the repository
 @Service
 public class MenuServiceImpl implements MenuService {
 
-    private static final String NAME = "name";
-    private static Logger logger = LoggerFactory.getLogger(MenuServiceImpl.class);
+  private static final String NAME = "name";
+  private static Logger logger = LoggerFactory.getLogger(MenuServiceImpl.class);
 
-    private MenuRepository menuRepository;
+  private final MenuRepository menuRepository;
 
-    public MenuServiceImpl(MenuRepository menuRepository) {
-        this.menuRepository = menuRepository;
+  public MenuServiceImpl(MenuRepository menuRepository) {
+    this.menuRepository = menuRepository;
+  }
+
+  public Optional<Menu> findById(UUID id) {
+    return menuRepository.findById(id.toString());
+  }
+
+  public List<Menu> findAll(int pageNumber, int pageSize) {
+
+    Page<Menu> page = menuRepository.findAll(
+            pageRequestWithSort(Sort.Direction.ASC, NAME, 0, pageSize));
+
+    int currentPage = 0;
+
+    // This is specific and needed due to the way in which CosmosDB handles pagination
+    // using a continuationToken and a limitation in the Swagger Specification.
+    // See https://github.com/Azure/azure-sdk-for-java/issues/12726
+    while (currentPage < pageNumber && page.hasNext()) {
+      currentPage++;
+      Pageable nextPageable = page.nextPageable();
+      page = menuRepository.findAll(nextPageable);
     }
 
-    public Optional<Menu> findById(UUID id) {
-        return menuRepository.findById(id.toString());
-    }
+    return page.getContent();
+  }
 
-    public List<Menu> findAll(int pageNumber, int pageSize) {
+  @Override
+  public List<Menu> findAllByRestaurantId(UUID restaurantId,
+                                          Integer pageSize,
+                                          Integer pageNumber) {
 
-        Page<Menu> page = menuRepository.findAll(
-                pageRequestWithSort(Sort.Direction.ASC, NAME, 0, pageSize));
+    return menuRepository.findAllByRestaurantId(
+            restaurantId.toString(),
+            pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize))
+            .getContent();
+  }
 
-        int currentPage = 0;
-
-        // This is specific and needed due to the way in which CosmosDB handles pagination
-        // using a continuationToken and a limitation in the Swagger Specification.
-        // See https://github.com/Azure/azure-sdk-for-java/issues/12726
-        while (currentPage < pageNumber && page.hasNext()) {
-            currentPage++;
-            Pageable nextPageable = page.nextPageable();
-            page = menuRepository.findAll(nextPageable);
-        }
-
-        return page.getContent();
-    }
-
-    @Override
-    public List<Menu> findAllByRestaurantId(UUID restaurantId,
+  @Override
+  public List<Menu> findAllByNameContaining(String searchTerm,
                                             Integer pageSize,
                                             Integer pageNumber) {
 
-        return menuRepository.findAllByRestaurantId(
-                restaurantId.toString(),
-                pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize))
-                .getContent();
-    }
+    return menuRepository.findAllByNameContaining(
+            searchTerm,
+            pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize))
+            .getContent();
+  }
 
-    @Override
-    public List<Menu> findAllByNameContaining(String searchTerm,
-                                              Integer pageSize,
-                                              Integer pageNumber) {
+  @Override
+  public List<Menu> findAllByRestaurantIdAndNameContaining(UUID restaurantId,
+                                                           String searchTerm,
+                                                           Integer pageSize,
+                                                           Integer pageNumber) {
 
-        return menuRepository.findAllByNameContaining(
-                searchTerm,
-                pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize))
-                .getContent();
-    }
+    return menuRepository.findAllByRestaurantIdAndNameContaining(
+            restaurantId.toString(), searchTerm,
+            pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize))
+            .getContent();
+  }
 
-    @Override
-    public List<Menu> findAllByRestaurantIdAndNameContaining(UUID restaurantId,
-                                                             String searchTerm,
-                                                             Integer pageSize,
-                                                             Integer pageNumber) {
-
-        return menuRepository.findAllByRestaurantIdAndNameContaining(
-                restaurantId.toString(), searchTerm,
-                pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize))
-                .getContent();
-    }
+  @Override
+  public Menu saveMenu(Menu aMenu) {
+    aMenu.setId(UUID.randomUUID().toString());
+    Menu saved = menuRepository.save(aMenu);
+    logger.debug("A new menu is created");
+    return saved;
+  }
 }
