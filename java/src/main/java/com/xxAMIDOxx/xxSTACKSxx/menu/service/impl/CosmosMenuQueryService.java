@@ -1,11 +1,12 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.service.impl;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
+import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -13,8 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import static com.xxAMIDOxx.xxSTACKSxx.core.azure.cosmos.CosmosHelper.pageRequestWithSort;
 
 @Service
 public class CosmosMenuQueryService implements MenuQueryService {
@@ -35,8 +34,8 @@ public class CosmosMenuQueryService implements MenuQueryService {
     public List<Menu> findAll(int pageNumber, int pageSize) {
 
         Page<Menu> page = menuRepository.findAll(
-                pageRequestWithSort(
-                        Sort.Direction.ASC, NAME, 0, pageSize));
+                PageRequest.of(0, pageSize,
+                        Sort.by(Sort.Direction.ASC, NAME)));
 
         // This is specific and needed due to the way in which CosmosDB handles pagination
         // using a continuationToken and a limitation in the Swagger Specification.
@@ -47,10 +46,6 @@ public class CosmosMenuQueryService implements MenuQueryService {
             Pageable nextPageable = page.nextPageable();
             page = menuRepository.findAll(nextPageable);
         }
-
-        page.getTotalElements()
-
-
         return page.getContent();
     }
 
@@ -61,8 +56,8 @@ public class CosmosMenuQueryService implements MenuQueryService {
 
         return menuRepository.findAllByRestaurantId(
                 restaurantId.toString(),
-                pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize))
-                .getContent();
+                PageRequest.of(0, pageSize,
+                        Sort.by(Sort.Direction.ASC, NAME))).getContent();
     }
 
     @Override
@@ -72,8 +67,8 @@ public class CosmosMenuQueryService implements MenuQueryService {
 
         return menuRepository.findAllByNameContaining(
                 searchTerm,
-                pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize))
-                .getContent();
+                PageRequest.of(0, pageSize,
+                        Sort.by(Sort.Direction.ASC, NAME))).getContent();
     }
 
     @Override
@@ -83,8 +78,9 @@ public class CosmosMenuQueryService implements MenuQueryService {
                                                              Integer pageNumber) {
 
         return menuRepository.findAllByRestaurantIdAndNameContaining(
-                restaurantId.toString(), searchTerm,
-                pageRequestWithSort(Sort.Direction.ASC, NAME, pageNumber, pageSize))
-                .getContent();
+                restaurantId.toString(),
+                searchTerm,
+                PageRequest.of(0, pageSize,
+                        Sort.by(Sort.Direction.ASC, NAME))).getContent();
     }
 }
