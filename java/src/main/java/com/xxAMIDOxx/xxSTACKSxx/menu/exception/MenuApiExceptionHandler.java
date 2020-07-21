@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class MenuApiExceptionAdvice {
+public class MenuApiExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(MenuAlreadyExistsException.class)

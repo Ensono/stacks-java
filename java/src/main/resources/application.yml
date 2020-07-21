@@ -34,3 +34,8 @@ azure:
     client-id: xxxxxx
     client-key: xxxxxx
     tenant-id: xxxxxx
+  servicebus:
+    connectionString: xxxxxx
+    topicName: menu-updates
+    subscriptionName: Subscription1
+    enabled: true

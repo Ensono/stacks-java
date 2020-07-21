@@ -21,8 +21,8 @@ public class CorrelationIdFilterConfiguration {
     @Bean
     public FilterRegistrationBean<CorrelationIdFilter> servletRegistrationBean() {
 
-        final FilterRegistrationBean<CorrelationIdFilter> registrationBean =
-                new FilterRegistrationBean<>();
+        final FilterRegistrationBean<CorrelationIdFilter>
+                registrationBean = new FilterRegistrationBean<>();
 
         final CorrelationIdFilter logFilter = new CorrelationIdFilter(
                 responseHeader, logTokenKey, requestHeader);

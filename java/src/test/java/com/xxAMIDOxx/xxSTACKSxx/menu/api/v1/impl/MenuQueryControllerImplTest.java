@@ -96,7 +96,7 @@ public class MenuQueryControllerImplTest {
         List<Menu> matching = Collections.singletonList(match);
 
         List<SearchMenuResultItem> expectedMenuList = matching.stream()
-                .map(SearchMenuResultItem::new)
+                .map(MenuMapper.INSTANCE::menuToSearchMenuResultItem)
                 .collect(Collectors.toList());
 
         SearchMenuResult expectedResponse = new SearchMenuResult(

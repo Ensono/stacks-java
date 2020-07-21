@@ -15,8 +15,14 @@ public class SearchMenuResult {
   @JsonProperty("results")
   private List<SearchMenuResultItem> results;
 
-  public SearchMenuResult() {
-  }
+  /** TODO Should have count and total included in response.
+  @JsonProperty("count")
+  private Integer count;
+
+  @JsonProperty("total")
+  private Integer total;
+   *
+   */
 
   public SearchMenuResult(Integer pageSize, Integer pageNumber, List<SearchMenuResultItem> results) {
     this.pageSize = pageSize;

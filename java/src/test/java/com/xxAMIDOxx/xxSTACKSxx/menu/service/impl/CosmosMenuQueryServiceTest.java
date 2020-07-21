@@ -1,7 +1,7 @@
-package com.xxAMIDOxx.xxSTACKSxx.menu.handlers.query.impl;
+package com.xxAMIDOxx.xxSTACKSxx.menu.service.impl;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.handlers.query.QueryMenuHandler;
+import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -19,13 +19,13 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 @Tag("Unit")
-public class QueryMenuHandlerTest {
+public class CosmosMenuQueryServiceTest {
 
     @Test
     void findAll() {
 
         MenuRepository repository = mock(MenuRepository.class);
-        QueryMenuHandler queryMenuHandlerImpl = new CosmosQueryMenuHandler(repository);
+        MenuQueryService menuQueryServiceImpl = new CosmosMenuQueryService(repository);
 
         Pageable pageable = mock(Pageable.class);
 
@@ -38,7 +38,7 @@ public class QueryMenuHandlerTest {
         given(repository.findAll(eq(pageable))).willReturn(page2);
 
         // When
-        List<Menu> actualResults = queryMenuHandlerImpl.findAll(2, 5);
+        List<Menu> actualResults = menuQueryServiceImpl.findAll(2, 5);
 
         // Then
         then(actualResults).isEqualTo(results);

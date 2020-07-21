@@ -1,12 +1,15 @@
-package com.xxAMIDOxx.xxSTACKSxx.menu.events;
+package com.xxAMIDOxx.xxSTACKSxx.core.events;
 
-import com.xxAMIDOxx.xxSTACKSxx.core.events.ApplicationEvent;
-import com.xxAMIDOxx.xxSTACKSxx.core.events.ApplicationEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(
+        value = "azure.servicebus.enabled",
+        havingValue = "false",
+        matchIfMissing = true)
 public class DefaultEventPublisher implements ApplicationEventPublisher {
 
     Logger logger = LoggerFactory.getLogger(DefaultEventPublisher.class);

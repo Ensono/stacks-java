@@ -2,18 +2,14 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.domain;
 
 import com.microsoft.azure.spring.data.cosmosdb.core.mapping.Document;
 import com.microsoft.azure.spring.data.cosmosdb.core.mapping.PartitionKey;
+import org.springframework.data.annotation.Id;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.springframework.data.annotation.Id;
-
-/**
- * @author James Peet
- */
-@Document(collection = "MenuDTO")
+@Document(collection = "Menu")
 public class Menu {
 
   @Id
@@ -67,7 +63,7 @@ public class Menu {
     this.categories = categories;
   }
 
-  public Menu updateCategory(Category category) {
+  public Menu addUpdateCategory(Category category) {
     if (this.categories == null) {
       this.categories = new ArrayList<>();
     }

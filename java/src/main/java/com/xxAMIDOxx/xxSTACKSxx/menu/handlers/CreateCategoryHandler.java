@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx.menu.handlers.command;
+package com.xxAMIDOxx.xxSTACKSxx.menu.handlers;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.events.ApplicationEventPublisher;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateCategoryCommand;

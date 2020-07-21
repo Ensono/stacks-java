@@ -1,7 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -23,17 +22,6 @@ public class SearchMenuResultItem {
   @JsonProperty("enabled")
   private Boolean enabled;
 
-  public SearchMenuResultItem() {
-  }
-
-  public SearchMenuResultItem(Menu menu) {
-    this.id = UUID.fromString(menu.getId());
-    this.restaurantId = UUID.fromString(menu.getRestaurantId());
-    this.name = menu.getName();
-    this.description = menu.getDescription();
-    this.enabled = menu.getEnabled();
-  }
-
   public UUID getId() {
     return id;
   }
@@ -52,6 +40,26 @@ public class SearchMenuResultItem {
 
   public Boolean getEnabled() {
     return enabled;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+  public void setRestaurantId(UUID restaurantId) {
+    this.restaurantId = restaurantId;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public void setEnabled(Boolean enabled) {
+    this.enabled = enabled;
   }
 
   @Override
