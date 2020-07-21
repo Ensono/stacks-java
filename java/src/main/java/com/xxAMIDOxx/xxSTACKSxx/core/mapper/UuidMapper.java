@@ -4,9 +4,9 @@ import java.util.UUID;
 
 public class UuidMapper {
     public UUID map(String uuid) {
-        return UUID.fromString(uuid);
+        return uuid != null ? UUID.fromString(uuid) : null;
     }
     public String map(UUID uuid) {
-        return uuid.toString();
+        return uuid != null ? uuid.toString() : null;
     }
 }

@@ -4,7 +4,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.CreateMenuItemController;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateItemRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateItemCommand;
-import com.xxAMIDOxx.xxSTACKSxx.menu.handlers.command.CreateItemHandler;
+import com.xxAMIDOxx.xxSTACKSxx.menu.handlers.CreateItemHandler;
 import com.xxAMIDOxx.xxSTACKSxx.menu.mapper.MenuCommandMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

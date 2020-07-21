@@ -1,8 +1,8 @@
-package com.xxAMIDOxx.xxSTACKSxx.menu.handlers.query.impl;
+package com.xxAMIDOxx.xxSTACKSxx.menu.service.impl;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
-import com.xxAMIDOxx.xxSTACKSxx.menu.handlers.query.QueryMenuHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -14,17 +14,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.xxAMIDOxx.xxSTACKSxx.core.azure.CosmosHelper.pageRequestWithSort;
+import static com.xxAMIDOxx.xxSTACKSxx.core.azure.cosmos.CosmosHelper.pageRequestWithSort;
 
 @Service
-public class CosmosQueryMenuHandler implements QueryMenuHandler {
+public class CosmosMenuQueryService implements MenuQueryService {
 
     private static final String NAME = "name";
-    private static Logger logger = LoggerFactory.getLogger(CosmosQueryMenuHandler.class);
+    private static Logger logger = LoggerFactory.getLogger(CosmosMenuQueryService.class);
 
     private MenuRepository menuRepository;
 
-    public CosmosQueryMenuHandler(MenuRepository menuRepository) {
+    public CosmosMenuQueryService(MenuRepository menuRepository) {
         this.menuRepository = menuRepository;
     }
 
@@ -34,21 +34,22 @@ public class CosmosQueryMenuHandler implements QueryMenuHandler {
 
     public List<Menu> findAll(int pageNumber, int pageSize) {
 
-        logger.info("findAll: {} {}", pageNumber, pageSize);
-
         Page<Menu> page = menuRepository.findAll(
-                pageRequestWithSort(Sort.Direction.ASC, NAME, 0, pageSize));
-
-        int currentPage = 0;
+                pageRequestWithSort(
+                        Sort.Direction.ASC, NAME, 0, pageSize));
 
         // This is specific and needed due to the way in which CosmosDB handles pagination
         // using a continuationToken and a limitation in the Swagger Specification.
         // See https://github.com/Azure/azure-sdk-for-java/issues/12726
+        int currentPage = 0;
         while (currentPage < pageNumber && page.hasNext()) {
             currentPage++;
             Pageable nextPageable = page.nextPageable();
             page = menuRepository.findAll(nextPageable);
         }
+
+        page.getTotalElements()
+
 
         return page.getContent();
     }

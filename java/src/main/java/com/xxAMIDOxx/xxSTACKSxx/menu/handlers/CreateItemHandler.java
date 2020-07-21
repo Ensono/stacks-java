@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx.menu.handlers.command;
+package com.xxAMIDOxx.xxSTACKSxx.menu.handlers;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.events.ApplicationEventPublisher;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateItemCommand;
@@ -29,7 +29,7 @@ public class CreateItemHandler extends MenuBaseCommandHandler<CreateItemCommand>
     Optional<UUID> handleCommand(Menu menu, CreateItemCommand command) {
         itemId = UUID.randomUUID();
         Category category = addItem(getCategory(menu, command), command);
-        menuRepository.save(menu.updateCategory(category));
+        menuRepository.save(menu.addUpdateCategory(category));
         return Optional.of(itemId);
     }
 

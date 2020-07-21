@@ -4,7 +4,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.CreateCategoryController;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateCategoryRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateCategoryCommand;
-import com.xxAMIDOxx.xxSTACKSxx.menu.handlers.command.CreateCategoryHandler;
+import com.xxAMIDOxx.xxSTACKSxx.menu.handlers.CreateCategoryHandler;
 import com.xxAMIDOxx.xxSTACKSxx.menu.mapper.MenuCommandMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

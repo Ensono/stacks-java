@@ -12,7 +12,7 @@ public class ItemAlreadyExistsException extends MenuApiException {
                         "id '%s'.", name,
                 categoryId,
                 command.getMenuId()),
-                ExceptionCode.MENUITEMALREADY_EXISTS,
+                ExceptionCode.ITEM_ALREADY_EXISTS,
                 command);
     }
 }

@@ -23,6 +23,7 @@
         <applicationinsights.version>2.6.1</applicationinsights.version>
         <cosmosdb.version>2.3.2</cosmosdb.version>
         <azure.springboot.version>2.3.2</azure.springboot.version>
+        <azure.servicebus.version>3.4.0</azure.servicebus.version>
         <jackson.version>2.11.0</jackson.version>
         <mockito.version>3.4.0</mockito.version>
         <lombok.version>1.18.12</lombok.version>
@@ -31,9 +32,9 @@
         <jacoco.version>0.8.5</jacoco.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <maven-surefire-phase>test</maven-surefire-phase>
-        <sonar.cpd.exclusions>**/model/**</sonar.cpd.exclusions>
         <junit-jupiter.version>5.6.2</junit-jupiter.version>
-        <mapstruct.version>1.4.0.Beta2</mapstruct.version>
+        <mapstruct.version>1.4.0.Beta3</mapstruct.version>
+        <equals-verifier.version>3.4.1</equals-verifier.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     </properties>
 
@@ -43,13 +44,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-
-        <!--
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        -->
 
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -61,12 +55,6 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-data-rest</artifactId>
             <version>${org.springdoc-openapi.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-sleuth</artifactId>
-            <version>2.2.3.RELEASE</version>
         </dependency>
 
         <dependency>
@@ -92,6 +80,12 @@
             <artifactId>applicationinsights-spring-boot-starter</artifactId>
             <version>${applicationinsights.version}</version>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>azure-servicebus</artifactId>
+            <version>${azure.servicebus.version}</version>
         </dependency>
 
         <dependency>
@@ -174,15 +168,8 @@
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.4.1</version>
+            <version>${equals-verifier.version}</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.pitest</groupId>
-            <artifactId>pitest-parent</artifactId>
-            <version>${pitest.version}</version>
-            <type>pom</type>
         </dependency>
 
     </dependencies>
@@ -232,38 +219,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <version>${pitest.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.pitest</groupId>
-                        <artifactId>pitest-junit5-plugin</artifactId>
-                        <version>0.12</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <id>pitest</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>mutationCoverage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <threads>4</threads>
-                    <timestampedReports>false</timestampedReports>
-                    <mutators>
-                        <value>STRONGER</value>
-                    </mutators>
-                    <outputFormats>
-                        <outputFormat>XML</outputFormat>
-                    </outputFormats>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>

@@ -29,13 +29,13 @@ public interface QueryMenuController {
                             responseCode = "200",
                             description = "Search results matching criteria",
                             content =
-                            @Content(
-                                    mediaType = "application/json",
+                            @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = SearchMenuResult.class))),
                     @ApiResponse(
                             responseCode = "400",
                             description = "Bad Request",
-                            content = @Content(schema = @Schema(hidden = true)))
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorResponse.class)))
             })
     ResponseEntity<SearchMenuResult> searchMenu(
             @RequestParam(value = "searchTerm", required = false) String searchTerm,
@@ -53,19 +53,18 @@ public interface QueryMenuController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Menu",
-                            content = @Content(
-                                    mediaType = "application/json",
+                            content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = MenuDTO.class))),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Not Found",
-                            content = @Content(
-                                    mediaType = "application/json",
+                            description = "Menu Not Found",
+                            content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(
                             responseCode = "400",
                             description = "Bad Request",
-                            content = @Content(schema = @Schema(hidden = true)))
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorResponse.class)))
             })
     ResponseEntity<MenuDTO> getMenu(@PathVariable(name = "id") UUID id,
                                     @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId);

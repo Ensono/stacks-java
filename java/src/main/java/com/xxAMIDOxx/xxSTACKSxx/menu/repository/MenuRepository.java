@@ -38,4 +38,14 @@ public interface MenuRepository extends CosmosRepository<Menu, String> {
      */
     Page<Menu> findAllByRestaurantIdAndNameContaining(String restaurantId, String searchTerm, Pageable pageable);
 
+    /**
+     * Query is constructed OOTB - out of the box, executed and results are fetched based param restaurantId and searchTerm.
+     * Pagination and sorting is done by spring data JPA.
+     *
+     * @param restaurantId
+     * @param name
+     * @param pageable
+     * @return
+     */
+    Page<Menu> findAllByRestaurantIdAndName(String restaurantId, String name, Pageable pageable);
 }

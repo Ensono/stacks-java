@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx.menu.handlers.query;
+package com.xxAMIDOxx.xxSTACKSxx.menu.service;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface QueryMenuHandler {
+public interface MenuQueryService {
 
     /**
      * Retrieve list of all available Menus
