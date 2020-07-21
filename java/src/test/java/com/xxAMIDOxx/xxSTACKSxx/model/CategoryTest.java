@@ -13,10 +13,10 @@ import static com.xxAMIDOxx.xxSTACKSxx.builder.ItemBuilder.aDefaultItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @Tag("Unit")
-public class CategoryTest {
+class CategoryTest {
 
   @Test
-  public void testCategory() {
+  void testCategory() {
     // Given
     Category category = aCategory()
             .withDescription("1st Category Description")
@@ -30,7 +30,7 @@ public class CategoryTest {
   }
 
   @Test
-  public void equalsContract() {
+  void equalsContract() {
     EqualsVerifier.simple().forClass(Category.class).verify();
   }
 }

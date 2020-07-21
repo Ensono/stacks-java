@@ -3,8 +3,8 @@ package com.xxAMIDOxx.xxSTACKSxx.actuator;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
 import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -27,30 +27,30 @@ import static org.assertj.core.api.BDDAssertions.then;
                 CosmosAutoConfiguration.class
         })
 @Tag("Component")
-public class ActuatorTest {
+class ActuatorTest {
 
-    @Value("${local.management.port}")
-    private int mgt;
+  @Value("${local.management.port}")
+  private int mgt;
 
-    @Autowired
-    private TestRestTemplate testRestTemplate;
+  @Autowired
+  private TestRestTemplate testRestTemplate;
 
-    @MockBean
-    private MenuRepository menuRepository;
+  @MockBean
+  private MenuRepository menuRepository;
 
-    @Test
-    public void shouldReturn200WhenSendingRequestToHealthEndpoint() {
+  @Test
+  void shouldReturn200WhenSendingRequestToHealthEndpoint() {
 
-        var entity = this.testRestTemplate.getForEntity(
-                getBaseURL(this.mgt) + "/health", Map.class);
-        then(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
-    }
+    var entity = this.testRestTemplate.getForEntity(
+            getBaseURL(this.mgt) + "/health", Map.class);
+    then(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
 
-    @Test
-    public void shouldReturn200WhenSendingRequestToManagementEndpoint() {
+  @Test
+  void shouldReturn200WhenSendingRequestToManagementEndpoint() {
 
-        var entity = this.testRestTemplate.getForEntity(
-                getBaseURL(this.mgt) + "/info", Map.class);
-        then(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
-    }
+    var entity = this.testRestTemplate.getForEntity(
+            getBaseURL(this.mgt) + "/info", Map.class);
+    then(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
 }

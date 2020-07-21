@@ -16,10 +16,10 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 @Tag("Unit")
-public class MenuTest {
+class MenuTest {
 
   @Test
-  public void testMenusBuilder() {
+  void testMenusBuilder() {
     // Given
     Item item = aDefaultItem();
     Category category = aCategory()
@@ -42,7 +42,7 @@ public class MenuTest {
   }
 
   @Test
-  public void equalsContract() {
+  void equalsContract() {
     EqualsVerifier.simple().forClass(Menu.class).verify();
   }
 }

@@ -11,10 +11,10 @@ import static com.xxAMIDOxx.xxSTACKSxx.builder.ItemBuilder.anItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @Tag("Unit")
-public class ItemTest {
+class ItemTest {
 
   @Test
-  public void testItem() {
+  void testItem() {
     // Given
     Item item = anItem()
             .withAvailable(true)
@@ -29,7 +29,7 @@ public class ItemTest {
   }
 
   @Test
-  public void equalsContract() {
+  void equalsContract() {
     EqualsVerifier.simple().forClass(Item.class).verify();
   }
 }
