@@ -1,5 +1,6 @@
-package com.xxAMIDOxx.xxSTACKSxx.core.events;
+package com.xxAMIDOxx.xxSTACKSxx.core.messaging.publish;
 
+import com.xxAMIDOxx.xxSTACKSxx.core.messaging.event.ApplicationEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

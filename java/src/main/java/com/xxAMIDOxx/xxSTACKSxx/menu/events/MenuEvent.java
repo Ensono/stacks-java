@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.events;
 
-import com.xxAMIDOxx.xxSTACKSxx.core.events.ApplicationEvent;
+import com.xxAMIDOxx.xxSTACKSxx.core.messaging.event.ApplicationEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.MenuCommand;
 
 import java.util.UUID;

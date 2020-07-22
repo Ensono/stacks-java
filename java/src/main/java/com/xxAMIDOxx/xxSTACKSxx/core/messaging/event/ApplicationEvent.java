@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx.core.events;
+package com.xxAMIDOxx.xxSTACKSxx.core.messaging.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.xxAMIDOxx.xxSTACKSxx.core.operations.OperationContext;

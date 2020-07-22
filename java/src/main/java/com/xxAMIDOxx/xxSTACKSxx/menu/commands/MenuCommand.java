@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.commands;
 
-import com.xxAMIDOxx.xxSTACKSxx.core.commands.ApplicationCommand;
+import com.xxAMIDOxx.xxSTACKSxx.core.cqrs.command.ApplicationCommand;
 
 import java.util.UUID;
 

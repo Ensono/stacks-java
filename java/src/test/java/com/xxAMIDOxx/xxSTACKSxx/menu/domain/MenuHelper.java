@@ -23,7 +23,7 @@ public class MenuHelper {
                 UUID.randomUUID().toString(),
                 counter + " Menu",
                 counter + " Menu Description",
-                null,
+                new ArrayList<Category>(),
                 true);
     }
 }
