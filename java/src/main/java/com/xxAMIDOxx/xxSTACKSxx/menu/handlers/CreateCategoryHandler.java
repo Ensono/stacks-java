@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.handlers;
 
-import com.xxAMIDOxx.xxSTACKSxx.core.events.ApplicationEventPublisher;
+import com.xxAMIDOxx.xxSTACKSxx.core.messaging.publish.ApplicationEventPublisher;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateCategoryCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;

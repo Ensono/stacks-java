@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx.core.commands;
+package com.xxAMIDOxx.xxSTACKSxx.core.cqrs.command;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.operations.OperationContext;
 

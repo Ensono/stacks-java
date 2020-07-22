@@ -1,9 +1,15 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class SearchMenuResult {
 
   @JsonProperty("pageSize")
@@ -16,54 +22,10 @@ public class SearchMenuResult {
   private List<SearchMenuResultItem> results;
 
   /** TODO Should have count and total included in response.
-  @JsonProperty("count")
-  private Integer count;
+   @JsonProperty("count") private Integer count;
 
-  @JsonProperty("total")
-  private Integer total;
-   *
+   @JsonProperty("total") private Integer total;
    */
 
-  public SearchMenuResult(Integer pageSize, Integer pageNumber, List<SearchMenuResultItem> results) {
-    this.pageSize = pageSize;
-    this.pageNumber = pageNumber;
-    this.results = results;
-  }
-
-  public Integer getPageSize() {
-    return pageSize;
-  }
-
-  public Integer getPageNumber() {
-    return pageNumber;
-  }
-
-  public List<SearchMenuResultItem> getResults() {
-    return results;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof SearchMenuResult)) return false;
-    SearchMenuResult that = (SearchMenuResult) o;
-    return Objects.equals(pageSize, that.pageSize) &&
-            Objects.equals(pageNumber, that.pageNumber) &&
-            Objects.equals(results, that.results);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(pageSize, pageNumber, results);
-  }
-
-  @Override
-  public String toString() {
-    return "SearchMenuResult{" +
-            "pageSize=" + pageSize +
-            ", pageNumber=" + pageNumber +
-            ", results=" + results +
-            '}';
-  }
 }
 

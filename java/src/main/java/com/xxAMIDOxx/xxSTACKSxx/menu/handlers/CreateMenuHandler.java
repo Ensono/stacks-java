@@ -1,7 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.handlers;
 
-import com.xxAMIDOxx.xxSTACKSxx.core.commands.CommandHandler;
-import com.xxAMIDOxx.xxSTACKSxx.core.events.ApplicationEventPublisher;
+import com.xxAMIDOxx.xxSTACKSxx.core.cqrs.handler.CommandHandler;
+import com.xxAMIDOxx.xxSTACKSxx.core.messaging.publish.ApplicationEventPublisher;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateMenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuCreatedEvent;

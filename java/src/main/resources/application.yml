@@ -14,8 +14,6 @@ management:
       base-path: /
 
 springdoc:
-  api-docs:
-    path: /swagger/oas.json
   swagger-ui:
     path: /swagger/index.html
   packagesToScan: com.xxAMIDOxx.xxSTACKSxx.menu.api.v1

@@ -26,8 +26,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.MenuHelper.*;
-import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.*;
+import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.MenuHelper.createMenu;
+import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.MenuHelper.createMenus;
+import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -174,7 +175,7 @@ public class MenuQueryControllerImplTest {
 
         // When
         var response = this.testRestTemplate.getForEntity(
-                getBaseURL(port) + "/v1/menu/" + menu.getId(),
+                String.format("%s/v1/menu/%s", getBaseURL(port), menu.getId()),
                 MenuDTO.class);
 
         // Then

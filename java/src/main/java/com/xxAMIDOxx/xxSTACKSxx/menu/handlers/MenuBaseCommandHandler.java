@@ -1,7 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.handlers;
 
-import com.xxAMIDOxx.xxSTACKSxx.core.commands.CommandHandler;
-import com.xxAMIDOxx.xxSTACKSxx.core.events.ApplicationEventPublisher;
+import com.xxAMIDOxx.xxSTACKSxx.core.cqrs.handler.CommandHandler;
+import com.xxAMIDOxx.xxSTACKSxx.core.messaging.publish.ApplicationEventPublisher;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.MenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
@@ -26,11 +26,9 @@ public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements C
     @Override
     public Optional<UUID> handle(T command) {
 
-        Menu menu = menuRepository.findById(command.getMenuId().toString())
-                .orElseThrow(
-                        () -> new MenuNotFoundException(command));
-
-        // TODO: Check if the user owns the resource before any operation
+        Menu menu = menuRepository
+                .findById(command.getMenuId().toString())
+                .orElseThrow(() -> new MenuNotFoundException(command));
 
         var result = handleCommand(menu, command);
 

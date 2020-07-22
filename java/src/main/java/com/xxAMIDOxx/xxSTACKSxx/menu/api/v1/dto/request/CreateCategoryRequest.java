@@ -1,9 +1,11 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
 import javax.validation.constraints.NotEmpty;
 
+@Getter
 public class CreateCategoryRequest {
 
   @JsonProperty("name")
@@ -13,13 +15,4 @@ public class CreateCategoryRequest {
   @JsonProperty("description")
   @NotEmpty
   private String description = null;
-
-  public String getName() {
-    return name;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
 }
