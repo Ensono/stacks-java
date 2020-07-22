@@ -1,8 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.NotNull;
@@ -17,12 +15,6 @@ import java.util.Objects;
 @Schema(name = "CreateCategoryRequest")
 public class CreateCategoryRequestDto {
 
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  @JsonPropertyOrder({
-          "name",
-          "description"
-  })
-
   @NotNull
   @JsonProperty("name")
   private String name;
@@ -30,6 +22,9 @@ public class CreateCategoryRequestDto {
   @NotNull
   @JsonProperty("description")
   private String description;
+
+  public CreateCategoryRequestDto() {
+  }
 
   public String getName() {
     return name;

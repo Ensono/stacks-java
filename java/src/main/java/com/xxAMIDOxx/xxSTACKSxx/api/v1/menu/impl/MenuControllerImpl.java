@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
@@ -77,10 +76,7 @@ public class MenuControllerImpl implements MenuController {
   public ResponseEntity<ResourceCreatedResponseDto> createMenu(
           MenuCreateRequestDto requestDto) {
     Menu menu = this.menuService.saveMenu(convertMenuDtoToMenu(requestDto));
-    ResourceCreatedResponseDto createdResponse =
-            new ResourceCreatedResponseDto();
-    createdResponse.setId(menu.getId());
-    return new ResponseEntity<>(createdResponse, CREATED);
+    return new ResponseEntity<>(new ResourceCreatedResponseDto(menu.getId()), CREATED);
   }
 
   /**
@@ -102,24 +98,17 @@ public class MenuControllerImpl implements MenuController {
    * @return CategoryCreateResponse
    */
   @Override
-  public ResponseEntity<ResourceCreatedResponseDto>
-  createCategory(UUID id, CreateCategoryRequestDto requestDto) {
+  public ResponseEntity<ResourceCreatedResponseDto> createCategory(UUID id,
+                                                                   CreateCategoryRequestDto requestDto) {
     Category category = convertCategoryDtoToCategory(requestDto);
 
-    if (isNull(category)) {
-      return new ResponseEntity<>(BAD_REQUEST);
-    }
     category = this.menuService.saveCategory(id, category);
 
     if (isNull(category)) {
       return new ResponseEntity<>(NOT_FOUND);
     }
 
-    ResourceCreatedResponseDto createdResponse =
-            new ResourceCreatedResponseDto();
-    createdResponse.setId(category.getId());
-
-    return new ResponseEntity<>(createdResponse, OK);
+    return new ResponseEntity<>(new ResourceCreatedResponseDto(category.getId()), OK);
   }
 
   /**

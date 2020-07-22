@@ -8,6 +8,13 @@ public class ResourceCreatedResponseDto {
 
   private String id;
 
+  public ResourceCreatedResponseDto(String id) {
+    this.id = id;
+  }
+
+  private ResourceCreatedResponseDto() {
+  }
+
   public String getId() {
     return id;
   }
