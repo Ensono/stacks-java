@@ -1,7 +1,11 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.commands;
 
+import lombok.Data;
+import lombok.Getter;
+
 import java.util.UUID;
 
+@Getter
 public class CreateMenuCommand extends MenuCommand {
 
     private String name;
@@ -14,38 +18,6 @@ public class CreateMenuCommand extends MenuCommand {
         this.name = name;
         this.description = description;
         this.restaurantId = restaurantId;
-        this.enabled = enabled;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public UUID getRestaurantId() {
-        return restaurantId;
-    }
-
-    public void setRestaurantId(UUID restaurantId) {
-        this.restaurantId = restaurantId;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 }

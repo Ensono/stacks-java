@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1;
 
-import com.xxAMIDOxx.xxSTACKSxx.core.dto.ErrorResponse;
+import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateMenuRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
 import io.swagger.v3.oas.annotations.Operation;

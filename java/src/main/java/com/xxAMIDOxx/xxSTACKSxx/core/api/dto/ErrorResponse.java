@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx.core.dto;
+package com.xxAMIDOxx.xxSTACKSxx.core.api.dto;
 
 public class ErrorResponse {
 
