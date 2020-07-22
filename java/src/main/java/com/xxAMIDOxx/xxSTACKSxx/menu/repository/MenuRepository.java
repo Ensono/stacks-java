@@ -12,8 +12,8 @@ public interface MenuRepository extends CosmosRepository<Menu, String> {
      * Query is constructed OOTB- out of the box, executed and results are fetched based param restaurantId.
      * Pagination and sorting is done by spring data JPA.
      *
-     * @param restaurantId
-     * @return
+     * @param restaurantId tenantID/RestaurantId
+     * @return page of menu
      */
     Page<Menu> findAllByRestaurantId(String restaurantId, Pageable pageable);
 
@@ -21,9 +21,9 @@ public interface MenuRepository extends CosmosRepository<Menu, String> {
      * Query is constructed OOTB - out of the box, executed and results are fetched based param searchTerm.
      * Pagination and sorting is done by spring data JPA.
      *
-     * @param searchTerm
-     * @param pageable
-     * @return
+     * @param searchTerm Menu name
+     * @param pageable pagination
+     * @return page of menu
      */
     Page<Menu> findAllByNameContaining(String searchTerm, Pageable pageable);
 
@@ -31,10 +31,10 @@ public interface MenuRepository extends CosmosRepository<Menu, String> {
      * Query is constructed OOTB - out of the box, executed and results are fetched based param restaurantId and searchTerm.
      * Pagination and sorting is done by spring data JPA.
      *
-     * @param restaurantId
-     * @param searchTerm
-     * @param pageable
-     * @return
+     * @param restaurantId tenantID/RestaurantId
+     * @param searchTerm Menu name
+     * @param pageable pagination
+     * @return page of menu
      */
     Page<Menu> findAllByRestaurantIdAndNameContaining(String restaurantId, String searchTerm, Pageable pageable);
 
