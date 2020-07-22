@@ -17,13 +17,18 @@ public class CreateCategoryRequestDto {
 
   @NotNull
   @JsonProperty("name")
-  private String name;
+  private String name = null;
 
   @NotNull
   @JsonProperty("description")
-  private String description;
+  private String description = null;
 
   public CreateCategoryRequestDto() {
+  }
+
+  public CreateCategoryRequestDto(String name, String description) {
+    this.name = name;
+    this.description = description;
   }
 
   public String getName() {
