@@ -85,15 +85,17 @@ pipeline {
             }
           }
 
-          dir("${self_repo_tf_src}") {
-            sh '''#!/bin/bash
-              terraform fmt -diff -check -recursive
-            '''
+          steps {
+            dir("${self_repo_tf_src}") {
+              sh '''#!/bin/bash
+                terraform fmt -diff -check -recursive
+              '''
 
-            sh '''#!/bin/bash
-              terraform init -backend=false
-              terraform validate
-            '''
+              sh '''#!/bin/bash
+                terraform init -backend=false
+                terraform validate
+              '''
+            }
           }
         }
 
