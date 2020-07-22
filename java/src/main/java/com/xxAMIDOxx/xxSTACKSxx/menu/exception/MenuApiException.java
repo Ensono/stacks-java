@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.exception;
 
-import com.xxAMIDOxx.xxSTACKSxx.core.exception.ApiException;
+import com.xxAMIDOxx.xxSTACKSxx.core.api.exception.ApiException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.MenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
 

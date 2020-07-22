@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx.core.exception;
+package com.xxAMIDOxx.xxSTACKSxx.core.api.exception;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ExceptionCode;

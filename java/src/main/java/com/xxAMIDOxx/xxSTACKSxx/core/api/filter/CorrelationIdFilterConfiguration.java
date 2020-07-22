@@ -1,6 +1,5 @@
-package com.xxAMIDOxx.xxSTACKSxx.core.filter;
+package com.xxAMIDOxx.xxSTACKSxx.core.api.filter;
 
-import com.xxAMIDOxx.xxSTACKSxx.core.filter.CorrelationIdFilter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

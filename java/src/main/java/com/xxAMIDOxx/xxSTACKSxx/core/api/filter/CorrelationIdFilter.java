@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx.core.filter;
+package com.xxAMIDOxx.xxSTACKSxx.core.api.filter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;

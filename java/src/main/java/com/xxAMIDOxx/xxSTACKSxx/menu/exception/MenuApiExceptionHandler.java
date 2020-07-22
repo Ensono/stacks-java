@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.exception;
 
-import com.xxAMIDOxx.xxSTACKSxx.core.dto.ErrorResponse;
+import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

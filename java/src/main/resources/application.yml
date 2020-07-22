@@ -36,4 +36,4 @@ azure:
     connectionString: xxxxxx
     topicName: menu-updates
     subscriptionName: Subscription1
-    enabled: true
+    enabled: false

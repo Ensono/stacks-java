@@ -1,6 +1,6 @@
-package com.xxAMIDOxx.xxSTACKSxx.core.exception;
+package com.xxAMIDOxx.xxSTACKSxx.core.api.exception;
 
-import com.xxAMIDOxx.xxSTACKSxx.core.dto.ErrorResponse;
+import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
