@@ -9,16 +9,16 @@ import org.junit.jupiter.api.Test;
  * @author ArathyKrishna
  */
 @Tag("Unit")
-class CreateItemRequestDtoTest {
+class UpdateMenuRequestDtoTest {
 
   @Test
   void testEquals() {
-    EqualsVerifier.simple().forClass(CreateItemRequestDto.class).verify();
+    EqualsVerifier.simple().forClass(UpdateMenuRequestDto.class).verify();
   }
 
   @Test
   void testToString() {
-    ToStringVerifier.forClass(CreateItemRequestDto.class).verify();
+    ToStringVerifier.forClass(UpdateMenuRequestDto.class).verify();
   }
 
 }

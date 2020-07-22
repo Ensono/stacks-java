@@ -1,5 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.service.impl;
 
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.UpdateMenuRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.model.Category;
 import com.xxAMIDOxx.xxSTACKSxx.model.Item;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.xxAMIDOxx.xxSTACKSxx.model.MenuHelper.createMenus;
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -50,7 +52,7 @@ class MenuServiceImplTest {
     menu = new Menu();
     menu.setEnabled(true);
     menu.setName("testMenu");
-    menu.setRestaurantId(UUID.randomUUID());
+    menu.setRestaurantId(randomUUID());
     menu.setDescription("something");
 
     category = new Category();
@@ -144,7 +146,7 @@ class MenuServiceImplTest {
 
     // When
     Category actualResult =
-            menuServiceImpl.saveCategory(UUID.randomUUID(), category);
+            menuServiceImpl.saveCategory(randomUUID(), category);
 
     // Then
     then(actualResult).isNull();
@@ -155,7 +157,7 @@ class MenuServiceImplTest {
     // Given
     when(repository.save(any(Menu.class))).thenReturn(menu);
     when(repository.findById(any(String.class))).thenReturn(Optional.of(menu));
-    category.setId(UUID.randomUUID().toString());
+    category.setId(randomUUID().toString());
     menu.setCategories(List.of(category));
     Menu savedMenu = menuServiceImpl.saveMenu(menu);
     // When
@@ -174,7 +176,7 @@ class MenuServiceImplTest {
 
     // When
     String itemId =
-            menuServiceImpl.saveItem(item, UUID.randomUUID().toString(), category.getId());
+            menuServiceImpl.saveItem(item, randomUUID().toString(), category.getId());
 
     // Then
     then(itemId).isNull();
@@ -193,5 +195,28 @@ class MenuServiceImplTest {
 
     // Then
     then(itemId).isNull();
+  }
+
+  @Test
+  void testUpdateMenu() {
+    // Given
+    when(repository.save(any(Menu.class))).thenReturn(menu);
+    when(repository.findById(any(String.class))).thenReturn(Optional.of(menu));
+    menu.setId(randomUUID().toString());
+    Menu savedMenu = menuServiceImpl.saveMenu(menu);
+
+    menu.setEnabled(false);
+    menu.setRestaurantId(randomUUID());
+    menu.setName("Updated");
+
+
+    // When
+    Menu updatedMenu = menuServiceImpl.saveMenu(menu);
+
+    // Then
+    then(updatedMenu.getEnabled()).isFalse();
+    then(updatedMenu.getDescription()).isEqualTo(menu.getDescription());
+    then(updatedMenu.getName()).isEqualTo(menu.getName());
+    then(updatedMenu.getRestaurantId()).isEqualTo(menu.getRestaurantId());
   }
 }

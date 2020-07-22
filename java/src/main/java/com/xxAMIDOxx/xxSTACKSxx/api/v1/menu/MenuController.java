@@ -4,8 +4,11 @@ import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.CreateCategoryRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.CreateItemRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.UpdateMenuRequestDto;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.MenuUpdateResponseDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponseDto;
 import com.xxAMIDOxx.xxSTACKSxx.model.Category;
+import com.xxAMIDOxx.xxSTACKSxx.model.Item;
 import com.xxAMIDOxx.xxSTACKSxx.model.Menu;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,7 +35,7 @@ public interface MenuController {
 
   @GetMapping(value = "", produces = "application/json")
   @Operation(
-          tags = "Menu",
+          tags = "SearchMenu",
           summary = "Get or search a list of menus",
           description =
                   "By passing in the appropriate options, you can search for " +
@@ -160,7 +164,7 @@ public interface MenuController {
                           description = "Resource created",
                           content = @Content(
                                   mediaType = APPLICATION_JSON_VALUE,
-                                  schema = @Schema(implementation = Category.class))),
+                                  schema = @Schema(implementation = Item.class))),
                   @ApiResponse(
                           responseCode = "400",
                           description = "Bad Request",
@@ -190,5 +194,42 @@ public interface MenuController {
           @Valid @PathVariable(name = "id") String id,
           @Valid @PathVariable(name = "categoryId") String categoryId,
           @Valid @RequestBody CreateItemRequestDto requestDto);
-}
 
+  @Operation(
+          tags = "UpdateMenu",
+          summary = "Update a Menu",
+          description = "Update a menu with new information",
+          responses = {
+                  @ApiResponse(
+                          responseCode = "200",
+                          description = "Success",
+                          content = @Content(
+                                  mediaType = APPLICATION_JSON_VALUE,
+                                  schema = @Schema(implementation = Menu.class))),
+                  @ApiResponse(
+                          responseCode = "204",
+                          description = "No Content",
+                          content = @Content(schema = @Schema(hidden = true))),
+                  @ApiResponse(
+                          responseCode = "400",
+                          description = "Bad Request",
+                          content = @Content(schema = @Schema(hidden = true))),
+                  @ApiResponse(
+                          responseCode = "401",
+                          description = "Unauthorized, Access tocken is missing or invalid",
+                          content = @Content(schema = @Schema(hidden = true))),
+                  @ApiResponse(
+                          responseCode = "403",
+                          description = "Forbidden, the user does not have the permission to execute this operation",
+                          content = @Content(schema = @Schema(hidden = true))),
+                  @ApiResponse(
+                          responseCode = "404",
+                          description = "Resource not found",
+                          content = @Content(schema = @Schema(hidden = true)))
+
+          })
+
+  @PutMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+  ResponseEntity<MenuUpdateResponseDto> updateMenu(@Valid @PathVariable(name = "id") String id, @Valid @RequestBody
+                                                   UpdateMenuRequestDto requestDto);
+}

@@ -1,5 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.model;
 
+import com.jparams.verifier.tostring.NameStyle;
+import com.jparams.verifier.tostring.ToStringVerifier;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.matcher.TypeMatchers;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Tag;
@@ -44,5 +46,11 @@ class MenuTest {
   @Test
   void equalsContract() {
     EqualsVerifier.simple().forClass(Menu.class).verify();
+  }
+
+  @Test
+  void testToString() {
+    ToStringVerifier.forClass(Menu.class)
+            .withClassName(NameStyle.SIMPLE_NAME).verify();
   }
 }

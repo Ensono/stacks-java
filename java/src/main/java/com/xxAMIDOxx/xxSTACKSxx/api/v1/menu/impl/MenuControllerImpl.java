@@ -7,6 +7,8 @@ import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.CreateCategoryRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.CreateItemRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.UpdateMenuRequestDto;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.MenuUpdateResponseDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponseDto;
 import com.xxAMIDOxx.xxSTACKSxx.model.Category;
 import com.xxAMIDOxx.xxSTACKSxx.model.Item;
@@ -16,7 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -33,7 +37,6 @@ import static org.springframework.http.HttpStatus.OK;
 /**
  * MenuControllerImpl - Menu Controller used to interact and manage menus API.
  *
- * @author James Peet
  * @author James Peet
  * @author Suresh Krishnan
  * @author ArathyKrishna
@@ -90,7 +93,7 @@ public class MenuControllerImpl implements MenuController {
   }
 
   /**
-   * Mapping MenuRequestDto to Menu object
+   * Mapping MenuRequestDto to Menu object.
    *
    * @param requestDto Menu request dto
    * @return mapped menu
@@ -108,8 +111,8 @@ public class MenuControllerImpl implements MenuController {
    * @return createdResponse
    */
   @Override
-  public ResponseEntity<ResourceCreatedResponseDto>
-  createCategory(UUID id, CreateCategoryRequestDto requestDto) {
+  public ResponseEntity<ResourceCreatedResponseDto> createCategory
+      (UUID id, CreateCategoryRequestDto requestDto) {
     Category category = convertCategoryDtoToCategory(requestDto);
 
     if (isNull(category)) {
@@ -125,7 +128,7 @@ public class MenuControllerImpl implements MenuController {
   }
 
   /**
-   * Mapping MenuRequestDto to Menu object
+   * Mapping MenuRequestDto to Menu object.
    *
    * @param requestDto Menu request dto
    * @return mapped menu
@@ -169,6 +172,47 @@ public class MenuControllerImpl implements MenuController {
     createdResponse.setId(id);
 
     return new ResponseEntity<>(createdResponse, status);
+  }
+
+  /**
+   * Update an existing menu.
+   * @param id menu id
+   * @param requestDto update menu request
+   * @return dto
+   */
+  @Override
+  public ResponseEntity<MenuUpdateResponseDto> updateMenu(@Valid String id,
+                                                          @Valid UpdateMenuRequestDto requestDto) {
+    Optional<Menu> mayBeMenu = this.menuService.findById(UUID.fromString(id));
+
+    if (mayBeMenu.isEmpty()) {
+      return new ResponseEntity<>(NOT_FOUND);
+    }
+
+    Menu menu = mayBeMenu.get();
+    menu = this.menuService.saveMenu(convertMenuUpdateDtoToMenu(requestDto, menu));
+
+    MenuUpdateResponseDto dto = mapMenuUpdateResponse(menu);
+    return new ResponseEntity<>(dto, OK);
+  }
+
+  private Menu convertMenuUpdateDtoToMenu(UpdateMenuRequestDto requestDto, Menu existing) {
+    Menu converted = this.mapper.convertValue(requestDto, Menu.class);
+    existing.setEnabled(converted.getEnabled());
+    existing.setDescription(converted.getDescription());
+    existing.setName(converted.getName());
+    existing.setRestaurantId(converted.getRestaurantId());
+    return existing;
+  }
+
+  private MenuUpdateResponseDto mapMenuUpdateResponse(Menu menu) {
+    MenuUpdateResponseDto dto = new MenuUpdateResponseDto();
+    dto.setDescription(menu.getDescription());
+    dto.setId(menu.getId());
+    dto.setEnabled(menu.getEnabled());
+    dto.setName(menu.getName());
+    dto.setRestaurantId(menu.getRestaurantId().toString());
+    return dto;
   }
 
 }

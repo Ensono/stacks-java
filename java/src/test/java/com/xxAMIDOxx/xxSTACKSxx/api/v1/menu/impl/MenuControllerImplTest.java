@@ -7,6 +7,7 @@ import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.CreateCategoryRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.CreateItemRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.MenuCreateRequestDto;
+import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.requestDto.UpdateMenuRequestDto;
 import com.xxAMIDOxx.xxSTACKSxx.api.v1.menu.dto.responseDto.ResourceCreatedResponseDto;
 import com.xxAMIDOxx.xxSTACKSxx.model.Category;
 import com.xxAMIDOxx.xxSTACKSxx.model.Item;
@@ -60,6 +61,7 @@ import static org.springframework.http.HttpStatus.OK;
 @Tag("Integration")
 class MenuControllerImplTest {
 
+  public static final String V_1_MENU = "/v1/menu/";
   @LocalServerPort
   private int port;
 
@@ -216,7 +218,7 @@ class MenuControllerImplTest {
 
     // When
     var response = this.testRestTemplate.getForEntity(
-            getBaseURL(port) + "/v1/menu/" + menu.getId(),
+            getBaseURL(port) + V_1_MENU + menu.getId(),
             Menu.class);
 
     // Then
@@ -289,7 +291,8 @@ class MenuControllerImplTest {
 
     // When
     var response =
-            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu/" + randomUUID() + "/category", dto, ResourceCreatedResponseDto.class);
+            this.testRestTemplate.postForEntity(getBaseURL(port) + V_1_MENU
+                    + randomUUID() + "/category", dto, ResourceCreatedResponseDto.class);
 
     // Then
     then(response.getStatusCode()).isEqualTo(NOT_FOUND);
@@ -300,7 +303,7 @@ class MenuControllerImplTest {
     // Given
     // When
     var response =
-            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu/"
+            this.testRestTemplate.postForEntity(getBaseURL(port) + V_1_MENU
                     + randomUUID() + "/category", new CreateCategoryRequestDto(), ResourceCreatedResponseDto.class);
 
     // Then
@@ -334,7 +337,7 @@ class MenuControllerImplTest {
     Menu initialSave = menuRepository.save(menu);
     // When
     var response =
-            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu/"
+            this.testRestTemplate.postForEntity(getBaseURL(port) + V_1_MENU
                     + initialSave.getId() + "/category", dto, ResourceCreatedResponseDto.class);
 
     // Then
@@ -361,16 +364,13 @@ class MenuControllerImplTest {
 
     Menu initialSave = menuRepository.save(menu);
 
-    CreateItemRequestDto requestDto = new CreateItemRequestDto();
-    requestDto.setAvailable(true);
-    requestDto.setDescription("Some Description");
-    requestDto.setName("Some Name");
-    requestDto.setPrice(13.56d);
+    CreateItemRequestDto requestDto = createItemRequest();
 
     // When
     var response =
-            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu/"
-                    + initialSave.getId() + "/category/" + category.getId() + "/items", requestDto, ResourceCreatedResponseDto.class);
+            this.testRestTemplate.postForEntity(getBaseURL(port) + V_1_MENU
+                    + initialSave.getId() + "/category/" + category.getId() +
+                    "/items", requestDto, ResourceCreatedResponseDto.class);
 
     // Then
     then(response.getStatusCode()).isEqualTo(CREATED);
@@ -389,16 +389,12 @@ class MenuControllerImplTest {
   @Test
   void testAddItemWhenNullMenuIdGiven() {
     // Given
-    CreateItemRequestDto requestDto = new CreateItemRequestDto();
-    requestDto.setAvailable(true);
-    requestDto.setDescription("Some Description");
-    requestDto.setName("Some Name");
-    requestDto.setPrice(13.56d);
+    CreateItemRequestDto requestDto = createItemRequest();
 
     // When
     var response =
             this.testRestTemplate.postForEntity(getBaseURL(port) +
-                    "/v1/menu/" + " /category/" + randomUUID().toString() + "/items",
+                            V_1_MENU + " /category/" + randomUUID().toString() + "/items",
                     requestDto, ResourceCreatedResponseDto.class);
 
     // Then
@@ -408,15 +404,11 @@ class MenuControllerImplTest {
   @Test
   void testAddItemWhenNullCategoryIdGiven() {
     // Given
-    CreateItemRequestDto requestDto = new CreateItemRequestDto();
-    requestDto.setAvailable(true);
-    requestDto.setDescription("Some Description");
-    requestDto.setName("Some Name");
-    requestDto.setPrice(13.56d);
+    CreateItemRequestDto requestDto = createItemRequest();
 
     // When
     var response =
-            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu/"
+            this.testRestTemplate.postForEntity(getBaseURL(port) + V_1_MENU
                     + randomUUID().toString() + "/category/" +
                     " /items", requestDto, ResourceCreatedResponseDto.class);
 
@@ -436,20 +428,54 @@ class MenuControllerImplTest {
 
     Menu initialSave = menuRepository.save(menu);
 
-    CreateItemRequestDto requestDto = new CreateItemRequestDto();
-    requestDto.setAvailable(true);
-    requestDto.setDescription("Some Description");
-    requestDto.setName("Some Name");
-    requestDto.setPrice(13.56d);
+    CreateItemRequestDto requestDto = createItemRequest();
 
     // When
     var response =
-            this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu/"
+            this.testRestTemplate.postForEntity(getBaseURL(port) + V_1_MENU
                     + initialSave.getId() + "/category/" + randomUUID().toString()
                     + "/items", requestDto, ResourceCreatedResponseDto.class);
 
     // Then
     then(response.getStatusCode()).isEqualTo(NOT_FOUND);
+  }
+
+  private CreateItemRequestDto createItemRequest() {
+    CreateItemRequestDto requestDto = new CreateItemRequestDto();
+    requestDto.setAvailable(true);
+    requestDto.setDescription("Some Description");
+    requestDto.setName("Some Name");
+    requestDto.setPrice(13.56d);
+    return requestDto;
+  }
+
+  @Test
+  void testUpdateMenu() {
+    // Given
+    when(menuRepository.save(any(Menu.class))).thenReturn(menu);
+    when(menuRepository.findById(any(String.class))).thenReturn(Optional.of(menu));
+
+    menu.setId(randomUUID().toString());
+    Menu initialSave = menuRepository.save(menu);
+
+    UpdateMenuRequestDto dto = new UpdateMenuRequestDto();
+    dto.setDescription("Update Menu description");
+    dto.setName("Update menu Name");
+    dto.setRestaurantId(randomUUID().toString());
+    dto.setEnabled(false);
+
+    // When
+    this.testRestTemplate.put(getBaseURL(port) + V_1_MENU + menu.getId(), dto);
+
+    // Then
+    Optional<Menu> updatedMenuOpt =
+            menuRepository.findById(menu.getId());
+    Menu updated = updatedMenuOpt.get();
+    then(updated).isNotNull();
+    then(updated.getId()).isEqualTo(menu.getId());
+    then(updated.getName()).isEqualTo(dto.getName());
+    then(updated.getDescription()).isEqualTo(dto.getDescription());
+    then(updated.getEnabled()).isFalse();
   }
 
 }
