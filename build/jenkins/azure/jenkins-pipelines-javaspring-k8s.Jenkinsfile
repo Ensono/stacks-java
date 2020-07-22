@@ -12,7 +12,7 @@ pipeline {
     role="frontend"
     // SelfConfig"
     self_repo_src="java"
-    self_repo_tf_src="deploy/gcp/app/kube"
+    self_repo_tf_src="deploy/azure/app/kube"
     self_repo_k8s_src="deploy/k8s"
     self_generic_name="stacks-java-jenkins"
     self_pipeline_repo="stacks-pipeline-templates"
@@ -65,6 +65,7 @@ pipeline {
               image "azul/zulu-openjdk-debian:11"
             }
           }
+
           steps {
             dir("${self_pipeline_repo}") {
               checkout([
@@ -75,6 +76,27 @@ pipeline {
             }
           }
         }
+
+        stage('Terraform Validation') {
+          agent {
+            docker {
+              // add additional args if you need to here
+              image "amidostacks/ci-tf:0.0.4"
+            }
+          }
+
+          dir("${self_repo_tf_src}") {
+            sh '''#!/bin/bash
+              terraform fmt -diff -check -recursive
+            '''
+
+            sh '''#!/bin/bash
+              terraform init -backend=false
+              terraform validate
+            '''
+          }
+        }
+
         stage('Build') {
           agent {
             docker {
@@ -117,7 +139,17 @@ pipeline {
                 ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Integration
               '''
 
-              stash includes: ".m2", name: ".m2", allowEmpty: false
+              sh '''#!/bin/bash
+                set -euxo pipefail
+                ./mvnw jacoco:report --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
+              '''
+
+              jacoco(
+                execPattern: 'target/*.exec',
+                classPattern: 'target/classes',
+                sourcePattern: 'src/main/java',
+                exclusionPattern: 'src/test*'
+              )
             }
           }
         }
