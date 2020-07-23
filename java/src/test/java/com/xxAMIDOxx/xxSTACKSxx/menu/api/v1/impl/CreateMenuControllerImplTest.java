@@ -2,6 +2,7 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
+import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateMenuRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
@@ -82,7 +83,7 @@ public class CreateMenuControllerImplTest {
         // When
         var response =
                 this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu", request,
-                        ResourceCreatedResponse.class);
+                        ErrorResponse.class);
 
         // Then
         then(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
@@ -98,7 +99,10 @@ public class CreateMenuControllerImplTest {
         when(menuRepository.save(any(Menu.class))).thenReturn(m);
         // When
         var response =
-                this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu", request, ResourceCreatedResponse.class);
+                this.testRestTemplate.postForEntity(
+                        getBaseURL(port) + "/v1/menu",
+                        request,
+                        ErrorResponse.class);
 
         // Then
         then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);

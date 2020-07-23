@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.microsoft.azure.servicebus.Message;
 import com.microsoft.azure.servicebus.TopicClient;
-import com.xxAMIDOxx.xxSTACKSxx.core.messaging.event.ApplicationEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateCategoryCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuCreatedEvent;
 import org.junit.jupiter.api.Test;
