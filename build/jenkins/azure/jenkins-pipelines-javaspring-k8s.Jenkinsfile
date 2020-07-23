@@ -111,11 +111,11 @@ pipeline {
           steps {
             dir("${self_repo_tf_src}") {
               sh """#!/bin/bash
-                ${build_scripts_directory}/build-terraform-fmt-check.bash
+                bash ${build_scripts_directory}/build-terraform-fmt-check.bash
               """
 
               sh """#!/bin/bash
-                ${build_scripts_directory}/build-terraform-validate.bash
+                bash ${build_scripts_directory}/build-terraform-validate.bash
               """
             }
           }
@@ -136,31 +136,31 @@ pipeline {
           steps {
             dir("${self_repo_src}") {
               sh """#!/bin/bash
-                ${build_scripts_directory}/build-maven-install.bash
+                bash ${build_scripts_directory}/build-maven-install.bash
               """
 
               sh """#!/bin/bash
-                ${build_scripts_directory}/build-maven-compile.bash
+                bash ${build_scripts_directory}/build-maven-compile.bash
               """
 
               sh """#!/bin/bash
-                ${build_scripts_directory}/build-maven-download-test-deps.bash
+                bash ${build_scripts_directory}/build-maven-download-test-deps.bash
               """
 
               sh """#!/bin/bash
-                ${build_scripts_directory}/build-maven-tagged-test-run.bash "Unit"
+                bash ${build_scripts_directory}/build-maven-tagged-test-run.bash "Unit"
               """
 
               sh """#!/bin/bash
-                ${build_scripts_directory}/build-maven-tagged-test-run.bash "Component"
+                bash ${build_scripts_directory}/build-maven-tagged-test-run.bash "Component"
               """
 
               sh """#!/bin/bash
-                ${build_scripts_directory}/build-maven-tagged-test-run.bash "Integration"
+                bash ${build_scripts_directory}/build-maven-tagged-test-run.bash "Integration"
               """
 
               sh """#!/bin/bash
-                ${build_scripts_directory}/build-maven-generate-jacoco-report.bash
+                bash ${build_scripts_directory}/build-maven-generate-jacoco-report.bash
               """
 
               // Sonar Cloud Goes 'ere.
