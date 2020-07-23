@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
@@ -13,11 +13,11 @@ import java.util.UUID;
 public class CreateMenuRequest {
 
   @JsonProperty("name")
-  @NotEmpty
+  @NotBlank
   private String name = null;
 
   @JsonProperty("description")
-  @NotEmpty
+  @NotBlank
   private String description = null;
 
   @JsonProperty("tenantId")

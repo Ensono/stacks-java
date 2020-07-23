@@ -39,7 +39,7 @@ public class ApiExceptionAdvice extends ResponseEntityExceptionHandler {
 
     private Map<String, String> processFieldErrors(List<FieldError> fieldErrors) {
         Map<String, String> errors = newHashMap();
-        for (org.springframework.validation.FieldError fieldError : fieldErrors) {
+        for (FieldError fieldError : fieldErrors) {
             errors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
         return errors;
