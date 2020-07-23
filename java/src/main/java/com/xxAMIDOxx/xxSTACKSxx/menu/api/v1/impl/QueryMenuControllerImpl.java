@@ -7,7 +7,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.commands.MenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.MenuNotFoundException;
-import com.xxAMIDOxx.xxSTACKSxx.menu.mapper.MenuMapper;
+import com.xxAMIDOxx.xxSTACKSxx.menu.mappers.DomainToDtoMapper;
 import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +29,12 @@ public class QueryMenuControllerImpl implements QueryMenuController {
 
     Logger logger = LoggerFactory.getLogger(QueryMenuControllerImpl.class);
 
+    private DomainToDtoMapper mapper;
+
     private MenuQueryService menuQueryService;
 
-    public QueryMenuControllerImpl(MenuQueryService menuQueryService) {
+    public QueryMenuControllerImpl(DomainToDtoMapper mapper, MenuQueryService menuQueryService) {
+        this.mapper = mapper;
         this.menuQueryService = menuQueryService;
     }
 
@@ -54,7 +57,7 @@ public class QueryMenuControllerImpl implements QueryMenuController {
         }
 
         return ResponseEntity.ok(new SearchMenuResult(pageSize, pageNumber,
-                menuList.stream().map(MenuMapper.INSTANCE::menuToSearchMenuResultItem)
+                menuList.stream().map(m -> mapper.toSearchMenuResultItem(m))
                         .collect(Collectors.toList())));
     }
 
@@ -63,6 +66,6 @@ public class QueryMenuControllerImpl implements QueryMenuController {
         Menu menu = this.menuQueryService.findById(id).orElseThrow(
                 () -> new MenuNotFoundException(
                         new MenuCommand(OperationCode.GET_MENU_BY_ID, correlationId, id)));
-        return ResponseEntity.ok(MenuMapper.INSTANCE.menuToMenuDto(menu));
+        return ResponseEntity.ok(mapper.toMenuDto(menu));
     }
 }
