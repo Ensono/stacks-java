@@ -38,7 +38,7 @@ public class CorrelationIdFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         try {
-            final String correlationId = extractCorrelationId(httpServletRequest);
+            final String correlationId = UUID.randomUUID().toString();
             MDC.put(mdcTokenKey, correlationId);
 
             if (!StringUtils.isEmpty(responseHeader)) {
@@ -51,16 +51,5 @@ public class CorrelationIdFilter extends OncePerRequestFilter {
         } finally {
             MDC.remove(mdcTokenKey);
         }
-    }
-
-    private String extractCorrelationId(final HttpServletRequest request) {
-        final String correlationId;
-        if (!StringUtils.isEmpty(requestHeader)
-                && !StringUtils.isEmpty(request.getHeader(requestHeader))) {
-            correlationId = request.getHeader(requestHeader);
-        } else {
-            correlationId = UUID.randomUUID().toString();
-        }
-        return correlationId;
     }
 }

@@ -45,8 +45,7 @@ public class CreateCategoryHandler extends MenuBaseCommandHandler<CreateCategory
                 : menu.getCategories();
 
         if (categories.stream().anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
-            throw new CategoryAlreadyExistsException(command,
-                    command.getName());
+            throw new CategoryAlreadyExistsException(command, command.getName());
         } else {
             categories.add(new Category(categoryId.toString(),
                     command.getName(),
