@@ -41,6 +41,13 @@ pipeline {
     docker_image_tag="${version_major}.${version_minor}.${version_revision}-${GIT_COMMIT}"
     docker_container_registry_name="eu.gcr.io/${gcp_project_id}"
     build_artifact_deploy_name="${self_generic_name}"
+    // SonarScanner variables
+    static_code_analysis="true"
+    sonar_host_url="https://sonarcloud.io"
+    sonar_project_name="amido-stacks-java-api-jenkins"
+    sonar_project_key="amido-stacks-java-jenkins"
+    // SONAR_TOKEN - Please define this as a Jenkins credential.
+    // SONAR_ORGANIZATION - Please define this as a Jenkins credential.
     // AKS/AZURE
     // This will always be predictably named by setting your company - project - INFRAstage - location - compnonent names in the infra-pipeline"
     gcp_region="europe-west2"
@@ -60,16 +67,6 @@ pipeline {
   stages {
     stage('CI') {
       stages {
-        // stage('Set `WORKSPACE` var') {
-        //   agent {
-
-        //   }
-
-        //   steps {
-
-        //   }
-        // }
-
         stage('Checkout Dependencies') {
           agent {
             docker {
@@ -111,11 +108,11 @@ pipeline {
           steps {
             dir("${self_repo_tf_src}") {
               sh """#!/bin/bash
-                bash ${build_scripts_directory}/build-terraform-fmt-check.bash
+                bash ${build_scripts_directory}/test-terraform-fmt-check.bash
               """
 
               sh """#!/bin/bash
-                bash ${build_scripts_directory}/build-terraform-validate.bash
+                bash ${build_scripts_directory}/test-terraform-validate.bash
               """
             }
           }
@@ -144,27 +141,69 @@ pipeline {
               """
 
               sh """#!/bin/bash
-                bash ${build_scripts_directory}/build-maven-download-test-deps.bash
+                bash ${build_scripts_directory}/test-maven-download-test-deps.bash
               """
 
               sh """#!/bin/bash
-                bash ${build_scripts_directory}/build-maven-tagged-test-run.bash "Unit"
+                bash ${build_scripts_directory}/test-maven-tagged-test-run.bash -a "Unit"
               """
 
               sh """#!/bin/bash
-                bash ${build_scripts_directory}/build-maven-tagged-test-run.bash "Component"
+                bash ${build_scripts_directory}/test-tagged-test-run.bash -a Component"
               """
 
               sh """#!/bin/bash
-                bash ${build_scripts_directory}/build-maven-tagged-test-run.bash "Integration"
+                bash ${build_scripts_directory}/test-tagged-test-run.bash -a "Integration"
               """
 
               sh """#!/bin/bash
-                bash ${build_scripts_directory}/build-maven-generate-jacoco-report.bash
+                bash ${build_scripts_directory}/test-maven-generate-jacoco-report.bash
               """
-
-              // Sonar Cloud Goes 'ere.
             }
+
+            // stage('SonarScanner') {
+            //     when {
+            //       expression {
+            //         "${static_code_analysis}" == "true"
+            //       }
+            //     }
+
+            //     agent {
+            //       docker {
+            //         // add additional args if you need to here
+            //         image "amidostacks/ci-sonarscanner:0.0.1"
+            //       }
+            //     }
+
+            //     environment {
+            //       build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
+            //       SONAR_HOST_URL="${sonar_host_url}"
+            //       SONAR_PROJECT_NAME="${sonar_project_name}"
+            //       SONAR_PROJECT_KEY="${sonar_project_key}"
+            //       BUILD_NUMBER="${docker_image_tag}"
+            //       SOURCE_BRANCH_NAME="${GIT_BRANCH}"
+            //     }
+
+            //     steps {
+            //       dir("${self_repo_src}") {
+            //         withCredentials([
+            //           string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN'),
+            //           string(credentialsId: 'SONAR_ORGANIZATION', variable: 'SONAR_ORGANIZATION')
+            //         ]) {
+            //           sh """#!/bin/bash
+            //           bash ${build_scripts_directory}/test-sonar-scanner.bash \
+            //             ${SONAR_HOST_URL} \
+            //             ${SONAR_PROJECT_NAME} \
+            //             ${SONAR_PROJECT_KEY} \
+            //             ${SONAR_TOKEN} \
+            //             ${SONAR_ORGANIZATION} \
+            //             ${BUILD_NUMBER} \
+            //             ${SOURCE_BRANCH_NAME}
+            //           """
+            //         }
+            //       }
+            //     }
+            //   }
           }
 
           post {
