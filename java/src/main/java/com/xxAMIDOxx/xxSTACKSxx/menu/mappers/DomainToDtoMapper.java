@@ -32,6 +32,7 @@ public class DomainToDtoMapper {
         dto.setName(menu.getName());
         dto.setDescription(menu.getDescription());
         dto.setId(UUID.fromString(menu.getId()));
+        dto.setRestaurantId(UUID.fromString(menu.getRestaurantId()));
         return dto;
     }
 
