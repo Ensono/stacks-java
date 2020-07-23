@@ -1,8 +1,8 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateItemRequest;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.UUID;
 
 @RequestMapping("/v1/menu/{id}/category/{categoryId}/items")
-public interface CreateMenuItemController {
+public interface CreateItemController {
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @Operation(

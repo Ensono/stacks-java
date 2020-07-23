@@ -1,5 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.core.azure.servicebus;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
@@ -7,6 +9,8 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotEmpty;
 
 @Validated
+@Data
+@NoArgsConstructor
 @ConfigurationProperties("azure.servicebus")
 public class ServiceBusProperties {
     /**
@@ -29,29 +33,5 @@ public class ServiceBusProperties {
     @NotEmpty
     @Value("subscriptionName")
     private String subscriptionName;
-
-    public String getConnectionString() {
-        return connectionString;
-    }
-
-    public String getTopicName() {
-        return topicName;
-    }
-
-    public String getSubscriptionName() {
-        return subscriptionName;
-    }
-
-    public void setConnectionString(String connectionString) {
-        this.connectionString = connectionString;
-    }
-
-    public void setTopicName(String topicName) {
-        this.topicName = topicName;
-    }
-
-    public void setSubscriptionName(String subscriptionName) {
-        this.subscriptionName = subscriptionName;
-    }
 }
 
