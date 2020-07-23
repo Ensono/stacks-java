@@ -2,11 +2,13 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 
-@Getter
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class CreateCategoryRequest {
 

@@ -5,6 +5,8 @@ import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAut
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.MenuDTO;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.SearchMenuResultItem;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.mappers.DomainToDtoMapper;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
@@ -20,10 +22,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.MenuHelper.createMenu;
@@ -169,6 +168,13 @@ public class MenuQueryControllerImplTest {
     public void getMenuById() {
         // Given
         Menu menu = createMenu(0);
+        Item item = new Item(randomUUID().toString(), "item name",
+                "item description", 5.99d, true);
+        Category category =
+                new Category(UUID.randomUUID().toString(), "cat name",
+                        "cat description", Arrays.asList(item));
+        menu.addUpdateCategory(category);
+
         MenuDTO expectedResponse = DomainToDtoMapper.toMenuDto(menu);
 
         when(menuRepository.findById(menu.getId())).thenReturn(Optional.of(menu));
