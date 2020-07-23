@@ -175,10 +175,10 @@ pipeline {
               // https://www.jenkins.io/doc/pipeline/steps/jacoco/
               // For Code Coverage gates for Jenkins JaCoCo.
               jacoco(
-                execPattern: 'target/*.exec',
-                classPattern: 'target/classes',
-                sourcePattern: 'src/main/java',
-                exclusionPattern: 'src/test*'
+                execPattern: "${self_repo_src}/target/*.exec",
+                classPattern: "${self_repo_src}/target/classes",
+                sourcePattern: "${self_repo_src}/src/main/java",
+                exclusionPattern: "${self_repo_src}/src/test*"
               )
             }
           }
