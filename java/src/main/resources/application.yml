@@ -14,11 +14,9 @@ management:
       base-path: /
 
 springdoc:
-  api-docs:
-    path: /swagger/oas.json
   swagger-ui:
     path: /swagger/index.html
-  packagesToScan: com.xxAMIDOxx.xxSTACKSxx, com.xxAMIDOxx.xxSTACKSxx.api.v1.menu
+  packagesToScan: com.xxAMIDOxx.xxSTACKSxx.menu.api.v1
 
 azure:
   cosmosdb:
@@ -34,3 +32,8 @@ azure:
     client-id: xxxxxx
     client-key: xxxxxx
     tenant-id: xxxxxx
+  servicebus:
+    connectionString: xxxxxx
+    topicName: menu-updates
+    subscriptionName: Subscription1
+    enabled: false
