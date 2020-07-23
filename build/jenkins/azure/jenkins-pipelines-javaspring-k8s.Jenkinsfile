@@ -59,10 +59,6 @@ pipeline {
 
   stages {
     stage('CI') {
-      environment {
-        build_scripts_directory="${PWD}/${self_pipeline_repo}/scripts"
-      }
-
       stages {
         // stage('Set `WORKSPACE` var') {
         //   agent {
@@ -85,6 +81,10 @@ pipeline {
             }
           }
 
+          environment {
+            build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
+          }
+
           steps {
             dir("${self_pipeline_repo}") {
               checkout([
@@ -102,6 +102,10 @@ pipeline {
               // add additional args if you need to here
               image "amidostacks/ci-tf:0.0.4"
             }
+          }
+
+          environment {
+            build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
           }
 
           steps {
@@ -123,6 +127,10 @@ pipeline {
               // add additional args if you need to here
               image "azul/zulu-openjdk-debian:11"
             }
+          }
+
+          environment {
+            build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
           }
 
           steps {
