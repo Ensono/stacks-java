@@ -6,9 +6,7 @@ pipeline {
     preserveStashes()
   }
   environment {
-    node {
-      WORKSPACE=sh(returnStdout: true, script: 'pwd').trim()
-    }
+    // WORKSPACE=sh(returnStdout: true, script: 'pwd').trim()
     company="amido"
     project="stacks"
     domain="java-jenkins"
@@ -41,7 +39,7 @@ pipeline {
     docker_image_tag="${version_major}.${version_minor}.${version_revision}-${GIT_COMMIT}"
     docker_container_registry_name="eu.gcr.io/${gcp_project_id}"
     build_artifact_deploy_name="${self_generic_name}"
-    build_scripts_directory="${env.WORKSPACE}/${self_pipeline_repo}/scripts"
+    build_scripts_directory="${PWD}/${self_pipeline_repo}/scripts"
     // AKS/AZURE
     // This will always be predictably named by setting your company - project - INFRAstage - location - compnonent names in the infra-pipeline"
     gcp_region="europe-west2"
@@ -60,6 +58,16 @@ pipeline {
   stages {
     stage('CI') {
       stages {
+        // stage('Set `WORKSPACE` var') {
+        //   agent {
+
+        //   }
+
+        //   steps {
+
+        //   }
+        // }
+
         stage('Checkout Dependencies') {
           agent {
             docker {
