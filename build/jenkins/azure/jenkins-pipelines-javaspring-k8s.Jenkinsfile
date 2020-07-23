@@ -1,5 +1,8 @@
 pipeline {
   agent none
+  node {
+    env.WORKSPACE = sh(returnStdout: true, script: 'pwd').trim()
+  }
   // parameters {
   // }
   options {
