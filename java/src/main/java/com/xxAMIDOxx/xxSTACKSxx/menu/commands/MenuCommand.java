@@ -6,6 +6,7 @@ import java.util.UUID;
 
 public class MenuCommand extends ApplicationCommand {
     private UUID menuId;
+
     public MenuCommand(OperationCode operationCode, String correlationId, UUID menuId) {
         super(operationCode.getCode(), correlationId);
         this.menuId = menuId;

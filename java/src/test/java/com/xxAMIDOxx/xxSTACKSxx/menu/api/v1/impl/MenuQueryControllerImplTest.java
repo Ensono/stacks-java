@@ -6,7 +6,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.MenuDTO;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.mapper.MenuMapper;
+import com.xxAMIDOxx.xxSTACKSxx.menu.mappers.DomainToDtoMapper;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -97,7 +97,7 @@ public class MenuQueryControllerImplTest {
         List<Menu> matching = Collections.singletonList(match);
 
         List<SearchMenuResultItem> expectedMenuList = matching.stream()
-                .map(MenuMapper.INSTANCE::menuToSearchMenuResultItem)
+                .map(DomainToDtoMapper::toSearchMenuResultItem)
                 .collect(Collectors.toList());
 
         SearchMenuResult expectedResponse = new SearchMenuResult(
@@ -169,7 +169,7 @@ public class MenuQueryControllerImplTest {
     public void getMenuById() {
         // Given
         Menu menu = createMenu(0);
-        MenuDTO expectedResponse = MenuMapper.INSTANCE.menuToMenuDto(menu);
+        MenuDTO expectedResponse = DomainToDtoMapper.toMenuDto(menu);
 
         when(menuRepository.findById(menu.getId())).thenReturn(Optional.of(menu));
 

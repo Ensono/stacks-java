@@ -8,6 +8,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MenuRepository extends CosmosRepository<Menu, String> {
+
+    @Override
+    Menu save(Menu menu);
+
     /**
      * Query is constructed OOTB- out of the box, executed and results are fetched based param restaurantId.
      * Pagination and sorting is done by spring data JPA.

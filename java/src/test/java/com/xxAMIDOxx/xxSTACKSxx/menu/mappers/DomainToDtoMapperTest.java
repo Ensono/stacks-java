@@ -1,18 +1,16 @@
-package com.xxAMIDOxx.xxSTACKSxx.menu.mapper;
+package com.xxAMIDOxx.xxSTACKSxx.menu.mappers;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.MenuDTO;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.SearchMenuResultItem;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class MenuMapperTest {
+class DomainToDtoMapperTest {
 
   @Test
   void menuToMenuDto() {
@@ -28,7 +26,7 @@ class MenuMapperTest {
             Collections.emptyList(), enabled);
 
     // When
-    MenuDTO menuDTO = MenuMapper.INSTANCE.menuToMenuDto(menu);
+    MenuDTO menuDTO = DomainToDtoMapper.toMenuDto(menu);
 
     // Then
     assertThat(menuDTO.getId()).isEqualTo(id);
@@ -53,7 +51,7 @@ class MenuMapperTest {
             null, enabled);
 
     // When
-    SearchMenuResultItem resultItem = MenuMapper.INSTANCE.menuToSearchMenuResultItem(menu);
+    SearchMenuResultItem resultItem = DomainToDtoMapper.toSearchMenuResultItem(menu);
 
     // Then
     assertThat(resultItem.getId()).isEqualTo(id);
