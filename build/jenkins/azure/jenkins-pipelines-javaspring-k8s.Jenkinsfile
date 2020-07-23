@@ -8,7 +8,7 @@ pipeline {
   environment {
     company="amido"
     project="stacks"
-    domain="node"
+    domain="java-jenkins"
     role="frontend"
     // SelfConfig"
     self_repo_src="java"
@@ -27,7 +27,7 @@ pipeline {
     // **`terraform_state_workspace="`** "
     // avoid running anything past dev that is not on master"
     // sample value="company-webapp"
-    tf_state_key="node-app"
+    tf_state_key="java-jenkins"
     // Versioning
     version_major="0"
     version_minor="0"
@@ -38,6 +38,7 @@ pipeline {
     docker_image_tag="${version_major}.${version_minor}.${version_revision}-${GIT_COMMIT}"
     docker_container_registry_name="eu.gcr.io/${gcp_project_id}"
     build_artifact_deploy_name="${self_generic_name}"
+    build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
     // AKS/AZURE
     // This will always be predictably named by setting your company - project - INFRAstage - location - compnonent names in the infra-pipeline"
     gcp_region="europe-west2"
@@ -45,7 +46,8 @@ pipeline {
     gcp_project_id="amido-stacks"
     gcp_cluster_name="${company}-${project}-nonprod-gke-infra"
     // Infra
-    base_domain="gke.nonprod.amidostacks.com"
+    base_domain_nonprod="nonprod.amidostacks.com"
+    base_domain_prod="prod.amidostacks.com"
     // GLOBAL GCP vars
     CLOUDSDK_COMPUTE_REGION="${gcp_region}"
     CLOUDSDK_CONTAINER_CLUSTER="${company}-${project}-nonprod-gke-infra"
@@ -70,7 +72,7 @@ pipeline {
             dir("${self_pipeline_repo}") {
               checkout([
                 $class: 'GitSCM',
-                branches: [[name: 'refs/tags/v1.4.5']],
+                branches: [[name: 'refs/heads/feature/cycle4']],
                 userRemoteConfigs: [[url: "https://github.com/amido/${self_pipeline_repo}"]]
               ])
             }
@@ -87,14 +89,13 @@ pipeline {
 
           steps {
             dir("${self_repo_tf_src}") {
-              sh '''#!/bin/bash
-                terraform fmt -diff -check -recursive
-              '''
+              sh """#!/bin/bash
+                ${build_scripts_directory}/build-terraform-fmt-check.bash
+              """
 
-              sh '''#!/bin/bash
-                terraform init -backend=false
-                terraform validate
-              '''
+              sh """#!/bin/bash
+                ${build_scripts_directory}/build-terraform-validate.bash
+              """
             }
           }
         }
@@ -106,46 +107,48 @@ pipeline {
               image "azul/zulu-openjdk-debian:11"
             }
           }
+
           steps {
             dir("${self_repo_src}") {
-              sh '''#!/bin/bash
-                set -euxo pipefail
-                ./mvnw dependency:go-offline -Dmaven.repo.local=./.m2 --no-transfer-progress
-                ./mvnw process-resources --no-transfer-progress -Dmaven.repo.local=./.m2
-              '''
+              sh """#!/bin/bash
+                ${build_scripts_directory}/build-maven-install.bash
+              """
 
-              sh '''#!/bin/bash
-                set -euxo pipefail
-                ./mvnw compile --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
-                ./mvnw process-test-resources --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
-                ./mvnw test-compile --no-transfer-progress -Dmaven.repo.local=./.m2 # --offline
-              '''
+              sh """#!/bin/bash
+                ${build_scripts_directory}/build-maven-compile.bash
+              """
 
-              sh '''#!/bin/bash
-                set -euxo pipefail
-                ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 -DexcludedGroups='any()'
-              '''
+              sh """#!/bin/bash
+                ${build_scripts_directory}/build-maven-download-test-deps.bash
+              """
 
-              sh '''#!/bin/bash
-                set -euxo pipefail
-                ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Unit
-              '''
+              sh """#!/bin/bash
+                ${build_scripts_directory}/build-maven-tagged-test-run.bash "Unit"
+              """
 
-              sh '''#!/bin/bash
-                set -euxo pipefail
-                ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Component
-              '''
+              sh """#!/bin/bash
+                ${build_scripts_directory}/build-maven-tagged-test-run.bash "Component"
+              """
 
-              sh '''#!/bin/bash
-                set -euxo pipefail
-                ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Integration
-              '''
+              sh """#!/bin/bash
+                ${build_scripts_directory}/build-maven-tagged-test-run.bash "Integration"
+              """
 
-              sh '''#!/bin/bash
-                set -euxo pipefail
-                ./mvnw jacoco:report --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
-              '''
+              sh """#!/bin/bash
+                ${build_scripts_directory}/build-maven-generate-jacoco-report.bash
+              """
 
+              // Sonar Cloud Goes 'ere.
+            }
+          }
+
+          post {
+            always {
+              junit 'target/**/*.xml'
+
+              // See:
+              // https://www.jenkins.io/doc/pipeline/steps/jacoco/
+              // For Code Coverage gates for Jenkins JaCoCo.
               jacoco(
                 execPattern: 'target/*.exec',
                 classPattern: 'target/classes',
