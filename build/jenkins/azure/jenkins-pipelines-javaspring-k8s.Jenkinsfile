@@ -6,7 +6,9 @@ pipeline {
     preserveStashes()
   }
   environment {
-    WORKSPACE=sh(returnStdout: true, script: 'pwd').trim()
+    node {
+      WORKSPACE=sh(returnStdout: true, script: 'pwd').trim()
+    }
     company="amido"
     project="stacks"
     domain="java-jenkins"
