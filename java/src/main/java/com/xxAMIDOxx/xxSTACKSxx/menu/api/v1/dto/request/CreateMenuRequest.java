@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
@@ -16,11 +16,11 @@ import java.util.UUID;
 public class CreateMenuRequest {
 
   @JsonProperty("name")
-  @NotEmpty
+  @NotBlank
   private String name = null;
 
   @JsonProperty("description")
-  @NotEmpty
+  @NotBlank
   private String description = null;
 
   @JsonProperty("tenantId")
