@@ -35,20 +35,28 @@ public class UpdateEventServiceBusDispatcher implements ApplicationEventPublishe
     public void publish(ApplicationEvent applicationEvent) {
 
         try {
-            final String messageId = applicationEvent.getId().toString();
-            String content = jsonMapper.writeValueAsString(applicationEvent);
-            Message message = new Message(content.getBytes(UTF_8));
-            message.setContentType("application/json");
-            message.setLabel(applicationEvent.getClass().getSimpleName());
-            message.setMessageId(messageId);
-            message.setTimeToLive(Duration.ofMinutes(2));
-            logger.debug("Message sending: Id = {}\n, Content = {}", message.getMessageId(), content);
+
+            Message message = createMessageFromEvent(applicationEvent);
+
+            logger.debug("Message sending: Id = {}", message.getMessageId());
+
             topicClient.sendAsync(message).thenRunAsync(() ->
                     logger.debug("Message acknowledged: Id = {}", message.getMessageId())
             );
+
         } catch (JsonProcessingException e) {
             logger.error("Unable to process ApplicationEvent", e);
         }
 
+    }
+
+    protected Message createMessageFromEvent(ApplicationEvent applicationEvent) throws JsonProcessingException {
+        String content = jsonMapper.writeValueAsString(applicationEvent);
+        Message message = new Message(content.getBytes(UTF_8));
+        message.setContentType("application/json");
+        message.setLabel(applicationEvent.getClass().getSimpleName());
+        message.setMessageId(applicationEvent.getId().toString());
+        message.setTimeToLive(Duration.ofMinutes(2));
+        return message;
     }
 }

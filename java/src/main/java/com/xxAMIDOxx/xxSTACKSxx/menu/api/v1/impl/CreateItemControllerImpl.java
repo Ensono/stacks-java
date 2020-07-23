@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.CreateMenuItemController;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.CreateItemController;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateItemRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateItemCommand;
@@ -15,11 +15,11 @@ import java.util.UUID;
 import static com.xxAMIDOxx.xxSTACKSxx.menu.mappers.RequestToCommandMapper.map;
 
 @RestController
-public class CreateMenuItemControllerImpl implements CreateMenuItemController {
+public class CreateItemControllerImpl implements CreateItemController {
 
     private CreateItemHandler createItemHandler;
 
-    public CreateMenuItemControllerImpl(CreateItemHandler createItemHandler) {
+    public CreateItemControllerImpl(CreateItemHandler createItemHandler) {
         this.createItemHandler = createItemHandler;
     }
 
