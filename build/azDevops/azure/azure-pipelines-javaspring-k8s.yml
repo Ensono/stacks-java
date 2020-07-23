@@ -249,7 +249,8 @@ stages:
                 TF_VAR_name_environment: dev,
                 TF_VAR_dns_record: dev-java-api,
                 TF_VAR_dns_zone_name: $(base_domain_nonprod),
-                TF_VAR_internal_dns_zone_name: $(base_domain_internal_nonprod)
+                TF_VAR_internal_dns_zone_name: $(base_domain_internal_nonprod),
+                TF_VAR_stage: dev,
               }
               terraform_output_commands: |
                 raw_tf=$(terraform output -json | jq -r 'keys[] as $k | "##vso[task.setvariable variable=\($k);isOutput=true]\(.[$k] | .value)"')
@@ -296,7 +297,7 @@ stages:
                       app_name: java-api,
                       resource_def_name: "$(resource_def_name)",
                       version: $(docker_image_tag),
-                      environment: dev
+                      environment: dev,
                     }
                     enable_debug: "yes" # uncomment for debug and if you want to see the templated out file in the STDOUT of pipeline
                     template_input: [
@@ -313,7 +314,7 @@ stages:
                           app_insights_key: $(app_insights_instrumentation_key),
                           cosmosdb_key: $(cosmosdb_primary_master_key),
                           cosmosdb_endpoint: $(cosmosdb_endpoint),
-                          cosmosdb_name: $(cosmosdb_database_name)
+                          cosmosdb_name: $(cosmosdb_database_name),
                         },
                         args: "-no-empty", # -no-unset is present by default
                       }
@@ -407,7 +408,8 @@ stages:
                 TF_VAR_name_environment: prod,
                 TF_VAR_dns_record: prod-java-api,
                 TF_VAR_dns_zone_name: $(base_domain_prod),
-                TF_VAR_internal_dns_zone_name: $(base_domain_internal_prod)
+                TF_VAR_internal_dns_zone_name: $(base_domain_internal_prod),
+                TF_VAR_stage: prod,
               }
               terraform_output_commands: |
                 raw_tf=$(terraform output -json | jq -r 'keys[] as $k | "##vso[task.setvariable variable=\($k);isOutput=true]\(.[$k] | .value)"')
@@ -471,7 +473,7 @@ stages:
                           app_insights_key: $(app_insights_instrumentation_key),
                           cosmosdb_key: $(cosmosdb_primary_master_key),
                           cosmosdb_endpoint: $(cosmosdb_endpoint),
-                          cosmosdb_name: $(cosmosdb_database_name)
+                          cosmosdb_name: $(cosmosdb_database_name),
                         },
                         args: "-no-empty", # -no-unset is present by default
                       }
