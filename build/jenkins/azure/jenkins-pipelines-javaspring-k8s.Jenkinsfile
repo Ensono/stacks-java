@@ -169,7 +169,7 @@ pipeline {
 
           post {
             always {
-              junit 'target/**/*.xml'
+              junit "${self_repo_src}/target/**/*.xml"
 
               // See:
               // https://www.jenkins.io/doc/pipeline/steps/jacoco/
