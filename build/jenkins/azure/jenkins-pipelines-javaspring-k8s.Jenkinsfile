@@ -1,14 +1,12 @@
 pipeline {
   agent none
-  environment {
-    WORKSPACE=sh(returnStdout: true, script: 'pwd').trim()
-  }
   // parameters {
   // }
   options {
     preserveStashes()
   }
   environment {
+    WORKSPACE=sh(returnStdout: true, script: 'pwd').trim()
     company="amido"
     project="stacks"
     domain="java-jenkins"
