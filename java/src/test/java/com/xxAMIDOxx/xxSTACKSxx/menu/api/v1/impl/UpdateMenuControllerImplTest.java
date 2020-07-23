@@ -3,10 +3,8 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateCategoryRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateMenuRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import org.junit.jupiter.api.Tag;
@@ -18,9 +16,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,10 +29,10 @@ import static com.azure.data.cosmos.internal.Utils.randomUUID;
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.MenuHelper.createMenu;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(
@@ -58,7 +59,8 @@ class UpdateMenuControllerImplTest {
         when(menuRepository.findById(eq(menu.getId())))
                 .thenReturn(Optional.of(menu));
 
-        UpdateMenuRequest request = new UpdateMenuRequest("new name", "new description", false);
+        UpdateMenuRequest request =
+                new UpdateMenuRequest("new name", "new description", false);
 
         // When
         HttpHeaders headers = new HttpHeaders();
@@ -93,7 +95,8 @@ class UpdateMenuControllerImplTest {
         when(menuRepository.findById(eq(menuId.toString())))
                 .thenReturn(Optional.empty());
 
-        UpdateMenuRequest request = new UpdateMenuRequest("name", "description", true);
+        UpdateMenuRequest request =
+                new UpdateMenuRequest("name", "description", true);
 
         // When
         HttpHeaders headers = new HttpHeaders();

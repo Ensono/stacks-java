@@ -33,7 +33,8 @@ public class QueryMenuControllerImpl implements QueryMenuController {
 
     private MenuQueryService menuQueryService;
 
-    public QueryMenuControllerImpl(DomainToDtoMapper mapper, MenuQueryService menuQueryService) {
+    public QueryMenuControllerImpl(DomainToDtoMapper mapper,
+                                   MenuQueryService menuQueryService) {
         this.mapper = mapper;
         this.menuQueryService = menuQueryService;
     }
@@ -46,12 +47,15 @@ public class QueryMenuControllerImpl implements QueryMenuController {
         List<Menu> menuList;
 
         if (isNotEmpty(searchTerm) && nonNull(restaurantId)) {
-            menuList = this.menuQueryService.findAllByRestaurantIdAndNameContaining(
-                    restaurantId, searchTerm, pageSize, pageNumber);
+            menuList =
+                    this.menuQueryService.findAllByRestaurantIdAndNameContaining(
+                            restaurantId, searchTerm, pageSize, pageNumber);
         } else if (isNotEmpty(searchTerm)) {
-            menuList = this.menuQueryService.findAllByNameContaining(searchTerm, pageSize, pageNumber);
+            menuList =
+                    this.menuQueryService.findAllByNameContaining(searchTerm, pageSize, pageNumber);
         } else if (nonNull(restaurantId)) {
-            menuList = this.menuQueryService.findAllByRestaurantId(restaurantId, pageSize, pageNumber);
+            menuList =
+                    this.menuQueryService.findAllByRestaurantId(restaurantId, pageSize, pageNumber);
         } else {
             menuList = this.menuQueryService.findAll(pageNumber, pageSize);
         }
@@ -62,7 +66,8 @@ public class QueryMenuControllerImpl implements QueryMenuController {
     }
 
     @Override
-    public ResponseEntity<MenuDTO> getMenu(final UUID id, final String correlationId) {
+    public ResponseEntity<MenuDTO> getMenu(final UUID id,
+                                           final String correlationId) {
         Menu menu = this.menuQueryService.findById(id).orElseThrow(
                 () -> new MenuNotFoundException(
                         new MenuCommand(OperationCode.GET_MENU_BY_ID, correlationId, id)));
