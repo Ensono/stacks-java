@@ -28,7 +28,8 @@ public class ApiExceptionAdvice extends ResponseEntityExceptionHandler {
             HttpStatus status,
             WebRequest request) {
 
-        var validationIssues = processFieldErrors(ex.getBindingResult().getFieldErrors());
+        var validationIssues =
+                processFieldErrors(ex.getBindingResult().getFieldErrors());
         ErrorResponse response = new ErrorResponse(
                 BAD_REQUEST.value(),
                 0,
@@ -37,7 +38,8 @@ public class ApiExceptionAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, BAD_REQUEST);
     }
 
-    private Map<String, String> processFieldErrors(List<FieldError> fieldErrors) {
+    private Map<String, String> processFieldErrors(
+            List<FieldError> fieldErrors) {
         Map<String, String> errors = newHashMap();
         for (FieldError fieldError : fieldErrors) {
             errors.put(fieldError.getField(), fieldError.getDefaultMessage());

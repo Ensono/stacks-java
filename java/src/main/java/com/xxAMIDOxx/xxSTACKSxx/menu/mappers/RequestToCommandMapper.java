@@ -10,6 +10,8 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateItemCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateMenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.UpdateCategoryCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.UpdateMenuCommand;
+import com.xxAMIDOxx.xxSTACKSxx.menu.commands.DeleteMenuCommand;
+import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
 
 import java.util.UUID;
 
@@ -23,6 +25,10 @@ public class RequestToCommandMapper {
     public static UpdateMenuCommand map(String correlationId, UUID menuId, UpdateMenuRequest r) {
         return new UpdateMenuCommand(correlationId, menuId, r.getName(),
                 r.getDescription(), r.getEnabled());
+    }
+
+    public static DeleteMenuCommand map(String correlationId, UUID menuId) {
+        return new DeleteMenuCommand(OperationCode.DELETE_MENU, correlationId, menuId);
     }
 
     public static CreateCategoryCommand map(String correlationId, UUID menuId, CreateCategoryRequest r) {

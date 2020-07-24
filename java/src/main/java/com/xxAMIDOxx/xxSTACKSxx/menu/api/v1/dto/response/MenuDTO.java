@@ -3,15 +3,18 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Schema(name = "Menu")
 public class MenuDTO {
 
@@ -28,7 +31,8 @@ public class MenuDTO {
   private String description;
 
   @JsonProperty("categories")
-  private List<CategoryDTO> categories;
+  @Builder.Default
+  private List<CategoryDTO> categories = new ArrayList<>();
 
   @JsonProperty("enabled")
   private Boolean enabled;
