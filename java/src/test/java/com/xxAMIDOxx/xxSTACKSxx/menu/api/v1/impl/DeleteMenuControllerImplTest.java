@@ -63,13 +63,15 @@ class DeleteMenuControllerImplTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         var requestEntity = new HttpEntity<>(headers);
+
+        // When
         var response =
                 this.testRestTemplate.exchange(String.format("%s/v1/menu/%s", getBaseURL(port), menu.getId()),
                         HttpMethod.DELETE,
                         requestEntity, ResponseEntity.class);
         // Then
         ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
-        verify(repository, times(1)).deleteById(menu.getId());
+        verify(repository, times(1)).delete(menu);
         then(response.getStatusCode()).isEqualTo(OK);
     }
 }
