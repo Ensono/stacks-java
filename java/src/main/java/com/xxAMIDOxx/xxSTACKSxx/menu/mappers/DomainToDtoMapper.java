@@ -20,9 +20,9 @@ public class DomainToDtoMapper {
                 UUID.fromString(menu.getRestaurantId()),
                 menu.getName(),
                 menu.getDescription(),
-                menu.getCategories().stream().map(
+                menu.getCategories() != null ? menu.getCategories().stream().map(
                         DomainToDtoMapper::toCategoryDto)
-                        .collect(Collectors.toList()),
+                        .collect(Collectors.toList()) : null,
                 menu.getEnabled());
 
     }
@@ -31,9 +31,9 @@ public class DomainToDtoMapper {
         return new CategoryDTO(category.getId(),
                 category.getName(),
                 category.getDescription(),
-                category.getItems().stream()
+                category.getItems() != null ? category.getItems().stream()
                         .map(DomainToDtoMapper::toItemDto)
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList()) : null);
     }
 
     public static ItemDTO toItemDto(Item item) {
