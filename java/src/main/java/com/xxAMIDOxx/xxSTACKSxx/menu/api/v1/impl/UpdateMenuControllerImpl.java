@@ -1,10 +1,8 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.UpdateMenuController;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateCategoryRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateMenuRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateCategoryCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.UpdateMenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.handlers.UpdateMenuHandler;
 import org.springframework.http.HttpStatus;
