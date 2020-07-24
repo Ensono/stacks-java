@@ -1,13 +1,15 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.handlers;
 
-import com.xxAMIDOxx.xxSTACKSxx.core.cqrs.handler.CommandHandler;
 import com.xxAMIDOxx.xxSTACKSxx.core.messaging.publish.ApplicationEventPublisher;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.DeleteMenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.exception.MenuNotFoundException;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuDeletedEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,33 +19,23 @@ import java.util.UUID;
  * @author ArathyKrishna
  */
 @Component
-public class DeleteMenuHandler implements CommandHandler<DeleteMenuCommand> {
+public class DeleteMenuHandler extends MenuBaseCommandHandler<DeleteMenuCommand> {
 
-    protected MenuRepository repository;
-
-    private ApplicationEventPublisher publisher;
-
-    public DeleteMenuHandler(MenuRepository repository,
-                             ApplicationEventPublisher publisher) {
-        this.repository = repository;
-        this.publisher = publisher;
+    public DeleteMenuHandler(MenuRepository menuRepository,
+                             ApplicationEventPublisher applicationEventPublisher) {
+        super(menuRepository, applicationEventPublisher);
     }
 
     @Override
-    public Optional<UUID> handle(DeleteMenuCommand command) {
-
-        verifyMenuExists(command);
-
-        repository.deleteById(command.getMenuId().toString());
-
+    Optional<UUID> handleCommand(Menu menu, DeleteMenuCommand command) {
+        menuRepository.deleteById(command.getMenuId().toString());
         return Optional.empty();
     }
 
-    protected void verifyMenuExists(DeleteMenuCommand command) {
-        Optional<Menu> optMenu =
-                repository.findById(command.getMenuId().toString());
-        if (optMenu.isEmpty()) {
-            throw new MenuNotFoundException(command);
-        }
+    @Override
+    List<MenuEvent> raiseApplicationEvents(Menu menu,
+                                           DeleteMenuCommand command) {
+      return Collections.singletonList(new MenuDeletedEvent(command));
     }
+
 }

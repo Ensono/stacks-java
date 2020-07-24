@@ -35,8 +35,7 @@ public interface DeleteMenuController {
                     @ApiResponse(
                             responseCode = "204",
                             description = "No Content",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ErrorResponse.class))),
+                            content = @Content(schema = @Schema(hidden = true))),
                     @ApiResponse(
                             responseCode = "400",
                             description = "Bad Request",
