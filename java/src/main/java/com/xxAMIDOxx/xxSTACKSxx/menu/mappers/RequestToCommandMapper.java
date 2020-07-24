@@ -15,9 +15,6 @@ import java.util.UUID;
 
 public class RequestToCommandMapper {
 
-    private RequestToCommandMapper() {
-    }
-
     public static CreateMenuCommand map(String correlationId, CreateMenuRequest r) {
         return new CreateMenuCommand(correlationId, r.getName(), r.getDescription(),
                 r.getTenantId(), r.getEnabled());
@@ -28,6 +25,10 @@ public class RequestToCommandMapper {
                 r.getDescription(), r.getEnabled());
     }
 
+    public static DeleteMenuCommand map(String correlationId, UUID menuId) {
+        return new DeleteMenuCommand(OperationCode.DELETE_MENU, correlationId, menuId);
+    }
+
     public static CreateCategoryCommand map(String correlationId, UUID menuId, CreateCategoryRequest r) {
         return new CreateCategoryCommand(correlationId, menuId, r.getName(), r.getDescription());
     }
@@ -35,9 +36,5 @@ public class RequestToCommandMapper {
     public static CreateItemCommand map(String correlationId, UUID menuId, UUID categoryId, CreateItemRequest r) {
         return new CreateItemCommand(correlationId, menuId, categoryId, r.getName(),
                 r.getDescription(), r.getPrice(), r.getAvailable());
-    }
-
-    public static DeleteMenuCommand map(String correlationId, UUID menuId) {
-        return new DeleteMenuCommand(OperationCode.DELETE_MENU, correlationId, menuId);
     }
 }

@@ -9,8 +9,6 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -18,37 +16,24 @@ import java.util.stream.Collectors;
 public class DomainToDtoMapper {
 
     public static MenuDTO toMenuDto(Menu menu) {
-        MenuDTO dto = new MenuDTO();
-        if (menu.getCategories() == null || menu.getCategories().isEmpty()) {
-            dto.setCategories(Collections.emptyList());
-        } else {
-            dto.setCategories(menu.getCategories().stream().filter(Objects::nonNull).map(
-                    DomainToDtoMapper::toCategoryDto)
-                    .collect(Collectors.toList()));
+        return new MenuDTO(UUID.fromString(menu.getId()),
+                UUID.fromString(menu.getRestaurantId()),
+                menu.getName(),
+                menu.getDescription(),
+                menu.getCategories() != null ? menu.getCategories().stream().map(
+                        DomainToDtoMapper::toCategoryDto)
+                        .collect(Collectors.toList()) : null,
+                menu.getEnabled());
 
-        }
-
-        dto.setEnabled(menu.getEnabled());
-        dto.setName(menu.getName());
-        dto.setDescription(menu.getDescription());
-        dto.setId(UUID.fromString(menu.getId()));
-        dto.setRestaurantId(UUID.fromString(menu.getRestaurantId()));
-        return dto;
     }
 
     public static CategoryDTO toCategoryDto(Category category) {
-        CategoryDTO dto = new CategoryDTO();
-        if (category.getItems() == null || category.getItems().isEmpty()) {
-            dto.setItems(Collections.emptyList());
-        } else {
-            dto.setItems(category.getItems().stream().filter(Objects::nonNull)
-                    .map(DomainToDtoMapper::toItemDto)
-                    .collect(Collectors.toList()));
-        }
-        dto.setDescription(category.getDescription());
-        dto.setId(category.getId());
-        dto.setName(category.getName());
-        return dto;
+        return new CategoryDTO(category.getId(),
+                category.getName(),
+                category.getDescription(),
+                category.getItems() != null ? category.getItems().stream()
+                        .map(DomainToDtoMapper::toItemDto)
+                        .collect(Collectors.toList()) : null);
     }
 
     public static ItemDTO toItemDto(Item item) {
