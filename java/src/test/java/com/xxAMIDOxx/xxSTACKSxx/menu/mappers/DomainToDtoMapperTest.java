@@ -9,6 +9,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -40,6 +41,67 @@ class DomainToDtoMapperTest {
     assertThat(menuDTO.getDescription()).isEqualTo(description);
     assertThat(menuDTO.getCategories()).isEqualTo(Collections.emptyList());
     assertThat(menuDTO.getEnabled()).isEqualTo(enabled);
+  }
+
+  @Test
+  void menuToMenuDtoWithNullCategories() {
+
+    // Given
+    UUID id = randomUUID();
+    UUID restaurantId = randomUUID();
+    String name = "yyyyyyyy";
+    String description = "xxxxxxxx";
+    Boolean enabled = true;
+
+    Menu menu = new Menu(id.toString(), restaurantId.toString(), name, description,
+            null, enabled);
+
+    // When
+    MenuDTO menuDTO = DomainToDtoMapper.toMenuDto(menu);
+
+    // Then
+    assertThat(menuDTO.getId()).isEqualTo(id);
+    assertThat(menuDTO.getRestaurantId()).isEqualTo(restaurantId);
+    assertThat(menuDTO.getName()).isEqualTo(name);
+    assertThat(menuDTO.getDescription()).isEqualTo(description);
+    assertThat(menuDTO.getCategories()).isNull();
+    assertThat(menuDTO.getEnabled()).isEqualTo(enabled);
+  }
+
+  @Test
+  void menuToMenuDtoWithNullCategoryItems() {
+
+    // Given
+    UUID id = randomUUID();
+    UUID restaurantId = randomUUID();
+    String name = "yyyyyyyy";
+    String description = "xxxxxxxx";
+    Boolean enabled = true;
+
+    UUID categoryId = randomUUID();
+    Category category = new Category(categoryId.toString(),
+            "aaaaaa", "bbbbbb", null);
+
+    Menu menu =
+            new Menu(
+                    id.toString(), restaurantId.toString(), name, description,
+                    Arrays.asList(category), enabled);
+
+    // When
+    MenuDTO menuDTO = DomainToDtoMapper.toMenuDto(menu);
+
+    // Then
+    assertThat(menuDTO.getId()).isEqualTo(id);
+    assertThat(menuDTO.getRestaurantId()).isEqualTo(restaurantId);
+    assertThat(menuDTO.getName()).isEqualTo(name);
+    assertThat(menuDTO.getDescription()).isEqualTo(description);
+    assertThat(menuDTO.getEnabled()).isEqualTo(enabled);
+    assertThat(menuDTO.getCategories().size()).isEqualTo(1);
+    assertThat(menuDTO.getCategories().get(0).getName()).isEqualTo(category.getName());
+    assertThat(menuDTO.getCategories().get(0).getDescription()).isEqualTo(category.getDescription());
+    assertThat(menuDTO.getCategories().get(0).getId()).isEqualTo(category.getId());
+    assertThat(menuDTO.getCategories().get(0).getItems()).isNull();
+
   }
 
   @Test
