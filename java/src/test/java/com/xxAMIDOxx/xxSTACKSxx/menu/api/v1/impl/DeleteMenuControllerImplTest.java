@@ -69,7 +69,7 @@ class DeleteMenuControllerImplTest {
                         requestEntity, ResponseEntity.class);
         // Then
         ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
-        verify(repository, times(1)).deleteById(menu.getId());
+        verify(repository, times(1)).delete(menu);
         then(response.getStatusCode()).isEqualTo(OK);
     }
 }

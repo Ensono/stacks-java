@@ -1,64 +1,58 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.handlers;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.messaging.publish.ApplicationEventPublisher;
-import com.xxAMIDOxx.xxSTACKSxx.menu.commands.UpdateCategoryCommand;
+import com.xxAMIDOxx.xxSTACKSxx.menu.commands.DeleteCategoryCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.events.CategoryUpdatedEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.CategoryDeletedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
-import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryAlreadyExistsException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryDoesNotExistException;
+import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ItemAlreadyExistsException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author ArathyKrishna
  */
 @Component
-public class UpdateCategoryHandler extends MenuBaseCommandHandler<UpdateCategoryCommand> {
+public class DeleteCategoryHandler extends MenuBaseCommandHandler<DeleteCategoryCommand> {
 
-    public UpdateCategoryHandler(MenuRepository repository,
-                                 ApplicationEventPublisher publisher) {
-        super(repository, publisher);
+    public DeleteCategoryHandler(MenuRepository menuRepository,
+                                 ApplicationEventPublisher applicationEventPublisher) {
+        super(menuRepository, applicationEventPublisher);
     }
 
     @Override
-    Optional<UUID> handleCommand(Menu menu, UpdateCategoryCommand command) {
-        menu.setCategories(updateCategory(menu, command));
-        menuRepository.save(menu);
-        return Optional.of(command.getCategoryId());
-    }
-
-    List<Category> updateCategory(Menu menu, UpdateCategoryCommand command) {
-
+    Optional<UUID> handleCommand(Menu menu, DeleteCategoryCommand command) {
         Category category = getCategory(menu, command);
-
-        if (menu.getCategories().stream().anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
-            throw new CategoryAlreadyExistsException(command, command.getName());
-        } else {
-            category.setDescription(command.getDescription());
-            category.setName(command.getName());
+        if (!category.getItems().isEmpty()) {
+            throw new ItemAlreadyExistsException(command, command.getCategoryId(), "");
         }
-        return List.of(category);
+        List<Category> collect = menu.getCategories().stream()
+                .filter(t -> !Objects.equals(t, category))
+                .collect(Collectors.toList());
+        menu.setCategories(!collect.isEmpty() ? collect : null);
+        menuRepository.save(menu);
+        return Optional.empty();
     }
 
     @Override
     List<MenuEvent> raiseApplicationEvents(Menu menu,
-                                           UpdateCategoryCommand command) {
+                                           DeleteCategoryCommand command) {
         return Arrays.asList(new MenuUpdatedEvent(command),
-                new CategoryUpdatedEvent(command, command.getCategoryId()));
+                new CategoryDeletedEvent(command, command.getCategoryId()));
     }
 
-    Category getCategory(Menu menu, UpdateCategoryCommand command) {
-
+    Category getCategory(Menu menu, DeleteCategoryCommand command) {
         Optional<Category> existing = Optional.empty();
-
         if (menu.getCategories() != null && !menu.getCategories().isEmpty()) {
             existing = menu.getCategories()
                     .stream()
@@ -69,4 +63,5 @@ public class UpdateCategoryHandler extends MenuBaseCommandHandler<UpdateCategory
                 command,
                 command.getCategoryId()));
     }
+
 }

@@ -1,7 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateCategoryRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -9,22 +8,20 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.validation.Valid;
 import java.util.UUID;
 
 /**
  * @author ArathyKrishna
  */
 @RequestMapping("/v1/menu/{id}/category/{categoryId}")
-public interface UpdateCategoryController {
+public interface DeleteCategoryController {
 
-    @PutMapping(consumes = "application/json", produces = "application/json")
+    @DeleteMapping(consumes = "application/json", produces = "application/json")
     @Operation(
             tags = "Category",
             summary = "Update a category in the menu",
@@ -62,10 +59,8 @@ public interface UpdateCategoryController {
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ErrorResponse.class))),
             })
-    ResponseEntity<ResourceCreatedResponse> updateMenuCategory(
+    ResponseEntity<Void> deleteCategory(
             @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
             @Parameter(description = "Category id", required = true) @PathVariable("categoryId") UUID categoryId,
-            @Valid @RequestBody UpdateCategoryRequest body,
-            @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId
-    );
+            @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId);
 }
