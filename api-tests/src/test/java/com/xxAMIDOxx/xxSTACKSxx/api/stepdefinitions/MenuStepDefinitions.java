@@ -2,12 +2,12 @@ package com.xxAMIDOxx.xxSTACKSxx.api.stepdefinitions;
 
 import com.xxAMIDOxx.xxSTACKSxx.api.ExceptionMessages;
 import com.xxAMIDOxx.xxSTACKSxx.api.WebServiceEndPoints;
-import com.xxAMIDOxx.xxSTACKSxx.api.menu.MenuRequests;
 import com.xxAMIDOxx.xxSTACKSxx.api.menu.MenuActions;
-import com.xxAMIDOxx.xxSTACKSxx.api.templates.TemplateResponse;
+import com.xxAMIDOxx.xxSTACKSxx.api.menu.MenuRequests;
 import com.xxAMIDOxx.xxSTACKSxx.api.models.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.api.templates.FieldValues;
 import com.xxAMIDOxx.xxSTACKSxx.api.templates.MergeFrom;
+import com.xxAMIDOxx.xxSTACKSxx.api.templates.TemplateResponse;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -95,7 +95,7 @@ public class MenuStepDefinitions {
     @When("I search the menu by criteria")
     public void search_the_menu_by_multiple_parameters(DataTable table) {
         List<List<String>> data = table.asLists(String.class);
-        String xPath = menuActions.createUrlWithCriteria(data);
+        String xPath = MenuActions.createUrlWithCriteria(data);
         String parametrisedPath = BASE_URL + WebServiceEndPoints.MENU.getUrl() + "?" + xPath;
 
         SerenityRest.get(parametrisedPath);
@@ -106,7 +106,7 @@ public class MenuStepDefinitions {
     public void the_items_are_returned(Integer expectedSize) {
         String response = SerenityRest.lastResponse().prettyPrint();
 
-        JSONObject js = menuActions.toJson(response);
+        JSONObject js = MenuActions.toJson(response);
         Assert.assertEquals(js.getJSONArray("results").length(), (int) expectedSize);
     }
 
@@ -124,7 +124,7 @@ public class MenuStepDefinitions {
         restAssuredThat(response -> response.statusCode(200));
 
         String id = menuActions.getIdOfLastCreatedObject();
-        Menu expectedMenu = menuActions.mapToMenu(menuDetails.get(0), id);
+        Menu expectedMenu = MenuActions.mapToMenu(menuDetails.get(0), id);
         Menu actualMenu = menuActions.responseToMenu(lastResponse());
 
         assertThat(expectedMenu).isEqualToIgnoringGivenFields(actualMenu, "categories");
@@ -158,15 +158,15 @@ public class MenuStepDefinitions {
 
     @Then("the 'menu does not exist' message is returned")
     public void i_check_the_menu_does_not_exist_message() {
-        menuActions.check_exception_message(ExceptionMessages.MENU_DOES_NOT_EXIST);
+        menuActions.check_exception_message(ExceptionMessages.MENU_DOES_NOT_EXIST, lastResponse());
     }
 
     @Then("the 'menu already exist' message is returned")
     public void i_check_the_menu_already_exist_message() {
-        menuActions.check_exception_message(ExceptionMessages.MENU_ALREADY_EXISTS);
+        menuActions.check_exception_message(ExceptionMessages.MENU_ALREADY_EXISTS, lastResponse());
     }
 
-    @Then("I update the menu with fallowing data:")
+    @Then("I update the menu with the following data:")
     public void i_update_the_menu_with_following_data(List<Map<String, String>> menuDetails) throws IOException {
         String id = menuActions.getIdOfLastCreatedObject();
         create_menu_body_from_data(menuDetails);
