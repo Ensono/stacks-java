@@ -25,43 +25,43 @@ import java.util.stream.Collectors;
 @Component
 public class DeleteCategoryHandler extends MenuBaseCommandHandler<DeleteCategoryCommand> {
 
-    public DeleteCategoryHandler(MenuRepository menuRepository,
-                                 ApplicationEventPublisher applicationEventPublisher) {
-        super(menuRepository, applicationEventPublisher);
-    }
+  public DeleteCategoryHandler(MenuRepository menuRepository,
+                               ApplicationEventPublisher applicationEventPublisher) {
+    super(menuRepository, applicationEventPublisher);
+  }
 
-    @Override
-    Optional<UUID> handleCommand(Menu menu, DeleteCategoryCommand command) {
-        Category category = getCategory(menu, command);
-        if (!category.getItems().isEmpty()) {
-            throw new ItemAlreadyExistsException(command, command.getCategoryId(), "");
-        }
-        List<Category> collect = menu.getCategories().stream()
-                .filter(t -> !Objects.equals(t, category))
-                .collect(Collectors.toList());
-        menu.setCategories(!collect.isEmpty() ? collect : null);
-        menuRepository.save(menu);
-        return Optional.empty();
+  @Override
+  Optional<UUID> handleCommand(Menu menu, DeleteCategoryCommand command) {
+    Category category = getCategory(menu, command);
+    if (!category.getItems().isEmpty()) {
+      throw new ItemAlreadyExistsException(command, command.getCategoryId(), "");
     }
+    List<Category> collect = menu.getCategories().stream()
+            .filter(t -> !Objects.equals(t, category))
+            .collect(Collectors.toList());
+    menu.setCategories(!collect.isEmpty() ? collect : null);
+    menuRepository.save(menu);
+    return Optional.empty();
+  }
 
-    @Override
-    List<MenuEvent> raiseApplicationEvents(Menu menu,
-                                           DeleteCategoryCommand command) {
-        return Arrays.asList(new MenuUpdatedEvent(command),
-                new CategoryDeletedEvent(command, command.getCategoryId()));
-    }
+  @Override
+  List<MenuEvent> raiseApplicationEvents(Menu menu,
+                                         DeleteCategoryCommand command) {
+    return Arrays.asList(new MenuUpdatedEvent(command),
+            new CategoryDeletedEvent(command, command.getCategoryId()));
+  }
 
-    Category getCategory(Menu menu, DeleteCategoryCommand command) {
-        Optional<Category> existing = Optional.empty();
-        if (menu.getCategories() != null && !menu.getCategories().isEmpty()) {
-            existing = menu.getCategories()
-                    .stream()
-                    .filter(c -> c.getId().equals(command.getCategoryId().toString()))
-                    .findFirst();
-        }
-        return existing.orElseThrow(() -> new CategoryDoesNotExistException(
-                command,
-                command.getCategoryId()));
+  Category getCategory(Menu menu, DeleteCategoryCommand command) {
+    Optional<Category> existing = Optional.empty();
+    if (menu.getCategories() != null && !menu.getCategories().isEmpty()) {
+      existing = menu.getCategories()
+              .stream()
+              .filter(c -> c.getId().equals(command.getCategoryId().toString()))
+              .findFirst();
     }
+    return existing.orElseThrow(() -> new CategoryDoesNotExistException(
+            command,
+            command.getCategoryId()));
+  }
 
 }

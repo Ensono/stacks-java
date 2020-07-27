@@ -1,0 +1,85 @@
+package com.xxAMIDOxx.xxSTACKSxx.menu.handlers;
+
+import com.xxAMIDOxx.xxSTACKSxx.core.messaging.publish.ApplicationEventPublisher;
+import com.xxAMIDOxx.xxSTACKSxx.menu.commands.DeleteItemCommand;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.CategoryUpdatedEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.ItemDeletedEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryDoesNotExistException;
+import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ItemDoesNotExistsException;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
+import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+/**
+ * @author ArathyKrishna
+ */
+@Component
+public class DeleteItemHandler extends MenuBaseCommandHandler<DeleteItemCommand> {
+
+  public DeleteItemHandler(MenuRepository menuRepository,
+                           ApplicationEventPublisher applicationEventPublisher) {
+    super(menuRepository, applicationEventPublisher);
+  }
+
+  @Override
+  Optional<UUID> handleCommand(Menu menu, DeleteItemCommand command) {
+    Category category = getCategory(menu, command);
+    Item item = getItem(category, command);
+
+    List<Item> itemList = category.getItems().stream()
+            .filter(t -> !Objects.equals(t, item))
+            .collect(Collectors.toList());
+    category.setItems(!itemList.isEmpty() ? itemList : null);
+
+    menuRepository.save(menu.addUpdateCategory(category));
+
+    return Optional.empty();
+  }
+
+  @Override
+  List<MenuEvent> raiseApplicationEvents(Menu menu,
+                                         DeleteItemCommand command) {
+
+    return Arrays.asList(new ItemDeletedEvent(command, command.getCategoryId(), command.getItemId()),
+            new CategoryUpdatedEvent(command, command.getCategoryId()),
+            new MenuUpdatedEvent(command));
+  }
+
+  Category getCategory(Menu menu, DeleteItemCommand command) {
+    Optional<Category> existing = Optional.empty();
+
+    if (menu.getCategories() != null && !menu.getCategories().isEmpty()) {
+      existing = menu.getCategories()
+              .stream()
+              .filter(c -> c.getId().equals(command.getCategoryId().toString()))
+              .findFirst();
+    }
+    return existing.orElseThrow(() -> new CategoryDoesNotExistException(
+            command,
+            command.getCategoryId()));
+  }
+
+  Item getItem(Category category, DeleteItemCommand command) {
+
+    Optional<Item> existing = Optional.empty();
+    if (category.getItems() != null && !category.getItems().isEmpty()) {
+      existing = category.getItems()
+              .stream()
+              .filter(t -> t.getId().equals(command.getItemId().toString()))
+              .findFirst();
+    }
+    return existing.orElseThrow(() -> new ItemDoesNotExistsException(
+            command, command.getCategoryId(), command.getItemId()));
+  }
+}
