@@ -23,50 +23,50 @@ import java.util.UUID;
 @Component
 public class UpdateCategoryHandler extends MenuBaseCommandHandler<UpdateCategoryCommand> {
 
-    public UpdateCategoryHandler(MenuRepository repository,
-                                 ApplicationEventPublisher publisher) {
-        super(repository, publisher);
+  public UpdateCategoryHandler(MenuRepository repository,
+                               ApplicationEventPublisher publisher) {
+    super(repository, publisher);
+  }
+
+  @Override
+  Optional<UUID> handleCommand(Menu menu, UpdateCategoryCommand command) {
+    menu.addUpdateCategory(updateCategory(menu, command));
+    menuRepository.save(menu);
+    return Optional.of(command.getCategoryId());
+  }
+
+  Category updateCategory(Menu menu, UpdateCategoryCommand command) {
+
+    Category category = getCategory(menu, command);
+
+    if (menu.getCategories().stream().anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
+      throw new CategoryAlreadyExistsException(command, command.getName());
+    } else {
+      category.setDescription(command.getDescription());
+      category.setName(command.getName());
     }
+    return category;
+  }
 
-    @Override
-    Optional<UUID> handleCommand(Menu menu, UpdateCategoryCommand command) {
-        menu.setCategories(updateCategory(menu, command));
-        menuRepository.save(menu);
-        return Optional.of(command.getCategoryId());
+  @Override
+  List<MenuEvent> raiseApplicationEvents(Menu menu,
+                                         UpdateCategoryCommand command) {
+    return Arrays.asList(new MenuUpdatedEvent(command),
+            new CategoryUpdatedEvent(command, command.getCategoryId()));
+  }
+
+  Category getCategory(Menu menu, UpdateCategoryCommand command) {
+
+    Optional<Category> existing = Optional.empty();
+
+    if (menu.getCategories() != null && !menu.getCategories().isEmpty()) {
+      existing = menu.getCategories()
+              .stream()
+              .filter(c -> c.getId().equals(command.getCategoryId().toString()))
+              .findFirst();
     }
-
-    List<Category> updateCategory(Menu menu, UpdateCategoryCommand command) {
-
-        Category category = getCategory(menu, command);
-
-        if (menu.getCategories().stream().anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
-            throw new CategoryAlreadyExistsException(command, command.getName());
-        } else {
-            category.setDescription(command.getDescription());
-            category.setName(command.getName());
-        }
-        return List.of(category);
-    }
-
-    @Override
-    List<MenuEvent> raiseApplicationEvents(Menu menu,
-                                           UpdateCategoryCommand command) {
-        return Arrays.asList(new MenuUpdatedEvent(command),
-                new CategoryUpdatedEvent(command, command.getCategoryId()));
-    }
-
-    Category getCategory(Menu menu, UpdateCategoryCommand command) {
-
-        Optional<Category> existing = Optional.empty();
-
-        if (menu.getCategories() != null && !menu.getCategories().isEmpty()) {
-            existing = menu.getCategories()
-                    .stream()
-                    .filter(c -> c.getId().equals(command.getCategoryId().toString()))
-                    .findFirst();
-        }
-        return existing.orElseThrow(() -> new CategoryDoesNotExistException(
-                command,
-                command.getCategoryId()));
-    }
+    return existing.orElseThrow(() -> new CategoryDoesNotExistException(
+            command,
+            command.getCategoryId()));
+  }
 }
