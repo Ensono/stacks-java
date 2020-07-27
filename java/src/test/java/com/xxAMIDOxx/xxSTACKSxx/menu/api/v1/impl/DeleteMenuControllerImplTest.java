@@ -2,6 +2,7 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
+import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -21,14 +22,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.MenuHelper.createMenu;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
+import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getRequestHttpEntity;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -55,21 +59,34 @@ class DeleteMenuControllerImplTest {
     }
 
     @Test
-    void testDeleteSuccess() {
+    void testDeleteMenuSuccess() {
         // Given
         Menu menu = createMenu(1);
         when(repository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        var requestEntity = new HttpEntity<>(headers);
         var response =
                 this.testRestTemplate.exchange(String.format("%s/v1/menu/%s", getBaseURL(port), menu.getId()),
                         HttpMethod.DELETE,
-                        requestEntity, ResponseEntity.class);
+                        new HttpEntity<>(getRequestHttpEntity()), ResponseEntity.class);
         // Then
         ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
         verify(repository, times(1)).delete(menu);
         then(response.getStatusCode()).isEqualTo(OK);
+    }
+
+    @Test
+    void testDeleteMenuWithInvalidId() {
+        // Given
+        Menu menu = createMenu(1);
+        when(repository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+        var response =
+                this.testRestTemplate.exchange(String.format("%s/v1/menu/%s", getBaseURL(port), UUID.randomUUID().toString()),
+                        HttpMethod.DELETE,
+                        new HttpEntity<>(getRequestHttpEntity()), ErrorResponse.class);
+        // Then
+        ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
+        verify(repository, times(0)).delete(menu);
+        then(response.getStatusCode()).isEqualTo(NOT_FOUND);
     }
 }

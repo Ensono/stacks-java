@@ -2,7 +2,7 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateCategoryRequest;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,9 +33,9 @@ public interface UpdateCategoryController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Resource created",
+                            description = "Success",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ResourceCreatedResponse.class))),
+                                    schema = @Schema(implementation = ResourceUpdatedResponse.class))),
                     @ApiResponse(
                             responseCode = "204",
                             description = "No Content",
@@ -62,7 +62,7 @@ public interface UpdateCategoryController {
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ErrorResponse.class))),
             })
-    ResponseEntity<ResourceCreatedResponse> updateMenuCategory(
+    ResponseEntity<ResourceUpdatedResponse> updateMenuCategory(
             @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
             @Parameter(description = "Category id", required = true) @PathVariable("categoryId") UUID categoryId,
             @Valid @RequestBody UpdateCategoryRequest body,
