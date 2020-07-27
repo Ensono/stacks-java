@@ -6,6 +6,7 @@ import com.microsoft.azure.servicebus.Message;
 import com.microsoft.azure.servicebus.TopicClient;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateCategoryCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuCreatedEvent;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
+@Tag("Component")
 class UpdateEventServiceBusDispatcherTest {
 
     @MockBean
