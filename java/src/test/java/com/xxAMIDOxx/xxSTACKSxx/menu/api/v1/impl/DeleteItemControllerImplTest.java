@@ -23,7 +23,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,10 +34,12 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
+/**
+ * @author ArathyKrishna
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(
         exclude = {
@@ -46,7 +47,7 @@ import static org.springframework.http.HttpStatus.OK;
                 CosmosAutoConfiguration.class
         })
 @Tag("Integration")
-class DeleteCategoryControllerImplTest {
+class DeleteItemControllerImplTest {
 
   @LocalServerPort
   private int port;
@@ -63,18 +64,21 @@ class DeleteCategoryControllerImplTest {
   }
 
   @Test
-  void testDeleteCategorySuccess() {
+  void testDeleteItemSuccess() {
     // Given
     Menu menu = createMenu(1);
     Category category = createCategory(0);
+    Item item =
+            new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
+    category.addUpdateItem(item);
     menu.addUpdateCategory(category);
     when(repository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     // When
     var requestEntity = getObjectHttpEntity();
-
     String requestUrl =
-            String.format("%s/v1/menu/%s/category/%s", getBaseURL(port), menu.getId(), category.getId());
+            String.format("%s/v1/menu/%s/category/%s/items/%s", getBaseURL(port), menu.getId(), category.getId(), item.getId());
+
     var response =
             this.testRestTemplate.exchange(requestUrl, HttpMethod.DELETE, requestEntity, ResponseEntity.class);
 
@@ -82,31 +86,6 @@ class DeleteCategoryControllerImplTest {
     ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
     verify(repository, times(1)).save(menu);
     then(response.getStatusCode()).isEqualTo(OK);
-  }
-
-  @Test
-  void testDeleteCategoryWithAnItem() {
-    // Given
-    Menu menu = createMenu(1);
-    Category category = createCategory(0);
-    Item item =
-            new Item(UUID.randomUUID().toString(), "New Item", "New item description", 14.2d, true);
-    category.setItems(List.of(item));
-    menu.addUpdateCategory(category);
-    when(repository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
-
-    // When
-    var requestEntity = getObjectHttpEntity();
-
-    String requestUrl =
-            String.format("%s/v1/menu/%s/category/%s", getBaseURL(port), menu.getId(), category.getId());
-    var response =
-            this.testRestTemplate.exchange(requestUrl, HttpMethod.DELETE, requestEntity, ErrorResponse.class);
-
-    // Then
-    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
-    verify(repository, times(0)).save(menu);
-    then(response.getStatusCode()).isEqualTo(CONFLICT);
   }
 
   private HttpEntity<Object> getObjectHttpEntity() {
@@ -120,21 +99,25 @@ class DeleteCategoryControllerImplTest {
     // Given
     Menu menu = createMenu(1);
     Category category = createCategory(0);
-    menu.setCategories(List.of(category));
+    Item item =
+            new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
+    category.addUpdateItem(item);
+    menu.addUpdateCategory(category);
     when(repository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     // When
     var requestEntity = getObjectHttpEntity();
-
     String requestUrl =
-            String.format("%s/v1/menu/%s/category/%s", getBaseURL(port), menu.getId(), menu.getId());
+            String.format("%s/v1/menu/%s/category/%s/items/%s",
+                    getBaseURL(port), menu.getId(), item.getId(), item.getId());
+
     var response =
-            this.testRestTemplate.exchange(requestUrl, HttpMethod.DELETE, requestEntity, ErrorResponse.class);
+            this.testRestTemplate.exchange(requestUrl, HttpMethod.DELETE,
+                    requestEntity, ErrorResponse.class);
 
     // Then
     ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
     verify(repository, times(0)).save(menu);
     then(response.getStatusCode()).isEqualTo(NOT_FOUND);
   }
-
 }

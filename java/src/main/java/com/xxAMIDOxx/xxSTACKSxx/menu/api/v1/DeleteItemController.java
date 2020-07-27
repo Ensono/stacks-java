@@ -17,19 +17,19 @@ import java.util.UUID;
 /**
  * @author ArathyKrishna
  */
-@RequestMapping("/v1/menu/{id}/category/{categoryId}")
-public interface DeleteCategoryController {
+@RequestMapping("/v1/menu/{id}/category/{categoryId}/items/{itemId}")
+public interface DeleteItemController {
 
     @DeleteMapping(consumes = "application/json", produces = "application/json")
     @Operation(
-            tags = "Category",
-            summary = "Update a category in the menu",
-            description = "Update a category to menu",
-            operationId = "UpdateMenuCategory",
+            tags = "Item",
+            summary = "Removes an item from menu",
+            description = "Removes an item from menu",
+            operationId = "DeleteMenuItem",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = " Success",
+                            description = "Success",
                             content = @Content(mediaType = "application/json", schema = @Schema(hidden = true))),
                     @ApiResponse(
                             responseCode = "204",
@@ -56,8 +56,9 @@ public interface DeleteCategoryController {
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ErrorResponse.class)))
             })
-    ResponseEntity<Void> deleteCategory(
+    ResponseEntity<Void> deleteItem(
             @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
             @Parameter(description = "Category id", required = true) @PathVariable("categoryId") UUID categoryId,
+            @Parameter(description = "Item id", required = true) @PathVariable("itemId") UUID itemId,
             @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId);
 }

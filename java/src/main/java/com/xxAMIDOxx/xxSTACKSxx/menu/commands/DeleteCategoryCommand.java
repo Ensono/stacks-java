@@ -12,11 +12,11 @@ import java.util.UUID;
 @Setter
 public class DeleteCategoryCommand extends MenuCommand {
 
-    private UUID categoryId;
+  private UUID categoryId;
 
-    public DeleteCategoryCommand(String correlationId, UUID menuId,
-                                 UUID categoryId) {
-        super(OperationCode.DELETE_CATEGORY, correlationId, menuId);
-        this.categoryId = categoryId;
-    }
+  public DeleteCategoryCommand(String correlationId, UUID menuId,
+                               UUID categoryId) {
+    super(OperationCode.DELETE_CATEGORY, correlationId, menuId);
+    this.categoryId = categoryId;
+  }
 }
