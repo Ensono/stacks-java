@@ -1,9 +1,6 @@
 pipeline {
   agent none
 
-  // parameters {
-  // }
-
   options {
     preserveStashes()
   }
@@ -19,6 +16,8 @@ pipeline {
     self_repo_k8s_src="deploy/k8s"
     self_generic_name="stacks-java-jenkins"
     self_pipeline_repo="stacks-pipeline-templates"
+    maven_cache_directory="./.m2"
+    maven_surefire_repots_dir="./target/surefire-reports"
     // TF STATE CONFIG"
     tf_state_rg="amido-stacks-rg-eun"
     tf_state_storage="amidostackstfstategbl"
@@ -133,31 +132,46 @@ pipeline {
           steps {
             dir("${self_repo_src}") {
               sh """#!/bin/bash
-                bash ${build_scripts_directory}/build-maven-install.bash
+                bash ${build_scripts_directory}/build-maven-install.bash \
+                  -Z "${maven_cache_directory}"
               """
 
               sh """#!/bin/bash
-                bash ${build_scripts_directory}/build-maven-compile.bash
+                bash ${build_scripts_directory}/build-maven-compile.bash \
+                  -Z "${maven_cache_directory}"
+              """
+
+              // TODO: hardcoded vars to vars.
+              sh """#!/bin/bash
+                rm -rf "${maven_surefire_repots_dir}"
+
+                bash ${build_scripts_directory}/test-maven-download-test-deps.bash \
+                  -X "Unit | Component | Integration | Functional | Performance | Smoke" \
+                  -Y "${maven_surefire_repots_dir}" \
+                  -Z "${maven_cache_directory}"
               """
 
               sh """#!/bin/bash
-                bash ${build_scripts_directory}/test-maven-download-test-deps.bash
+                bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+                  -a "Unit" \
+                  -Z "${maven_cache_directory}"
               """
 
               sh """#!/bin/bash
-                bash ${build_scripts_directory}/test-maven-tagged-test-run.bash -a "Unit"
+                bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+                  -a "Component" \
+                  -Z "${maven_cache_directory}"
               """
 
               sh """#!/bin/bash
-                bash ${build_scripts_directory}/test-tagged-test-run.bash -a Component"
+                bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+                  -a "Integration" \
+                  -Z "${maven_cache_directory}"
               """
 
               sh """#!/bin/bash
-                bash ${build_scripts_directory}/test-tagged-test-run.bash -a "Integration"
-              """
-
-              sh """#!/bin/bash
-                bash ${build_scripts_directory}/test-maven-generate-jacoco-report.bash
+                bash ${build_scripts_directory}/test-maven-generate-jacoco-report.bash \
+                  -Z "${maven_cache_directory}"
               """
             }
 
