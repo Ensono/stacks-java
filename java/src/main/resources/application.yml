@@ -10,9 +10,10 @@ api:
   basepath: '/'
 
 server:
+  forward-headers-strategy: native
   port: 9000
-  servlet:
-    context-path: ${api.basepath}
+  # servlet:
+  #   context-path: ${api.basepath}
 
 management:
   endpoints:
