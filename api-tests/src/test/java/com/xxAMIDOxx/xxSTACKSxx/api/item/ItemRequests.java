@@ -6,7 +6,7 @@ import net.thucydides.core.annotations.Step;
 
 public class ItemRequests {
 
-    String menuUrl = WebServiceEndPoints.BASE_URL.getUrl() + WebServiceEndPoints.MENU.getUrl();
+    String menuUrl = WebServiceEndPoints.BASE_URL.getUrl().concat(WebServiceEndPoints.MENU.getUrl());
 
     @Step("Create a new item")
     public void createItem(String body, String menuID, String categoryID) {
@@ -15,8 +15,9 @@ public class ItemRequests {
                 .header("Content-Type", "application/json")
                 .body(body)
                 .when()
-                .post(menuUrl + "/" + menuID + WebServiceEndPoints.CATEGORY.getUrl() + "/" + categoryID + "/" +
-                        WebServiceEndPoints.ITEMS);
+                .post(menuUrl.concat("/").concat(menuID)
+                        .concat(WebServiceEndPoints.CATEGORY.getUrl()).concat("/").concat(categoryID)
+                        .concat(WebServiceEndPoints.ITEMS.getUrl()));
 
     }
 
@@ -27,7 +28,8 @@ public class ItemRequests {
                 .header("Content-Type", "application/json")
                 .body(body)
                 .when()
-                .put(menuUrl + "/" + menuID + WebServiceEndPoints.CATEGORY.getUrl() + "/" + categoryID +
-                        WebServiceEndPoints.ITEMS + "/" + itemID);
+                .put(menuUrl.concat("/").concat(menuID)
+                        .concat(WebServiceEndPoints.CATEGORY.getUrl()).concat("/").concat(categoryID)
+                        .concat(WebServiceEndPoints.ITEMS.getUrl()).concat("/").concat(itemID));
     }
 }
