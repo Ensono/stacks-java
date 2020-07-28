@@ -342,7 +342,7 @@ stages:
                     deployment_status_timeout: "90s"
 
   - stage: Prod
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
       - group: amido-stacks-infra-credentials-prod
     jobs:
@@ -432,18 +432,18 @@ stages:
             inputs:
               filePath: "$(self_pipeline_scripts_dir)/deploy-azure-promote-image.bash"
               arguments: >
-                    -a "$(docker_image_name):$(docker_image_tag)"
-                    -b "$(k8s_docker_registry_nonprod)"
-                    -c "$(azure_subscription_id)"
-                    -d "$(azure_client_id)"
-                    -e "$(azure_client_secret)"
-                    -f "$(azure_tenant_id)"
-                    -g "$(k8s_docker_registry_prod)"
-                    -h "$(prod_azure_subscription_id)"
-                    -i "$(prod_azure_client_id)"
-                    -j "$(prod_azure_client_secret)"
-                    -k "$(prod_azure_tenant_id)"
-                    -Z "false"
+                -a "$(docker_image_name):$(docker_image_tag)"
+                -b "$(k8s_docker_registry_nonprod)"
+                -c "$(azure_subscription_id)"
+                -d "$(azure_client_id)"
+                -e "$(azure_client_secret)"
+                -f "$(azure_tenant_id)"
+                -g "$(k8s_docker_registry_prod)"
+                -h "$(prod_azure_subscription_id)"
+                -i "$(prod_azure_client_id)"
+                -j "$(prod_azure_client_secret)"
+                -k "$(prod_azure_tenant_id)"
+                -Z "false"
             displayName: Promote Docker Image to Production ACR
 
       - deployment: DeployProd
