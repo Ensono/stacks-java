@@ -10,7 +10,6 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.CategoryHelper.createCategories;
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.CategoryHelper.createCategory;
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.MenuHelper.createMenu;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
@@ -71,9 +71,8 @@ class DeleteCategoryControllerImplTest {
     // When
     String requestUrl =
             String.format("%s/v1/menu/%s/category/%s", getBaseURL(port), menu.getId(), category.getId());
-    var response =
-            this.testRestTemplate.exchange(requestUrl, HttpMethod.DELETE,
-                    new HttpEntity<>(getRequestHttpEntity()), ErrorResponse.class);
+    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.DELETE,
+            new HttpEntity<>(getRequestHttpEntity()), ErrorResponse.class);
 
     // Then
     verify(repository, times(1)).save(menu);
@@ -118,9 +117,30 @@ class DeleteCategoryControllerImplTest {
             new HttpEntity<>(getRequestHttpEntity()), ErrorResponse.class);
 
     // Then
-    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
     verify(repository, times(0)).save(menu);
     then(response.getStatusCode()).isEqualTo(NOT_FOUND);
+  }
+
+  @Test
+  void testDeleteACategoryFromList() {
+    // Given
+    Menu menu = createMenu(1);
+    List<Category> categories = createCategories(2);
+    menu.setCategories(categories);
+    when(repository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    // When
+    String requestUrl =
+            String.format("%s/v1/menu/%s/category/%s", getBaseURL(port), menu.getId(), categories.get(0).getId());
+    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.DELETE,
+            new HttpEntity<>(getRequestHttpEntity()), ErrorResponse.class);
+
+    // Then
+    verify(repository, times(1)).save(menu);
+    then(response.getStatusCode()).isEqualTo(OK);
+    Optional<Menu> byId = repository.findById(menu.getId());
+    Menu updatedMenu = byId.get();
+    then(updatedMenu.getCategories()).hasSize(1);
   }
 
 }
