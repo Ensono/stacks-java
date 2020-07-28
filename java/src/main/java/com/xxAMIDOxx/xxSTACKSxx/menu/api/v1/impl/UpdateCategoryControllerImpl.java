@@ -2,7 +2,7 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.UpdateCategoryController;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateCategoryRequest;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.UpdateCategoryCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.handlers.UpdateCategoryHandler;
 import org.springframework.http.ResponseEntity;
@@ -22,19 +22,19 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 public class UpdateCategoryControllerImpl implements UpdateCategoryController {
 
-    private UpdateCategoryHandler handler;
+  private UpdateCategoryHandler handler;
 
-    public UpdateCategoryControllerImpl(UpdateCategoryHandler handler) {
-        this.handler = handler;
-    }
+  public UpdateCategoryControllerImpl(UpdateCategoryHandler handler) {
+    this.handler = handler;
+  }
 
-    @Override
-    public ResponseEntity<ResourceCreatedResponse> updateMenuCategory(
-            UUID menuId, UUID categoryId, @Valid UpdateCategoryRequest body,
-            String correlationId) {
-        UpdateCategoryCommand command =
-                map(correlationId, menuId, categoryId, body);
+  @Override
+  public ResponseEntity<ResourceUpdatedResponse> updateMenuCategory(
+          UUID menuId, UUID categoryId, @Valid UpdateCategoryRequest body,
+          String correlationId) {
+    UpdateCategoryCommand command =
+            map(correlationId, menuId, categoryId, body);
 
-        return new ResponseEntity<>(new ResourceCreatedResponse(handler.handle(command).get()), OK);
-    }
+    return new ResponseEntity<>(new ResourceUpdatedResponse(handler.handle(command).get()), OK);
+  }
 }
