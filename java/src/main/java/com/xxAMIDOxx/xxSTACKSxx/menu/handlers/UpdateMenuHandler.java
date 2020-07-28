@@ -8,7 +8,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,7 +31,7 @@ public class UpdateMenuHandler extends MenuBaseCommandHandler<UpdateMenuCommand>
 
   @Override
   List<MenuEvent> raiseApplicationEvents(Menu menu, UpdateMenuCommand command) {
-    return Arrays.asList(
+    return Collections.singletonList(
             new MenuUpdatedEvent(command)
     );
   }
