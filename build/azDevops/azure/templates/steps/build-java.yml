@@ -32,8 +32,7 @@ parameters:
   sonar_pullrequest_provider: ""
   sonar_remote_repo: ""
   sonar_container: ""
-  # Testing
-  unit_test: true
+  sonar_command: ""
   # contract_test: true
   # # audit_test: false
   # contract_check_can_deploy: true
@@ -64,8 +63,9 @@ steps:
       echo "Build Num: ${{ parameters.docker_imagetag }}"
       echo "Source Branch: ${{ parameters.source_branch_ref }}"
       echo "Sonar Command: ${{ parameters.sonar_command }}"
-      echo "Target Branch: ${{ parameters.target_branch_ref }}"
+      echo "Remote Repo: ${{ parameters.sonar_remote_repo }}"
       echo "PR Prov: ${{ parameters.sonar_pullrequest_provider }}"
+      echo "Target Branch: ${{ parameters.target_branch_ref }}"
       echo "PR Num: ${{ parameters.pullrequest_number }}"
     displayName: "Test"
 
@@ -180,38 +180,38 @@ steps:
             -f "${{ parameters.docker_imagetag }}"
             -g "${{ parameters.source_branch_ref }}"
             -V "${{ parameters.sonar_command }}"
-            -W "${{ parameters.target_branch_ref }}"
-            -Y "${{ parameters.sonar_pullrequest_provider }}"
+            -W "${{ parameters.sonar_remote_repo }}"
+            -X "${{ parameters.sonar_pullrequest_provider }}"
+            -Y "${{ parameters.target_branch_ref }}"
             -Z "${{ parameters.pullrequest_number }}"
           working_directory: "${{ parameters.project_root_dir }}"
         target:
           container: "${{ parameters.sonar_container }}"
         displayName: "Static Analysis: SonarScanner Run"
 
-  - ${{ if eq(parameters.docker_build, true) }}:
-      - task: Bash@3
-        inputs:
-          filePath: "${{ parameters.pipeline_scripts_directory }}/build-docker-image.bash"
-          arguments: >
-            -a "${{ parameters.docker_build_additional_args }}"
-            -b "${{ parameters.docker_imagename }}"
-            -c "${{ parameters.docker_imagetag }}"
-            -d "${{ parameters.docker_containerregistryname }}"
-            -Z ".azurecr.io"
-          workingDirectory: ${{ parameters.docker_workdir }}
-        displayName: "Build Container Image"
+    - task: Bash@3
+      inputs:
+        filePath: "${{ parameters.pipeline_scripts_directory }}/build-docker-image.bash"
+        arguments: >
+          -a "${{ parameters.docker_build_additional_args }}"
+          -b "${{ parameters.docker_imagename }}"
+          -c "${{ parameters.docker_imagetag }}"
+          -d "${{ parameters.docker_containerregistryname }}"
+          -Z ".azurecr.io"
+        workingDirectory: ${{ parameters.docker_workdir }}
+      displayName: "Build Container Image"
 
-      - task: Bash@3
-        inputs:
-          filePath: "${{ parameters.pipeline_scripts_directory }}/build-docker-image-push.bash"
-          arguments: >
-            -a "${{ parameters.docker_imagename }}"
-            -b "${{ parameters.docker_imagetag }}"
-            -c "${{ parameters.docker_containerregistryname }}"
-            -Y "false"
-            -Z ".azurecr.io"
-          workingDirectory: ${{ parameters.docker_workdir }}
-        displayName: "Push Container Image to Azure Container Registry"
+    - task: Bash@3
+      inputs:
+        filePath: "${{ parameters.pipeline_scripts_directory }}/build-docker-image-push.bash"
+        arguments: >
+          -a "${{ parameters.docker_imagename }}"
+          -b "${{ parameters.docker_imagetag }}"
+          -c "${{ parameters.docker_containerregistryname }}"
+          -Y "false"
+          -Z ".azurecr.io"
+        workingDirectory: ${{ parameters.docker_workdir }}
+      displayName: "Push Container Image to Azure Container Registry"
 
   - task: PublishTestResults@2
 

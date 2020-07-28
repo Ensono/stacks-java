@@ -104,15 +104,10 @@ variables:
   base_domain_internal_nonprod: nonprod.amidostacks.internal
   base_domain_prod: prod.amidostacks.com
   base_domain_internal_prod: prod.amidostacks.internal
-  # Dynamic vars for downstream purposes
-  # tf_workspace_suffix: $[]
-  # dns_suffix: ""
-  # DEFAULT IMAGE RUNNER
-  pool_vm_image: ubuntu-18.04
-  # Test setup
-  # ADD Vars here
-  # TestCafe E2E Tests
-  testcafe_e2e_test: false
+  # Maven
+  maven_cache_directory: "./.m2"
+  maven_surefire_reports_dir: "target/surefire-reports"
+  maven_allowed_test_tags: "Unit | Component | Integration | Functional | Performance | Smoke"
 
 stages:
   - stage: Build
@@ -152,14 +147,10 @@ stages:
               repo_root_dir: "$(self_repo_dir)"
               project_root_dir: "$(self_project_dir)"
               pipeline_scripts_directory: $(self_pipeline_scripts_dir)
-              # Docker Config
-              build_on_server: false
-              docker_build: true
               # PR / Branch vars
               source_branch_ref: "$(source_branch_ref)"
               target_branch_ref: "$(target_branch_ref)"
               pullrequest_number: "$(pullrequest_number)"
-              # TODO: normalize this
               docker_build_container: azul_java
               docker_build_additional_args: "."
               docker_workdir: "$(self_project_dir)"
@@ -179,19 +170,18 @@ stages:
               sonar_pullrequest_provider: "GitHub" # Probably `GitHub` or `vsts`
               sonar_remote_repo: "$(self_remote_repo)"
               sonar_container: sonar_scanner
+              sonar_command: "sonar-scanner"
               #Linting and formatting validation
               lint_formatting: false
-              shared_eslint_config: "@amidostacks/eslint-config@latest"
-              unit_test: true
-              unit_test_project: "$(Test.UnitTestProjectPath)"
               # Build Output File
               # files to be persisted across stages
               build_file: true
               build_file_path: "$(build_artifact_deploy_path)"
               build_file_artefact: "$(build_artifact_deploy_name)"
-              # Git Tag release
-              git_do_tag_release: false
-              git_release_tag: "$(version_major).$(version_minor).$(version_revision)-$(Build.SourceBranchName)"
+              # Maven
+              maven_cache_directory: "$(maven_cache_directory)"
+              maven_surefire_reports_dir: "$(maven_surefire_reports_dir)"
+              maven_allowed_test_tags: "$(maven_allowed_test_tags)"
 
   - stage: Dev
     variables:
