@@ -22,7 +22,7 @@ import java.util.UUID;
 @RequestMapping("/v1/menu/{id}")
 public interface DeleteMenuController {
 
-    @DeleteMapping(consumes = "application/json", produces = "application/json")
+    @DeleteMapping(produces = "application/json")
     @Operation(
             tags = "Menu",
             summary = "Removes a Menu with all it's Categories and Items",
