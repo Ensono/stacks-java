@@ -61,9 +61,13 @@ variables:
   self_repo: stacks-java
   self_remote_repo: "amido/$(self_repo)"
   self_repo_src: java
+  self_repo_dir: "$(Agent.BuildDirectory)/s/$(self_repo)"
+  self_project_dir: "$(self_repo_dir)/$(self_repo_src)"
   self_repo_tf_src: deploy/azure/app/kube
+  self_repo_tf_dir: "$(self_repo_dir)/$(self_repo_tf_src)"
   self_generic_name: stacks-api
-  self_pipeline_repo: stacks-pipeline-templates
+  self_pipeline_repo: "$(Agent.BuildDirectory)/s/stacks-pipeline-templates"
+  self_pipeline_scripts_dir: "$(self_pipeline_repo)/scripts"
   # TF STATE CONFIG
   tf_state_rg: amido-stacks-rg-uks
   tf_state_storage: amidostackstfstategbl
@@ -93,23 +97,17 @@ variables:
   docker_container_registry_name_prod: amidostacksprodeuncore
   k8s_docker_registry_prod: $(docker_container_registry_name_prod).azurecr.io
   # BUILD ARTIFACTS across stages
-  build_artifact_deploy_path: $(Agent.BuildDirectory)/s/$(self_repo)/deploy/k8s/app
+  build_artifact_deploy_path: $(self_repo_dir)/deploy/k8s/app
   build_artifact_deploy_name: $(self_generic_name)
-  build_scripts_directory: "$(Agent.BuildDirectory)/s/$(self_pipeline_repo)/scripts"
   # Infra
   base_domain_nonprod: nonprod.amidostacks.com
   base_domain_internal_nonprod: nonprod.amidostacks.internal
   base_domain_prod: prod.amidostacks.com
   base_domain_internal_prod: prod.amidostacks.internal
-  # Dynamic vars for downstream purposes
-  # tf_workspace_suffix: $[]
-  # dns_suffix: ""
-  # DEFAULT IMAGE RUNNER
-  pool_vm_image: ubuntu-18.04
-  # Test setup
-  # ADD Vars here
-  # TestCafe E2E Tests
-  testcafe_e2e_test: false
+  # Maven
+  maven_cache_directory: "./.m2"
+  maven_surefire_reports_dir: "target/surefire-reports"
+  maven_allowed_test_tags: "Unit | Component | Integration | Functional | Performance | Smoke"
 
 stages:
   - stage: Build
@@ -131,17 +129,14 @@ stages:
             displayName: 'Update: Build Number'
 
           # TODO: Refactor these steps out into a template
-          - bash: |
-              terraform fmt -diff -check -recursive
-            workingDirectory: "$(Agent.BuildDirectory)/s/$(self_repo)/$(self_repo_tf_src)"
+          - bash: "$(self_pipeline_scripts_dir)/test-terraform-fmt-check.bash"
+            workingDirectory: "$(self_repo_tf_dir)"
             target:
               container: terraform_custom
             displayName: "Terraform: Format Check"
 
-          - bash: |
-              terraform init -backend=false
-              terraform validate
-            workingDirectory: "$(Agent.BuildDirectory)/s/$(self_repo)/$(self_repo_tf_src)"
+          - bash: "$(self_pipeline_scripts_dir)/test-terraform-validate.bash"
+            workingDirectory: "$(self_repo_tf_dir)"
             target:
               container: terraform_custom
             displayName: "Terraform: Validate Check"
@@ -149,16 +144,16 @@ stages:
 
           - template: templates/steps/build-java.yml
             parameters:
-              # Docker Config
-              build_on_server: false
-              docker_build: true
+              repo_root_dir: "$(self_repo_dir)"
+              project_root_dir: "$(self_project_dir)"
+              pipeline_scripts_directory: $(self_pipeline_scripts_dir)
               # PR / Branch vars
               source_branch_ref: "$(source_branch_ref)"
               target_branch_ref: "$(target_branch_ref)"
               pullrequest_number: "$(pullrequest_number)"
-              # TODO: normalize this
+              docker_build_container: azul_java
               docker_build_additional_args: "."
-              docker_workdir: "$(Agent.BuildDirectory)/s/$(self_repo)/$(self_repo_src)"
+              docker_workdir: "$(self_project_dir)"
               docker_imagename: "$(docker_image_name)"
               docker_imagetag: "$(docker_image_tag)"
               docker_containerregistryname: $(docker_container_registry_name_nonprod)
@@ -167,24 +162,26 @@ stages:
               vulnerability_workdir: "$(Build.ArtifactStagingDirectory)"
               # Sonar settings
               static_code_analysis: true
-              sonar_container: sonar_scanner
+              sonar_host_url: "https://sonarcloud.io"
+              sonar_project_name: "$(SONAR_PROJECT_NAME)"
+              sonar_project_key: "$(SONAR_PROJECT_KEY)"
+              sonar_token: "$(SONAR_TOKEN)"
+              sonar_organisation: "$(SONAR_ORGANIZATION)"
               sonar_pullrequest_provider: "GitHub" # Probably `GitHub` or `vsts`
               sonar_remote_repo: "$(self_remote_repo)"
+              sonar_container: sonar_scanner
+              sonar_command: "sonar-scanner"
               #Linting and formatting validation
               lint_formatting: false
-              shared_eslint_config: "@amidostacks/eslint-config@latest"
-              # Should be hardcoded in your sonar-project.properties file
-              unit_test: false
-              project_root_dir: "$(Agent.BuildDirectory)/s/$(self_repo)/$(self_repo_src)"
-              unit_test_project: "$(Test.UnitTestProjectPath)"
               # Build Output File
               # files to be persisted across stages
               build_file: true
               build_file_path: "$(build_artifact_deploy_path)"
               build_file_artefact: "$(build_artifact_deploy_name)"
-              # Git Tag release
-              git_do_tag_release: false
-              git_release_tag: "$(version_major).$(version_minor).$(version_revision)-$(Build.SourceBranchName)"
+              # Maven
+              maven_cache_directory: "$(maven_cache_directory)"
+              maven_surefire_reports_dir: "$(maven_surefire_reports_dir)"
+              maven_allowed_test_tags: "$(maven_allowed_test_tags)"
 
   - stage: Dev
     variables:
@@ -208,7 +205,7 @@ stages:
           - template: azDevOps/azure/templates/v2/steps/deploy-terraform-resource.yml@templates
             parameters:
               # Terraform Basic Config
-              terraform_working_dir: '$(Agent.BuildDirectory)/s/$(self_repo)/$(self_repo_tf_src)'
+              terraform_working_dir: '$(self_repo_tf_dir)'
               # changing this would require changing the downstream consumers of these outputs
               #
               terraform_output_artefact: 'tfoutputs'
@@ -305,12 +302,12 @@ stages:
                     enable_debug: "yes" # uncomment for debug and if you want to see the templated out file in the STDOUT of pipeline
                     template_input: [
                       {
-                        base: $(Agent.BuildDirectory)/s/$(self_repo)/deploy/k8s/app/base_api-deploy.yml,
+                        base: $(self_repo_dir)/deploy/k8s/app/base_api-deploy.yml,
                         displayName: AppDeployment,
                         env_vars: {
                           dns_pointer: dev-java-api.$(base_domain_nonprod),
                           tls_domain: $(base_domain_nonprod),
-                          k8s_app_path: "/api/menu",
+                          k8s_app_path: "/api",
                           log_level: "Debug",
                           k8s_image: '$(k8s_docker_registry_nonprod)/$(docker_image_name):$(docker_image_tag)',
                           aadpodidentitybinding: stacks-webapp-identity,
@@ -336,7 +333,7 @@ stages:
                     kubernetes_clustername: amido-stacks-nonprod-eun-core
                     # Mutation Information
                     kubectl_filepath:
-                      - $(Agent.BuildDirectory)/s/$(self_repo)/deploy/k8s/app/api-deploy.yml
+                      - $(self_repo_dir)/deploy/k8s/app/api-deploy.yml
                     # ReleaseNote Information
                     releasenote: false
                     kubectl_check_deployment: true
@@ -367,7 +364,7 @@ stages:
           - template: azDevOps/azure/templates/v2/steps/deploy-terraform-resource.yml@templates
             parameters:
               # Terraform Basic Config
-              terraform_working_dir: '$(Agent.BuildDirectory)/s/$(self_repo)/$(self_repo_tf_src)'
+              terraform_working_dir: '$(self_repo_tf_dir)'
               # changing this would require changing the downstream consumers of these outputs
               #
               terraform_output_artefact: 'tfoutputs'
@@ -431,21 +428,21 @@ stages:
 
           - checkout: templates
 
-          - bash: |
-              set -exo pipefail
-
-              bash "$(build_scripts_directory)/deploy-azure-promote-image.bash" \
-                -a "$(docker_image_name):$(docker_image_tag)" \
-                -b "$(k8s_docker_registry_nonprod)" \
-                -c "$(azure_subscription_id)" \
-                -d "$(azure_client_id)" \
-                -e "$(azure_client_secret)" \
-                -f "$(azure_tenant_id)" \
-                -g "$(k8s_docker_registry_prod)" \
-                -h "$(prod_azure_subscription_id)" \
-                -i "$(prod_azure_client_id)" \
-                -j "$(prod_azure_client_secret)" \
-                -k "$(prod_azure_tenant_id)" \
+          - task: Bash@3
+            inputs:
+              filePath: "$(self_pipeline_scripts_dir)/deploy-azure-promote-image.bash"
+              arguments: >
+                -a "$(docker_image_name):$(docker_image_tag)"
+                -b "$(k8s_docker_registry_nonprod)"
+                -c "$(azure_subscription_id)"
+                -d "$(azure_client_id)"
+                -e "$(azure_client_secret)"
+                -f "$(azure_tenant_id)"
+                -g "$(k8s_docker_registry_prod)"
+                -h "$(prod_azure_subscription_id)"
+                -i "$(prod_azure_client_id)"
+                -j "$(prod_azure_client_secret)"
+                -k "$(prod_azure_tenant_id)"
                 -Z "false"
             displayName: Promote Docker Image to Production ACR
 
@@ -497,12 +494,12 @@ stages:
                     enable_debug: "yes" # uncomment for debug and if you want to see the templated out file in the STDOUT of pipeline
                     template_input: [
                       {
-                        base: $(Agent.BuildDirectory)/s/$(self_repo)/deploy/k8s/app/base_api-deploy.yml,
+                        base: $(self_repo_dir)/deploy/k8s/app/base_api-deploy.yml,
                         displayName: AppDeployment,
                         env_vars: {
                           dns_pointer: prod-java-api.$(base_domain_prod),
                           tls_domain: $(base_domain_prod),
-                          k8s_app_path: "/api/menu",
+                          k8s_app_path: "/api",
                           log_level: "Debug",
                           k8s_image: '$(k8s_docker_registry_prod)/$(docker_image_name):$(docker_image_tag)',
                           aadpodidentitybinding: stacks-webapp-identity,
@@ -528,7 +525,7 @@ stages:
                     kubernetes_clustername: amido-stacks-prod-eun-core
                     # Mutation Information
                     kubectl_filepath:
-                      - $(Agent.BuildDirectory)/s/$(self_repo)/deploy/k8s/app/api-deploy.yml
+                      - $(self_repo_dir)/deploy/k8s/app/api-deploy.yml
                     # ReleaseNote Information
                     releasenote: false
                     kubectl_check_deployment: true
