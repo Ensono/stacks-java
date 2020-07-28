@@ -20,7 +20,7 @@ import java.util.UUID;
 @RequestMapping("/v1/menu/{id}/category/{categoryId}")
 public interface DeleteCategoryController {
 
-    @DeleteMapping(consumes = "application/json", produces = "application/json")
+    @DeleteMapping(produces = "application/json")
     @Operation(
             tags = "Category",
             summary = "Update a category in the menu",
