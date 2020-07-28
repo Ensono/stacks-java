@@ -10,7 +10,6 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,9 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
@@ -29,6 +26,7 @@ import java.util.UUID;
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.CategoryHelper.createCategory;
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.MenuHelper.createMenu;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
+import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getRequestHttpEntity;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -75,23 +73,15 @@ class DeleteItemControllerImplTest {
     when(repository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     // When
-    var requestEntity = getObjectHttpEntity();
-    String requestUrl =
-            String.format("%s/v1/menu/%s/category/%s/items/%s", getBaseURL(port), menu.getId(), category.getId(), item.getId());
+    String requestUrl = String.format("%s/v1/menu/%s/category/%s/items/%s",
+            getBaseURL(port), menu.getId(), category.getId(), item.getId());
 
-    var response =
-            this.testRestTemplate.exchange(requestUrl, HttpMethod.DELETE, requestEntity, ResponseEntity.class);
+    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.DELETE,
+            new HttpEntity<>(getRequestHttpEntity()), ResponseEntity.class);
 
     // Then
-    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
     verify(repository, times(1)).save(menu);
     then(response.getStatusCode()).isEqualTo(OK);
-  }
-
-  private HttpEntity<Object> getObjectHttpEntity() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    return new HttpEntity<>(headers);
   }
 
   @Test
@@ -106,17 +96,13 @@ class DeleteItemControllerImplTest {
     when(repository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     // When
-    var requestEntity = getObjectHttpEntity();
-    String requestUrl =
-            String.format("%s/v1/menu/%s/category/%s/items/%s",
-                    getBaseURL(port), menu.getId(), item.getId(), item.getId());
+    String requestUrl = String.format("%s/v1/menu/%s/category/%s/items/%s",
+            getBaseURL(port), menu.getId(), item.getId(), item.getId());
 
-    var response =
-            this.testRestTemplate.exchange(requestUrl, HttpMethod.DELETE,
-                    requestEntity, ErrorResponse.class);
+    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.DELETE,
+            new HttpEntity<>(getRequestHttpEntity()), ErrorResponse.class);
 
     // Then
-    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
     verify(repository, times(0)).save(menu);
     then(response.getStatusCode()).isEqualTo(NOT_FOUND);
   }

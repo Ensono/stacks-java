@@ -57,29 +57,12 @@ public class DeleteItemHandler extends MenuBaseCommandHandler<DeleteItemCommand>
   }
 
   Category getCategory(Menu menu, DeleteItemCommand command) {
-    Optional<Category> existing = Optional.empty();
-
-    if (menu.getCategories() != null && !menu.getCategories().isEmpty()) {
-      existing = menu.getCategories()
-              .stream()
-              .filter(c -> c.getId().equals(command.getCategoryId().toString()))
-              .findFirst();
-    }
-    return existing.orElseThrow(() -> new CategoryDoesNotExistException(
-            command,
-            command.getCategoryId()));
+    return findCategory(menu, command.getCategoryId()).orElseThrow(() -> new CategoryDoesNotExistException(
+            command, command.getCategoryId()));
   }
 
   Item getItem(Category category, DeleteItemCommand command) {
-
-    Optional<Item> existing = Optional.empty();
-    if (category.getItems() != null && !category.getItems().isEmpty()) {
-      existing = category.getItems()
-              .stream()
-              .filter(t -> t.getId().equals(command.getItemId().toString()))
-              .findFirst();
-    }
-    return existing.orElseThrow(() -> new ItemDoesNotExistsException(
+    return findItem(category, command.getItemId()).orElseThrow(() -> new ItemDoesNotExistsException(
             command, command.getCategoryId(), command.getItemId()));
   }
 }

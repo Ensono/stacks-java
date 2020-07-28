@@ -56,7 +56,7 @@ public interface UpdateMenuController {
                             responseCode = "409",
                             description = "Conflict, an item already exists",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ErrorResponse.class))),
+                                    schema = @Schema(implementation = ErrorResponse.class)))
             })
     ResponseEntity<ResourceUpdatedResponse> updateMenu(
             @Parameter(description = "Menu id",required=true) @PathVariable("id") UUID menuId,

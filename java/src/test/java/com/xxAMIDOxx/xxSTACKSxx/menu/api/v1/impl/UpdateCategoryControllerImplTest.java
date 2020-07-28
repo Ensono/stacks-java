@@ -58,11 +58,11 @@ class UpdateCategoryControllerImplTest {
   private MenuRepository menuRepository;
 
   @Test
-  void testUpdateSuccess() {
+  void testUpdateCategorySuccess() {
     // Given
     Menu menu = createMenu(0);
     Category category = createCategory(0);
-    menu.setCategories(List.of(category));
+    menu.addUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateCategoryRequest request =
@@ -71,6 +71,7 @@ class UpdateCategoryControllerImplTest {
     // When
     String requestUrl = String.format("%s/v1/menu/%s/category/%s",
             getBaseURL(port), UUID.fromString(menu.getId()), UUID.fromString(category.getId()));
+
     var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
             new HttpEntity<>(request, getRequestHttpEntity()), ResourceUpdatedResponse.class);
 
@@ -99,9 +100,8 @@ class UpdateCategoryControllerImplTest {
     // When
     String requestUrl = String.format("%s/v1/menu/%s/category/%s",
             getBaseURL(port), menuId, randomUUID());
-    var response =
-            this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
-                    new HttpEntity<>(request, getRequestHttpEntity()), ErrorResponse.class);
+    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
+            new HttpEntity<>(request, getRequestHttpEntity()), ErrorResponse.class);
 
     // Then
     then(response).isNotNull();
@@ -121,6 +121,7 @@ class UpdateCategoryControllerImplTest {
     // When
     String requestUrl = String.format("%s/v1/menu/%s/category/%s",
             getBaseURL(port), UUID.fromString(menu.getId()), UUID.randomUUID());
+
     var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
             new HttpEntity<>(request, getRequestHttpEntity()), ErrorResponse.class);
 
@@ -145,12 +146,45 @@ class UpdateCategoryControllerImplTest {
     // When
     String requestUrl = String.format("%s/v1/menu/%s/category/%s",
             getBaseURL(port), UUID.fromString(menu.getId()), UUID.fromString(categoryList.get(1).getId()));
-    var response =
-            this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
-                    new HttpEntity<>(request, getRequestHttpEntity()), ErrorResponse.class);
+    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
+            new HttpEntity<>(request, getRequestHttpEntity()), ErrorResponse.class);
 
     // Then
     then(response).isNotNull();
     then(response.getStatusCode()).isEqualTo(CONFLICT);
+  }
+
+  @Test
+  void testUpdateCategoryWhenMultipleCategoriesExists() {
+    // Given
+    Menu menu = createMenu(0);
+    List<Category> categories = createCategories(2);
+    menu.setCategories(categories);
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    UpdateCategoryRequest request =
+            new UpdateCategoryRequest("new Category", "new Description");
+
+    // When
+    String requestUrl = String.format("%s/v1/menu/%s/category/%s",
+            getBaseURL(port), menu.getId(), categories.get(0).getId());
+
+    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
+            new HttpEntity<>(request, getRequestHttpEntity()), ResourceUpdatedResponse.class);
+
+    // Then
+    then(response).isNotNull();
+    then(response.getStatusCode()).isEqualTo(OK);
+
+    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
+    verify(menuRepository, times(1)).save(captor.capture());
+    Menu updated = captor.getValue();
+    then(updated.getCategories()).hasSize(2);
+    Optional<Category> updatedCategory = menu.getCategories()
+            .stream()
+            .filter(c -> c.getId().equals(categories.get(0).getId()))
+            .findFirst();
+    then(updatedCategory.get().getDescription()).isEqualTo(request.getDescription());
+    then(updatedCategory.get().getName()).isEqualTo(request.getName());
   }
 }
