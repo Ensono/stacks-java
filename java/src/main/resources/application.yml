@@ -5,12 +5,14 @@ spring:
     rest:
       detection-strategy: annotated
 
-server:
-  port: 9000
-
 # The basepath, passed in as `API_BASEPATH` by Kubernetes.
 api:
   basepath: '/'
+
+server:
+  port: 9000
+  servlet:
+    context-path: ${api.basepath}
 
 management:
   endpoints:
@@ -18,10 +20,10 @@ management:
       base-path: /
 
 springdoc:
-  api-docs:
-    path: ${api.basepath}/v3/api-docs
+  # api-docs:
+  #   path: /v3/api-docs
   swagger-ui:
-    configUrl: ${api.basepath}/v3/api-docs/swagger-config
+    # configUrl: ${api.basepath}/v3/api-docs/swagger-config
     path: /swagger/index.html
   packagesToScan: com.xxAMIDOxx.xxSTACKSxx.menu.api.v1
 
