@@ -21,6 +21,7 @@ import java.util.UUID;
  */
 @RequestMapping("/v1/menu/{id}")
 public interface DeleteMenuController {
+
     @DeleteMapping(consumes = "application/json", produces = "application/json")
     @Operation(
             tags = "Menu",
@@ -61,6 +62,4 @@ public interface DeleteMenuController {
             @Parameter(description = "Menu id", required = true) @PathVariable("id")
                     UUID menuId,
             @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId);
-
-
 }
