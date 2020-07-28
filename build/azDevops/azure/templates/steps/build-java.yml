@@ -1,50 +1,48 @@
 parameters:
-  pool:
-    vmImage: "ubuntu-latest"
-  versionSpec: 12.x
+  repo_root_dir: ""
   project_root_dir: ""
-  dependsOn: "GetPackage"
-  download_devops: true
+  pipeline_scripts_directory: ""
+  # TODO: Pull up?
+  maven_cache_directory: "./.m2"
+  maven_surefire_reports_dir: "target/surefire-reports"
+  maven_allowed_test_tags: "Unit | Component | Integration | Functional | Performance | Smoke"
   # PR / Branch vars
   source_branch_ref: ""
   target_branch_ref: ""
   pullrequest_number: ""
-  # Custom registry (eg. private)
-  customRegistry: ""
   # Docker Config
   docker_build: true
   docker_build_additional_args: ""
+  docker_build_container: ""
   docker_workdir: ""
   docker_imagename: ""
   docker_imagetag: ""
   docker_containerregistryname: ""
-  # Vulnerability Scanning
-  vulnerability_scan: false
-  vulnerability_workdir: ""
+  # TODO: Vulnerability Scans
+  # # Vulnerability Scanning
+  # vulnerability_scan: false
+  # vulnerability_workdir: ""
   #  Static Code Analysis
-  static_code_analysis: false
-  sonar_container: ""
+  static_code_analysis: true
+  sonar_host_url: ""
+  sonar_project_name: ""
+  sonar_project_key: ""
+  sonar_token: ""
+  sonar_organisation: ""
   sonar_pullrequest_provider: ""
   sonar_remote_repo: ""
-  # Linting and formatting validation
-  lint_formatting: ""
-  shared_eslint_config: ""
-  # Testing
-  unit_test: true
-  contract_test: true
-  audit_test: false
-  contract_check_can_deploy: true
-  cypress_e2e_test: true
-  cypress_applitools_test: false
-  cypress_e2e_env_vars: {}
+  sonar_container: ""
+  sonar_command: ""
+  # contract_test: true
+  # # audit_test: false
+  # contract_check_can_deploy: true
+  # cypress_e2e_test: true
+  # cypress_applitools_test: false
+  # cypress_e2e_env_vars: {}
   # Build File Output
   build_file: false
-  build_on_server: false
   build_file_path: ""
   build_file_artefact: ""
-  # build output defaults
-  git_do_tag_release: false
-  git_release_tag: ""
 
 steps:
   - task: Cache@2
@@ -53,7 +51,7 @@ steps:
       restoreKeys: |
         maven | "$(Agent.OS)"
         maven
-      path: "${{ parameters.project_root_dir }}/.m2"
+      path: "${{ parameters.project_root_dir }}/${{ parameters.maven_cache_directory }}"
     displayName: Cache Maven packages
 
   # Login to Azure/AKS
@@ -65,79 +63,86 @@ steps:
       azure_client_secret: "$(azure_client_secret)"
       login_azure: true
 
-  - bash: |
-      set -euxo pipefail
-      set +x; echo "dependency:go-offline"; set -x
-      ./mvnw dependency:go-offline -Dmaven.repo.local=./.m2 --no-transfer-progress
-      set +x; echo "##[endgroup]"; set -x
-      set +x; echo "##[group]process-resources"; set -x
-      ./mvnw process-resources --no-transfer-progress -Dmaven.repo.local=./.m2
-      set +x; echo "##[endgroup]"; set -x
-    workingDirectory: "${{ parameters.project_root_dir }}"
+  - task: Bash@3
+    inputs:
+      filePath: "${{ parameters.pipeline_scripts_directory }}/build-maven-install.bash"
+      arguments: >
+        -Z "${{ parameters.maven_cache_directory }}"
+      workingDirectory: "${{ parameters.project_root_dir }}"
     target:
-      container: azul_java
+      container: ${{ parameters.docker_build_container }}
     displayName: "Maven: Install Packages"
 
-  - bash: |
-      set -euxo pipefail
-      set +x; echo "##[group]compile"; set -x
-      ./mvnw compile --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
-      set +x; echo "##[endgroup]"; set -x
-      set +x; echo "##[group]process-test-resources"
-      ./mvnw process-test-resources --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
-      set +x; echo "##[endgroup]"; set -x
-      set +x; echo "##[group]test-compile"; set -x
-      # TODO: See if we can run this `--offline`.
-      ./mvnw test-compile --no-transfer-progress -Dmaven.repo.local=./.m2 # --offline
-      set +x; echo "##[endgroup]"; set -x
-    workingDirectory: "${{ parameters.project_root_dir }}"
+  - task: Bash@3
+    inputs:
+      filePath: "${{ parameters.pipeline_scripts_directory }}/build-maven-install.bash"
+      arguments: >
+        -Z "${{ parameters.maven_cache_directory }}"
+      workingDirectory: "${{ parameters.project_root_dir }}"
     target:
-      container: azul_java
+      container: ${{ parameters.docker_build_container }}
     displayName: "Maven: Compile Application"
 
-  - bash: |
-      set -euxo pipefail
-      ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 -DexcludedGroups='any()'
-    workingDirectory: "${{ parameters.project_root_dir }}"
+    # TODO: move hardcoded args up to main script.
+  - task: Bash@3
+    inputs:
+      filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-download-test-deps.bash"
+      arguments: >
+        -X "${{ parameters.maven_allowed_test_tags }}"
+        -Y "${{ parameters.maven_surefire_reports_dir }}"
+        -Z "${{ parameters.maven_cache_directory }}"
+      workingDirectory: "${{ parameters.project_root_dir }}"
     target:
-      container: azul_java
+      container: ${{ parameters.docker_build_container }}
     displayName: "Test: Download Test Deps"
 
-  - bash: |
-      set -euxo pipefail
-      ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Unit
-    workingDirectory: "${{ parameters.project_root_dir }}"
+  - task: Bash@3
+    inputs:
+      filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-tagged-test-run.bash"
+      arguments: >
+        -a "Unit"
+        -Z "${{ parameters.maven_cache_directory }}"
+      workingDirectory: "${{ parameters.project_root_dir }}"
     target:
-      container: azul_java
+      container: ${{ parameters.docker_build_container }}
     displayName: "Test: Unit tests"
 
-  - bash: |
-      set -euxo pipefail
-      ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Component
-    workingDirectory: "${{ parameters.project_root_dir }}"
+  - task: Bash@3
+    inputs:
+      filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-tagged-test-run.bash"
+      arguments: >
+        -a "Component"
+        -Z "${{ parameters.maven_cache_directory }}"
+      workingDirectory: "${{ parameters.project_root_dir }}"
     target:
-      container: azul_java
+      container: ${{ parameters.docker_build_container }}
     displayName: "Test: Component tests"
 
-  - bash: |
-      set -euxo pipefail
-      ./mvnw test --no-transfer-progress -Dmaven.repo.local=./.m2 --offline -Dgroups=Integration
-    workingDirectory: "${{ parameters.project_root_dir }}"
+  - task: Bash@3
+    inputs:
+      filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-tagged-test-run.bash"
+      arguments: >
+        -a "Integration"
+        -Z "${{ parameters.maven_cache_directory }}"
+      workingDirectory: "${{ parameters.project_root_dir }}"
     target:
-      container: azul_java
+      container: ${{ parameters.docker_build_container }}
     displayName: "Test: Integration tests"
 
-  - bash: |
-      set -euxo pipefail
-      ./mvnw jacoco:report --no-transfer-progress -Dmaven.repo.local=./.m2 --offline
-    workingDirectory: "${{ parameters.project_root_dir }}"
+  - task: Bash@3
+    inputs:
+      filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-generate-jacoco-report.bash"
+      arguments: >
+        -Z "${{ parameters.maven_cache_directory }}"
+      workingDirectory: "${{ parameters.project_root_dir }}"
     target:
-      container: azul_java
+      container: ${{ parameters.docker_build_container }}
     displayName: "Generate Jacoco coverage reports"
 
+  # TODO: Pull this out into a bash script?
   - bash: |
       set -euxo pipefail
-      cp "${{ parameters.project_root_dir }}/../build/azDevops/azure/coverage/"* .
+      cp "${{ parameters.repo_root_dir }}/build/azDevops/azure/coverage/"* .
       npm i
       ./node_modules/.bin/gulp inline-css-images
       ./node_modules/.bin/gulp inline-sources
@@ -148,68 +153,50 @@ steps:
 
   # SonarCloud
   - ${{ if eq(parameters.static_code_analysis, true) }}:
-      - bash: |
-          set -euxo pipefail
-          function strip_refs()
-          {
-            local BRANCH_REF="$1"
+      - task: Bash@3
+        inputs:
+          filePath: "${{ parameters.pipeline_scripts_directory }}/test-sonar-scanner.bash"
+          arguments: >
+            -a "${{ parameters.sonar_host_url }}"
+            -b "${{ parameters.sonar_project_name }}"
+            -c "${{ parameters.sonar_project_key }}"
+            -d "${{ parameters.sonar_token }}"
+            -e "${{ parameters.sonar_organisation }}"
+            -f "${{ parameters.docker_imagetag }}"
+            -g "${{ parameters.source_branch_ref }}"
+            -V "${{ parameters.sonar_command }}"
+            -W "${{ parameters.sonar_remote_repo }}"
+            -X "${{ parameters.sonar_pullrequest_provider }}"
+            -Y "${{ parameters.target_branch_ref }}"
+            -Z "${{ parameters.pullrequest_number }}"
+          workingDirectory: "${{ parameters.project_root_dir }}"
+        target:
+          container: "${{ parameters.sonar_container }}"
+        displayName: "Static Analysis: SonarScanner Run"
 
-            RETURN_BRANCH="$(sed -e "s%^refs/\(heads\|tags\)/%%" <<< $BRANCH_REF)"
-          }
+  - task: Bash@3
+    inputs:
+      filePath: "${{ parameters.pipeline_scripts_directory }}/build-docker-image.bash"
+      arguments: >
+        -a "${{ parameters.docker_build_additional_args }}"
+        -b "${{ parameters.docker_imagename }}"
+        -c "${{ parameters.docker_imagetag }}"
+        -d "${{ parameters.docker_containerregistryname }}"
+        -Z ".azurecr.io"
+      workingDirectory: ${{ parameters.docker_workdir }}
+    displayName: "Build Container Image"
 
-          strip_refs "${{ parameters.source_branch_ref }}"
-          SOURCE_BRANCH=$RETURN_BRANCH
-
-          strip_refs "${{ parameters.target_branch_ref }}"
-          TARGET_BRANCH=$RETURN_BRANCH
-
-          if [ -z "${{ parameters.pullrequest_number }}" ]; then
-            EXTRA_SONAR_ARGUMENTS="-Dsonar.branch.name='$SOURCE_BRANCH'"
-            EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.branch.target='$TARGET_BRANCH'"
-          else
-            PROVIDER_LOWERCASED="$(tr '[:upper:]' '[:lower:]' <<< "${{ parameters.sonar_pullrequest_provider }}")"
-
-            EXTRA_SONAR_ARGUMENTS="-Dsonar.pullrequest.key='${{ parameters.pullrequest_number }}'"
-            EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.branch='$SOURCE_BRANCH'"
-            EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.provider='$PROVIDER_LOWERCASED'"
-            EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.base='$TARGET_BRANCH'"
-
-            if [ "$PROVIDER_LOWERCASED" == 'github' ]; then
-              EXTRA_SONAR_ARGUMENTS="${EXTRA_SONAR_ARGUMENTS} -Dsonar.pullrequest.github.repository='${{ parameters.sonar_remote_repo }}'"
-            fi
-          fi
-
-          echo "##vso[task.setvariable variable=bash_extra_sonar_arguments]$EXTRA_SONAR_ARGUMENTS"
-        displayName: "Sonar: Extra Sonar Arguments"
-
-      - template: azDevOps/azure/templates/v2/steps/test-static-code-sonar.yml@templates
-        parameters:
-          working_directory: "${{ parameters.project_root_dir }}"
-          target_container: "${{ parameters.sonar_container }}"
-          extra_arguments: "$(bash_extra_sonar_arguments)"
-          env_vars: {
-            SONAR_HOST_URL: "https://sonarcloud.io",
-            SONAR_TOKEN: $SONAR_TOKEN,
-            SONAR_PROJECT_KEY: $SONAR_PROJECT_KEY,
-            SONAR_ORGANIZATION: $SONAR_ORGANIZATION,
-            SONAR_PROJECT_NAME: $SONAR_PROJECT_NAME,
-            BUILD_NUMBER: $(docker_image_tag),
-            SONAR_SCANNER_OPTS: "",
-            # PR Sonar Variables
-            # SONAR_BRANCH_NAME: "${{ parameters.branch_ref }}",
-            # SONAR_PULL_REQUEST: "${{ parameters.pull_request_number }}",
-            # SONAR_PR_PROVIDER: "GitHub",
-            # SONAR_GITHUB_REPO: "amido/stacks-java",
-          }
-
-  - ${{ if eq(parameters.docker_build, true) }}:
-      - template: azDevOps/azure/templates/v2/steps/build-container-image.yml@templates
-        parameters:
-          workingDirectory: ${{ parameters.docker_workdir }}
-          docker_build_additional_args: ${{ parameters.docker_build_additional_args }}
-          docker_imagename: ${{ parameters.docker_imagename }}
-          docker_imagetag: ${{ parameters.docker_imagetag }}
-          docker_containerregistryname: ${{ parameters.docker_containerregistryname }}
+  - task: Bash@3
+    inputs:
+      filePath: "${{ parameters.pipeline_scripts_directory }}/build-docker-image-push.bash"
+      arguments: >
+        -a "${{ parameters.docker_imagename }}"
+        -b "${{ parameters.docker_imagetag }}"
+        -c "${{ parameters.docker_containerregistryname }}"
+        -Y "false"
+        -Z ".azurecr.io"
+      workingDirectory: ${{ parameters.docker_workdir }}
+    displayName: "Push Container Image to Azure Container Registry"
 
   - task: PublishTestResults@2
 
