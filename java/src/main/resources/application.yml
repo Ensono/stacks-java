@@ -10,7 +10,7 @@ server:
 
 # The basepath, passed in as `API_BASEPATH` by Kubernetes.
 api:
-  basepath: ''
+  basepath: '/'
 
 management:
   endpoints:
@@ -18,8 +18,11 @@ management:
       base-path: /
 
 springdoc:
+  api-docs:
+    path: ${api.basepath}/v3/api-docs
   swagger-ui:
-    path: ${api.basepath}/swagger/index.html
+    configUrl: ${api.basepath}/v3/api-docs/swagger-config
+    path: /swagger/index.html
   packagesToScan: com.xxAMIDOxx.xxSTACKSxx.menu.api.v1
 
 azure:
