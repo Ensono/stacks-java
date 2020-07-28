@@ -28,4 +28,9 @@ public class MenuRequests {
                 .when()
                 .put(menuUrl + "/" + id);
     }
+
+    @Step("Get the menu")
+    public void getMenu(String id) {
+        SerenityRest.get(menuUrl.concat("/").concat(id));
+    }
 }
