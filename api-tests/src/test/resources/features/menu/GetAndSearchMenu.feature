@@ -33,7 +33,7 @@ Feature: Search menu
     Then the returned status code is 400
 
 
-  Scenario: Search menu by nonexistent id
+  Scenario: Search menu by non-existent id
     Given the menu list is not empty
     When I search the menu by:
       | id                                   |
