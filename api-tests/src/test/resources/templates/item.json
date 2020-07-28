@@ -1,0 +1,6 @@
+{
+  "name": "${name}",
+  "description": "${description}",
+  "price": "${price}",
+  "available": "${available}"
+}
