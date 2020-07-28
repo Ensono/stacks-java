@@ -8,6 +8,10 @@ spring:
 server:
   port: 9000
 
+# The basepath, passed in as `API_BASEPATH` by Kubernetes.
+api:
+  basepath: ''
+
 management:
   endpoints:
     web:
@@ -15,7 +19,7 @@ management:
 
 springdoc:
   swagger-ui:
-    path: /swagger/index.html
+    path: ${api.basepath}/swagger/index.html
   packagesToScan: com.xxAMIDOxx.xxSTACKSxx.menu.api.v1
 
 azure:
