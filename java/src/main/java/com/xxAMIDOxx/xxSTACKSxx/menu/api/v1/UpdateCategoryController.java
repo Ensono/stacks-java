@@ -1,7 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateMenuRequest;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateCategoryRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,14 +18,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 import java.util.UUID;
 
-@RequestMapping("/v1/menu/{id}")
-public interface UpdateMenuController {
+/**
+ * @author ArathyKrishna
+ */
+@RequestMapping("/v1/menu/{id}/category/{categoryId}")
+public interface UpdateCategoryController {
 
     @PutMapping(consumes = "application/json", produces = "application/json")
     @Operation(
-            tags = "Menu",
-            summary = "Update a menu",
-            description = "Update a menu with new information",
+            tags = "Category",
+            summary = "Update a category in the menu",
+            description = "Update a category to menu",
+            operationId = "UpdateMenuCategory",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -58,10 +62,10 @@ public interface UpdateMenuController {
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ErrorResponse.class))),
             })
-    ResponseEntity<ResourceUpdatedResponse> updateMenu(
-            @Parameter(description = "Menu id",required=true) @PathVariable("id") UUID menuId,
-            @Valid @RequestBody UpdateMenuRequest body,
+    ResponseEntity<ResourceUpdatedResponse> updateMenuCategory(
+            @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
+            @Parameter(description = "Category id", required = true) @PathVariable("categoryId") UUID categoryId,
+            @Valid @RequestBody UpdateCategoryRequest body,
             @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId
     );
-
 }

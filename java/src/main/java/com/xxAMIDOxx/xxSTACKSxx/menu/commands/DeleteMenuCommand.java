@@ -14,9 +14,7 @@ import java.util.UUID;
 @Setter
 public class DeleteMenuCommand extends MenuCommand {
 
-    public DeleteMenuCommand(
-            OperationCode operationCode, String correlationId,
-            UUID menuId) {
+    public DeleteMenuCommand(String correlationId, UUID menuId) {
         super(OperationCode.DELETE_MENU, correlationId, menuId);
     }
 }
