@@ -2,21 +2,23 @@ package com.xxAMIDOxx.xxSTACKSxx.api.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
+
 public class Item {
 
-    @JsonProperty("Id")
+    @JsonProperty("id")
     private String id;
 
-    @JsonProperty("Name")
+    @JsonProperty("name")
     private String name;
 
-    @JsonProperty("Description")
+    @JsonProperty("description")
     private String description;
 
-    @JsonProperty("Price")
+    @JsonProperty("price")
     private Double price;
 
-    @JsonProperty("Available")
+    @JsonProperty("available")
     private Boolean available;
 
     public Item() {
@@ -28,5 +30,22 @@ public class Item {
         this.description = description;
         this.price = price;
         this.available = available;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return Objects.equals(id, item.id) &&
+                Objects.equals(name, item.name) &&
+                Objects.equals(description, item.description) &&
+                Objects.equals(price, item.price) &&
+                Objects.equals(available, item.available);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, price, available);
     }
 }
