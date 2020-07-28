@@ -189,29 +189,29 @@ steps:
           container: "${{ parameters.sonar_container }}"
         displayName: "Static Analysis: SonarScanner Run"
 
-    - task: Bash@3
-      inputs:
-        filePath: "${{ parameters.pipeline_scripts_directory }}/build-docker-image.bash"
-        arguments: >
-          -a "${{ parameters.docker_build_additional_args }}"
-          -b "${{ parameters.docker_imagename }}"
-          -c "${{ parameters.docker_imagetag }}"
-          -d "${{ parameters.docker_containerregistryname }}"
-          -Z ".azurecr.io"
-        workingDirectory: ${{ parameters.docker_workdir }}
-      displayName: "Build Container Image"
+  - task: Bash@3
+    inputs:
+      filePath: "${{ parameters.pipeline_scripts_directory }}/build-docker-image.bash"
+      arguments: >
+        -a "${{ parameters.docker_build_additional_args }}"
+        -b "${{ parameters.docker_imagename }}"
+        -c "${{ parameters.docker_imagetag }}"
+        -d "${{ parameters.docker_containerregistryname }}"
+        -Z ".azurecr.io"
+      workingDirectory: ${{ parameters.docker_workdir }}
+    displayName: "Build Container Image"
 
-    - task: Bash@3
-      inputs:
-        filePath: "${{ parameters.pipeline_scripts_directory }}/build-docker-image-push.bash"
-        arguments: >
-          -a "${{ parameters.docker_imagename }}"
-          -b "${{ parameters.docker_imagetag }}"
-          -c "${{ parameters.docker_containerregistryname }}"
-          -Y "false"
-          -Z ".azurecr.io"
-        workingDirectory: ${{ parameters.docker_workdir }}
-      displayName: "Push Container Image to Azure Container Registry"
+  - task: Bash@3
+    inputs:
+      filePath: "${{ parameters.pipeline_scripts_directory }}/build-docker-image-push.bash"
+      arguments: >
+        -a "${{ parameters.docker_imagename }}"
+        -b "${{ parameters.docker_imagetag }}"
+        -c "${{ parameters.docker_containerregistryname }}"
+        -Y "false"
+        -Z ".azurecr.io"
+      workingDirectory: ${{ parameters.docker_workdir }}
+    displayName: "Push Container Image to Azure Container Registry"
 
   - task: PublishTestResults@2
 
