@@ -14,34 +14,35 @@ import java.util.UUID;
 
 public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements CommandHandler<T> {
 
-    protected MenuRepository menuRepository;
+  protected MenuRepository menuRepository;
 
-    private ApplicationEventPublisher applicationEventPublisher;
+  private ApplicationEventPublisher applicationEventPublisher;
 
-    public MenuBaseCommandHandler(MenuRepository menuRepository, ApplicationEventPublisher applicationEventPublisher) {
-        this.menuRepository = menuRepository;
-        this.applicationEventPublisher = applicationEventPublisher;
-    }
+  public MenuBaseCommandHandler(MenuRepository menuRepository,
+                                ApplicationEventPublisher applicationEventPublisher) {
+    this.menuRepository = menuRepository;
+    this.applicationEventPublisher = applicationEventPublisher;
+  }
 
-    @Override
-    public Optional<UUID> handle(T command) {
+  @Override
+  public Optional<UUID> handle(T command) {
 
-        Menu menu = menuRepository
-                .findById(command.getMenuId().toString())
-                .orElseThrow(() -> new MenuNotFoundException(command));
+    Menu menu = menuRepository
+            .findById(command.getMenuId().toString())
+            .orElseThrow(() -> new MenuNotFoundException(command));
 
-        var result = handleCommand(menu, command);
+    var result = handleCommand(menu, command);
 
-        publishEvents(raiseApplicationEvents(menu, command));
+    publishEvents(raiseApplicationEvents(menu, command));
 
-        return result;
-    }
+    return result;
+  }
 
-    private void publishEvents(List<MenuEvent> menuEvents) {
-        menuEvents.forEach(applicationEventPublisher::publish);
-    }
+  private void publishEvents(List<MenuEvent> menuEvents) {
+    menuEvents.forEach(applicationEventPublisher::publish);
+  }
 
-    abstract Optional<UUID> handleCommand(Menu menu, T command);
+  abstract Optional<UUID> handleCommand(Menu menu, T command);
 
-    abstract List<MenuEvent> raiseApplicationEvents(Menu menu, T command);
+  abstract List<MenuEvent> raiseApplicationEvents(Menu menu, T command);
 }

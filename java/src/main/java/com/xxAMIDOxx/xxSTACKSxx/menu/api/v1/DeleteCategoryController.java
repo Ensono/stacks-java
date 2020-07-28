@@ -29,7 +29,7 @@ public interface DeleteCategoryController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = " Success",
+                            description = "Success",
                             content = @Content(mediaType = "application/json", schema = @Schema(hidden = true))),
                     @ApiResponse(
                             responseCode = "204",
@@ -51,8 +51,8 @@ public interface DeleteCategoryController {
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(
-                            responseCode = "404",
-                            description = "Resource not found",
+                            responseCode = "409",
+                            description = "Conflict, an item already exists",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ErrorResponse.class)))
             })

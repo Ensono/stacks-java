@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
-import static com.xxAMIDOxx.xxSTACKSxx.menu.mappers.RequestToCommandMapper.map;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -19,17 +18,16 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 public class DeleteMenuControllerImpl implements DeleteMenuController {
 
-    private DeleteMenuHandler handler;
+  private DeleteMenuHandler handler;
 
-    public DeleteMenuControllerImpl(DeleteMenuHandler handler) {
-        this.handler = handler;
-    }
+  public DeleteMenuControllerImpl(DeleteMenuHandler handler) {
+    this.handler = handler;
+  }
 
-    @Override
-    public ResponseEntity<Void> deleteMenu(UUID menuId, String correlationId) {
+  @Override
+  public ResponseEntity<Void> deleteMenu(UUID menuId, String correlationId) {
 
-        DeleteMenuCommand command = map(correlationId, menuId);
-        handler.handle(command);
-        return new ResponseEntity<>(OK);
-    }
+    handler.handle(new DeleteMenuCommand(correlationId, menuId));
+    return new ResponseEntity<>(OK);
+  }
 }
