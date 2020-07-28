@@ -6,12 +6,14 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateMenuRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateCategoryCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateItemCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateMenuCommand;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Tag("Unit")
 class RequestToCommandMapperTest {
 
   @Test
