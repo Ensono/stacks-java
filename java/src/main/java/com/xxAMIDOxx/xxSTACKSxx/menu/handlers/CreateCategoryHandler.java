@@ -44,10 +44,8 @@ public class CreateCategoryHandler extends MenuBaseCommandHandler<CreateCategory
   }
 
   List<Category> addCategory(Menu menu, CreateCategoryCommand command) {
-
     categoryId = UUID.randomUUID();
-    List<Category> categories = menu.getCategories() == null ?
-            new ArrayList<>()
+    List<Category> categories = menu.getCategories() == null ? new ArrayList<>()
             : menu.getCategories();
 
     if (categories.stream().anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
