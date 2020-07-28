@@ -35,7 +35,8 @@ public class RequestToCommandMapper {
   public static UpdateCategoryCommand map(String correlationId, UUID menuId,
                                           UUID categoryId,
                                           UpdateCategoryRequest r) {
-    return new UpdateCategoryCommand(correlationId, menuId, categoryId, r.getName(), r.getDescription());
+    return new UpdateCategoryCommand(correlationId, menuId, categoryId,
+            r.getName(), r.getDescription());
   }
 
   public static CreateItemCommand map(String correlationId, UUID menuId,
