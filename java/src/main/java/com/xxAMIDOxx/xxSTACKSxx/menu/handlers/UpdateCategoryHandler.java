@@ -36,10 +36,10 @@ public class UpdateCategoryHandler extends MenuBaseCommandHandler<UpdateCategory
   }
 
   Category updateCategory(Menu menu, UpdateCategoryCommand command) {
-
     Category category = getCategory(menu, command);
 
-    if (menu.getCategories().stream().anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
+    if (menu.getCategories().stream()
+            .anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
       throw new CategoryAlreadyExistsException(command, command.getName());
     } else {
       category.setDescription(command.getDescription());
@@ -56,17 +56,7 @@ public class UpdateCategoryHandler extends MenuBaseCommandHandler<UpdateCategory
   }
 
   Category getCategory(Menu menu, UpdateCategoryCommand command) {
-
-    Optional<Category> existing = Optional.empty();
-
-    if (menu.getCategories() != null && !menu.getCategories().isEmpty()) {
-      existing = menu.getCategories()
-              .stream()
-              .filter(c -> c.getId().equals(command.getCategoryId().toString()))
-              .findFirst();
-    }
-    return existing.orElseThrow(() -> new CategoryDoesNotExistException(
-            command,
-            command.getCategoryId()));
+    return findCategory(menu, command.getCategoryId()).orElseThrow(() ->
+            new CategoryDoesNotExistException(command, command.getCategoryId()));
   }
 }

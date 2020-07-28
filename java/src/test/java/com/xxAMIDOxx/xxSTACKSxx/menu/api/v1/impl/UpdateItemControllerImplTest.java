@@ -3,7 +3,7 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateItemRequest;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
@@ -18,9 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -28,6 +26,7 @@ import java.util.UUID;
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.CategoryHelper.createCategory;
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.MenuHelper.createMenu;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
+import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getRequestHttpEntity;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -72,13 +71,11 @@ class UpdateItemControllerImplTest {
             true);
 
     // When
-    var requestEntity = getObjectHttpEntity(request);
     String requestUrl = String.format("%s/v1/menu/%s/category/%s/items/%s",
             getBaseURL(port), menu.getId(), category.getId(), item.getId());
 
-    var response =
-            this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
-                    requestEntity, ResourceCreatedResponse.class);
+    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
+            new HttpEntity<>(request, getRequestHttpEntity()), ResourceUpdatedResponse.class);
 
     // Then
     then(response).isNotNull();
@@ -96,12 +93,6 @@ class UpdateItemControllerImplTest {
     then(updatedItem.getName()).isEqualTo(request.getName());
     then(updatedItem.getPrice()).isEqualTo(request.getPrice());
     then(updatedItem.getAvailable()).isTrue();
-  }
-
-  private HttpEntity<Object> getObjectHttpEntity(UpdateItemRequest request) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    return new HttpEntity<>(request, headers);
   }
 
 }

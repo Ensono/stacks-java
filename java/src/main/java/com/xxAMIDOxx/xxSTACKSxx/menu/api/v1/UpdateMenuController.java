@@ -2,7 +2,7 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateMenuRequest;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -31,7 +31,7 @@ public interface UpdateMenuController {
                             responseCode = "200",
                             description = "Success",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ResourceCreatedResponse.class))),
+                                    schema = @Schema(implementation = ResourceUpdatedResponse.class))),
                     @ApiResponse(
                             responseCode = "204",
                             description = "No Content",
@@ -56,9 +56,9 @@ public interface UpdateMenuController {
                             responseCode = "409",
                             description = "Conflict, an item already exists",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ErrorResponse.class))),
+                                    schema = @Schema(implementation = ErrorResponse.class)))
             })
-    ResponseEntity<ResourceCreatedResponse> updateMenu(
+    ResponseEntity<ResourceUpdatedResponse> updateMenu(
             @Parameter(description = "Menu id",required=true) @PathVariable("id") UUID menuId,
             @Valid @RequestBody UpdateMenuRequest body,
             @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId

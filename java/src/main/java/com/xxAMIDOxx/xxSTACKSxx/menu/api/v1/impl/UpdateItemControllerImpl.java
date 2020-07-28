@@ -2,8 +2,7 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.UpdateItemController;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateItemRequest;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.commands.UpdateItemCommand;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.handlers.UpdateItemHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,15 +27,13 @@ public class UpdateItemControllerImpl implements UpdateItemController {
   }
 
   @Override
-  public ResponseEntity<ResourceCreatedResponse> updateItem(UUID menuId,
+  public ResponseEntity<ResourceUpdatedResponse> updateItem(UUID menuId,
                                                             UUID categoryId,
                                                             UUID itemId,
                                                             @Valid UpdateItemRequest body,
                                                             String correlationId) {
-
-    UpdateItemCommand command =
-            map(correlationId, menuId, categoryId, itemId, body);
-    return new ResponseEntity<>(new ResourceCreatedResponse(handler.handle(command).get()),
+    return new ResponseEntity<>(new ResourceUpdatedResponse(
+            handler.handle(map(correlationId, menuId, categoryId, itemId, body)).get()),
             HttpStatus.OK);
   }
 }
