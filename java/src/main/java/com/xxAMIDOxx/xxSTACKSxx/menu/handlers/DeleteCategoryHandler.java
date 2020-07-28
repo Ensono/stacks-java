@@ -30,7 +30,6 @@ public class DeleteCategoryHandler extends MenuBaseCommandHandler<DeleteCategory
     super(menuRepository, applicationEventPublisher);
   }
 
-  @Override
   Optional<UUID> handleCommand(Menu menu, DeleteCategoryCommand command) {
     Category category = getCategory(menu, command);
     if (!category.getItems().isEmpty()) {
@@ -44,7 +43,6 @@ public class DeleteCategoryHandler extends MenuBaseCommandHandler<DeleteCategory
     return Optional.empty();
   }
 
-  @Override
   List<MenuEvent> raiseApplicationEvents(Menu menu,
                                          DeleteCategoryCommand command) {
     return Arrays.asList(new MenuUpdatedEvent(command),
