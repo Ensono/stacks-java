@@ -55,6 +55,20 @@ steps:
       path: "${{ parameters.project_root_dir }}/${{ parameters.maven_cache_directory }}"
     displayName: Cache Maven packages
 
+  - bash: |
+      echo "URL: ${{ parameters.sonar_host_url }}"
+      echo "Name: ${{ parameters.sonar_project_name }}"
+      echo "Key: ${{ parameters.sonar_project_key }}"
+      echo "Token: ${{ parameters.sonar_token }}"
+      echo "Org: ${{ parameters.sonar_organisation }}"
+      echo "Build Num: ${{ parameters.docker_imagetag }}"
+      echo "Source Branch: ${{ parameters.source_branch_ref }}"
+      echo "Sonar Command: ${{ parameters.sonar_command }}"
+      echo "Target Branch: ${{ parameters.target_branch_ref }}"
+      echo "PR Prov: ${{ parameters.sonar_pullrequest_provider }}"
+      echo "PR Num: ${{ parameters.pullrequest_number }}"
+    displayName: "Test"
+
   # Login to Azure/AKS
   - template: azDevOps/azure/templates/v2/steps/login-services.yml@templates
     parameters:
@@ -167,9 +181,9 @@ steps:
             -g "${{ parameters.source_branch_ref }}"
             -V "${{ parameters.sonar_command }}"
             -W "${{ parameters.target_branch_ref }}"
-            -Y "${{ parameters.sonar_provider }}"
-            -Z "${{ parameters.sonar_pullrequest_provider }}"
-        working_directory: "${{ parameters.project_root_dir }}"
+            -Y "${{ parameters.sonar_pullrequest_provider }}"
+            -Z "${{ parameters.pullrequest_number }}"
+          working_directory: "${{ parameters.project_root_dir }}"
         target:
           container: "${{ parameters.sonar_container }}"
         displayName: "Static Analysis: SonarScanner Run"
