@@ -30,9 +30,9 @@ public class DeleteCategoryHandler extends MenuBaseCommandHandler<DeleteCategory
     super(menuRepository, applicationEventPublisher);
   }
 
-  @Override
   Optional<UUID> handleCommand(Menu menu, DeleteCategoryCommand command) {
     Category category = getCategory(menu, command);
+
     if (!category.getItems().isEmpty()) {
       throw new ItemAlreadyExistsException(command, command.getCategoryId(), "");
     }
@@ -44,7 +44,6 @@ public class DeleteCategoryHandler extends MenuBaseCommandHandler<DeleteCategory
     return Optional.empty();
   }
 
-  @Override
   List<MenuEvent> raiseApplicationEvents(Menu menu,
                                          DeleteCategoryCommand command) {
     return Arrays.asList(new MenuUpdatedEvent(command),
@@ -52,16 +51,8 @@ public class DeleteCategoryHandler extends MenuBaseCommandHandler<DeleteCategory
   }
 
   Category getCategory(Menu menu, DeleteCategoryCommand command) {
-    Optional<Category> existing = Optional.empty();
-    if (menu.getCategories() != null && !menu.getCategories().isEmpty()) {
-      existing = menu.getCategories()
-              .stream()
-              .filter(c -> c.getId().equals(command.getCategoryId().toString()))
-              .findFirst();
-    }
-    return existing.orElseThrow(() -> new CategoryDoesNotExistException(
-            command,
-            command.getCategoryId()));
+    return findCategory(menu, command.getCategoryId()).orElseThrow(() ->
+            new CategoryDoesNotExistException(command, command.getCategoryId()));
   }
 
 }

@@ -3,7 +3,6 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.CreateMenuController;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateMenuRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateMenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.handlers.CreateMenuHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,19 +15,19 @@ import static com.xxAMIDOxx.xxSTACKSxx.menu.mappers.RequestToCommandMapper.map;
 @RestController
 public class CreateMenuControllerImpl implements CreateMenuController {
 
-    private CreateMenuHandler createMenuHandler;
+  private CreateMenuHandler createMenuHandler;
 
-    public CreateMenuControllerImpl(CreateMenuHandler createMenuHandler) {
-        this.createMenuHandler = createMenuHandler;
-    }
+  public CreateMenuControllerImpl(CreateMenuHandler createMenuHandler) {
+    this.createMenuHandler = createMenuHandler;
+  }
 
-    @Override
-    public ResponseEntity<ResourceCreatedResponse> createMenu(@Valid CreateMenuRequest body,
-                                                              String correlationId) {
-
-        CreateMenuCommand command = map(correlationId, body);
-        return new ResponseEntity<>(
-                new ResourceCreatedResponse(createMenuHandler.handle(command).get()),
-                HttpStatus.CREATED);
-    }
+  @Override
+  public ResponseEntity<ResourceCreatedResponse> createMenu(
+          @Valid CreateMenuRequest body,
+          String correlationId) {
+    return new ResponseEntity<>(
+            new ResourceCreatedResponse(createMenuHandler.handle(
+                    map(correlationId, body)).get()),
+            HttpStatus.CREATED);
+  }
 }
