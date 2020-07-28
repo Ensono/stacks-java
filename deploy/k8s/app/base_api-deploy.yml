@@ -192,6 +192,8 @@ spec:
               value: ${k8s_app_path}
             - name: LOG_LEVEL
               value: debug
+            - name: AZURE_COSMOSDB_URI
+              value: ${cosmosdb_endpoint}
             - name: AZURE_COSMOSDB_KEY
               valueFrom:
                 secretKeyRef:
