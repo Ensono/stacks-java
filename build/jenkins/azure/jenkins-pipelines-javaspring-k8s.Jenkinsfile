@@ -222,26 +222,28 @@ pipeline {
             //       }
             //     }
             //   }
-          }
+            }
 
-          post {
-            // always {
-            //   dir("${self_repo_src}") {
-            //     junit 'target/**/*.xml'
+            post {
+              // always {
+              //   dir("${self_repo_src}") {
+              //     junit 'target/**/*.xml'
 
-            //     // See:
-            //     // https://www.jenkins.io/doc/pipeline/steps/jacoco/
-            //     // For Code Coverage gates for Jenkins JaCoCo.
-            //     jacoco(
-            //       execPattern: 'target/*.exec',
-            //       classPattern: 'target/classes',
-            //       sourcePattern: 'src/main/java',
-            //       exclusionPattern: 'src/test*'
-            //     )
-            //   }
-            // }
-          }
-        }
+              //     // See:
+              //     // https://www.jenkins.io/doc/pipeline/steps/jacoco/
+              //     // For Code Coverage gates for Jenkins JaCoCo.
+              //     jacoco(
+              //       execPattern: 'target/*.exec',
+              //       classPattern: 'target/classes',
+              //       sourcePattern: 'src/main/java',
+              //       exclusionPattern: 'src/test*'
+              //     )
+              //   }
+            } // post end
+
+          } // steps end
+
+        } // stage end
     //     stage('Test') {
     //       // when {
     //       //     branch 'master'
