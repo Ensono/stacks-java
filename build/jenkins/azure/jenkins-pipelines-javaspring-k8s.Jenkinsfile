@@ -182,7 +182,8 @@ pipeline {
               """
             }
 
-            stage('SonarScanner') {
+            stages {
+              stage('SonarScanner') {
                 when {
                   expression {
                     "${static_code_analysis}" == "true"
@@ -200,45 +201,47 @@ pipeline {
                   build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
                 }
 
-                steps {
-                  dir("${self_repo_src}") {
-                    withCredentials([
-                      string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')
-                    ]) {
-                      sh """#!/bin/bash
-                        # Workaround for Jenkins not allowing a blank variable.
-                        if [ "${target_branch_ref}" == ' ' ]; then
-                          TARGET_BRANCH_REF=""
-                        else
-                          TARGET_BRANCH_REF="${target_branch_ref}"
-                        fi
+                  steps {
+                    dir("${self_repo_src}") {
+                      withCredentials([
+                        string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')
+                      ]) {
+                        sh """#!/bin/bash
+                          # Workaround for Jenkins not allowing a blank variable.
+                          if [ "${target_branch_ref}" == ' ' ]; then
+                            TARGET_BRANCH_REF=""
+                          else
+                            TARGET_BRANCH_REF="${target_branch_ref}"
+                          fi
 
-                        # Workaround for Jenkins not allowing a blank variable.
-                        if [ "${pullrequest_number}" == ' ' ]; then
-                          PULL_REQUEST_NUMBER=""
-                        else
-                          PULL_REQUEST_NUMBER="${pullrequest_number}"
-                        fi
+                          # Workaround for Jenkins not allowing a blank variable.
+                          if [ "${pullrequest_number}" == ' ' ]; then
+                            PULL_REQUEST_NUMBER=""
+                          else
+                            PULL_REQUEST_NUMBER="${pullrequest_number}"
+                          fi
 
-                        bash ${build_scripts_directory}/test-sonar-scanner.bash \
-                          -a "${sonar_host_url}" \
-                          -b "${sonar_project_name}" \
-                          -c "${sonar_project_key}" \
-                          -d "${SONAR_TOKEN}" \
-                          -e "${sonar_organisation}" \
-                          -f "${BUILD_NUMBER}" \
-                          -g "${source_branch_ref}" \
-                          -V "${sonar_command}" \
-                          -W "${sonar_remote_repo}" \
-                          -X "${sonar_pullrequest_provider}" \
-                          -Y "$TARGET_BRANCH_REF" \
-                          -Z "$PULL_REQUEST_NUMBER"
-                      """
+                          bash ${build_scripts_directory}/test-sonar-scanner.bash \
+                            -a "${sonar_host_url}" \
+                            -b "${sonar_project_name}" \
+                            -c "${sonar_project_key}" \
+                            -d "${SONAR_TOKEN}" \
+                            -e "${sonar_organisation}" \
+                            -f "${BUILD_NUMBER}" \
+                            -g "${source_branch_ref}" \
+                            -V "${sonar_command}" \
+                            -W "${sonar_remote_repo}" \
+                            -X "${sonar_pullrequest_provider}" \
+                            -Y "$TARGET_BRANCH_REF" \
+                            -Z "$PULL_REQUEST_NUMBER"
+                        """
+                      }
                     }
                   }
-                }
 
-              } // End of SonarScanner Stage
+                } // End of SonarScanner Stage
+
+            } // End of Nested Stage
 
             } // End of Build Stage
 
