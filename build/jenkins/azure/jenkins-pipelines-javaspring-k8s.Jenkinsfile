@@ -64,7 +64,7 @@ pipeline {
 
     sonar_remote_repo="amido/stacks-java"
     sonar_source_branch="${CHANGE_BRANCH ?: BRANCH_NAME}"
-    sonar_target_branch="${CHANGE_TARGET ?: ""}"
+    sonar_target_branch="${CHANGE_TARGET ?: ''}"
     sonar_pr_provider="github"
   }
 
@@ -138,7 +138,7 @@ pipeline {
             dir("${self_repo_src}") {
               sh """#!/bin/bash
                 echo "${sonar_source_branch}"
-                echo "${sonar_target_branch ?: ""}"
+                echo "${sonar_target_branch ?: ''}"
               """
 
             //   sh """#!/bin/bash
