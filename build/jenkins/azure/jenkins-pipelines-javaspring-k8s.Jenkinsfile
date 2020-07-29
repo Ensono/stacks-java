@@ -61,6 +61,11 @@ pipeline {
     CLOUDSDK_CONTAINER_CLUSTER="${company}-${project}-nonprod-gke-infra"
     CLOUDSDK_CORE_PROJECT="${gcp_project_id}"
     CLOUDSDK_CORE_DISABLE_PROMPTS="True"
+
+    sonar_remote_repo="amido/stacks-java"
+    sonar_source_branch="${CHANGE_BRANCH ?: BRANCH_NAME}"
+    sonar_target_branch="${TARGET_BRANCH ?: ""}"
+    sonar_pr_provider="github"
   }
 
   stages {
@@ -132,7 +137,8 @@ pipeline {
           steps {
             dir("${self_repo_src}") {
               sh """#!/bin/bash
-                printenv
+                echo "${sonar_source_branch}"
+                echo "${sonar_target_branch}"
               """
 
             //   sh """#!/bin/bash
@@ -224,22 +230,22 @@ pipeline {
             //   }
             }
 
-            post {
-              // always {
-              //   dir("${self_repo_src}") {
-              //     junit 'target/**/*.xml'
+            // post {
+            //   always {
+            //     dir("${self_repo_src}") {
+            //       junit 'target/**/*.xml'
 
-              //     // See:
-              //     // https://www.jenkins.io/doc/pipeline/steps/jacoco/
-              //     // For Code Coverage gates for Jenkins JaCoCo.
-              //     jacoco(
-              //       execPattern: 'target/*.exec',
-              //       classPattern: 'target/classes',
-              //       sourcePattern: 'src/main/java',
-              //       exclusionPattern: 'src/test*'
-              //     )
-              //   }
-            } // post end
+            //       // See:
+            //       // https://www.jenkins.io/doc/pipeline/steps/jacoco/
+            //       // For Code Coverage gates for Jenkins JaCoCo.
+            //       jacoco(
+            //         execPattern: 'target/*.exec',
+            //         classPattern: 'target/classes',
+            //         sourcePattern: 'src/main/java',
+            //         exclusionPattern: 'src/test*'
+            //       )
+            //     }
+            // } // post end
 
           } // steps end
 
