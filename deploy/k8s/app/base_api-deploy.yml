@@ -21,7 +21,8 @@ metadata:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
     nginx.ingress.kubernetes.io/rewrite-target: /$$2
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/x-forwarded-prefix: "${k8s_app_path}"
     owner: ${company}/${project}
     projectID: ${project}
     version: ${version}
@@ -192,6 +193,8 @@ spec:
               value: ${k8s_app_path}
             - name: LOG_LEVEL
               value: debug
+            - name: AZURE_COSMOSDB_URI
+              value: ${cosmosdb_endpoint}
             - name: AZURE_COSMOSDB_KEY
               valueFrom:
                 secretKeyRef:
