@@ -6,6 +6,10 @@ spring:
       detection-strategy: annotated
 
 server:
+  # Note: ONLY use this if you're behind a trusted Reverse Proxy, such as Application Gateway.
+  # If you host this app directly then users can easily inject headers.
+  forward-headers-strategy: framework
+  #######
   port: 9000
 
 management:
@@ -14,11 +18,10 @@ management:
       base-path: /
 
 springdoc:
-  api-docs:
-    path: /swagger/oas.json
   swagger-ui:
-    path: /swagger/index.html
-  packagesToScan: com.xxAMIDOxx.xxSTACKSxx, com.xxAMIDOxx.xxSTACKSxx.api.v1.menu
+    disable-swagger-default-url: true
+    path: /swagger/index.html # TODO: Swagger keeps redirecting, it'd be good to stop it if possible.
+  packagesToScan: com.xxAMIDOxx.xxSTACKSxx.menu.api.v1
 
 azure:
   cosmosdb:
@@ -34,3 +37,8 @@ azure:
     client-id: xxxxxx
     client-key: xxxxxx
     tenant-id: xxxxxx
+  servicebus:
+    connectionString: xxxxxx
+    topicName: menu-updates
+    subscriptionName: Subscription1
+    enabled: false

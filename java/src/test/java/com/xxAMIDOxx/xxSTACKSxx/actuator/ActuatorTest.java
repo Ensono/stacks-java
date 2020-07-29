@@ -2,7 +2,7 @@ package com.xxAMIDOxx.xxSTACKSxx.actuator;
 
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
-import com.xxAMIDOxx.xxSTACKSxx.repository.MenuRepository;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

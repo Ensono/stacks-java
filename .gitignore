@@ -9,12 +9,12 @@
 .gradle
 
 java/target/
+api-tests/target
 java/build/
 java/.classpath
 java/.project
 java/.settings/
 
-lombok.config
 .terraform
 
 node_modules/
