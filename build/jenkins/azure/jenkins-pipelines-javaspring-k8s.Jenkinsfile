@@ -138,8 +138,8 @@ pipeline {
               steps {
                 dir("${self_repo_src}") {
                   sh """#!/bin/bash
-                    echo "${sonar_source_branch_ref}"
-                    echo "${sonar_target_branch_ref}"
+                    echo "${source_branch_ref}"
+                    echo "${target_branch_ref}"
                   """
 
                   sh """#!/bin/bash
