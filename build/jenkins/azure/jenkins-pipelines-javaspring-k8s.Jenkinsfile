@@ -190,6 +190,24 @@ pipeline {
 
               }
 
+              post {
+                always {
+                  dir("${self_repo_src}") {
+                    junit 'target/**/*.xml'
+
+                    // See:
+                    // https://www.jenkins.io/doc/pipeline/steps/jacoco/
+                    // For Code Coverage gates for Jenkins JaCoCo.
+                    jacoco(
+                      execPattern: 'target/*.exec',
+                      classPattern: 'target/classes',
+                      sourcePattern: 'src/main/java',
+                      exclusionPattern: 'src/test*'
+                    )
+                  }
+                }
+              } // post end
+
             } // End of Java Build Stage
 
             stage('SonarScanner') {
@@ -216,18 +234,20 @@ pipeline {
                     string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')
                   ]) {
                     sh """#!/bin/bash
+                      set -exo pipefail
+
                       # Workaround for Jenkins not allowing a blank variable.
                       if [ "${target_branch_ref}" == ' ' ]; then
-                        TARGET_BRANCH_REF=""
+                        BASH_TARGET_BRANCH_REF=""
                       else
-                        TARGET_BRANCH_REF="${target_branch_ref}"
+                        BASH_TARGET_BRANCH_REF="${target_branch_ref}"
                       fi
 
                       # Workaround for Jenkins not allowing a blank variable.
-                      if [ "${pullrequest_number}" == ' ' ]; then
-                        PULL_REQUEST_NUMBER=""
+                      if [ "${pull_request_number}" == ' ' ]; then
+                        BASH_PULL_REQUEST_NUMBER=""
                       else
-                        PULL_REQUEST_NUMBER="${pullrequest_number}"
+                        BASH_PULL_REQUEST_NUMBER="${pull_request_number}"
                       fi
 
                       bash ${build_scripts_directory}/test-sonar-scanner.bash \
@@ -241,8 +261,8 @@ pipeline {
                         -V "${sonar_command}" \
                         -W "${sonar_remote_repo}" \
                         -X "${sonar_pullrequest_provider}" \
-                        -Y "$TARGET_BRANCH_REF" \
-                        -Z "$PULL_REQUEST_NUMBER"
+                        -Y "\$BASH_TARGET_BRANCH_REF" \
+                        -Z "\$BASH_PULL_REQUEST_NUMBER"
                     """
                   }
                 }
@@ -251,24 +271,6 @@ pipeline {
             } // End of SonarScanner Stage
 
           } // End of Build Stages
-
-          post {
-            always {
-              dir("${self_repo_src}") {
-                junit 'target/**/*.xml'
-
-                // See:
-                // https://www.jenkins.io/doc/pipeline/steps/jacoco/
-                // For Code Coverage gates for Jenkins JaCoCo.
-                jacoco(
-                  execPattern: 'target/*.exec',
-                  classPattern: 'target/classes',
-                  sourcePattern: 'src/main/java',
-                  exclusionPattern: 'src/test*'
-                )
-              }
-            }
-          } // post end
 
         } // End of Build stage
 
