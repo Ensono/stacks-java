@@ -136,12 +136,13 @@ pipeline {
 
               steps {
                 dir("${self_repo_src}") {
-                  sh
+                  sh(
                     script: """#!/bin/bash
                       echo "${source_branch_ref}"
                       echo "${target_branch_ref}"
                     """,
                     label: "test"
+                  )
 
                   sh """#!/bin/bash
                     bash ${build_scripts_directory}/build-maven-install.bash \
