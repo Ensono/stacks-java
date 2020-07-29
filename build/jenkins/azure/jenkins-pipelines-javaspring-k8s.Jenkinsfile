@@ -198,11 +198,6 @@ pipeline {
 
                 environment {
                   build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
-                  SONAR_HOST_URL="${sonar_host_url}"
-                  SONAR_PROJECT_NAME="${sonar_project_name}"
-                  SONAR_PROJECT_KEY="${sonar_project_key}"
-                  BUILD_NUMBER="${docker_image_tag}"
-                  SOURCE_BRANCH_NAME="${GIT_BRANCH}"
                 }
 
                 steps {
