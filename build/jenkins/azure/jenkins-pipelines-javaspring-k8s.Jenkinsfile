@@ -138,7 +138,7 @@ pipeline {
             dir("${self_repo_src}") {
               sh """#!/bin/bash
                 echo "${sonar_source_branch}"
-                echo "${sonar_target_branch}"
+                echo "${sonar_target_branch ?: ""}"
               """
 
             //   sh """#!/bin/bash
