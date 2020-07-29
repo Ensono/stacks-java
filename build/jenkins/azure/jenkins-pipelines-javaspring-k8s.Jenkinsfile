@@ -132,48 +132,52 @@ pipeline {
           steps {
             dir("${self_repo_src}") {
               sh """#!/bin/bash
-                bash ${build_scripts_directory}/build-maven-install.bash \
-                  -Z "${maven_cache_directory}"
+                printenv
               """
 
-              sh """#!/bin/bash
-                bash ${build_scripts_directory}/build-maven-compile.bash \
-                  -Z "${maven_cache_directory}"
-              """
+            //   sh """#!/bin/bash
+            //     bash ${build_scripts_directory}/build-maven-install.bash \
+            //       -Z "${maven_cache_directory}"
+            //   """
 
-              // TODO: hardcoded vars to vars.
-              sh """#!/bin/bash
-                rm -rf "${maven_surefire_repots_dir}"
+            //   sh """#!/bin/bash
+            //     bash ${build_scripts_directory}/build-maven-compile.bash \
+            //       -Z "${maven_cache_directory}"
+            //   """
 
-                bash ${build_scripts_directory}/test-maven-download-test-deps.bash \
-                  -X "Unit | Component | Integration | Functional | Performance | Smoke" \
-                  -Y "${maven_surefire_repots_dir}" \
-                  -Z "${maven_cache_directory}"
-              """
+            //   // TODO: hardcoded vars to vars.
+            //   sh """#!/bin/bash
+            //     rm -rf "${maven_surefire_repots_dir}"
 
-              sh """#!/bin/bash
-                bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
-                  -a "Unit" \
-                  -Z "${maven_cache_directory}"
-              """
+            //     bash ${build_scripts_directory}/test-maven-download-test-deps.bash \
+            //       -X "Unit | Component | Integration | Functional | Performance | Smoke" \
+            //       -Y "${maven_surefire_repots_dir}" \
+            //       -Z "${maven_cache_directory}"
+            //   """
 
-              sh """#!/bin/bash
-                bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
-                  -a "Component" \
-                  -Z "${maven_cache_directory}"
-              """
+            //   sh """#!/bin/bash
+            //     bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+            //       -a "Unit" \
+            //       -Z "${maven_cache_directory}"
+            //   """
 
-              sh """#!/bin/bash
-                bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
-                  -a "Integration" \
-                  -Z "${maven_cache_directory}"
-              """
+            //   sh """#!/bin/bash
+            //     bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+            //       -a "Component" \
+            //       -Z "${maven_cache_directory}"
+            //   """
 
-              sh """#!/bin/bash
-                bash ${build_scripts_directory}/test-maven-generate-jacoco-report.bash \
-                  -Z "${maven_cache_directory}"
-              """
-            }
+            //   sh """#!/bin/bash
+            //     bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+            //       -a "Integration" \
+            //       -Z "${maven_cache_directory}"
+            //   """
+
+            //   sh """#!/bin/bash
+            //     bash ${build_scripts_directory}/test-maven-generate-jacoco-report.bash \
+            //       -Z "${maven_cache_directory}"
+            //   """
+            // }
 
             // stage('SonarScanner') {
             //     when {
@@ -221,21 +225,21 @@ pipeline {
           }
 
           post {
-            always {
-              dir("${self_repo_src}") {
-                junit 'target/**/*.xml'
+            // always {
+            //   dir("${self_repo_src}") {
+            //     junit 'target/**/*.xml'
 
-                // See:
-                // https://www.jenkins.io/doc/pipeline/steps/jacoco/
-                // For Code Coverage gates for Jenkins JaCoCo.
-                jacoco(
-                  execPattern: 'target/*.exec',
-                  classPattern: 'target/classes',
-                  sourcePattern: 'src/main/java',
-                  exclusionPattern: 'src/test*'
-                )
-              }
-            }
+            //     // See:
+            //     // https://www.jenkins.io/doc/pipeline/steps/jacoco/
+            //     // For Code Coverage gates for Jenkins JaCoCo.
+            //     jacoco(
+            //       execPattern: 'target/*.exec',
+            //       classPattern: 'target/classes',
+            //       sourcePattern: 'src/main/java',
+            //       exclusionPattern: 'src/test*'
+            //     )
+            //   }
+            // }
           }
         }
     //     stage('Test') {
