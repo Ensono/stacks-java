@@ -11,11 +11,15 @@ pipeline {
     domain="java-jenkins"
     role="frontend"
     // SelfConfig"
+    source_branch_ref="${CHANGE_BRANCH ?: BRANCH_NAME}"
+    target_branch_ref="${CHANGE_TARGET ?: " "}" // Set to a space as Jenkins doesn't support blank vars
+    pull_request_number="${CHANGE_ID ?: " "}" // Set to a space as Jenkins doesn't support blank vars
     self_repo_src="java"
     self_repo_tf_src="deploy/azure/app/kube"
     self_repo_k8s_src="deploy/k8s"
     self_generic_name="stacks-java-jenkins"
     self_pipeline_repo="stacks-pipeline-templates"
+    // Maven
     maven_cache_directory="./.m2"
     maven_surefire_repots_dir="./target/surefire-reports"
     // TF STATE CONFIG"
@@ -43,10 +47,13 @@ pipeline {
     // SonarScanner variables
     static_code_analysis="true"
     sonar_host_url="https://sonarcloud.io"
-    sonar_project_name="amido-stacks-java-api-jenkins"
-    sonar_project_key="amido-stacks-java-jenkins"
+    sonar_project_name="stacks-java-jenkins"
+    sonar_project_key="stacks-java-jenkins"
     // SONAR_TOKEN - Please define this as a Jenkins credential.
-    // SONAR_ORGANIZATION - Please define this as a Jenkins credential.
+    sonar_organisation="amido"
+    sonar_command="sonar-scanner"
+    sonar_remote_repo="amido/stacks-java"
+    sonar_pullrequest_provider="github"
     // AKS/AZURE
     // This will always be predictably named by setting your company - project - INFRAstage - location - compnonent names in the infra-pipeline"
     gcp_region="europe-west2"
@@ -56,16 +63,6 @@ pipeline {
     // Infra
     base_domain_nonprod="nonprod.amidostacks.com"
     base_domain_prod="prod.amidostacks.com"
-    // GLOBAL GCP vars
-    CLOUDSDK_COMPUTE_REGION="${gcp_region}"
-    CLOUDSDK_CONTAINER_CLUSTER="${company}-${project}-nonprod-gke-infra"
-    CLOUDSDK_CORE_PROJECT="${gcp_project_id}"
-    CLOUDSDK_CORE_DISABLE_PROMPTS="True"
-
-    sonar_remote_repo="amido/stacks-java"
-    sonar_source_branch="${CHANGE_BRANCH ?: BRANCH_NAME}"
-    sonar_target_branch="${CHANGE_TARGET ?: ''}"
-    sonar_pr_provider="github"
   }
 
   stages {
@@ -137,115 +134,135 @@ pipeline {
           steps {
             dir("${self_repo_src}") {
               sh """#!/bin/bash
-                echo "${sonar_source_branch}"
-                echo "${sonar_target_branch ?: ''}"
+                echo "${sonar_source_branch_ref}"
+                echo "${sonar_target_branch_ref}"
               """
 
-            //   sh """#!/bin/bash
-            //     bash ${build_scripts_directory}/build-maven-install.bash \
-            //       -Z "${maven_cache_directory}"
-            //   """
+              sh """#!/bin/bash
+                bash ${build_scripts_directory}/build-maven-install.bash \
+                  -Z "${maven_cache_directory}"
+              """
 
-            //   sh """#!/bin/bash
-            //     bash ${build_scripts_directory}/build-maven-compile.bash \
-            //       -Z "${maven_cache_directory}"
-            //   """
+              sh """#!/bin/bash
+                bash ${build_scripts_directory}/build-maven-compile.bash \
+                  -Z "${maven_cache_directory}"
+              """
 
-            //   // TODO: hardcoded vars to vars.
-            //   sh """#!/bin/bash
-            //     rm -rf "${maven_surefire_repots_dir}"
+              // TODO: hardcoded vars to vars.
+              sh """#!/bin/bash
+                rm -rf "${maven_surefire_repots_dir}"
 
-            //     bash ${build_scripts_directory}/test-maven-download-test-deps.bash \
-            //       -X "Unit | Component | Integration | Functional | Performance | Smoke" \
-            //       -Y "${maven_surefire_repots_dir}" \
-            //       -Z "${maven_cache_directory}"
-            //   """
+                bash ${build_scripts_directory}/test-maven-download-test-deps.bash \
+                  -X "Unit | Component | Integration | Functional | Performance | Smoke" \
+                  -Y "${maven_surefire_repots_dir}" \
+                  -Z "${maven_cache_directory}"
+              """
 
-            //   sh """#!/bin/bash
-            //     bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
-            //       -a "Unit" \
-            //       -Z "${maven_cache_directory}"
-            //   """
+              sh """#!/bin/bash
+                bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+                  -a "Unit" \
+                  -Z "${maven_cache_directory}"
+              """
 
-            //   sh """#!/bin/bash
-            //     bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
-            //       -a "Component" \
-            //       -Z "${maven_cache_directory}"
-            //   """
+              sh """#!/bin/bash
+                bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+                  -a "Component" \
+                  -Z "${maven_cache_directory}"
+              """
 
-            //   sh """#!/bin/bash
-            //     bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
-            //       -a "Integration" \
-            //       -Z "${maven_cache_directory}"
-            //   """
+              sh """#!/bin/bash
+                bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+                  -a "Integration" \
+                  -Z "${maven_cache_directory}"
+              """
 
-            //   sh """#!/bin/bash
-            //     bash ${build_scripts_directory}/test-maven-generate-jacoco-report.bash \
-            //       -Z "${maven_cache_directory}"
-            //   """
-            // }
-
-            // stage('SonarScanner') {
-            //     when {
-            //       expression {
-            //         "${static_code_analysis}" == "true"
-            //       }
-            //     }
-
-            //     agent {
-            //       docker {
-            //         // add additional args if you need to here
-            //         image "amidostacks/ci-sonarscanner:0.0.1"
-            //       }
-            //     }
-
-            //     environment {
-            //       build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
-            //       SONAR_HOST_URL="${sonar_host_url}"
-            //       SONAR_PROJECT_NAME="${sonar_project_name}"
-            //       SONAR_PROJECT_KEY="${sonar_project_key}"
-            //       BUILD_NUMBER="${docker_image_tag}"
-            //       SOURCE_BRANCH_NAME="${GIT_BRANCH}"
-            //     }
-
-            //     steps {
-            //       dir("${self_repo_src}") {
-            //         withCredentials([
-            //           string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN'),
-            //           string(credentialsId: 'SONAR_ORGANIZATION', variable: 'SONAR_ORGANIZATION')
-            //         ]) {
-            //           sh """#!/bin/bash
-            //           bash ${build_scripts_directory}/test-sonar-scanner.bash \
-            //             ${SONAR_HOST_URL} \
-            //             ${SONAR_PROJECT_NAME} \
-            //             ${SONAR_PROJECT_KEY} \
-            //             ${SONAR_TOKEN} \
-            //             ${SONAR_ORGANIZATION} \
-            //             ${BUILD_NUMBER} \
-            //             ${SOURCE_BRANCH_NAME}
-            //           """
-            //         }
-            //       }
-            //     }
-            //   }
+              sh """#!/bin/bash
+                bash ${build_scripts_directory}/test-maven-generate-jacoco-report.bash \
+                  -Z "${maven_cache_directory}"
+              """
             }
 
-            // post {
-            //   always {
-            //     dir("${self_repo_src}") {
-            //       junit 'target/**/*.xml'
+            stage('SonarScanner') {
+                when {
+                  expression {
+                    "${static_code_analysis}" == "true"
+                  }
+                }
 
-            //       // See:
-            //       // https://www.jenkins.io/doc/pipeline/steps/jacoco/
-            //       // For Code Coverage gates for Jenkins JaCoCo.
-            //       jacoco(
-            //         execPattern: 'target/*.exec',
-            //         classPattern: 'target/classes',
-            //         sourcePattern: 'src/main/java',
-            //         exclusionPattern: 'src/test*'
-            //       )
-            //     }
-            // } // post end
+                agent {
+                  docker {
+                    // add additional args if you need to here
+                    image "amidostacks/ci-sonarscanner:0.0.1"
+                  }
+                }
+
+                environment {
+                  build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
+                  SONAR_HOST_URL="${sonar_host_url}"
+                  SONAR_PROJECT_NAME="${sonar_project_name}"
+                  SONAR_PROJECT_KEY="${sonar_project_key}"
+                  BUILD_NUMBER="${docker_image_tag}"
+                  SOURCE_BRANCH_NAME="${GIT_BRANCH}"
+                }
+
+                steps {
+                  dir("${self_repo_src}") {
+                    withCredentials([
+                      string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')
+                    ]) {
+                      sh """#!/bin/bash
+                        # Workaround for Jenkins not allowing a blank variable.
+                        if [ "${target_branch_ref}" == ' ' ]; then
+                          TARGET_BRANCH_REF=""
+                        else
+                          TARGET_BRANCH_REF="${target_branch_ref}"
+                        fi
+
+                        # Workaround for Jenkins not allowing a blank variable.
+                        if [ "${pullrequest_number}" == ' ' ]; then
+                          PULL_REQUEST_NUMBER=""
+                        else
+                          PULL_REQUEST_NUMBER="${pullrequest_number}"
+                        fi
+
+                        bash ${build_scripts_directory}/test-sonar-scanner.bash \
+                          -a "${sonar_host_url}" \
+                          -b "${sonar_project_name}" \
+                          -c "${sonar_project_key}" \
+                          -d "${SONAR_TOKEN}" \
+                          -e "${sonar_organisation}" \
+                          -f "${BUILD_NUMBER}" \
+                          -g "${source_branch_ref}" \
+                          -V "${sonar_command}" \
+                          -W "${sonar_remote_repo}" \
+                          -X "${sonar_pullrequest_provider}" \
+                          -Y "$TARGET_BRANCH_REF" \
+                          -Z "$PULL_REQUEST_NUMBER"
+                      """
+                    }
+                  }
+                }
+
+              } // End of SonarScanner Stage
+
+            } // End of Build Stage
+
+            post {
+              always {
+                dir("${self_repo_src}") {
+                  junit 'target/**/*.xml'
+
+                  // See:
+                  // https://www.jenkins.io/doc/pipeline/steps/jacoco/
+                  // For Code Coverage gates for Jenkins JaCoCo.
+                  jacoco(
+                    execPattern: 'target/*.exec',
+                    classPattern: 'target/classes',
+                    sourcePattern: 'src/main/java',
+                    exclusionPattern: 'src/test*'
+                  )
+                }
+            } // post end
 
           } // steps end
 
