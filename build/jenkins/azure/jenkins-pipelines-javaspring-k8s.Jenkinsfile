@@ -64,7 +64,7 @@ pipeline {
 
     sonar_remote_repo="amido/stacks-java"
     sonar_source_branch="${CHANGE_BRANCH ?: BRANCH_NAME}"
-    sonar_target_branch="${CHANGE_TARGET ?: "lol"}"
+    sonar_target_branch="${CHANGE_TARGET ?: ""}"
     sonar_pr_provider="github"
   }
 
