@@ -1,33 +1,40 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateCategoryRequest;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.validation.Valid;
 import java.util.UUID;
 
-@RequestMapping("/v1/menu/{id}/category")
-public interface CreateCategoryController {
+/**
+ * @author ArathyKrishna
+ */
+@RequestMapping("/v1/menu/{id}/category/{categoryId}/items/{itemId}")
+public interface DeleteItemController {
 
-    @PostMapping(consumes = "application/json", produces = "application/json")
+    @DeleteMapping(produces = "application/json")
     @Operation(
-            tags = "Category",
-            summary = "Create a category in the menu",
-            description = "Adds a category to menu",
+            tags = "Item",
+            summary = "Removes an item from menu",
+            description = "Removes an item from menu",
+            operationId = "DeleteMenuItem",
             responses = {
                     @ApiResponse(
-                            responseCode = "201",
-                            description = "Resource created",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ResourceCreatedResponse.class))),
+                            responseCode = "200",
+                            description = "Success",
+                            content = @Content(mediaType = "application/json", schema = @Schema(hidden = true))),
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "No Content",
+                            content = @Content(schema = @Schema(hidden = true))),
                     @ApiResponse(
                             responseCode = "400",
                             description = "Bad Request",
@@ -44,14 +51,14 @@ public interface CreateCategoryController {
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(
-                            responseCode = "409",
-                            description = "Conflict, an item already exists",
+                            responseCode = "404",
+                            description = "Resource not found",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ErrorResponse.class)))
             })
-    ResponseEntity<ResourceCreatedResponse> addMenuCategory(
-            @Parameter(description = "Menu id", required=true) @PathVariable("id") UUID menuId,
-            @Valid @RequestBody CreateCategoryRequest body,
-            @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId
-    );
+    ResponseEntity<Void> deleteItem(
+            @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
+            @Parameter(description = "Category id", required = true) @PathVariable("categoryId") UUID categoryId,
+            @Parameter(description = "Item id", required = true) @PathVariable("itemId") UUID itemId,
+            @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId);
 }
