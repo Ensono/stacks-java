@@ -11,48 +11,52 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryAlreadyExistsException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class CreateCategoryHandler extends MenuBaseCommandHandler<CreateCategoryCommand> {
 
-    private UUID categoryId;
+  private UUID categoryId;
 
-    public CreateCategoryHandler(MenuRepository menuRepository, ApplicationEventPublisher applicationEventPublisher) {
-        super(menuRepository, applicationEventPublisher);
+  public CreateCategoryHandler(MenuRepository menuRepository,
+                               ApplicationEventPublisher applicationEventPublisher) {
+    super(menuRepository, applicationEventPublisher);
+  }
+
+  @Override
+  Optional<UUID> handleCommand(Menu menu, CreateCategoryCommand command) {
+    menu.setCategories(addCategory(menu, command));
+    menuRepository.save(menu);
+    return Optional.of(categoryId);
+  }
+
+  @Override
+  List<MenuEvent> raiseApplicationEvents(Menu menu,
+                                         CreateCategoryCommand command) {
+    return Arrays.asList(
+            new MenuUpdatedEvent(command),
+            new CategoryCreatedEvent(command, categoryId)
+    );
+  }
+
+  List<Category> addCategory(Menu menu, CreateCategoryCommand command) {
+    categoryId = UUID.randomUUID();
+    List<Category> categories = menu.getCategories() == null ? new ArrayList<>()
+            : menu.getCategories();
+
+    if (categories.stream().anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
+      throw new CategoryAlreadyExistsException(command, command.getName());
+    } else {
+      categories.add(new Category(categoryId.toString(),
+              command.getName(),
+              command.getDescription(),
+              new ArrayList<>()));
+      return categories;
     }
-
-    @Override
-    Optional<UUID> handleCommand(Menu menu, CreateCategoryCommand command) {
-        menu.setCategories(addCategory(menu, command));
-        menuRepository.save(menu);
-        return Optional.of(categoryId);
-    }
-
-    @Override
-    List<MenuEvent> raiseApplicationEvents(Menu menu, CreateCategoryCommand command) {
-        return Arrays.asList(
-                new MenuUpdatedEvent(command),
-                new CategoryCreatedEvent(command, categoryId)
-        );
-    }
-
-    List<Category> addCategory(Menu menu, CreateCategoryCommand command) {
-
-        categoryId = UUID.randomUUID();
-        List<Category> categories = menu.getCategories() == null ?
-                new ArrayList<>()
-                : menu.getCategories();
-
-        if (categories.stream().anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
-            throw new CategoryAlreadyExistsException(command, command.getName());
-        } else {
-            categories.add(new Category(categoryId.toString(),
-                    command.getName(),
-                    command.getDescription(),
-                    new ArrayList<>()));
-            return categories;
-        }
-    }
+  }
 
 }

@@ -47,7 +47,7 @@ public interface CreateItemController {
                             responseCode = "409",
                             description = "Conflict, an item already exists",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ErrorResponse.class))),
+                                    schema = @Schema(implementation = ErrorResponse.class)))
             })
     ResponseEntity<ResourceCreatedResponse> addMenuItem(
             @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
