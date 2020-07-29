@@ -131,140 +131,147 @@ pipeline {
             build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
           }
 
-          steps {
-            dir("${self_repo_src}") {
-              sh """#!/bin/bash
-                echo "${sonar_source_branch_ref}"
-                echo "${sonar_target_branch_ref}"
-              """
+          stages {
 
-              sh """#!/bin/bash
-                bash ${build_scripts_directory}/build-maven-install.bash \
-                  -Z "${maven_cache_directory}"
-              """
+            stage('Java Build') {
 
-              sh """#!/bin/bash
-                bash ${build_scripts_directory}/build-maven-compile.bash \
-                  -Z "${maven_cache_directory}"
-              """
+              steps {
+                dir("${self_repo_src}") {
+                  sh """#!/bin/bash
+                    echo "${sonar_source_branch_ref}"
+                    echo "${sonar_target_branch_ref}"
+                  """
 
-              // TODO: hardcoded vars to vars.
-              sh """#!/bin/bash
-                rm -rf "${maven_surefire_repots_dir}"
+                  sh """#!/bin/bash
+                    bash ${build_scripts_directory}/build-maven-install.bash \
+                      -Z "${maven_cache_directory}"
+                  """
 
-                bash ${build_scripts_directory}/test-maven-download-test-deps.bash \
-                  -X "Unit | Component | Integration | Functional | Performance | Smoke" \
-                  -Y "${maven_surefire_repots_dir}" \
-                  -Z "${maven_cache_directory}"
-              """
+                  sh """#!/bin/bash
+                    bash ${build_scripts_directory}/build-maven-compile.bash \
+                      -Z "${maven_cache_directory}"
+                  """
 
-              sh """#!/bin/bash
-                bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
-                  -a "Unit" \
-                  -Z "${maven_cache_directory}"
-              """
+                  // TODO: hardcoded vars to vars.
+                  sh """#!/bin/bash
+                    rm -rf "${maven_surefire_repots_dir}"
 
-              sh """#!/bin/bash
-                bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
-                  -a "Component" \
-                  -Z "${maven_cache_directory}"
-              """
+                    bash ${build_scripts_directory}/test-maven-download-test-deps.bash \
+                      -X "Unit | Component | Integration | Functional | Performance | Smoke" \
+                      -Y "${maven_surefire_repots_dir}" \
+                      -Z "${maven_cache_directory}"
+                  """
 
-              sh """#!/bin/bash
-                bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
-                  -a "Integration" \
-                  -Z "${maven_cache_directory}"
-              """
+                  sh """#!/bin/bash
+                    bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+                      -a "Unit" \
+                      -Z "${maven_cache_directory}"
+                  """
 
-              sh """#!/bin/bash
-                bash ${build_scripts_directory}/test-maven-generate-jacoco-report.bash \
-                  -Z "${maven_cache_directory}"
-              """
-            }
+                  sh """#!/bin/bash
+                    bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+                      -a "Component" \
+                      -Z "${maven_cache_directory}"
+                  """
 
-            stages {
-              stage('SonarScanner') {
-                when {
-                  expression {
-                    "${static_code_analysis}" == "true"
-                  }
+                  sh """#!/bin/bash
+                    bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+                      -a "Integration" \
+                      -Z "${maven_cache_directory}"
+                  """
+
+                  sh """#!/bin/bash
+                    bash ${build_scripts_directory}/test-maven-generate-jacoco-report.bash \
+                      -Z "${maven_cache_directory}"
+                  """
                 }
 
-                agent {
-                  docker {
-                    // add additional args if you need to here
-                    image "amidostacks/ci-sonarscanner:0.0.1"
-                  }
+              }
+
+            } // End of Java Build Stage
+
+            stage('SonarScanner') {
+              when {
+                expression {
+                  "${static_code_analysis}" == "true"
                 }
+              }
 
-                environment {
-                  build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
+              agent {
+                docker {
+                  // add additional args if you need to here
+                  image "amidostacks/ci-sonarscanner:0.0.1"
                 }
+              }
 
-                  steps {
-                    dir("${self_repo_src}") {
-                      withCredentials([
-                        string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')
-                      ]) {
-                        sh """#!/bin/bash
-                          # Workaround for Jenkins not allowing a blank variable.
-                          if [ "${target_branch_ref}" == ' ' ]; then
-                            TARGET_BRANCH_REF=""
-                          else
-                            TARGET_BRANCH_REF="${target_branch_ref}"
-                          fi
+              environment {
+                build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
+              }
 
-                          # Workaround for Jenkins not allowing a blank variable.
-                          if [ "${pullrequest_number}" == ' ' ]; then
-                            PULL_REQUEST_NUMBER=""
-                          else
-                            PULL_REQUEST_NUMBER="${pullrequest_number}"
-                          fi
+                steps {
+                  dir("${self_repo_src}") {
+                    withCredentials([
+                      string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')
+                    ]) {
+                      sh """#!/bin/bash
+                        # Workaround for Jenkins not allowing a blank variable.
+                        if [ "${target_branch_ref}" == ' ' ]; then
+                          TARGET_BRANCH_REF=""
+                        else
+                          TARGET_BRANCH_REF="${target_branch_ref}"
+                        fi
 
-                          bash ${build_scripts_directory}/test-sonar-scanner.bash \
-                            -a "${sonar_host_url}" \
-                            -b "${sonar_project_name}" \
-                            -c "${sonar_project_key}" \
-                            -d "${SONAR_TOKEN}" \
-                            -e "${sonar_organisation}" \
-                            -f "${BUILD_NUMBER}" \
-                            -g "${source_branch_ref}" \
-                            -V "${sonar_command}" \
-                            -W "${sonar_remote_repo}" \
-                            -X "${sonar_pullrequest_provider}" \
-                            -Y "$TARGET_BRANCH_REF" \
-                            -Z "$PULL_REQUEST_NUMBER"
-                        """
-                      }
+                        # Workaround for Jenkins not allowing a blank variable.
+                        if [ "${pullrequest_number}" == ' ' ]; then
+                          PULL_REQUEST_NUMBER=""
+                        else
+                          PULL_REQUEST_NUMBER="${pullrequest_number}"
+                        fi
+
+                        bash ${build_scripts_directory}/test-sonar-scanner.bash \
+                          -a "${sonar_host_url}" \
+                          -b "${sonar_project_name}" \
+                          -c "${sonar_project_key}" \
+                          -d "${SONAR_TOKEN}" \
+                          -e "${sonar_organisation}" \
+                          -f "${BUILD_NUMBER}" \
+                          -g "${source_branch_ref}" \
+                          -V "${sonar_command}" \
+                          -W "${sonar_remote_repo}" \
+                          -X "${sonar_pullrequest_provider}" \
+                          -Y "$TARGET_BRANCH_REF" \
+                          -Z "$PULL_REQUEST_NUMBER"
+                      """
                     }
                   }
 
-                } // End of SonarScanner Stage
-
-            } // End of Nested Stage
-
-            } // End of Build Stage
-
-            post {
-              always {
-                dir("${self_repo_src}") {
-                  junit 'target/**/*.xml'
-
-                  // See:
-                  // https://www.jenkins.io/doc/pipeline/steps/jacoco/
-                  // For Code Coverage gates for Jenkins JaCoCo.
-                  jacoco(
-                    execPattern: 'target/*.exec',
-                    classPattern: 'target/classes',
-                    sourcePattern: 'src/main/java',
-                    exclusionPattern: 'src/test*'
-                  )
                 }
-            } // post end
+            } // End of SonarScanner Stage
 
-          } // steps end
+          } // End of Build Stages
 
-        } // stage end
+          post {
+            always {
+              dir("${self_repo_src}") {
+                junit 'target/**/*.xml'
+
+                // See:
+                // https://www.jenkins.io/doc/pipeline/steps/jacoco/
+                // For Code Coverage gates for Jenkins JaCoCo.
+                jacoco(
+                  execPattern: 'target/*.exec',
+                  classPattern: 'target/classes',
+                  sourcePattern: 'src/main/java',
+                  exclusionPattern: 'src/test*'
+                )
+              }
+            }
+          } // post end
+
+        } // End of Build stage
+
+// vvvvv Ignore
+
     //     stage('Test') {
     //       // when {
     //       //     branch 'master'
