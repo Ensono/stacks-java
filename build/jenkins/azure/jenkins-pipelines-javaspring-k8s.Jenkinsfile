@@ -128,6 +128,7 @@ pipeline {
                   bash ${build_scripts_directory}/test-terraform-validate.bash
                 """,
                 label: "Terraform: Validate Check"
+              )
             }
           }
         }
@@ -149,6 +150,9 @@ pipeline {
 
               steps {
                 dir("${self_repo_src}") {
+
+                  sh "echo ${GIT_COMMIT}"
+                  sh "echo ${docker_image_tag}; exit 1"
 
                   sh(
                     script: """#!/bin/bash
