@@ -4,6 +4,7 @@ pipeline {
   options {
     preserveStashes()
   }
+
   environment {
     // WORKSPACE=sh(returnStdout: true, script: 'pwd').trim()
     company="amido"
@@ -44,7 +45,7 @@ pipeline {
     docker_workdir="java/"
     docker_build_additional_args="."
     docker_image_name="${self_generic_name}"
-    docker_image_tag="${version_major}.${version_minor}.${version_revision}-${GIT_COMMIT}"
+    docker_image_tag="${version_major}.${version_minor}.${version_revision}-${scmVars.GIT_COMMIT}"
     docker_container_registry_name_nonprod="amidostacksnonprodeuncore"
     k8s_docker_registry_nonprod="${docker_container_registry_name_nonprod}${container_registry_suffix}"
     docker_container_registry_name_prod="amidostacksprodeuncore"
@@ -151,7 +152,7 @@ pipeline {
               steps {
                 dir("${self_repo_src}") {
 
-                  sh "echo ${GIT_COMMIT}"
+                  sh "echo ${scmVars.GIT_COMMIT}"
                   sh "echo ${docker_image_tag}; exit 1"
 
                   sh(
