@@ -88,13 +88,12 @@ pipeline {
             }
           }
 
-          environment {
-            build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
-          }
-
           steps {
 
             script {
+              // Sets a variable for the pipeline script directory
+              env.dynamic_build_scripts_directory = "${WORKSPACE}/${self_pipeline_repo}/scripts"
+
               // Sets a branch based name to be used in the Docker image tag
               env.dynamic_docker_branch_tag = sh(
                 script: """#!/bin/bash
@@ -137,14 +136,10 @@ pipeline {
             }
           }
 
-          environment {
-            build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
-          }
-
           steps {
             sh(
               script: """#!/bin/bash
-                bash ${build_scripts_directory}/test-validate-yaml.bash \
+                bash ${dynamic_build_scripts_directory}/test-validate-yaml.bash \
                   -a "${yamllint_config}" \
                   -b "."
               """,
@@ -162,22 +157,18 @@ pipeline {
             }
           }
 
-          environment {
-            build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
-          }
-
           steps {
             dir("${self_repo_tf_src}") {
               sh(
                 script: """#!/bin/bash
-                  bash ${build_scripts_directory}/test-terraform-fmt-check.bash
+                  bash ${dynamic_build_scripts_directory}/test-terraform-fmt-check.bash
                 """,
                 label: "Terraform: Format Check"
               )
 
               sh(
                 script: """#!/bin/bash
-                  bash ${build_scripts_directory}/test-terraform-validate.bash
+                  bash ${dynamic_build_scripts_directory}/test-terraform-validate.bash
                 """,
                 label: "Terraform: Validate Check"
               )
@@ -196,16 +187,12 @@ pipeline {
                 }
               }
 
-              environment {
-                build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
-              }
-
               steps {
                 dir("${self_repo_src}") {
 
                   sh(
                     script: """#!/bin/bash
-                      bash ${build_scripts_directory}/build-maven-install.bash \
+                      bash ${dynamic_build_scripts_directory}/build-maven-install.bash \
                         -Z "${maven_cache_directory}"
                     """,
                     label: "Maven: Install Packages"
@@ -213,7 +200,7 @@ pipeline {
 
                   sh(
                     script: """#!/bin/bash
-                      bash ${build_scripts_directory}/build-maven-compile.bash \
+                      bash ${dynamic_build_scripts_directory}/build-maven-compile.bash \
                         -Z "${maven_cache_directory}"
                     """,
                     label: "Maven: Compile Application"
@@ -223,7 +210,7 @@ pipeline {
                     script: """#!/bin/bash
                       rm -rf "${maven_surefire_repots_dir}"
 
-                      bash ${build_scripts_directory}/test-maven-download-test-deps.bash \
+                      bash ${dynamic_build_scripts_directory}/test-maven-download-test-deps.bash \
                         -X "${maven_allowed_test_tags}" \
                         -Y "${maven_surefire_repots_dir}" \
                         -Z "${maven_cache_directory}"
@@ -233,7 +220,7 @@ pipeline {
 
                   sh(
                     script: """#!/bin/bash
-                      bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+                      bash ${dynamic_build_scripts_directory}/test-maven-tagged-test-run.bash \
                         -a "Unit" \
                         -Z "${maven_cache_directory}"
                     """,
@@ -242,7 +229,7 @@ pipeline {
 
                   sh(
                     script: """#!/bin/bash
-                      bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+                      bash ${dynamic_build_scripts_directory}/test-maven-tagged-test-run.bash \
                         -a "Component" \
                         -Z "${maven_cache_directory}"
                     """,
@@ -251,7 +238,7 @@ pipeline {
 
                   sh(
                     script: """#!/bin/bash
-                      bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+                      bash ${dynamic_build_scripts_directory}/test-maven-tagged-test-run.bash \
                         -a "Integration" \
                         -Z "${maven_cache_directory}"
                     """,
@@ -260,7 +247,7 @@ pipeline {
 
                   sh(
                     script:"""#!/bin/bash
-                      bash ${build_scripts_directory}/test-maven-generate-jacoco-report.bash \
+                      bash ${dynamic_build_scripts_directory}/test-maven-generate-jacoco-report.bash \
                         -Z "${maven_cache_directory}"
                     """,
                     label: "Generate Jacoco coverage reports"
@@ -303,10 +290,6 @@ pipeline {
                 }
               }
 
-              environment {
-                build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
-              }
-
               steps {
                 dir("${self_repo_src}") {
                   withCredentials([
@@ -330,7 +313,7 @@ pipeline {
                           BASH_PULL_REQUEST_NUMBER="${pull_request_number}"
                         fi
 
-                        bash ${build_scripts_directory}/test-sonar-scanner.bash \
+                        bash ${dynamic_build_scripts_directory}/test-sonar-scanner.bash \
                           -a "${sonar_host_url}" \
                           -b "${sonar_project_name}" \
                           -c "${sonar_project_key}" \
@@ -360,10 +343,6 @@ pipeline {
                 }
               }
 
-              environment {
-                build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
-              }
-
               steps {
                 dir("${docker_workdir}") {
 
@@ -375,7 +354,7 @@ pipeline {
                   ]) {
                     sh(
                       script: """#!/bin/bash
-                        bash ${build_scripts_directory}/util-azure-login.bash \
+                        bash ${dynamic_build_scripts_directory}/util-azure-login.bash \
                           -a "${NONPROD_AZURE_CLIENT_ID}" \
                           -b "${NONPROD_AZURE_CLIENT_SECRET}" \
                           -c "${NONPROD_AZURE_TENANT_ID}" \
@@ -387,7 +366,7 @@ pipeline {
 
                   sh(
                     script: """#!/bin/bash
-                      bash ${build_scripts_directory}/build-docker-image.bash \
+                      bash ${dynamic_build_scripts_directory}/build-docker-image.bash \
                         -a "${docker_build_additional_args}" \
                         -b "${docker_image_name}" \
                         -c "${dynamic_docker_image_tag}" \
@@ -399,7 +378,7 @@ pipeline {
 
                   sh(
                     script: """#!/bin/bash
-                      bash ${build_scripts_directory}/util-docker-image-push.bash \
+                      bash ${dynamic_build_scripts_directory}/util-docker-image-push.bash \
                         -a "${docker_image_name}" \
                         -b "${dynamic_docker_image_tag}" \
                         -c "${docker_container_registry_name_nonprod}" \
