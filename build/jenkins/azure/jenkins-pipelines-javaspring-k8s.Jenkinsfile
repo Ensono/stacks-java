@@ -10,7 +10,6 @@ pipeline {
     company="amido"
     project="stacks"
     domain="java-jenkins"
-    role="frontend"
     // SelfConfig"
     source_branch_ref="${CHANGE_BRANCH ?: BRANCH_NAME}"
     target_branch_ref="${CHANGE_TARGET ?: " "}" // Set to a space as Jenkins doesn't support blank vars
@@ -45,7 +44,7 @@ pipeline {
     docker_workdir="java/"
     docker_build_additional_args="."
     docker_image_name="${self_generic_name}"
-    docker_image_tag="${version_major}.${version_minor}.${version_revision}-${scmVars.GIT_COMMIT}"
+    docker_image_tag_prefix="${version_major}.${version_minor}.${version_revision}-"
     docker_container_registry_name_nonprod="amidostacksnonprodeuncore"
     k8s_docker_registry_nonprod="${docker_container_registry_name_nonprod}${container_registry_suffix}"
     docker_container_registry_name_prod="amidostacksprodeuncore"
@@ -92,8 +91,14 @@ pipeline {
           }
 
           steps {
+
+            def docker_image_tag = sh(
+              script: "echo '${docker_image_tag_prefix}-${GIT_COMMIT}'",
+              label: "Setting Docker Tag as Jenkins Var"
+            )
+
             dir("${self_pipeline_repo}") {
-              checkout([
+              def build_scripts_repo = checkout([
                 $class: 'GitSCM',
                 // TODO: move to a tag
                 branches: [[name: 'refs/heads/feature/cycle4']],
@@ -152,8 +157,9 @@ pipeline {
               steps {
                 dir("${self_repo_src}") {
 
-                  sh "echo ${scmVars.GIT_COMMIT}"
-                  sh "echo ${docker_image_tag}; exit 1"
+                  sh "echo ${GIT_COMMIT}"
+                  sh "echo ${docker_image_tag}"
+                  sh "echo ${version_major}.${version_minor}.${version_revision}-${GIT_COMMIT}; exit 1"
 
                   sh(
                     script: """#!/bin/bash
