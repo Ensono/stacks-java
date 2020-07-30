@@ -83,7 +83,6 @@ steps:
       container: ${{ parameters.docker_build_container }}
     displayName: "Maven: Compile Application"
 
-    # TODO: move hardcoded args up to main script.
   - task: Bash@3
     inputs:
       filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-download-test-deps.bash"
