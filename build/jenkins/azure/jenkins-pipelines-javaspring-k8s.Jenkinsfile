@@ -64,10 +64,10 @@ pipeline {
     sonar_remote_repo="amido/stacks-java"
     sonar_pullrequest_provider="github"
     // AKS/AZURE
-    // AZURE_SUBSCRIPTION_ID - Please define this as a Jenkins credential.
     // AZURE_CLIENT_ID - Please define this as a Jenkins credential.
     // AZURE_CLIENT_SECRET - Please define this as a Jenkins credential.
     // AZURE_TENANT_ID - Please define this as a Jenkins credential.
+    // AZURE_SUBSCRIPTION_ID - Please define this as a Jenkins credential.
     // Infra
     base_domain_nonprod="nonprod.amidostacks.com"
     base_domain_prod="prod.amidostacks.com"
@@ -340,6 +340,24 @@ pipeline {
               steps {
                 dir("${docker_workdir}") {
 
+                  withCredentials([
+                    string(credentialsId: 'NONPROD_AZURE_CLIENT_ID', variable: 'NONPROD_AZURE_CLIENT_ID'),
+                    string(credentialsId: 'NONPROD_AZURE_CLIENT_SECRET', variable: 'NONPROD_AZURE_CLIENT_SECRET'),
+                    string(credentialsId: 'NONPROD_AZURE_TENANT_ID', variable: 'NONPROD_AZURE_TENANT_ID'),
+                    string(credentialsId: 'NONPROD_AZURE_SUBSCRIPTION_ID', variable: 'NONPROD_AZURE_SUBSCRIPTION_ID')
+                  ]) {
+                    sh(
+                      script: """#!/bin/bash
+                        bash ${build_scripts_directory}/util-azure-login.bash \
+                          -a ${NONPROD_AZURE_CLIENT_ID} \
+                          -b ${NONPROD_AZURE_CLIENT_SECRET} \
+                          -c ${NONPROD_AZURE_TENANT_ID} \
+                          -d ${NONPROD_AZURE_SUBSCRIPTION_ID}
+                      """,
+                      label: "Login: Azure CLI"
+                    )
+                  }
+
                   sh(
                     script: """#!/bin/bash
                       bash ${build_scripts_directory}/build-docker-image.bash \
@@ -347,19 +365,19 @@ pipeline {
                         -b "${docker_image_name}" \
                         -c "${dynamic_docker_image_tag}" \
                         -d "${docker_container_registry_name_nonprod}" \
-                        -Z "${container_retistry_suffix}"
+                        -Z "${container_registry_suffix}"
                     """,
                     label: "Build Container Image"
                   )
 
                   sh(
                     script: """#!/bin/bash
-                      bash ${build_scripts_directory}/build-docker-image-push.bash \
+                      bash ${build_scripts_directory}/util-docker-image-push.bash \
                         -a "${docker_image_name}" \
                         -b "${dynamic_docker_image_tag}" \
                         -c "${docker_container_registry_name_nonprod}" \
                         -Y "${docker_tag_latest_nonprod}" \
-                        -Z "${container_retistry_suffix}"
+                        -Z "${container_registry_suffix}"
                     """,
                     label: "Push Container Image to Azure Container Registry"
                   )
