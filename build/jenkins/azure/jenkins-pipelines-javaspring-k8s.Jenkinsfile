@@ -6,7 +6,6 @@ pipeline {
   }
 
   environment {
-    // WORKSPACE=sh(returnStdout: true, script: 'pwd').trim()
     company="amido"
     project="stacks"
     domain="java-jenkins"
@@ -45,6 +44,8 @@ pipeline {
     docker_build_additional_args="."
     docker_image_name="${self_generic_name}"
     docker_image_tag_prefix="${version_major}.${version_minor}.${version_revision}-"
+    // dynamic_docker_branch_tag="" // Assigned dynamically in "Checkout Dependencies"
+    // dynamic_docker_image_tag="" // Assigned dynamically in "Checkout Dependencies"
     docker_container_registry_name_nonprod="amidostacksnonprodeuncore"
     k8s_docker_registry_nonprod="${docker_container_registry_name_nonprod}${container_registry_suffix}"
     docker_container_registry_name_prod="amidostacksprodeuncore"
@@ -93,21 +94,35 @@ pipeline {
           steps {
 
             script {
-
-              def docker_image_tag = sh(
-                script: "echo '${docker_image_tag_prefix}-${GIT_COMMIT}'",
-                label: "Setting Docker Tag as Jenkins Var"
+              // Sets a branch based name to be used in the Docker image tag
+              env.dynamic_docker_branch_tag = sh(
+                script: """#!/bin/bash
+                  DOCKER_BRANCH_TAG="\$(tr '/' '[-*2]' <<< "${env.CHANGE_ID ? "pr-${source_branch_ref}" : source_branch_ref}")"
+                  echo -n "\${DOCKER_BRANCH_TAG}"
+                """,
+                returnStdout: true,
+                label: "Setting Docker branch tag as Jenkins Var"
               )
 
-              dir("${self_pipeline_repo}") {
-                def build_scripts_repo = checkout([
-                  $class: 'GitSCM',
-                  // TODO: move to a tag
-                  branches: [[name: 'refs/heads/feature/cycle4']],
-                  userRemoteConfigs: [[url: "https://github.com/amido/${self_pipeline_repo}"]]
-                ])
-              }
+              // Sets the full docker tag be used as the Docker Tag
+              env.dynamic_docker_image_tag = sh(
+                script: """#!/bin/bash
+                  BRANCH_TAG="${docker_image_tag_prefix}${dynamic_docker_branch_tag}"
+                  IMAGE_TAG="\$(tr '[:upper:]' '[:lower:]' <<< "\${BRANCH_TAG}")"
+                  echo -n "\${BRANCH_TAG:0:128}"
+                """,
+                returnStdout: true,
+                label: "Setting Docker Image Tag as Jenkins Var"
+              )
+            }
 
+            dir("${self_pipeline_repo}") {
+              checkout([
+                $class: 'GitSCM',
+                // TODO: move to a tag
+                branches: [[name: 'refs/heads/feature/cycle4']],
+                userRemoteConfigs: [[url: "https://github.com/amido/${self_pipeline_repo}"]]
+              ])
             }
           }
         }
@@ -161,9 +176,8 @@ pipeline {
               steps {
                 dir("${self_repo_src}") {
 
-                  sh "echo ${GIT_COMMIT}"
-                  sh "echo ${docker_image_tag}"
-                  sh "echo ${version_major}.${version_minor}.${version_revision}-${GIT_COMMIT}; exit 1"
+                  sh "echo 'tag-raw: ${dynamic_docker_image_tag}'"
+                  sh "printenv; exit 1"
 
                   sh(
                     script: """#!/bin/bash
