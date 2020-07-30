@@ -109,7 +109,7 @@ pipeline {
                 script: """#!/bin/bash
                   BRANCH_TAG="${docker_image_tag_prefix}${dynamic_docker_branch_tag}"
                   IMAGE_TAG="\$(tr '[:upper:]' '[:lower:]' <<< "\${BRANCH_TAG}")"
-                  echo -n "\${BRANCH_TAG:0:128}"
+                  echo -n "echo \${IMAGE_TAG}"
                 """,
                 returnStdout: true,
                 label: "Setting Docker Image Tag as Jenkins Var"
@@ -175,9 +175,6 @@ pipeline {
 
               steps {
                 dir("${self_repo_src}") {
-
-                  sh "echo 'tag-raw: ${dynamic_docker_image_tag}'"
-                  sh "printenv; exit 1"
 
                   sh(
                     script: """#!/bin/bash
@@ -347,8 +344,8 @@ pipeline {
                     script: """#!/bin/bash
                       bash ${build_scripts_directory}/build-docker-image.bash \
                         -a "${docker_build_additional_args}" \
-                        -b "${parameters.docker_image_name}" \
-                        -c "${parameters.docker_image_tag}" \
+                        -b "${docker_image_name}" \
+                        -c "${dynamic_docker_image_tag}" \
                         -d "${docker_container_registry_name_nonprod}" \
                         -Z "${container_retistry_suffix}"
                     """,
@@ -358,14 +355,15 @@ pipeline {
                   sh(
                     script: """#!/bin/bash
                       bash ${build_scripts_directory}/build-docker-image-push.bash \
-                        -a "${parameters.docker_image_name}" \
-                        -b "${parameters.docker_image_tag}" \
+                        -a "${docker_image_name}" \
+                        -b "${dynamic_docker_image_tag}" \
                         -c "${docker_container_registry_name_nonprod}" \
                         -Y "${docker_tag_latest_nonprod}" \
                         -Z "${container_retistry_suffix}"
                     """,
                     label: "Push Container Image to Azure Container Registry"
                   )
+
                 }
 
               }
