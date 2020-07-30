@@ -109,7 +109,7 @@ pipeline {
                 script: """#!/bin/bash
                   BRANCH_TAG="${docker_image_tag_prefix}${dynamic_docker_branch_tag}"
                   IMAGE_TAG="\$(tr '[:upper:]' '[:lower:]' <<< "\${BRANCH_TAG}")"
-                  echo -n "echo \${IMAGE_TAG}"
+                  echo -n "\${IMAGE_TAG}"
                 """,
                 returnStdout: true,
                 label: "Setting Docker Image Tag as Jenkins Var"
