@@ -1,3 +1,6 @@
+// Note: Variables prefixed with `dynamic_` are set in the "Checkout Dependencies" Phase.
+// These use the scripted pipelines feature and `script {}` tags should only be used sparingly.
+
 pipeline {
   agent none
 
@@ -346,6 +349,18 @@ pipeline {
               steps {
                 dir("${docker_workdir}") {
 
+                  sh(
+                    script: """#!/bin/bash
+                      bash ${dynamic_build_scripts_directory}/build-docker-image.bash \
+                        -a "${docker_build_additional_args}" \
+                        -b "${docker_image_name}" \
+                        -c "${dynamic_docker_image_tag}" \
+                        -d "${docker_container_registry_name_nonprod}" \
+                        -Z "${container_registry_suffix}"
+                    """,
+                    label: "Build Container Image"
+                  )
+
                   withCredentials([
                     string(credentialsId: 'NONPROD_AZURE_CLIENT_ID', variable: 'NONPROD_AZURE_CLIENT_ID'),
                     string(credentialsId: 'NONPROD_AZURE_CLIENT_SECRET', variable: 'NONPROD_AZURE_CLIENT_SECRET'),
@@ -363,18 +378,6 @@ pipeline {
                       label: "Login: Azure CLI"
                     )
                   }
-
-                  sh(
-                    script: """#!/bin/bash
-                      bash ${dynamic_build_scripts_directory}/build-docker-image.bash \
-                        -a "${docker_build_additional_args}" \
-                        -b "${docker_image_name}" \
-                        -c "${dynamic_docker_image_tag}" \
-                        -d "${docker_container_registry_name_nonprod}" \
-                        -Z "${container_registry_suffix}"
-                    """,
-                    label: "Build Container Image"
-                  )
 
                   sh(
                     script: """#!/bin/bash
@@ -396,7 +399,7 @@ pipeline {
 
           } // End of Build stages
 
-        } // End of Build stage
+        } // End of Build Stage
 
       } // End of CI stages
 
