@@ -18,6 +18,7 @@ pipeline {
     self_repo_k8s_src="deploy/k8s"
     self_generic_name="stacks-java-jenkins"
     self_pipeline_repo="stacks-pipeline-templates"
+    yamllint_config="yamllint.conf"
     // Maven
     maven_cache_directory="./.m2"
     maven_surefire_repots_dir="./target/surefire-reports"
@@ -97,7 +98,8 @@ pipeline {
               // Sets a branch based name to be used in the Docker image tag
               env.dynamic_docker_branch_tag = sh(
                 script: """#!/bin/bash
-                  DOCKER_BRANCH_TAG="\$(tr '/' '[-*2]' <<< "${env.CHANGE_ID ? "pr-${source_branch_ref}" : source_branch_ref}")"
+                  DOCKER_BRANCH_TAG="${env.CHANGE_ID ? "pr-${source_branch_ref}" : source_branch_ref}"
+                  DOCKER_BRANCH_TAG="\${DOCKER_BRANCH_TAG/"/"/"--"}"
                   echo -n "\${DOCKER_BRANCH_TAG}"
                 """,
                 returnStdout: true,
@@ -127,11 +129,11 @@ pipeline {
           }
         }
 
-        stage('Terraform Validation') {
+        stage('Yaml Lint') {
           agent {
             docker {
               // add additional args if you need to here
-              image "amidostacks/ci-tf:0.0.4"
+              image "amidostacks/ci-k8s:0.0.11"
             }
           }
 
@@ -140,257 +142,282 @@ pipeline {
           }
 
           steps {
-            dir("${self_repo_tf_src}") {
-              sh(
-                script: """#!/bin/bash
-                  bash ${build_scripts_directory}/test-terraform-fmt-check.bash
-                """,
-                label: "Terraform: Format Check"
-              )
-
-              sh(
-                script: """#!/bin/bash
-                  bash ${build_scripts_directory}/test-terraform-validate.bash
-                """,
-                label: "Terraform: Validate Check"
-              )
-            }
+            sh(
+              script: """#!/bin/bash
+                bash ${build_scripts_directory}/test-validate-yaml.bash \
+                  -a "${yamllint_config}" \
+                  -b "."
+              """,
+              label: "Validate: Yamllint Validation"
+            )
           }
-        }
 
-        stage('Build') {
-          stages {
+        } // End of Yaml Lint stage
 
-            stage('Java Build') {
-              agent {
-                docker {
-                  // add additional args if you need to here
-                  image "azul/zulu-openjdk-debian:11"
-                }
-              }
+        // stage('Terraform Validation') {
+        //   agent {
+        //     docker {
+        //       // add additional args if you need to here
+        //       image "amidostacks/ci-tf:0.0.4"
+        //     }
+        //   }
 
-              environment {
-                build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
-              }
+        //   environment {
+        //     build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
+        //   }
 
-              steps {
-                dir("${self_repo_src}") {
+        //   steps {
+        //     dir("${self_repo_tf_src}") {
+        //       sh(
+        //         script: """#!/bin/bash
+        //           bash ${build_scripts_directory}/test-terraform-fmt-check.bash
+        //         """,
+        //         label: "Terraform: Format Check"
+        //       )
 
-                  sh(
-                    script: """#!/bin/bash
-                      bash ${build_scripts_directory}/build-maven-install.bash \
-                        -Z "${maven_cache_directory}"
-                    """,
-                    label: "Maven: Install Packages"
-                  )
+        //       sh(
+        //         script: """#!/bin/bash
+        //           bash ${build_scripts_directory}/test-terraform-validate.bash
+        //         """,
+        //         label: "Terraform: Validate Check"
+        //       )
+        //     }
+        //   }
+        // }
 
-                  sh(
-                    script: """#!/bin/bash
-                      bash ${build_scripts_directory}/build-maven-compile.bash \
-                        -Z "${maven_cache_directory}"
-                    """,
-                    label: "Maven: Compile Application"
-                  )
+        // stage('Build') {
+        //   stages {
 
-                  sh(
-                    script: """#!/bin/bash
-                      rm -rf "${maven_surefire_repots_dir}"
+        //     stage('Java Build') {
+        //       agent {
+        //         docker {
+        //           // add additional args if you need to here
+        //           image "azul/zulu-openjdk-debian:11"
+        //         }
+        //       }
 
-                      bash ${build_scripts_directory}/test-maven-download-test-deps.bash \
-                        -X "${maven_allowed_test_tags}" \
-                        -Y "${maven_surefire_repots_dir}" \
-                        -Z "${maven_cache_directory}"
-                    """,
-                    label: "Test: Download Test Deps"
-                  )
+        //       environment {
+        //         build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
+        //       }
 
-                  sh(
-                    script: """#!/bin/bash
-                      bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
-                        -a "Unit" \
-                        -Z "${maven_cache_directory}"
-                    """,
-                    label: "Test: Unit tests"
-                  )
+        //       steps {
+        //         dir("${self_repo_src}") {
 
-                  sh(
-                    script: """#!/bin/bash
-                      bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
-                        -a "Component" \
-                        -Z "${maven_cache_directory}"
-                    """,
-                    label: "Test: Component tests"
-                  )
+        //           sh(
+        //             script: """#!/bin/bash
+        //               bash ${build_scripts_directory}/build-maven-install.bash \
+        //                 -Z "${maven_cache_directory}"
+        //             """,
+        //             label: "Maven: Install Packages"
+        //           )
 
-                  sh(
-                    script: """#!/bin/bash
-                      bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
-                        -a "Integration" \
-                        -Z "${maven_cache_directory}"
-                    """,
-                    label: "Test: Integration tests"
-                  )
+        //           sh(
+        //             script: """#!/bin/bash
+        //               bash ${build_scripts_directory}/build-maven-compile.bash \
+        //                 -Z "${maven_cache_directory}"
+        //             """,
+        //             label: "Maven: Compile Application"
+        //           )
 
-                  sh(
-                    script:"""#!/bin/bash
-                      bash ${build_scripts_directory}/test-maven-generate-jacoco-report.bash \
-                        -Z "${maven_cache_directory}"
-                    """,
-                    label: "Generate Jacoco coverage reports"
-                  )
-                }
+        //           sh(
+        //             script: """#!/bin/bash
+        //               rm -rf "${maven_surefire_repots_dir}"
 
-              }
+        //               bash ${build_scripts_directory}/test-maven-download-test-deps.bash \
+        //                 -X "${maven_allowed_test_tags}" \
+        //                 -Y "${maven_surefire_repots_dir}" \
+        //                 -Z "${maven_cache_directory}"
+        //             """,
+        //             label: "Test: Download Test Deps"
+        //           )
 
-              post {
-                always {
-                  dir("${self_repo_src}") {
-                    junit 'target/**/*.xml'
+        //           sh(
+        //             script: """#!/bin/bash
+        //               bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+        //                 -a "Unit" \
+        //                 -Z "${maven_cache_directory}"
+        //             """,
+        //             label: "Test: Unit tests"
+        //           )
 
-                    // See:
-                    // https://www.jenkins.io/doc/pipeline/steps/jacoco/
-                    // For Code Coverage gates for Jenkins JaCoCo.
-                    jacoco(
-                      execPattern: 'target/*.exec',
-                      classPattern: 'target/classes',
-                      sourcePattern: 'src/main/java',
-                      exclusionPattern: 'src/test*'
-                    )
-                  }
-                }
-              } // post end
+        //           sh(
+        //             script: """#!/bin/bash
+        //               bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+        //                 -a "Component" \
+        //                 -Z "${maven_cache_directory}"
+        //             """,
+        //             label: "Test: Component tests"
+        //           )
 
-            } // End of Java Build Stage
+        //           sh(
+        //             script: """#!/bin/bash
+        //               bash ${build_scripts_directory}/test-maven-tagged-test-run.bash \
+        //                 -a "Integration" \
+        //                 -Z "${maven_cache_directory}"
+        //             """,
+        //             label: "Test: Integration tests"
+        //           )
 
-            stage('SonarScanner') {
-              when {
-                expression {
-                  "${static_code_analysis}" == "true"
-                }
-              }
+        //           sh(
+        //             script:"""#!/bin/bash
+        //               bash ${build_scripts_directory}/test-maven-generate-jacoco-report.bash \
+        //                 -Z "${maven_cache_directory}"
+        //             """,
+        //             label: "Generate Jacoco coverage reports"
+        //           )
+        //         }
 
-              agent {
-                docker {
-                  // add additional args if you need to here
-                  image "amidostacks/ci-sonarscanner:0.0.1"
-                }
-              }
+        //       }
 
-              environment {
-                build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
-              }
+        //       post {
+        //         always {
+        //           dir("${self_repo_src}") {
+        //             junit 'target/**/*.xml'
 
-              steps {
-                dir("${self_repo_src}") {
-                  withCredentials([
-                    string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')
-                  ]) {
-                    sh(
-                      script: """#!/bin/bash
-                        set -exo pipefail
+        //             // See:
+        //             // https://www.jenkins.io/doc/pipeline/steps/jacoco/
+        //             // For Code Coverage gates for Jenkins JaCoCo.
+        //             jacoco(
+        //               execPattern: 'target/*.exec',
+        //               classPattern: 'target/classes',
+        //               sourcePattern: 'src/main/java',
+        //               exclusionPattern: 'src/test*'
+        //             )
+        //           }
+        //         }
+        //       } // post end
 
-                        # Workaround for Jenkins not allowing a blank variable.
-                        if [ "${target_branch_ref}" == ' ' ]; then
-                          BASH_TARGET_BRANCH_REF=""
-                        else
-                          BASH_TARGET_BRANCH_REF="${target_branch_ref}"
-                        fi
+        //     } // End of Java Build Stage
 
-                        # Workaround for Jenkins not allowing a blank variable.
-                        if [ "${pull_request_number}" == ' ' ]; then
-                          BASH_PULL_REQUEST_NUMBER=""
-                        else
-                          BASH_PULL_REQUEST_NUMBER="${pull_request_number}"
-                        fi
+        //     stage('SonarScanner') {
+        //       when {
+        //         expression {
+        //           "${static_code_analysis}" == "true"
+        //         }
+        //       }
 
-                        bash ${build_scripts_directory}/test-sonar-scanner.bash \
-                          -a "${sonar_host_url}" \
-                          -b "${sonar_project_name}" \
-                          -c "${sonar_project_key}" \
-                          -d "${SONAR_TOKEN}" \
-                          -e "${sonar_organisation}" \
-                          -f "${BUILD_NUMBER}" \
-                          -g "${source_branch_ref}" \
-                          -V "${sonar_command}" \
-                          -W "${sonar_remote_repo}" \
-                          -X "${sonar_pullrequest_provider}" \
-                          -Y "\$BASH_TARGET_BRANCH_REF" \
-                          -Z "\$BASH_PULL_REQUEST_NUMBER"
-                      """,
-                      label: "Static Analysis: SonarScanner Run"
-                    )
-                  }
-                }
+        //       agent {
+        //         docker {
+        //           // add additional args if you need to here
+        //           image "amidostacks/ci-sonarscanner:0.0.1"
+        //         }
+        //       }
 
-              }
-            } // End of SonarScanner Stage
+        //       environment {
+        //         build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
+        //       }
 
-            stage('Docker') {
-              agent {
-                docker {
-                  // add additional args if you need to here
-                  image "amidostacks/ci-k8s:0.0.10"
-                }
-              }
+        //       steps {
+        //         dir("${self_repo_src}") {
+        //           withCredentials([
+        //             string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')
+        //           ]) {
+        //             sh(
+        //               script: """#!/bin/bash
+        //                 set -exo pipefail
 
-              environment {
-                build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
-              }
+        //                 # Workaround for Jenkins not allowing a blank variable.
+        //                 if [ "${target_branch_ref}" == ' ' ]; then
+        //                   BASH_TARGET_BRANCH_REF=""
+        //                 else
+        //                   BASH_TARGET_BRANCH_REF="${target_branch_ref}"
+        //                 fi
 
-              steps {
-                dir("${docker_workdir}") {
+        //                 # Workaround for Jenkins not allowing a blank variable.
+        //                 if [ "${pull_request_number}" == ' ' ]; then
+        //                   BASH_PULL_REQUEST_NUMBER=""
+        //                 else
+        //                   BASH_PULL_REQUEST_NUMBER="${pull_request_number}"
+        //                 fi
 
-                  withCredentials([
-                    string(credentialsId: 'NONPROD_AZURE_CLIENT_ID', variable: 'NONPROD_AZURE_CLIENT_ID'),
-                    string(credentialsId: 'NONPROD_AZURE_CLIENT_SECRET', variable: 'NONPROD_AZURE_CLIENT_SECRET'),
-                    string(credentialsId: 'NONPROD_AZURE_TENANT_ID', variable: 'NONPROD_AZURE_TENANT_ID'),
-                    string(credentialsId: 'NONPROD_AZURE_SUBSCRIPTION_ID', variable: 'NONPROD_AZURE_SUBSCRIPTION_ID')
-                  ]) {
-                    sh(
-                      script: """#!/bin/bash
-                        bash ${build_scripts_directory}/util-azure-login.bash \
-                          -a ${NONPROD_AZURE_CLIENT_ID} \
-                          -b ${NONPROD_AZURE_CLIENT_SECRET} \
-                          -c ${NONPROD_AZURE_TENANT_ID} \
-                          -d ${NONPROD_AZURE_SUBSCRIPTION_ID}
-                      """,
-                      label: "Login: Azure CLI"
-                    )
-                  }
+        //                 bash ${build_scripts_directory}/test-sonar-scanner.bash \
+        //                   -a "${sonar_host_url}" \
+        //                   -b "${sonar_project_name}" \
+        //                   -c "${sonar_project_key}" \
+        //                   -d "${SONAR_TOKEN}" \
+        //                   -e "${sonar_organisation}" \
+        //                   -f "${BUILD_NUMBER}" \
+        //                   -g "${source_branch_ref}" \
+        //                   -V "${sonar_command}" \
+        //                   -W "${sonar_remote_repo}" \
+        //                   -X "${sonar_pullrequest_provider}" \
+        //                   -Y "\$BASH_TARGET_BRANCH_REF" \
+        //                   -Z "\$BASH_PULL_REQUEST_NUMBER"
+        //               """,
+        //               label: "Static Analysis: SonarScanner Run"
+        //             )
+        //           }
+        //         }
 
-                  sh(
-                    script: """#!/bin/bash
-                      bash ${build_scripts_directory}/build-docker-image.bash \
-                        -a "${docker_build_additional_args}" \
-                        -b "${docker_image_name}" \
-                        -c "${dynamic_docker_image_tag}" \
-                        -d "${docker_container_registry_name_nonprod}" \
-                        -Z "${container_registry_suffix}"
-                    """,
-                    label: "Build Container Image"
-                  )
+        //       }
+        //     } // End of SonarScanner Stage
 
-                  sh(
-                    script: """#!/bin/bash
-                      bash ${build_scripts_directory}/util-docker-image-push.bash \
-                        -a "${docker_image_name}" \
-                        -b "${dynamic_docker_image_tag}" \
-                        -c "${docker_container_registry_name_nonprod}" \
-                        -Y "${docker_tag_latest_nonprod}" \
-                        -Z "${container_registry_suffix}"
-                    """,
-                    label: "Push Container Image to Azure Container Registry"
-                  )
+        //     stage('Docker') {
+        //       agent {
+        //         docker {
+        //           // add additional args if you need to here
+        //           image "amidostacks/ci-k8s:0.0.11"
+        //         }
+        //       }
 
-                }
+        //       environment {
+        //         build_scripts_directory="${WORKSPACE}/${self_pipeline_repo}/scripts"
+        //       }
 
-              }
+        //       steps {
+        //         dir("${docker_workdir}") {
 
-            } // End of Docker Stage
+        //           withCredentials([
+        //             string(credentialsId: 'NONPROD_AZURE_CLIENT_ID', variable: 'NONPROD_AZURE_CLIENT_ID'),
+        //             string(credentialsId: 'NONPROD_AZURE_CLIENT_SECRET', variable: 'NONPROD_AZURE_CLIENT_SECRET'),
+        //             string(credentialsId: 'NONPROD_AZURE_TENANT_ID', variable: 'NONPROD_AZURE_TENANT_ID'),
+        //             string(credentialsId: 'NONPROD_AZURE_SUBSCRIPTION_ID', variable: 'NONPROD_AZURE_SUBSCRIPTION_ID')
+        //           ]) {
+        //             sh(
+        //               script: """#!/bin/bash
+        //                 bash ${build_scripts_directory}/util-azure-login.bash \
+        //                   -a "${NONPROD_AZURE_CLIENT_ID}" \
+        //                   -b "${NONPROD_AZURE_CLIENT_SECRET}" \
+        //                   -c "${NONPROD_AZURE_TENANT_ID}" \
+        //                   -d "${NONPROD_AZURE_SUBSCRIPTION_ID}"
+        //               """,
+        //               label: "Login: Azure CLI"
+        //             )
+        //           }
 
-          } // End of Build stages
+        //           sh(
+        //             script: """#!/bin/bash
+        //               bash ${build_scripts_directory}/build-docker-image.bash \
+        //                 -a "${docker_build_additional_args}" \
+        //                 -b "${docker_image_name}" \
+        //                 -c "${dynamic_docker_image_tag}" \
+        //                 -d "${docker_container_registry_name_nonprod}" \
+        //                 -Z "${container_registry_suffix}"
+        //             """,
+        //             label: "Build Container Image"
+        //           )
 
-        } // End of Build stage
+        //           sh(
+        //             script: """#!/bin/bash
+        //               bash ${build_scripts_directory}/util-docker-image-push.bash \
+        //                 -a "${docker_image_name}" \
+        //                 -b "${dynamic_docker_image_tag}" \
+        //                 -c "${docker_container_registry_name_nonprod}" \
+        //                 -Y "${docker_tag_latest_nonprod}" \
+        //                 -Z "${container_registry_suffix}"
+        //             """,
+        //             label: "Push Container Image to Azure Container Registry"
+        //           )
+
+        //         }
+
+        //       }
+
+        //     } // End of Docker Stage
+
+        //   } // End of Build stages
+
+        // } // End of Build stage
 
       } // End of CI stages
 

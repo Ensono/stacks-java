@@ -11,9 +11,9 @@ parameters:
   target_branch_ref: ""
   pullrequest_number: ""
   # Docker Config
-  docker_build: true
-  docker_build_additional_args: ""
+  docker_k8s_container: ""
   docker_build_container: ""
+  docker_build_additional_args: ""
   docker_workdir: ""
   docker_imagename: ""
   docker_imagetag: ""
@@ -33,6 +33,11 @@ parameters:
   sonar_remote_repo: ""
   sonar_container: ""
   sonar_command: ""
+  # Azure
+  azure_client_id: ""
+  azure_client_secret: ""
+  azure_tenant_id: ""
+  azure_subscription_id: ""
   # contract_test: true
   # # audit_test: false
   # contract_check_can_deploy: true
@@ -62,6 +67,19 @@ steps:
       azure_client_id: "$(azure_client_id)"
       azure_client_secret: "$(azure_client_secret)"
       login_azure: true
+
+  - task: Bash@3
+    inputs:
+      filePath: "${{ parameters.pipeline_scripts_directory }}/util-azure-login.bash"
+      arguments: >
+        -a "${{ parameters.azure_client_id }"
+        -b "${{ parameters.azure_client_secret }}"
+        -c "${{ parameters.azure_tenant_id }}"
+        -d "${{ parameters.azure_subscription_id }}"
+      workingDirectory: "${{ parameters.project_root_dir }}"
+    target:
+      container: ${{ parameters.docker_k8s_container }}
+    displayName: "Login: Azure CLI"
 
   - task: Bash@3
     inputs:
@@ -183,11 +201,13 @@ steps:
         -d "${{ parameters.docker_containerregistryname }}"
         -Z ".azurecr.io"
       workingDirectory: ${{ parameters.docker_workdir }}
+    target:
+      container: ${{ parameters.docker_k8s_container }}
     displayName: "Build Container Image"
 
   - task: Bash@3
     inputs:
-      filePath: "${{ parameters.pipeline_scripts_directory }}/build-docker-image-push.bash"
+      filePath: "${{ parameters.pipeline_scripts_directory }}/util-docker-image-push.bash"
       arguments: >
         -a "${{ parameters.docker_imagename }}"
         -b "${{ parameters.docker_imagetag }}"
@@ -195,6 +215,8 @@ steps:
         -Y "false"
         -Z ".azurecr.io"
       workingDirectory: ${{ parameters.docker_workdir }}
+    target:
+      container: ${{ parameters.docker_k8s_container }}
     displayName: "Push Container Image to Azure Container Registry"
 
   - task: PublishTestResults@2

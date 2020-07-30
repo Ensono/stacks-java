@@ -44,7 +44,7 @@ resources:
       image: amidostacks/ci-sonarscanner:0.0.1
     # Container for Kubernetes Deployment
     - container: k8s_deploy
-      image: amidostacks/ci-k8s:0.0.10
+      image: amidostacks/ci-k8s:0.0.11
     # Container for Terraform deployments
     - container: terraform_custom
       image: amidostacks/ci-tf:0.0.4
@@ -128,19 +128,11 @@ stages:
               echo '##vso[build.updatebuildnumber]$(docker_image_tag)'
             displayName: 'Update: Build Number'
 
-          # TODO: Refactor these steps out into a template
-          - bash: "$(self_pipeline_scripts_dir)/test-terraform-fmt-check.bash"
-            workingDirectory: "$(self_repo_tf_dir)"
-            target:
-              container: terraform_custom
-            displayName: "Terraform: Format Check"
-
-          - bash: "$(self_pipeline_scripts_dir)/test-terraform-validate.bash"
-            workingDirectory: "$(self_repo_tf_dir)"
-            target:
-              container: terraform_custom
-            displayName: "Terraform: Validate Check"
-            #############################################
+          - template: templates/steps/test-vaidate-terraform.yml
+            parameters:
+              pipeline_scripts_directory: "$(self_pipeline_scripts_dir)"
+              terraform_container: "terraform_custom"
+              terraform_directory: "$(self_repo_tf_dir)"
 
           - template: templates/steps/build-java.yml
             parameters:
@@ -151,7 +143,8 @@ stages:
               source_branch_ref: "$(source_branch_ref)"
               target_branch_ref: "$(target_branch_ref)"
               pullrequest_number: "$(pullrequest_number)"
-              docker_build_container: azul_java
+              docker_k8s_container: "k8s_deploy"
+              docker_build_container: "azul_java"
               docker_build_additional_args: "."
               docker_workdir: "$(self_project_dir)"
               docker_imagename: "$(docker_image_name)"
@@ -182,6 +175,11 @@ stages:
               maven_cache_directory: "$(maven_cache_directory)"
               maven_surefire_reports_dir: "$(maven_surefire_reports_dir)"
               maven_allowed_test_tags: "$(maven_allowed_test_tags)"
+              # Azure
+              azure_client_id: "$(AZURE_CLIENT_ID)"
+              azure_client_secret: "$(AZURE_CLIENT_SECRET)"
+              azure_tenant_id: "$(AZURE_TENANT_ID)"
+              azure_subscription_id: "$(AZURE_SUBSCRIPTION_ID)"
 
   - stage: Dev
     variables:
@@ -430,7 +428,7 @@ stages:
 
           - task: Bash@3
             inputs:
-              filePath: "$(self_pipeline_scripts_dir)/deploy-azure-promote-image.bash"
+              filePath: "$(self_pipeline_scripts_dir)/util-azure-promote-image.bash"
               arguments: >
                 -a "$(docker_image_name):$(docker_image_tag)"
                 -b "$(k8s_docker_registry_nonprod)"
