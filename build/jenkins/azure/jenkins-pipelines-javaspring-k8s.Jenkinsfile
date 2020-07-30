@@ -92,18 +92,22 @@ pipeline {
 
           steps {
 
-            def docker_image_tag = sh(
-              script: "echo '${docker_image_tag_prefix}-${GIT_COMMIT}'",
-              label: "Setting Docker Tag as Jenkins Var"
-            )
+            script {
 
-            dir("${self_pipeline_repo}") {
-              def build_scripts_repo = checkout([
-                $class: 'GitSCM',
-                // TODO: move to a tag
-                branches: [[name: 'refs/heads/feature/cycle4']],
-                userRemoteConfigs: [[url: "https://github.com/amido/${self_pipeline_repo}"]]
-              ])
+              def docker_image_tag = sh(
+                script: "echo '${docker_image_tag_prefix}-${GIT_COMMIT}'",
+                label: "Setting Docker Tag as Jenkins Var"
+              )
+
+              dir("${self_pipeline_repo}") {
+                def build_scripts_repo = checkout([
+                  $class: 'GitSCM',
+                  // TODO: move to a tag
+                  branches: [[name: 'refs/heads/feature/cycle4']],
+                  userRemoteConfigs: [[url: "https://github.com/amido/${self_pipeline_repo}"]]
+                ])
+              }
+
             }
           }
         }
