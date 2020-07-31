@@ -190,7 +190,7 @@ stages:
           # Builds the Docker image and pushes it to an ACR
           - template: templates/steps/build-docker-image.yml
             parameters:
-              repo_root_dir: "$(self_repo_dir)"
+              project_root_dir: "$(self_project_dir)"
               pipeline_scripts_directory: $(self_pipeline_scripts_dir)
               docker_k8s_container: "k8s_deploy"
               docker_build_additional_args: "."
