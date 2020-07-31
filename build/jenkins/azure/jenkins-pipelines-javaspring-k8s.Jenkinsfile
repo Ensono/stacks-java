@@ -101,7 +101,7 @@ pipeline {
               env.dynamic_docker_branch_tag = sh(
                 script: """#!/bin/bash
                   DOCKER_BRANCH_TAG="${env.CHANGE_ID ? "pr-${source_branch_ref}" : source_branch_ref}"
-                  DOCKER_BRANCH_TAG="\${DOCKER_BRANCH_TAG/"/"/"--"}"
+                  DOCKER_BRANCH_TAG="\${DOCKER_BRANCH_TAG//"/"/"--"}"
                   echo -n "\${DOCKER_BRANCH_TAG}"
                 """,
                 returnStdout: true,
