@@ -9,12 +9,16 @@ parameters:
 
 steps:
   - task: PublishTestResults@2
+    condition: always()
+    displayName: "Publish Test Results"
 
   - task: PublishCodeCoverageResults@1
+    condition: always()
     inputs:
       codeCoverageTool: "JaCoCo"
       summaryFileLocation: "${{ parameters.project_root_dir }}/target/site/jacoco/jacoco.xml"
       reportDirectory: "${{ parameters.project_root_dir }}/target/site/jacoco-inline"
+    displayName: "Publish JaCoCo Coverage Results"
 
   # Publish Artefacts if required
   - ${{ if eq(parameters.functional_test, true) }}:

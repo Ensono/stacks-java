@@ -1,5 +1,5 @@
 parameters:
-  repo_root_dir: ""
+  project_root_dir: ""
   pipeline_scripts_directory: ""
   # Docker
   docker_k8s_container: ""
@@ -23,7 +23,7 @@ steps:
         -c "${{ parameters.docker_image_tag }}"
         -d "${{ parameters.docker_container_registry_name }}"
         -Z ".azurecr.io"
-      workingDirectory: ${{ parameters.repo_root_dir }}
+      workingDirectory: ${{ parameters.project_root_dir }}
     target:
       container: ${{ parameters.docker_k8s_container }}
     displayName: "Build Container Image"
@@ -36,7 +36,6 @@ steps:
         -b "${{ parameters.azure_client_secret }}"
         -c "${{ parameters.azure_tenant_id }}"
         -d "${{ parameters.azure_subscription_id }}"
-      workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: ${{ parameters.docker_k8s_container }}
     displayName: "Login: Azure CLI"
