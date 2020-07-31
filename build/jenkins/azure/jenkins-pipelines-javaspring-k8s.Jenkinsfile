@@ -177,7 +177,7 @@ pipeline {
               )
             }
           }
-        }
+        } // End of Terraform Validation Stage
 
         stage('Build') {
           stages {
