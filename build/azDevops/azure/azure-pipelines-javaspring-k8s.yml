@@ -196,7 +196,7 @@ stages:
               docker_build_additional_args: "."
               docker_image_name: "$(docker_image_name)"
               docker_image_tag: "$(docker_image_tag)"
-              docker_container_registry_name: "docker_container_registry_name_nonprod"
+              docker_container_registry_name: "$(docker_container_registry_name_nonprod)"
               # Azure
               azure_client_id: "$(AZURE_CLIENT_ID)"
               azure_client_secret: "$(AZURE_CLIENT_SECRET)"
