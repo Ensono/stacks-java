@@ -12,7 +12,6 @@ public class ItemRequests {
     public void createItem(String body, String menuID, String categoryID) {
         SerenityRest.given()
                 .contentType("application/json")
-                .header("Content-Type", "application/json")
                 .body(body)
                 .when()
                 .post(menuUrl.concat("/").concat(menuID)
@@ -25,10 +24,19 @@ public class ItemRequests {
     public void updateItem(String body, String menuID, String categoryID, String itemID) {
         SerenityRest.given()
                 .contentType("application/json")
-                .header("Content-Type", "application/json")
                 .body(body)
                 .when()
                 .put(menuUrl.concat("/").concat(menuID)
+                        .concat(WebServiceEndPoints.CATEGORY.getUrl()).concat("/").concat(categoryID)
+                        .concat(WebServiceEndPoints.ITEMS.getUrl()).concat("/").concat(itemID));
+    }
+
+    @Step("Delete the item")
+    public void deleteTheItem(String menuID, String categoryID, String itemID) {
+        SerenityRest.given()
+                .contentType("application/json")
+                .when()
+                .delete(menuUrl.concat("/").concat(menuID)
                         .concat(WebServiceEndPoints.CATEGORY.getUrl()).concat("/").concat(categoryID)
                         .concat(WebServiceEndPoints.ITEMS.getUrl()).concat("/").concat(itemID));
     }

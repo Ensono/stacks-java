@@ -27,6 +27,9 @@ public class MenuActions {
         return String.valueOf(toJson(lastResponse().getBody().prettyPrint()).get("id"));
     }
 
+    public String getRestaurantIdOfLastCreatedMenu() {
+        return String.valueOf(toJson(lastResponse().getBody().prettyPrint()).get("restaurantId"));
+    }
 
     public void check_exception_message(ExceptionMessages parameter, Response response) {
         JSONObject js = toJson(response.getBody().prettyPrint());

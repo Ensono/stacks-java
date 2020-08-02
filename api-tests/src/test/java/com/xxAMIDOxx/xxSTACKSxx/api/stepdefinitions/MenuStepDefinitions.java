@@ -19,6 +19,8 @@ import net.thucydides.core.annotations.Steps;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,6 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class MenuStepDefinitions {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(MenuStepDefinitions.class);
+
     @Steps
     MenuRequests menuRequest;
 
@@ -39,6 +43,7 @@ public class MenuStepDefinitions {
     @Steps
     MenuActions menuActions;
 
+    String menuId;
     String menuBody;
     final String BASE_URL = WebServiceEndPoints.BASE_URL.getUrl();
 
@@ -52,7 +57,6 @@ public class MenuStepDefinitions {
         Serenity.setSessionVariable("Menu").to(menuBody);
     }
 
-
     @Given("the menu list is not empty")
     public void get_all_existing_menus() {
         SerenityRest.get(WebServiceEndPoints.BASE_URL.getUrl()
@@ -62,24 +66,19 @@ public class MenuStepDefinitions {
         restAssuredThat(lastResponse -> lastResponse.body("results", Matchers.notNullValue()));
     }
 
-
     @When("I create the menu")
     public void i_create_the_menu() {
         menuRequest.createMenu(menuBody);
     }
 
-
-    @When("I search the created menu")
-    public void i_search_the_last_created_menu() {
-        String id = menuActions.getIdOfLastCreatedObject();
-        getMenuByParameter(id);
+    @When("I search the created menu by id")
+    public void i_search_the_last_created_menu_by_id() {
+        getMenuByParameter(menuId);
     }
-
 
     public Response getMenuByParameter(String parameter) {
         return SerenityRest.get(BASE_URL + WebServiceEndPoints.MENU.getUrl() + "/" + parameter);
     }
-
 
     @When("I search the menu by:")
     public void search_the_menu_by_parameter(DataTable table) {
@@ -91,12 +90,24 @@ public class MenuStepDefinitions {
         Serenity.setSessionVariable(value).to(parameter);
     }
 
-
     @When("I search the menu by criteria")
     public void search_the_menu_by_multiple_parameters(DataTable table) {
         List<List<String>> data = table.asLists(String.class);
         String xPath = MenuActions.createUrlWithCriteria(data);
         String parametrisedPath = BASE_URL + WebServiceEndPoints.MENU.getUrl() + "?" + xPath;
+
+        SerenityRest.get(parametrisedPath);
+    }
+
+    @When("I get the restaurant id for last created menu")
+    public void getLastCreatedRestaurantId() {
+        Serenity.setSessionVariable("RestaurantId").to(menuActions.getRestaurantIdOfLastCreatedMenu());
+    }
+
+    @When("I search the menu by restaurant id")
+    public void getMenuById() {
+        String restaurant_id = String.valueOf(Serenity.getCurrentSession().get("RestaurantId"));
+        String parametrisedPath = BASE_URL.concat(WebServiceEndPoints.MENU.getUrl()).concat("?restaurantId=") + restaurant_id ;
 
         SerenityRest.get(parametrisedPath);
     }
@@ -133,14 +144,15 @@ public class MenuStepDefinitions {
 
     @When("I search the updated menu")
     public void i_search_the_updated_menu() {
-        i_search_the_last_created_menu();
+        i_search_the_last_created_menu_by_id();
     }
 
 
     @Then("the menu was successfully created")
     public void the_menu_was_created() {
         restAssuredThat(response -> response.statusCode(201));
-        Serenity.setSessionVariable("MenuID").to(theMenuDetails.returned());
+        menuId = menuActions.getIdOfLastCreatedObject();
+        Serenity.setSessionVariable("MenuId").to(menuId);
     }
 
 
@@ -176,8 +188,29 @@ public class MenuStepDefinitions {
 
 
     @When("I update the menu for {string} id with data:")
-    public void i_update_the_menu_with_data(String id, List<Map<String, String>> menuDetails ) throws IOException {
+    public void i_update_the_menu_with_data(String id, List<Map<String, String>> menuDetails) throws IOException {
         create_menu_body_from_data(menuDetails);
         menuRequest.updateMenu(menuBody, id);
+    }
+
+    @When("I delete the menu")
+    public void i_delete_the_menu() {
+        menuId = menuActions.getIdOfLastCreatedObject();
+        menuRequest.deleteTheMenu(menuId);
+        LOGGER.info(String.format("The menu with '%s' id was successfully deleted.", menuId));
+    }
+
+    @When("I delete the menu with {string} id")
+    public void i_delete_the_menu_by_id(String menuId) {
+        menuRequest.deleteTheMenu(menuId);
+    }
+
+    @Then("the menu is successfully deleted")
+    public void the_menu_is_successfully_deleted() {
+        restAssuredThat(response -> response.statusCode(200));
+        menuRequest.getMenu(menuId);
+
+        restAssuredThat(response -> response.statusCode(404));
+        menuActions.check_exception_message(ExceptionMessages.MENU_DOES_NOT_EXIST, lastResponse());
     }
 }
