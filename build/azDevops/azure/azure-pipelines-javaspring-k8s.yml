@@ -216,69 +216,69 @@ stages:
   #             build_file_path: "$(build_artifact_deploy_path)"
   #             build_file_artefact: "$(build_artifact_deploy_name)"
 
-  - stage: Dev
-    variables:
-      - group: amido-stacks-infra-credentials-nonprod
-    jobs:
-      - job: AppInfraDev
-        pool:
-          vmImage: ubuntu-18.04
-        steps:
-          - checkout: self
+  # - stage: Dev
+  #   variables:
+  #     - group: amido-stacks-infra-credentials-nonprod
+  #   jobs:
+      # - job: AppInfraDev
+      #   pool:
+      #     vmImage: ubuntu-18.04
+      #   steps:
+      #     - checkout: self
 
-          - checkout: templates
+      #     - checkout: templates
 
-          - template: templates/steps/deploy/infra/deploy-infra.yml
-            parameters:
-              pipeline_scripts_directory: "$(self_pipeline_scripts_dir)"
-              docker_terraform_container: "terraform_custom"
-              # Azure Credenitals (For Deploying)
-              azure_client_id: "$(azure_client_id)"
-              azure_client_secret: "$(azure_client_secret)"
-              azure_tenant_id: "$(azure_tenant_id)"
-              azure_subscription_id: "$(azure_subscription_id)"
-              # Terraform
-              terraform_directory: '$(self_repo_tf_dir)'
-              # Backend Azure State Storage Credentials
-              # Change these if your state storage is in a different
-              # location to your deployment
-              terraform_backend_azure_client_id: "$(azure_client_id)"
-              terraform_backend_azure_client_secret: "$(azure_client_secret)"
-              terraform_backend_azure_tenant_id: "$(azure_tenant_id)"
-              terraform_backend_azure_subscription_id: "$(azure_subscription_id)"
-              terraform_state_rg: $(tf_state_rg)
-              terraform_state_storage: $(tf_state_storage)
-              terraform_state_container: $(tf_state_container)
-              terraform_state_key: $(tf_state_key)
-              terraform_state_workspace: dev
-              terraform_extra_properties: {
-                TF_VAR_resource_group_location: northeurope,
-                TF_VAR_create_cdn_endpoint: false,
-                TF_VAR_cosmosdb_sql_container: "Menu",
-                TF_VAR_cosmosdb_sql_container_partition_key: "/id",
-                TF_VAR_cosmosdb_kind: "GlobalDocumentDB",
-                TF_VAR_cosmosdb_offer_type: "Standard",
-                TF_VAR_create_dns_record: true,
-                TF_VAR_app_gateway_frontend_ip_name: "amido-stacks-nonprod-eun-core",
-                TF_VAR_core_resource_group: "amido-stacks-nonprod-eun-core",
-                TF_VAR_app_insights_name: "amido-stacks-nonprod-eun-core",
-                TF_VAR_name_company: $(company),
-                TF_VAR_name_project: $(project),
-                TF_VAR_name_domain: $(domain),
-                TF_VAR_create_cosmosdb: true,
-                TF_VAR_name_environment: dev,
-                TF_VAR_dns_record: dev-java-api,
-                TF_VAR_dns_zone_name: $(base_domain_nonprod),
-                TF_VAR_internal_dns_zone_name: $(base_domain_internal_nonprod),
-                TF_VAR_stage: dev,
-                TF_VAR_tags: "{}",
-              }
-              terraform_output_commands: |
-                raw_tf=$(terraform output -json | jq -r 'keys[] as $k | "##vso[task.setvariable variable=\($k);isOutput=true]\(.[$k] | .value)"')
-                readarray -t outputs <<<"$raw_tf"
-                for i in "${outputs[@]}"; do echo "$i"; done
-              # changing this would require changing the App deploy stage to make use of this
-              terraform_output_artefact_name: 'tfoutputs'
+      #     - template: templates/steps/deploy/infra/deploy-infra.yml
+      #       parameters:
+      #         pipeline_scripts_directory: "$(self_pipeline_scripts_dir)"
+      #         docker_terraform_container: "terraform_custom"
+      #         # Azure Credenitals (For Deploying)
+      #         azure_client_id: "$(azure_client_id)"
+      #         azure_client_secret: "$(azure_client_secret)"
+      #         azure_tenant_id: "$(azure_tenant_id)"
+      #         azure_subscription_id: "$(azure_subscription_id)"
+      #         # Terraform
+      #         terraform_directory: '$(self_repo_tf_dir)'
+      #         # Backend Azure State Storage Credentials
+      #         # Change these if your state storage is in a different
+      #         # location to your deployment
+      #         terraform_backend_azure_client_id: "$(azure_client_id)"
+      #         terraform_backend_azure_client_secret: "$(azure_client_secret)"
+      #         terraform_backend_azure_tenant_id: "$(azure_tenant_id)"
+      #         terraform_backend_azure_subscription_id: "$(azure_subscription_id)"
+      #         terraform_state_rg: $(tf_state_rg)
+      #         terraform_state_storage: $(tf_state_storage)
+      #         terraform_state_container: $(tf_state_container)
+      #         terraform_state_key: $(tf_state_key)
+      #         terraform_state_workspace: dev
+      #         terraform_extra_properties: {
+      #           TF_VAR_resource_group_location: northeurope,
+      #           TF_VAR_create_cdn_endpoint: false,
+      #           TF_VAR_cosmosdb_sql_container: "Menu",
+      #           TF_VAR_cosmosdb_sql_container_partition_key: "/id",
+      #           TF_VAR_cosmosdb_kind: "GlobalDocumentDB",
+      #           TF_VAR_cosmosdb_offer_type: "Standard",
+      #           TF_VAR_create_dns_record: true,
+      #           TF_VAR_app_gateway_frontend_ip_name: "amido-stacks-nonprod-eun-core",
+      #           TF_VAR_core_resource_group: "amido-stacks-nonprod-eun-core",
+      #           TF_VAR_app_insights_name: "amido-stacks-nonprod-eun-core",
+      #           TF_VAR_name_company: $(company),
+      #           TF_VAR_name_project: $(project),
+      #           TF_VAR_name_domain: $(domain),
+      #           TF_VAR_create_cosmosdb: true,
+      #           TF_VAR_name_environment: dev,
+      #           TF_VAR_dns_record: dev-java-api,
+      #           TF_VAR_dns_zone_name: $(base_domain_nonprod),
+      #           TF_VAR_internal_dns_zone_name: $(base_domain_internal_nonprod),
+      #           TF_VAR_stage: dev,
+      #           TF_VAR_tags: "{}",
+      #         }
+      #         terraform_output_commands: |
+      #           raw_tf=$(terraform output -json | jq -r 'keys[] as $k | "##vso[task.setvariable variable=\($k);isOutput=true]\(.[$k] | .value)"')
+      #           readarray -t outputs <<<"$raw_tf"
+      #           for i in "${outputs[@]}"; do echo "$i"; done
+      #         # changing this would require changing the App deploy stage to make use of this
+      #         terraform_output_artefact_name: 'tfoutputs'
 
   #     - deployment: DeployDev
   #       dependsOn: AppInfraDev
@@ -365,79 +365,70 @@ stages:
   #                   namespace: "$(namespace)"
   #                   deployment_status_timeout: "90s"
 
-  # - stage: Prod
-  #   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  #   variables:
-  #     - group: amido-stacks-infra-credentials-prod
-  #   jobs:
-  #     - job: AppInfraProd
-  #       variables:
-  #         ARM_SUBSCRIPTION_ID: $(prod_azure_subscription_id)
-  #         ARM_CLIENT_ID: $(prod_azure_client_id)
-  #         ARM_CLIENT_SECRET: "$(prod_azure_client_secret)"
-  #         ARM_TENANT_ID: $(prod_azure_tenant_id)
-  #       pool:
-  #         vmImage: ubuntu-18.04
-  #       container: terraform_custom
-  #       steps:
-  #         - checkout: self
+  - stage: Prod
+    # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    variables:
+      - group: amido-stacks-infra-credentials-prod
+    jobs:
+      - job: AppInfraProd
+        pool:
+          vmImage: ubuntu-18.04
+        steps:
+          - checkout: self
 
-  #         - checkout: templates
+          - checkout: templates
 
-  #         # Create TF infra
-  #         - template: azDevOps/azure/templates/v2/steps/deploy-terraform-resource.yml@templates
-  #           parameters:
-  #             # Terraform Basic Config
-  #             terraform_working_dir: '$(self_repo_tf_dir)'
-  #             # changing this would require changing the downstream consumers of these outputs
-  #             #
-  #             terraform_output_artefact: 'tfoutputs'
-  #             # Terraform State Config
-  #             terraform_backend_client_id: $(ARM_CLIENT_ID)
-  #             terraform_backend_client_secret: $(ARM_CLIENT_SECRET)
-  #             terraform_backend_tenant_id: $(ARM_TENANT_ID)
-  #             terraform_backend_subscription_id: $(ARM_SUBSCRIPTION_ID)
-  #             terraform_state_rg: $(tf_state_rg)
-  #             terraform_state_storage: $(tf_state_storage)
-  #             terraform_state_container: $(tf_state_container)
-  #             terraform_state_key: $(tf_state_key)
-  #             # for branch based builds this can be $(Build.SourceBranchName)
-  #             terraform_state_workspace: prod
-  #             # Global Config
-  #             company: $(company)
-  #             project: $(project)
-  #             environment: ''
-  #             azure_cli_providers: [
-  #               { name: MSIPreview, namespace: Microsoft.ContainerService },
-  #             ]
-  #             # Azure config
-  #             tags: ''
-  #             # Terraform Resource Specific Config
-  #             terraform_extra_properties: {
-  #               TF_VAR_resource_group_location: northeurope,
-  #               TF_VAR_create_cdn_endpoint: false,
-  #               TF_VAR_cosmosdb_sql_container: "Menu",
-  #               TF_VAR_cosmosdb_sql_container_partition_key: "/id",
-  #               TF_VAR_cosmosdb_kind: "GlobalDocumentDB",
-  #               TF_VAR_cosmosdb_offer_type: "Standard",
-  #               TF_VAR_create_dns_record: true,
-  #               TF_VAR_app_gateway_frontend_ip_name: "amido-stacks-prod-eun-core",
-  #               TF_VAR_core_resource_group: "amido-stacks-prod-eun-core",
-  #               TF_VAR_app_insights_name: "amido-stacks-prod-eun-core",
-  #               TF_VAR_name_company: $(company),
-  #               TF_VAR_name_project: $(project),
-  #               TF_VAR_name_domain: $(domain),
-  #               TF_VAR_create_cosmosdb: true,
-  #               TF_VAR_name_environment: prod,
-  #               TF_VAR_dns_record: prod-java-api,
-  #               TF_VAR_dns_zone_name: $(base_domain_prod),
-  #               TF_VAR_internal_dns_zone_name: $(base_domain_internal_prod),
-  #               TF_VAR_stage: prod,
-  #             }
-  #             terraform_output_commands: |
-  #               raw_tf=$(terraform output -json | jq -r 'keys[] as $k | "##vso[task.setvariable variable=\($k);isOutput=true]\(.[$k] | .value)"')
-  #               readarray -t outputs <<<"$raw_tf"
-  #               for i in "${outputs[@]}"; do echo "$i"; done
+          - template: templates/steps/deploy/infra/deploy-infra.yml
+            parameters:
+              pipeline_scripts_directory: "$(self_pipeline_scripts_dir)"
+              docker_terraform_container: "terraform_custom"
+              # Azure Credenitals (For Deploying)
+              azure_client_id: "$(prod_azure_client_id)"
+              azure_client_secret: "$(prod_azure_client_secret)"
+              azure_tenant_id: "$(prod_azure_tenant_id)"
+              azure_subscription_id: "$(prod_azure_subscription_id)"
+              # Terraform
+              terraform_directory: '$(self_repo_tf_dir)'
+              # Backend Azure State Storage Credentials
+              # Change these if your state storage is in a different
+              # location to your deployment
+              terraform_backend_azure_client_id: "$(prod_azure_client_id)"
+              terraform_backend_azure_client_secret: "$(prod_azure_client_secret)"
+              terraform_backend_azure_tenant_id: "$(prod_azure_tenant_id)"
+              terraform_backend_azure_subscription_id: "$(prod_azure_subscription_id)"
+              terraform_state_rg: $(tf_state_rg)
+              terraform_state_storage: $(tf_state_storage)
+              terraform_state_container: $(tf_state_container)
+              terraform_state_key: $(tf_state_key)
+              terraform_state_workspace: prod
+              terraform_extra_properties: {
+                TF_VAR_resource_group_location: northeurope,
+                TF_VAR_create_cdn_endpoint: false,
+                TF_VAR_cosmosdb_sql_container: "Menu",
+                TF_VAR_cosmosdb_sql_container_partition_key: "/id",
+                TF_VAR_cosmosdb_kind: "GlobalDocumentDB",
+                TF_VAR_cosmosdb_offer_type: "Standard",
+                TF_VAR_create_dns_record: true,
+                TF_VAR_app_gateway_frontend_ip_name: "amido-stacks-prod-eun-core",
+                TF_VAR_core_resource_group: "amido-stacks-prod-eun-core",
+                TF_VAR_app_insights_name: "amido-stacks-prod-eun-core",
+                TF_VAR_name_company: $(company),
+                TF_VAR_name_project: $(project),
+                TF_VAR_name_domain: $(domain),
+                TF_VAR_create_cosmosdb: true,
+                TF_VAR_name_environment: prod,
+                TF_VAR_dns_record: prod-java-api,
+                TF_VAR_dns_zone_name: $(base_domain_prod),
+                TF_VAR_internal_dns_zone_name: $(base_domain_internal_prod),
+                TF_VAR_stage: prod,
+                TF_VAR_tags: "{}",
+              }
+              terraform_output_commands: |
+                raw_tf=$(terraform output -json | jq -r 'keys[] as $k | "##vso[task.setvariable variable=\($k);isOutput=true]\(.[$k] | .value)"')
+                readarray -t outputs <<<"$raw_tf"
+                for i in "${outputs[@]}"; do echo "$i"; done
+              # changing this would require changing the App deploy stage to make use of this
+              terraform_output_artefact_name: 'tfoutputs'
 
   #     - job: PromotionProd
   #       dependsOn: AppInfraProd
