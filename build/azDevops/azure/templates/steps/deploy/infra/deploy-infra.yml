@@ -42,16 +42,16 @@ steps:
   - task: Bash@3
     inputs:
       filePath: "${{ parameters.pipeline_scripts_directory }}/deploy-azure-terraform-init.bash"
-    arguments: >
-      -a "${{ parameters.terraform_backend_azure_client_id }}"
-      -b "${{ parameters.terraform_backend_azure_client_secret }}"
-      -c "${{ parameters.terraform_backend_azure_tenant_id }}"
-      -d "${{ parameters.terraform_backend_azure_subscription_id }}"
-      -e "${{ parameters.terraform_state_rg }}"
-      -f "${{ parameters.terraform_state_storage }}"
-      -g "${{ parameters.terraform_state_container }}"
-      -h "${{ parameters.terraform_state_key }}"
-      -i "${{ parameters.terraform_state_workspace }}"
+      arguments: >
+        -a "${{ parameters.terraform_backend_azure_client_id }}"
+        -b "${{ parameters.terraform_backend_azure_client_secret }}"
+        -c "${{ parameters.terraform_backend_azure_tenant_id }}"
+        -d "${{ parameters.terraform_backend_azure_subscription_id }}"
+        -e "${{ parameters.terraform_state_rg }}"
+        -f "${{ parameters.terraform_state_storage }}"
+        -g "${{ parameters.terraform_state_container }}"
+        -h "${{ parameters.terraform_state_key }}"
+        -i "${{ parameters.terraform_state_workspace }}"
     target:
       container: ${{ parameters.docker_terraform_container }}
     displayName: "Terraform: Initialise and Set Workspace"
@@ -59,11 +59,11 @@ steps:
   - task: Bash@3
     inputs:
       filePath: "${{ parameters.pipeline_scripts_directory }}/deploy-azure-terraform-plan.bash"
-    arguments: >
-      -a "${{ parameters.azure_client_id }}"
-      -b "${{ parameters.azure_client_secret }}"
-      -c "${{ parameters.azure_tenant_id }}"
-      -d "${{ parameters.azure_subscription_id }}"
+      arguments: >
+        -a "${{ parameters.azure_client_id }}"
+        -b "${{ parameters.azure_client_secret }}"
+        -c "${{ parameters.azure_tenant_id }}"
+        -d "${{ parameters.azure_subscription_id }}"
     env:
       ${{ each var in parameters.terraform_extra_properties }}:
         ${{ var.key }}: "${{ var.value }}"
@@ -74,11 +74,11 @@ steps:
   - task: Bash@3
     inputs:
       filePath: "${{ parameters.pipeline_scripts_directory }}/deploy-azure-terraform-apply.bash"
-    arguments: >
-      -a "${{ parameters.azure_client_id }}"
-      -b "${{ parameters.azure_client_secret }}"
-      -c "${{ parameters.azure_tenant_id }}"
-      -d "${{ parameters.azure_subscription_id }}"
+      arguments: >
+        -a "${{ parameters.azure_client_id }}"
+        -b "${{ parameters.azure_client_secret }}"
+        -c "${{ parameters.azure_tenant_id }}"
+        -d "${{ parameters.azure_subscription_id }}"
     env:
       ${{ each var in parameters.terraform_extra_properties }}:
         ${{ var.key }}: "${{ var.value }}"
