@@ -271,7 +271,7 @@ stages:
                 TF_VAR_dns_zone_name: $(base_domain_nonprod),
                 TF_VAR_internal_dns_zone_name: $(base_domain_internal_nonprod),
                 TF_VAR_stage: dev,
-                TF_VAR_tags: '',
+                TF_VAR_tags: "{}",
               }
               terraform_output_commands: |
                 raw_tf=$(terraform output -json | jq -r 'keys[] as $k | "##vso[task.setvariable variable=\($k);isOutput=true]\(.[$k] | .value)"')
