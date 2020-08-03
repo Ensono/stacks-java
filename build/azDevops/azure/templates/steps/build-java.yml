@@ -2,47 +2,16 @@ parameters:
   repo_root_dir: ""
   project_root_dir: ""
   pipeline_scripts_directory: ""
-  # TODO: Pull up?
-  maven_cache_directory: "./.m2"
-  maven_surefire_reports_dir: "target/surefire-reports"
-  maven_allowed_test_tags: "Unit | Component | Integration | Functional | Performance | Smoke"
-  # PR / Branch vars
-  source_branch_ref: ""
-  target_branch_ref: ""
-  pullrequest_number: ""
+  # Maven
+  maven_cache_directory: ""
+  maven_surefire_reports_dir: ""
+  maven_allowed_test_tags: ""
   # Docker Config
-  docker_build: true
-  docker_build_additional_args: ""
   docker_build_container: ""
-  docker_workdir: ""
-  docker_imagename: ""
-  docker_imagetag: ""
-  docker_containerregistryname: ""
   # TODO: Vulnerability Scans
   # # Vulnerability Scanning
   # vulnerability_scan: false
   # vulnerability_workdir: ""
-  #  Static Code Analysis
-  static_code_analysis: true
-  sonar_host_url: ""
-  sonar_project_name: ""
-  sonar_project_key: ""
-  sonar_token: ""
-  sonar_organisation: ""
-  sonar_pullrequest_provider: ""
-  sonar_remote_repo: ""
-  sonar_container: ""
-  sonar_command: ""
-  # contract_test: true
-  # # audit_test: false
-  # contract_check_can_deploy: true
-  # cypress_e2e_test: true
-  # cypress_applitools_test: false
-  # cypress_e2e_env_vars: {}
-  # Build File Output
-  build_file: false
-  build_file_path: ""
-  build_file_artefact: ""
 
 steps:
   - task: Cache@2
@@ -53,15 +22,6 @@ steps:
         maven
       path: "${{ parameters.project_root_dir }}/${{ parameters.maven_cache_directory }}"
     displayName: Cache Maven packages
-
-  # Login to Azure/AKS
-  - template: azDevOps/azure/templates/v2/steps/login-services.yml@templates
-    parameters:
-      azure_tenant_id: "$(azure_tenant_id)"
-      azure_subscription_id: "$(azure_subscription_id)"
-      azure_client_id: "$(azure_client_id)"
-      azure_client_secret: "$(azure_client_secret)"
-      login_azure: true
 
   - task: Bash@3
     inputs:
@@ -83,7 +43,6 @@ steps:
       container: ${{ parameters.docker_build_container }}
     displayName: "Maven: Compile Application"
 
-    # TODO: move hardcoded args up to main script.
   - task: Bash@3
     inputs:
       filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-download-test-deps.bash"
@@ -150,73 +109,3 @@ steps:
     target:
       container: node
     displayName: "Gulp: Inline Jacoco report assets"
-
-  # SonarCloud
-  - ${{ if eq(parameters.static_code_analysis, true) }}:
-      - task: Bash@3
-        inputs:
-          filePath: "${{ parameters.pipeline_scripts_directory }}/test-sonar-scanner.bash"
-          arguments: >
-            -a "${{ parameters.sonar_host_url }}"
-            -b "${{ parameters.sonar_project_name }}"
-            -c "${{ parameters.sonar_project_key }}"
-            -d "${{ parameters.sonar_token }}"
-            -e "${{ parameters.sonar_organisation }}"
-            -f "${{ parameters.docker_imagetag }}"
-            -g "${{ parameters.source_branch_ref }}"
-            -V "${{ parameters.sonar_command }}"
-            -W "${{ parameters.sonar_remote_repo }}"
-            -X "${{ parameters.sonar_pullrequest_provider }}"
-            -Y "${{ parameters.target_branch_ref }}"
-            -Z "${{ parameters.pullrequest_number }}"
-          workingDirectory: "${{ parameters.project_root_dir }}"
-        target:
-          container: "${{ parameters.sonar_container }}"
-        displayName: "Static Analysis: SonarScanner Run"
-
-  - task: Bash@3
-    inputs:
-      filePath: "${{ parameters.pipeline_scripts_directory }}/build-docker-image.bash"
-      arguments: >
-        -a "${{ parameters.docker_build_additional_args }}"
-        -b "${{ parameters.docker_imagename }}"
-        -c "${{ parameters.docker_imagetag }}"
-        -d "${{ parameters.docker_containerregistryname }}"
-        -Z ".azurecr.io"
-      workingDirectory: ${{ parameters.docker_workdir }}
-    displayName: "Build Container Image"
-
-  - task: Bash@3
-    inputs:
-      filePath: "${{ parameters.pipeline_scripts_directory }}/build-docker-image-push.bash"
-      arguments: >
-        -a "${{ parameters.docker_imagename }}"
-        -b "${{ parameters.docker_imagetag }}"
-        -c "${{ parameters.docker_containerregistryname }}"
-        -Y "false"
-        -Z ".azurecr.io"
-      workingDirectory: ${{ parameters.docker_workdir }}
-    displayName: "Push Container Image to Azure Container Registry"
-
-  - task: PublishTestResults@2
-
-  - task: PublishCodeCoverageResults@1
-    inputs:
-      codeCoverageTool: "JaCoCo"
-      summaryFileLocation: "${{ parameters.project_root_dir }}/target/site/jacoco/jacoco.xml"
-      reportDirectory: "${{ parameters.project_root_dir }}/target/site/jacoco-inline"
-
-  # Publish Artefacts if required
-  - ${{ if eq(parameters.functional_test, true) }}:
-      - task: PublishPipelineArtifact@1
-        displayName: "Publish: Functional Tests Artifact"
-        inputs:
-          path: "${{ parameters.functional_test_path }}"
-          artifact: "${{ parameters.functional_test_artefact }}"
-
-  - ${{ if eq(parameters.build_file, true) }}:
-      - task: PublishPipelineArtifact@1
-        displayName: "Publish: Build Artefacts"
-        inputs:
-          path: "${{ parameters.build_file_path }}"
-          artifact: "${{ parameters.build_file_artefact }}"
