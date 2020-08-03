@@ -28,4 +28,14 @@ public class CategoryRequests {
                 .put(menuUrl.concat("/").concat(menuID).concat(WebServiceEndPoints.CATEGORY.getUrl())
                         .concat("/").concat(categoryID));
     }
+
+    @Step("Delete the category")
+    public void deleteTheCategory(String menuID, String categoryID) {
+        SerenityRest.given()
+                .contentType("application/json")
+                .when()
+                .delete(menuUrl.concat("/").concat(menuID)
+                        .concat(WebServiceEndPoints.CATEGORY.getUrl())
+                        .concat("/").concat(categoryID));
+    }
 }
