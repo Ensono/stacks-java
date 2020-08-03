@@ -12,7 +12,6 @@ public class MenuRequests {
     public void createMenu(String body) {
         SerenityRest.given()
                 .contentType("application/json")
-                .header("Content-Type", "application/json")
                 .body(body)
                 .when()
                 .post(menuUrl);
@@ -23,7 +22,6 @@ public class MenuRequests {
     public void updateMenu(String body, String id) {
         SerenityRest.given()
                 .contentType("application/json")
-                .header("Content-Type", "application/json")
                 .body(body)
                 .when()
                 .put(menuUrl + "/" + id);
@@ -32,5 +30,13 @@ public class MenuRequests {
     @Step("Get the menu")
     public void getMenu(String id) {
         SerenityRest.get(menuUrl.concat("/").concat(id));
+    }
+
+    @Step("Delete the menu")
+    public void deleteTheMenu(String id) {
+        SerenityRest.given()
+                .contentType("application/json")
+                .when()
+                .delete(menuUrl.concat("/").concat(id));
     }
 }
