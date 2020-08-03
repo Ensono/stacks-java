@@ -9,6 +9,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -52,6 +53,11 @@ class CreateItemControllerImplTest {
 
     @MockBean
     private MenuRepository menuRepository;
+
+    @AfterEach
+    void tearDown() {
+        menuRepository.deleteAll();
+    }
 
     @Test
     void testAddItem() {

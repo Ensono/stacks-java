@@ -22,6 +22,7 @@ public interface CreateCategoryController {
             tags = "Category",
             summary = "Create a category in the menu",
             description = "Adds a category to menu",
+            operationId = "AddMenuCategory",
             responses = {
                     @ApiResponse(
                             responseCode = "201",
