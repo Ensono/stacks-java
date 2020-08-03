@@ -228,7 +228,7 @@ stages:
 
           - checkout: templates
 
-          - template: deploy/infra/deploy-infra.yml
+          - template: templates/steps/deploy/infra/deploy-infra.yml
             parameters:
               pipeline_scripts_directory: "$(self_pipeline_scripts_dir)"
               docker_terraform_container: "terraform_custom"
