@@ -24,6 +24,7 @@ public interface CreateMenuController {
             tags = "Menu",
             summary = "Create a menu",
             description = "Adds a menu",
+            operationId = "CreateMenu",
             responses = {
                     @ApiResponse(
                             responseCode = "201",

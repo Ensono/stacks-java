@@ -8,6 +8,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -49,6 +50,11 @@ class CreateCategoryControllerImplTest {
 
     @MockBean
     private MenuRepository menuRepository;
+
+    @AfterEach
+    void tearDown() {
+        menuRepository.deleteAll();
+    }
 
     @Test
     void testCanNotAddCategoryIfMenuNotPresent() {

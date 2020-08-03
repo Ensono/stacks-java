@@ -29,7 +29,7 @@ public interface UpdateCategoryController {
             tags = "Category",
             summary = "Update a category in the menu",
             description = "Update a category to menu",
-            operationId = "UpdateMenuCategory",
+            operationId = "UpdateMenuCategory", hidden = false,
             responses = {
                     @ApiResponse(
                             responseCode = "200",
