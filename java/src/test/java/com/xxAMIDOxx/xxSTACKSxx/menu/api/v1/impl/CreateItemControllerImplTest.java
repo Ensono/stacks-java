@@ -43,6 +43,7 @@ import static org.springframework.http.HttpStatus.*;
 @Tag("Integration")
 class CreateItemControllerImplTest {
 
+    public static final String CREATE_ITEM = "%s/v1/menu/%s/category/%s/items";
 
     @LocalServerPort
     private int port;
@@ -77,7 +78,7 @@ class CreateItemControllerImplTest {
         // When
         var response =
                 this.testRestTemplate.postForEntity(
-                        String.format("%s/v1/menu/%s/category/%s/items",
+                        String.format(CREATE_ITEM,
                                 getBaseURL(port), menu.getId(), category.getId()),
                         request,
                         ResourceCreatedResponse.class);
@@ -122,7 +123,7 @@ class CreateItemControllerImplTest {
         // When
         var response =
                 this.testRestTemplate.postForEntity(
-                        String.format("%s/v1/menu/%s/category/%s/items",
+                        String.format(CREATE_ITEM,
                                 getBaseURL(port), randomUUID(), "xyz"),
                         request,
                         ErrorResponse.class);
@@ -149,7 +150,7 @@ class CreateItemControllerImplTest {
         // When
         var response =
                 this.testRestTemplate.postForEntity(
-                        String.format("%s/v1/menu/%s/category/%s/items",
+                        String.format(CREATE_ITEM,
                                 getBaseURL(port), menu.getId(), randomUUID()),
                         request,
                         ErrorResponse.class);
@@ -186,7 +187,7 @@ class CreateItemControllerImplTest {
         // When
         var response =
                 this.testRestTemplate.postForEntity(
-                        String.format("%s/v1/menu/%s/category/%s/items",
+                        String.format(CREATE_ITEM,
                                 getBaseURL(port), menu.getId(), category.getId()),
                         request,
                         ErrorResponse.class);

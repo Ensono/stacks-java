@@ -41,6 +41,8 @@ import static org.springframework.http.HttpStatus.OK;
 @Tag("Integration")
 class DeleteMenuControllerImplTest {
 
+  public static final String DELETE_MENU = "%s/v1/menu/%s";
+
   @LocalServerPort
   private int port;
 
@@ -62,7 +64,7 @@ class DeleteMenuControllerImplTest {
     when(repository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     var response =
-            this.testRestTemplate.exchange(String.format("%s/v1/menu/%s", getBaseURL(port), menu.getId()),
+            this.testRestTemplate.exchange(String.format(DELETE_MENU, getBaseURL(port), menu.getId()),
                     HttpMethod.DELETE,
                     new HttpEntity<>(getRequestHttpEntity()), ResponseEntity.class);
     // Then
@@ -77,7 +79,7 @@ class DeleteMenuControllerImplTest {
     when(repository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     var response =
-            this.testRestTemplate.exchange(String.format("%s/v1/menu/%s", getBaseURL(port), UUID.randomUUID().toString()),
+            this.testRestTemplate.exchange(String.format(DELETE_MENU, getBaseURL(port), UUID.randomUUID().toString()),
                     HttpMethod.DELETE,
                     new HttpEntity<>(getRequestHttpEntity()), ErrorResponse.class);
     // Then

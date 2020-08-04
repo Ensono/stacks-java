@@ -23,18 +23,13 @@ public interface DeleteCategoryController {
     @DeleteMapping(produces = "application/json")
     @Operation(
             tags = "Category",
-            summary = "Update a category in the menu",
-            description = "Update a category to menu",
-            operationId = "UpdateMenuCategory",
+            summary = "Removes a category and its items from menu",
+            description = "Removes a category and its items from menu",
+            operationId = "DeleteCategory",
             responses = {
                     @ApiResponse(
-                            responseCode = "200",
-                            description = "Success",
-                            content = @Content(mediaType = "application/json", schema = @Schema(hidden = true))),
-                    @ApiResponse(
                             responseCode = "204",
-                            description = "No Content",
-                            content = @Content(schema = @Schema(hidden = true))),
+                            description = "The resource was deleted successfully"),
                     @ApiResponse(
                             responseCode = "400",
                             description = "Bad Request",

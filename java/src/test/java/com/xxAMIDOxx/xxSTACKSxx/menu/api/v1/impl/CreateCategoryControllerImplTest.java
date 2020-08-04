@@ -41,6 +41,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @Tag("Integration")
 class CreateCategoryControllerImplTest {
 
+    public static final String CREATE_CATEGORY = "%s/v1/menu/%s/category";
+
     @LocalServerPort
     private int port;
 
@@ -63,7 +65,7 @@ class CreateCategoryControllerImplTest {
         // When
         var response =
                 this.testRestTemplate.postForEntity(
-                        String.format("%s/v1/menu/%s/category", getBaseURL(port), menuId),
+                        String.format(CREATE_CATEGORY, getBaseURL(port), menuId),
                         request,
                         ErrorResponse.class);
 
@@ -81,7 +83,7 @@ class CreateCategoryControllerImplTest {
         // When
         var response =
                 this.testRestTemplate.postForEntity(
-                        String.format("%s/v1/menu/%s/category", getBaseURL(port), randomUUID()),
+                        String.format(CREATE_CATEGORY, getBaseURL(port), randomUUID()),
                         request,
                         ErrorResponse.class);
 
@@ -99,7 +101,7 @@ class CreateCategoryControllerImplTest {
         // When
         var response =
                 this.testRestTemplate.postForEntity(
-                        String.format("%s/v1/menu/%s/category", getBaseURL(port), "XXXXXX"),
+                        String.format(CREATE_CATEGORY, getBaseURL(port), "XXXXXX"),
                         request,
                         ErrorResponse.class);
 
@@ -122,7 +124,7 @@ class CreateCategoryControllerImplTest {
         // When
         var response =
                 this.testRestTemplate.postForEntity(
-                        String.format("%s/v1/menu/%s/category", getBaseURL(port), menu.getId()),
+                        String.format(CREATE_CATEGORY, getBaseURL(port), menu.getId()),
                         request,
                         ResourceCreatedResponse.class);
 
@@ -162,7 +164,7 @@ class CreateCategoryControllerImplTest {
         // When
         var response =
                 this.testRestTemplate.postForEntity(
-                        String.format("%s/v1/menu/%s/category", getBaseURL(port), menu.getId()),
+                        String.format(CREATE_CATEGORY, getBaseURL(port), menu.getId()),
                         request,
                         ErrorResponse.class);
 

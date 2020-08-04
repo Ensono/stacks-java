@@ -37,7 +37,9 @@ import static org.mockito.Mockito.when;
                 CosmosAutoConfiguration.class
         })
 @Tag("Integration")
-public class CreateMenuControllerImplTest {
+class CreateMenuControllerImplTest {
+
+    public static final String CREATE_MENU = "/v1/menu";
 
     @LocalServerPort
     private int port;
@@ -62,7 +64,7 @@ public class CreateMenuControllerImplTest {
 
         // When
         var response =
-                this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu", request,
+                this.testRestTemplate.postForEntity(getBaseURL(port) + CREATE_MENU, request,
                         ResourceCreatedResponse.class);
 
         // Then
@@ -82,7 +84,7 @@ public class CreateMenuControllerImplTest {
 
         // When
         var response =
-                this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu", request,
+                this.testRestTemplate.postForEntity(getBaseURL(port) + CREATE_MENU, request,
                         ErrorResponse.class);
 
         // Then
@@ -100,7 +102,7 @@ public class CreateMenuControllerImplTest {
         // When
         var response =
                 this.testRestTemplate.postForEntity(
-                        getBaseURL(port) + "/v1/menu",
+                        getBaseURL(port) + CREATE_MENU,
                         request,
                         ErrorResponse.class);
 
