@@ -11,7 +11,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuItemUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryDoesNotExistException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ItemAlreadyExistsException;
-import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ItemDoesNotExistsException;
+import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ItemNotFoundException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +42,9 @@ public class UpdateItemHandler extends MenuBaseCommandHandler<UpdateItemCommand>
   Category updateItem(Menu menu, UpdateItemCommand command) {
     Category category = getCategory(menu, command);
     Item item = getItem(category, command);
-    if (category.getItems().stream().anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
+    if (category.getItems().stream().anyMatch(
+            c -> c.getName().equalsIgnoreCase(command.getName()))
+            && !item.getId().equalsIgnoreCase(command.getItemId().toString())) {
       throw new ItemAlreadyExistsException(command, command.getCategoryId(), command.getName());
     } else {
       item.setAvailable(command.getAvailable());
@@ -84,7 +86,7 @@ public class UpdateItemHandler extends MenuBaseCommandHandler<UpdateItemCommand>
               .filter(t -> t.getId().equals(command.getItemId().toString()))
               .findFirst();
     }
-    return existing.orElseThrow(() -> new ItemDoesNotExistsException(
+    return existing.orElseThrow(() -> new ItemNotFoundException(
             command, command.getCategoryId(), command.getItemId()));
   }
 

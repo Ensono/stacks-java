@@ -33,6 +33,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -81,11 +82,11 @@ class DeleteItemControllerImplTest {
 
     // Then
     verify(repository, times(1)).save(menu);
-    then(response.getStatusCode()).isEqualTo(OK);
+    then(response.getStatusCode()).isEqualTo(NO_CONTENT);
   }
 
   @Test
-  void testDeleteCategoryWithInvalidCategoryId() {
+  void testDeleteItemWithInvalidCategoryId() {
     // Given
     Menu menu = createMenu(1);
     Category category = createCategory(0);
@@ -98,6 +99,29 @@ class DeleteItemControllerImplTest {
     // When
     String requestUrl = String.format("%s/v1/menu/%s/category/%s/items/%s",
             getBaseURL(port), menu.getId(), item.getId(), item.getId());
+
+    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.DELETE,
+            new HttpEntity<>(getRequestHttpEntity()), ErrorResponse.class);
+
+    // Then
+    verify(repository, times(0)).save(menu);
+    then(response.getStatusCode()).isEqualTo(NOT_FOUND);
+  }
+
+  @Test
+  void testDeleteItemWithInvalidItemId() {
+    // Given
+    Menu menu = createMenu(1);
+    Category category = createCategory(0);
+    Item item =
+            new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
+    category.addUpdateItem(item);
+    menu.addUpdateCategory(category);
+    when(repository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    // When
+    String requestUrl = String.format("%s/v1/menu/%s/category/%s/items/%s",
+            getBaseURL(port), menu.getId(), category.getId(), UUID.randomUUID());
 
     var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.DELETE,
             new HttpEntity<>(getRequestHttpEntity()), ErrorResponse.class);
