@@ -8,6 +8,8 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
+import org.hibernate.validator.internal.IgnoreForbiddenApisErrors;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -54,6 +56,11 @@ class UpdateItemControllerImplTest {
   @MockBean
   private MenuRepository menuRepository;
 
+  @AfterEach
+  void teaDown() {
+    menuRepository.deleteAll();
+  }
+
   @Test
   void testUpdateItemSuccess() {
     // Given
@@ -94,5 +101,88 @@ class UpdateItemControllerImplTest {
     then(updatedItem.getPrice()).isEqualTo(request.getPrice());
     then(updatedItem.getAvailable()).isTrue();
   }
+
+  @Test
+  void testUpdateItemDescription() {
+    // Given
+    Menu menu = createMenu(0);
+    Category category = createCategory(0);
+    Item item =
+            new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
+    category.addUpdateItem(item);
+       menu.addUpdateCategory(category);
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    UpdateItemRequest request = new UpdateItemRequest("New Item",
+            "Some Description2",
+            13.56d,
+            true);
+
+    // When
+    String requestUrl = String.format("%s/v1/menu/%s/category/%s/items/%s",
+            getBaseURL(port), menu.getId(), category.getId(), item.getId());
+
+    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
+            new HttpEntity<>(request, getRequestHttpEntity()), ResourceUpdatedResponse.class);
+
+    // Then
+    then(response).isNotNull();
+    then(response.getStatusCode()).isEqualTo(OK);
+
+    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
+    verify(menuRepository, times(1)).save(captor.capture());
+    Menu updated = captor.getValue();
+    then(updated.getCategories()).hasSize(1);
+    Category updatedCategory = updated.getCategories().get(0);
+    then(updatedCategory.getItems()).hasSize(1);
+    Item updatedItem = updatedCategory.getItems().get(0);
+
+    then(updatedItem.getDescription()).isEqualTo(request.getDescription());
+    then(updatedItem.getName()).isEqualTo(request.getName());
+    then(updatedItem.getPrice()).isEqualTo(request.getPrice());
+    then(updatedItem.getAvailable()).isTrue();
+  }
+
+
+//  @Test
+//  void testUpdateItemWithInvalidId() {
+//    // Given
+//    Menu menu = createMenu(0);
+//    Category category = createCategory(0);
+//    Item item =
+//            new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
+//    category.addUpdateItem(item);
+//    menu.addUpdateCategory(category);
+//    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+//
+//    UpdateItemRequest request = new UpdateItemRequest("Some Name",
+//            "Some Description",
+//            13.56d,
+//            true);
+//
+//    // When
+//    String requestUrl = String.format("%s/v1/menu/%s/category/%s/items/%s",
+//            getBaseURL(port), menu.getId(), category.getId(), category.getId());
+//
+//    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
+//            new HttpEntity<>(request, getRequestHttpEntity()), ResourceUpdatedResponse.class);
+//
+//    // Then
+//    then(response).isNotNull();
+//    then(response.getStatusCode()).isEqualTo(OK);
+//
+//    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
+//    verify(menuRepository, times(1)).save(captor.capture());
+//    Menu updated = captor.getValue();
+//    then(updated.getCategories()).hasSize(1);
+//    Category updatedCategory = updated.getCategories().get(0);
+//    then(updatedCategory.getItems()).hasSize(1);
+//    Item updatedItem = updatedCategory.getItems().get(0);
+//
+//    then(updatedItem.getDescription()).isEqualTo(request.getDescription());
+//    then(updatedItem.getName()).isEqualTo(request.getName());
+//    then(updatedItem.getPrice()).isEqualTo(request.getPrice());
+//    then(updatedItem.getAvailable()).isTrue();
+//  }
 
 }
