@@ -6,8 +6,8 @@ Feature: Delete Item
     # 1. Create menu
     Given the application is running
     And the following menu data:
-      | name                | description   | tenantId                             | enabled |
-      | Andy's Greek Tavern | Greek Cuisine | d333f1ee-3c56-4b01-90e6-d701748f5656 | true    |
+      | name                                      | description   | tenantId                             | enabled |
+      | Andy's Greek Tavern (Automated Test Data) | Greek Cuisine | d333f1ee-3c56-4b01-90e6-d701748f5656 | true    |
     When I create the menu
     Then the menu was successfully created
     And the returned status code is 201

@@ -166,14 +166,12 @@ public class ItemStepDefinitions {
     @Then("I update the item with the following data for the menu with {string} id:")
     public void i_update_the_menu_for_given_menu(String menu_id, List<Map<String, String>> itemDetails) throws IOException {
         the_following_item_data(itemDetails);
-
         itemRequest.updateItem(itemBody, menu_id, categoryId, itemId);
     }
 
     @Then("I update the item with the following data for the category with {string} id:")
     public void i_update_the_menu_for_given_category(String category_id, List<Map<String, String>> itemDetails) throws IOException {
         the_following_item_data(itemDetails);
-
         itemRequest.updateItem(itemBody, menuId, category_id, itemId);
     }
 }

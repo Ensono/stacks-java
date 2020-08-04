@@ -3,6 +3,7 @@ package com.xxAMIDOxx.xxSTACKSxx.api.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Menu {
@@ -59,5 +60,24 @@ public class Menu {
 
     public Boolean getEnabled() {
         return enabled;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Menu menu = (Menu) o;
+        return Objects.equals(id, menu.id) &&
+                Objects.equals(restaurantId, menu.restaurantId) &&
+                Objects.equals(name, menu.name) &&
+                Objects.equals(description, menu.description) &&
+                Objects.equals(categories, menu.categories) &&
+                Objects.equals(enabled, menu.enabled);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, restaurantId, name, description, categories, enabled);
     }
 }
