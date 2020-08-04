@@ -33,6 +33,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -81,11 +82,11 @@ class DeleteItemControllerImplTest {
 
     // Then
     verify(repository, times(1)).save(menu);
-    then(response.getStatusCode()).isEqualTo(OK);
+    then(response.getStatusCode()).isEqualTo(NO_CONTENT);
   }
 
   @Test
-  void testDeleteCategoryWithInvalidCategoryId() {
+  void testDeleteItemWithInvalidCategoryId() {
     // Given
     Menu menu = createMenu(1);
     Category category = createCategory(0);

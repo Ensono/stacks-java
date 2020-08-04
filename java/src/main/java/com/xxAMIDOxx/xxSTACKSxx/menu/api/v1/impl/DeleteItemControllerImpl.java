@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -26,6 +27,6 @@ public class DeleteItemControllerImpl implements DeleteItemController {
   public ResponseEntity<Void> deleteItem(UUID menuId, UUID categoryId,
                                          UUID itemId, String correlationId) {
     handler.handle(new DeleteItemCommand(correlationId, menuId, categoryId, itemId));
-    return new ResponseEntity<>(OK);
+    return new ResponseEntity<>(NO_CONTENT);
   }
 }
