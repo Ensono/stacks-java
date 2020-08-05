@@ -6,8 +6,8 @@ Feature: Delete category
      # 1. Create menu
     Given the application is running
     And the following menu data:
-      | name      | description    | tenantId                             | enabled |
-      | Le Renoir | French Cuisine | d211f1ee-6c54-4b01-90e6-d701748f0852 | true    |
+      | name                            | description    | tenantId                             | enabled |
+      | Le Renoir (Automated Test Data) | French Cuisine | d211f1ee-6c54-4b01-90e6-d701748f0852 | true    |
     When I create the menu
     Then the menu was successfully created
     And the returned status code is 201
