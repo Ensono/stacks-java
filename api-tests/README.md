@@ -15,6 +15,11 @@
   d. Run tests by other tags and ignore tests that contain @Ignore tags:
   `mvn clean verify  verify -Dcucumber.options="--tags ~@Ignore --tags @YourTag"`
 
+## Check the output report
+Please use this path to find the generated test report:
+
+ `stacks-java/api-tests/target/site/serenity/index.html`
+
 ## Health check
 
 Available at: http://localhost:9000/health
