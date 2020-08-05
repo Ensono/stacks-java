@@ -38,6 +38,7 @@ Feature: Update Item
       | Updated name | Greek style burger patties served with cheese and tomatoes. | 11.95 | true      |
 
 
+  @Ignore
   Scenario: Update the existing item - update description only
     Given I update the item with the following data:
       | name    | description          | price | available |
@@ -49,6 +50,7 @@ Feature: Update Item
       | Bifteki | New Description Here | 11.95 | true      |
 
 
+  @Ignore
   Scenario: Update the existing item - update price only
     Given I update the item with the following data:
       | name    | description                                                 | price | available |
@@ -60,6 +62,7 @@ Feature: Update Item
       | Bifteki | Greek style burger patties served with cheese and tomatoes. | 15.95 | true      |
 
 
+  @Ignore
   Scenario: Update the existing item - update the availability only
     Given I update the item with the following data:
       | name    | description                                                 | price | available |
