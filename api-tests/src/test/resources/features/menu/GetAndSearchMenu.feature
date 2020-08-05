@@ -6,24 +6,24 @@ Feature: Search menu
   Scenario: Get menu by id
     Given the application is running
     And the following menu data:
-      | name      | description    | tenantId                             | enabled |
-      | Le Renoir | French Cuisine | d211f1ee-6c54-4b01-90e6-d701748f0852 | true    |
+      | name                            | description    | tenantId                             | enabled |
+      | Le Renoir (Automated Test Data) | French Cuisine | d211f1ee-6c54-4b01-90e6-d701748f0852 | true    |
     When I create the menu
     Then the menu was successfully created
     And the returned status code is 201
     And I search the created menu by id
     Then the returned status code is 200
     And the menu should include the following data:
-      | name      | description    | tenantId                             | enabled |
-      | Le Renoir | French Cuisine | d211f1ee-6c54-4b01-90e6-d701748f0852 | true    |
+      | name                            | description    | tenantId                             | enabled |
+      | Le Renoir (Automated Test Data) | French Cuisine | d211f1ee-6c54-4b01-90e6-d701748f0852 | true    |
 
 
   @DeleteCreatedMenu
   Scenario: Search menu by search term
     Given the application is running
     And the following menu data:
-      | name       | description                           | tenantId                             | enabled |
-      | Lunch Menu | A delicious food selection for lunch. | d211f1ee-6c54-4b01-90e6-d701748f0852 | false   |
+      | name                             | description                           | tenantId                             | enabled |
+      | Lunch Menu (Automated Test Data) | A delicious food selection for lunch. | d211f1ee-6c54-4b01-90e6-d701748f0852 | false   |
     When I create the menu
     Then the menu was successfully created
     And the returned status code is 201
@@ -70,8 +70,8 @@ Feature: Search menu
   Scenario: Search menu by restaurant Id
     Given the application is running
     And the following menu data:
-      | name       | description                           | tenantId                             | enabled |
-      | Lunch Menu | A delicious food selection for lunch. | d211f1ee-6c54-4b01-90e6-d701748f0852 | false   |
+      | name                             | description                           | tenantId                             | enabled |
+      | Lunch Menu (Automated Test Data) | A delicious food selection for lunch. | d211f1ee-6c54-4b01-90e6-d701748f0852 | false   |
     When I create the menu
     Then the menu was successfully created
     And the returned status code is 201
@@ -80,15 +80,15 @@ Feature: Search menu
       | restaurantId | d211f1ee-6c54-4b01-90e6-d701748f0852 |
     Then the returned status code is 200
     And the menu should include the following details:
-      | name       | description                           | tenantId                             | enabled |
-      | Lunch Menu | A delicious food selection for lunch. | d211f1ee-6c54-4b01-90e6-d701748f0852 | false   |
+      | name                             | description                           | tenantId                             | enabled |
+      | Lunch Menu (Automated Test Data) | A delicious food selection for lunch. | d211f1ee-6c54-4b01-90e6-d701748f0852 | false   |
 
   @DeleteCreatedMenu
   Scenario: Get menus by page size
     Given the application is running
     And the following menu data:
-      | name       | description                           | tenantId                             | enabled |
-      | Lunch Menu | A delicious food selection for lunch. | d211f1ee-6c54-4b01-90e6-d701748f0852 | false   |
+      | name                             | description                           | tenantId                             | enabled |
+      | Lunch Menu (Automated Test Data) | A delicious food selection for lunch. | d211f1ee-6c54-4b01-90e6-d701748f0852 | false   |
     When I create the menu
     Then the menu was successfully created
     And the menu list is not empty
