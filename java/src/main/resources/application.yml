@@ -22,7 +22,6 @@ springdoc:
     disable-swagger-default-url: true
     display-operation-id: true
     path: /swagger/index.html # TODO: Swagger keeps redirecting, it'd be good to stop it if possible
-    config-url: ""
   packagesToScan: com.xxAMIDOxx.xxSTACKSxx.menu.api.v1
 
 azure:

@@ -10,7 +10,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.events.ItemDeletedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryDoesNotExistException;
-import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ItemNotFoundException;
+import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ItemDoesNotExistsException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import org.springframework.stereotype.Component;
 
@@ -62,7 +62,7 @@ public class DeleteItemHandler extends MenuBaseCommandHandler<DeleteItemCommand>
   }
 
   Item getItem(Category category, DeleteItemCommand command) {
-    return findItem(category, command.getItemId()).orElseThrow(() -> new ItemNotFoundException(
+    return findItem(category, command.getItemId()).orElseThrow(() -> new ItemDoesNotExistsException(
             command, command.getCategoryId(), command.getItemId()));
   }
 }

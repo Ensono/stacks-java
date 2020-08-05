@@ -8,6 +8,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
+import org.hibernate.validator.internal.IgnoreForbiddenApisErrors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import org.springframework.http.HttpMethod;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.CategoryHelper.createCategory;
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.ItemHelper.createItem;
@@ -105,7 +107,7 @@ class UpdateItemControllerImplTest {
   }
 
   @Test
-  void testUpdateItemDescriptionForExistingItem() {
+  void testUpdateItemDescription() {
     // Given
     Menu menu = createMenu(0);
     Category category = createCategory(0);

@@ -28,8 +28,13 @@ public interface DeleteItemController {
             operationId = "DeleteMenuItem",
             responses = {
                     @ApiResponse(
+                            responseCode = "200",
+                            description = "Success",
+                            content = @Content(mediaType = "application/json", schema = @Schema(hidden = true))),
+                    @ApiResponse(
                             responseCode = "204",
-                            description = "The resource was deleted successfully"),
+                            description = "No Content",
+                            content = @Content(schema = @Schema(hidden = true))),
                     @ApiResponse(
                             responseCode = "400",
                             description = "Bad Request",
