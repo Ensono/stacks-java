@@ -15,14 +15,14 @@ parameters:
   project_type: ""
 
 steps:
-  # - task: Cache@2
-  #   inputs:
-  #     key: 'maven | "$(Agent.OS)" | ${{ parameters.project_root_dir }}/pom.xml'
-  #     restoreKeys: |
-  #       maven | "$(Agent.OS)"
-  #       maven
-  #     path: "${{ parameters.project_root_dir }}/${{ parameters.maven_cache_directory }}"
-  #   displayName: Cache Maven packages (${{ parameters.project_type }})
+  - task: Cache@2
+    inputs:
+      key: 'maven | "$(Agent.OS)" | ${{ parameters.project_root_dir }}/pom.xml'
+      restoreKeys: |
+        maven | "$(Agent.OS)"
+        maven
+      path: "${{ parameters.project_root_dir }}/${{ parameters.maven_cache_directory }}"
+    displayName: Cache Maven packages (${{ parameters.project_type }})
 
   # - task: Bash@3
   #   inputs:
