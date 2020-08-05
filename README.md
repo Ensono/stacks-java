@@ -27,3 +27,8 @@ The following environment variables are required:
 
 - AZURE_COSMOSDB_KEY
 - AZURE_APPLICATION_INSIGHTS_INSTRUMENTATION_KEY
+
+### Maven Wrapper
+
+There are two Maven wrappers in the repo, one in `java/` and one in `api-tests/`.
+Both these aid in running maven commands by using `./mvn` instead.

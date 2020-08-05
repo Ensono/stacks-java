@@ -1,0 +1,63 @@
+parameters:
+  repo_root_dir: ""
+  functional_tests_project_root_dir: ""
+  pipeline_scripts_directory: ""
+  # Maven
+  maven_cache_directory: ""
+  # maven_surefire_reports_dir: ""
+  maven_allowed_post_deploy_test_tags: ""
+  maven_ignored_post_deploy_test_tags: ""
+  # Docker Config
+  docker_build_container: ""
+  project_type: ""
+
+steps:
+  - task: Cache@2
+    inputs:
+      key: 'maven | "$(Agent.OS)" | ${{ parameters.functional_tests_project_root_dir }}/pom.xml'
+      restoreKeys: |
+        maven | "$(Agent.OS)"
+        maven
+      path: "${{ parameters.functional_tests_project_root_dir }}/${{ parameters.maven_cache_directory }}"
+    displayName: Cache Maven packages (${{ parameters.project_type }})
+
+  - task: Bash@3
+    inputs:
+      filePath: "${{ parameters.pipeline_scripts_directory }}/build-maven-install.bash"
+      arguments: >
+        -Z "${{ parameters.maven_cache_directory }}"
+      workingDirectory: "${{ parameters.functional_tests_project_root_dir }}"
+    target:
+      container: ${{ parameters.docker_build_container }}
+    displayName: "Maven: Install Packages (${{ parameters.project_type }})"
+
+  - task: Bash@3
+    inputs:
+      filePath: "${{ parameters.pipeline_scripts_directory }}/build-maven-compile.bash"
+      arguments: >
+        -Z "${{ parameters.maven_cache_directory }}"
+      workingDirectory: "${{ parameters.functional_tests_project_root_dir }}"
+    target:
+      container: ${{ parameters.docker_build_container }}
+    displayName: "Maven: Compile Application (${{ parameters.project_type }})"
+
+  - task: Bash@3
+    inputs:
+      filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-post-deploy-untagged-test-check.bash"
+      arguments: >
+        -a "${{ parameters.allowed_post_deploy_test_tags }}"
+        -Y "${{ parameters.maven_ignored_post_deploy_test_tags }}"
+        -Z "${{ parameters.maven_cache_directory }}"
+      workingDirectory: "${{ parameters.functional_tests_project_root_dir }}"
+    target:
+      container: ${{ parameters.docker_build_container }}
+    displayName: "Maven: Invalid Test Tag Check (${{ parameters.project_type }})"
+
+  - task: Bash@3
+    inputs:
+      inline: |
+        tar -cvzf post-deploy-tests.tgz .
+      workingDirectory: "${{ parameters.functional_tests_project_root_dir }}"
+    target:
+      container: ${{ parameters.docker_build_container }}
+    displayName: "Maven: Invalid Test Tag Check (${{ parameters.project_type }})"

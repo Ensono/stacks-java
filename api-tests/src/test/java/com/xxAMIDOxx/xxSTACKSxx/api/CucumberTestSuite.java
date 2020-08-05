@@ -10,8 +10,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         plugin = {"pretty", "html:target/cucumber"},
         features = "src/test/resources/features",
-        tags = "@Smoke, @Regression, ~@Ignore, @Functional"
-
+        tags = "(not @Ignore) and (@Smoke or @Regression or @Functional)"
 )
 public class CucumberTestSuite {
 
