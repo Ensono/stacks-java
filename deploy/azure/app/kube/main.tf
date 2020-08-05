@@ -49,7 +49,7 @@ resource "azurerm_storage_account" "test_report" {
   account_tier             = var.test_report_account_tier
   account_replication_type = var.test_report_account_replication_type
 
-  static_website = {}
+  static_website {}
 
   tags = var.tags
 }
