@@ -11,7 +11,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuItemUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryDoesNotExistException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ItemAlreadyExistsException;
-import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ItemNotFoundException;
+import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ItemDoesNotExistsException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import org.springframework.stereotype.Component;
 
@@ -88,7 +88,7 @@ public class UpdateItemHandler extends MenuBaseCommandHandler<UpdateItemCommand>
 
   Item getItem(Category category, UpdateItemCommand command) {
     return findItem(category, command.getItemId()).orElseThrow(
-            () -> new ItemNotFoundException(
+            () -> new ItemDoesNotExistsException(
                     command, command.getCategoryId(), command.getItemId()));
   }
 

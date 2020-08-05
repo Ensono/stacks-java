@@ -6,10 +6,10 @@ import java.util.UUID;
 /**
  * @author ArathyKrishna
  */
-public class ItemNotFoundException extends MenuApiException {
+public class ItemDoesNotExistsException extends MenuApiException {
 
-  public ItemNotFoundException(MenuCommand command, UUID categoryId,
-                               UUID itemId) {
+  public ItemDoesNotExistsException(MenuCommand command, UUID categoryId,
+                                    UUID itemId) {
     super(String.format(
             "An item with the id '%s' does not exists for category with the id '%s' and for menu with id '%s'.", itemId, categoryId,
             command.getMenuId()),
