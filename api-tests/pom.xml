@@ -9,7 +9,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <serenity.version>2.0.91</serenity.version>
+        <serenity.version>2.2.12</serenity.version>
         <serenity.maven.version>2.0.91</serenity.maven.version>
         <serenity.cucumber.version>1.0.30</serenity.cucumber.version>
         <cucumber.version>6.4.0</cucumber.version>
@@ -123,7 +123,7 @@
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.7.0</version>
+            <version>3.0.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -156,7 +156,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.22.1</version>
+                <version>2.22.2</version>
                 <configuration>
                     <includes>
                         <include>**/*Test.java</include>
