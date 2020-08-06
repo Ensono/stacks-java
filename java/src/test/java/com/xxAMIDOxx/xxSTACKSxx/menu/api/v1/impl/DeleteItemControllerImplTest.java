@@ -81,7 +81,7 @@ class DeleteItemControllerImplTest {
   }
 
   @Test
-  void testDeleteCategoryWithInvalidCategoryId() {
+  void testDeleteItemWithInvalidCategoryId() {
     // Given
     Menu menu = createMenu(1);
     Category category = createCategory(0);

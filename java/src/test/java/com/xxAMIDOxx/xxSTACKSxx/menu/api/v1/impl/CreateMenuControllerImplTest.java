@@ -33,7 +33,9 @@ import org.springframework.http.HttpStatus;
 @EnableAutoConfiguration(
     exclude = {CosmosDbRepositoriesAutoConfiguration.class, CosmosAutoConfiguration.class})
 @Tag("Integration")
-public class CreateMenuControllerImplTest {
+class CreateMenuControllerImplTest {
+
+  public static final String CREATE_MENU = "/v1/menu";
 
   @LocalServerPort private int port;
 
@@ -57,7 +59,7 @@ public class CreateMenuControllerImplTest {
     // When
     var response =
         this.testRestTemplate.postForEntity(
-            getBaseURL(port) + "/v1/menu", request, ResourceCreatedResponse.class);
+            getBaseURL(port) + CREATE_MENU, request, ResourceCreatedResponse.class);
 
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -78,7 +80,7 @@ public class CreateMenuControllerImplTest {
     // When
     var response =
         this.testRestTemplate.postForEntity(
-            getBaseURL(port) + "/v1/menu", request, ErrorResponse.class);
+            getBaseURL(port) + CREATE_MENU, request, ErrorResponse.class);
 
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
@@ -96,7 +98,7 @@ public class CreateMenuControllerImplTest {
     // When
     var response =
         this.testRestTemplate.postForEntity(
-            getBaseURL(port) + "/v1/menu", request, ErrorResponse.class);
+            getBaseURL(port) + CREATE_MENU, request, ErrorResponse.class);
 
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);

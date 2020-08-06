@@ -38,6 +38,8 @@ import org.springframework.http.HttpStatus;
 @Tag("Integration")
 class UpdateMenuControllerImplTest {
 
+  public static final String UPDATE_MENU = "%s/v1/menu/%s";
+
   @LocalServerPort private int port;
 
   @Autowired private TestRestTemplate testRestTemplate;
@@ -55,7 +57,7 @@ class UpdateMenuControllerImplTest {
     // When
     var response =
         this.testRestTemplate.exchange(
-            String.format("%s/v1/menu/%s", getBaseURL(port), menu.getId()),
+            String.format(UPDATE_MENU, getBaseURL(port), menu.getId()),
             HttpMethod.PUT,
             new HttpEntity<>(request, getRequestHttpEntity()),
             ResourceUpdatedResponse.class);
@@ -85,7 +87,7 @@ class UpdateMenuControllerImplTest {
     // When
     var response =
         this.testRestTemplate.exchange(
-            String.format("%s/v1/menu/%s", getBaseURL(port), menuId),
+            String.format(UPDATE_MENU, getBaseURL(port), menuId),
             HttpMethod.PUT,
             new HttpEntity<>(request, getRequestHttpEntity()),
             ErrorResponse.class);

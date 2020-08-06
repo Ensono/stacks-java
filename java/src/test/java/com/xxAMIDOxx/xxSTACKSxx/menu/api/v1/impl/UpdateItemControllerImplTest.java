@@ -1,6 +1,8 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.CategoryHelper.createCategory;
+import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.ItemHelper.createItem;
+import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.ItemHelper.createItems;
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.MenuHelper.createMenu;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getRequestHttpEntity;
@@ -19,8 +21,9 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -34,11 +37,14 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 
 /** @author ArathyKrishna */
+/** @author ArathyKrishna */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(
     exclude = {CosmosDbRepositoriesAutoConfiguration.class, CosmosAutoConfiguration.class})
 @Tag("Integration")
 class UpdateItemControllerImplTest {
+
+  public static final String UPDATE_ITEM = "%s/v1/menu/%s/category/%s/items/%s";
 
   @LocalServerPort private int port;
 
@@ -46,12 +52,17 @@ class UpdateItemControllerImplTest {
 
   @MockBean private MenuRepository menuRepository;
 
+  @AfterEach
+  void teaDown() {
+    menuRepository.deleteAll();
+  }
+
   @Test
   void testUpdateItemSuccess() {
     // Given
     Menu menu = createMenu(0);
     Category category = createCategory(0);
-    Item item = new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
+    Item item = createItem(0);
     category.addUpdateItem(item);
     menu.addUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
@@ -61,9 +72,7 @@ class UpdateItemControllerImplTest {
 
     // When
     String requestUrl =
-        String.format(
-            "%s/v1/menu/%s/category/%s/items/%s",
-            getBaseURL(port), menu.getId(), category.getId(), item.getId());
+        String.format(UPDATE_ITEM, getBaseURL(port), menu.getId(), category.getId(), item.getId());
 
     var response =
         this.testRestTemplate.exchange(
@@ -88,5 +97,52 @@ class UpdateItemControllerImplTest {
     then(updatedItem.getName()).isEqualTo(request.getName());
     then(updatedItem.getPrice()).isEqualTo(request.getPrice());
     then(updatedItem.getAvailable()).isTrue();
+  }
+
+  @Test
+  void testUpdateItemDescription() {
+    // Given
+    Menu menu = createMenu(0);
+    Category category = createCategory(0);
+    List<Item> items = createItems(2);
+    category.setItems(items);
+    menu.addUpdateCategory(category);
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    UpdateItemRequest request =
+        new UpdateItemRequest(items.get(0).getName(), "Some Description2", 13.56d, true);
+
+    // When
+    String requestUrl =
+        String.format(
+            UPDATE_ITEM, getBaseURL(port), menu.getId(), category.getId(), items.get(0).getId());
+
+    var response =
+        this.testRestTemplate.exchange(
+            requestUrl,
+            HttpMethod.PUT,
+            new HttpEntity<>(request, getRequestHttpEntity()),
+            ResourceUpdatedResponse.class);
+
+    // Then
+    then(response).isNotNull();
+    then(response.getStatusCode()).isEqualTo(OK);
+
+    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
+    verify(menuRepository, times(1)).save(captor.capture());
+    Category updatedCategory = captor.getValue().getCategories().get(0);
+    then(updatedCategory.getItems()).hasSize(2);
+
+    Item updatedItem = updatedCategory.getItems().get(1);
+    then(updatedItem.getDescription()).isEqualTo(request.getDescription());
+    then(updatedItem.getName()).isEqualTo(request.getName());
+    then(updatedItem.getPrice()).isEqualTo(request.getPrice());
+    then(updatedItem.getAvailable()).isTrue();
+
+    Item nonUpdatedItem = updatedCategory.getItems().get(0);
+    then(nonUpdatedItem.getDescription()).isEqualTo(items.get(1).getDescription());
+    then(nonUpdatedItem.getName()).isEqualTo(items.get(1).getName());
+    then(nonUpdatedItem.getPrice()).isEqualTo(items.get(1).getPrice());
+    then(nonUpdatedItem.getAvailable()).isEqualTo(items.get(1).getAvailable());
   }
 }

@@ -37,6 +37,8 @@ import org.springframework.http.HttpStatus;
 @Tag("Integration")
 class CreateCategoryControllerImplTest {
 
+  public static final String CREATE_CATEGORY = "%s/v1/menu/%s/category";
+
   @LocalServerPort private int port;
 
   @Autowired private TestRestTemplate testRestTemplate;
@@ -55,9 +57,7 @@ class CreateCategoryControllerImplTest {
     // When
     var response =
         this.testRestTemplate.postForEntity(
-            String.format("%s/v1/menu/%s/category", getBaseURL(port), menuId),
-            request,
-            ErrorResponse.class);
+            String.format(CREATE_CATEGORY, getBaseURL(port), menuId), request, ErrorResponse.class);
 
     // Then
     then(response).isNotNull();
@@ -72,7 +72,7 @@ class CreateCategoryControllerImplTest {
     // When
     var response =
         this.testRestTemplate.postForEntity(
-            String.format("%s/v1/menu/%s/category", getBaseURL(port), randomUUID()),
+            String.format(CREATE_CATEGORY, getBaseURL(port), randomUUID()),
             request,
             ErrorResponse.class);
 
@@ -89,7 +89,7 @@ class CreateCategoryControllerImplTest {
     // When
     var response =
         this.testRestTemplate.postForEntity(
-            String.format("%s/v1/menu/%s/category", getBaseURL(port), "XXXXXX"),
+            String.format(CREATE_CATEGORY, getBaseURL(port), "XXXXXX"),
             request,
             ErrorResponse.class);
 
@@ -111,7 +111,7 @@ class CreateCategoryControllerImplTest {
     // When
     var response =
         this.testRestTemplate.postForEntity(
-            String.format("%s/v1/menu/%s/category", getBaseURL(port), menu.getId()),
+            String.format(CREATE_CATEGORY, getBaseURL(port), menu.getId()),
             request,
             ResourceCreatedResponse.class);
 
@@ -149,7 +149,7 @@ class CreateCategoryControllerImplTest {
     // When
     var response =
         this.testRestTemplate.postForEntity(
-            String.format("%s/v1/menu/%s/category", getBaseURL(port), menu.getId()),
+            String.format(CREATE_CATEGORY, getBaseURL(port), menu.getId()),
             request,
             ErrorResponse.class);
 
