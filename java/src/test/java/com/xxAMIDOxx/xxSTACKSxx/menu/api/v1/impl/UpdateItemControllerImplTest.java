@@ -2,6 +2,7 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
+import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateItemRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
@@ -27,11 +28,13 @@ import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.CategoryHelper.createCategory
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.MenuHelper.createMenu;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getRequestHttpEntity;
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -60,7 +63,7 @@ class UpdateItemControllerImplTest {
     Menu menu = createMenu(0);
     Category category = createCategory(0);
     Item item =
-            new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
+            new Item(randomUUID().toString(), "New Item", "Item description", 12.2d, true);
     category.addUpdateItem(item);
     menu.addUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
@@ -93,6 +96,68 @@ class UpdateItemControllerImplTest {
     then(updatedItem.getName()).isEqualTo(request.getName());
     then(updatedItem.getPrice()).isEqualTo(request.getPrice());
     then(updatedItem.getAvailable()).isTrue();
+  }
+
+  @Test
+  void testUpdateItemWithInvalidCategoryId() {
+    // Given
+    Menu menu = createMenu(0);
+    Category category = createCategory(0);
+    Item item =
+            new Item(randomUUID().toString(), "New Item", "Item description", 12.2d, true);
+    category.addUpdateItem(item);
+    menu.addUpdateCategory(category);
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    UpdateItemRequest request = new UpdateItemRequest("Some Name",
+            "Some Description",
+            13.56d,
+            true);
+
+    // When
+    String requestUrl = String.format("%s/v1/menu/%s/category/%s/items/%s",
+            getBaseURL(port), menu.getId(), randomUUID(), item.getId());
+
+    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
+            new HttpEntity<>(request, getRequestHttpEntity()), ErrorResponse.class);
+
+    // Then
+    then(response).isNotNull();
+    then(response.getStatusCode()).isEqualTo(NOT_FOUND);
+
+    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
+    verify(menuRepository, times(0)).save(captor.capture());
+  }
+
+  @Test
+  void testUpdateItemWithInvalidItemId() {
+    // Given
+    Menu menu = createMenu(0);
+    Category category = createCategory(0);
+    Item item =
+            new Item(randomUUID().toString(), "New Item", "Item description", 12.2d, true);
+    category.addUpdateItem(item);
+    menu.addUpdateCategory(category);
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    UpdateItemRequest request = new UpdateItemRequest("Some Name",
+            "Some Description",
+            13.56d,
+            true);
+
+    // When
+    String requestUrl = String.format("%s/v1/menu/%s/category/%s/items/%s",
+            getBaseURL(port), menu.getId(), category.getId(), randomUUID());
+
+    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
+            new HttpEntity<>(request, getRequestHttpEntity()), ResourceUpdatedResponse.class);
+
+    // Then
+    then(response).isNotNull();
+    then(response.getStatusCode()).isEqualTo(NOT_FOUND);
+
+    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
+    verify(menuRepository, times(0)).save(captor.capture());
   }
 
 }
