@@ -10,21 +10,17 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryAlreadyExistsException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryDoesNotExistException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
-import org.springframework.stereotype.Component;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.stereotype.Component;
 
-/**
- * @author ArathyKrishna
- */
+/** @author ArathyKrishna */
 @Component
 public class UpdateCategoryHandler extends MenuBaseCommandHandler<UpdateCategoryCommand> {
 
-  public UpdateCategoryHandler(MenuRepository repository,
-                               ApplicationEventPublisher publisher) {
+  public UpdateCategoryHandler(MenuRepository repository, ApplicationEventPublisher publisher) {
     super(repository, publisher);
   }
 
@@ -39,7 +35,7 @@ public class UpdateCategoryHandler extends MenuBaseCommandHandler<UpdateCategory
     Category category = getCategory(menu, command);
 
     if (menu.getCategories().stream()
-            .anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
+        .anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
       throw new CategoryAlreadyExistsException(command, command.getName());
     } else {
       category.setDescription(command.getDescription());
@@ -49,14 +45,13 @@ public class UpdateCategoryHandler extends MenuBaseCommandHandler<UpdateCategory
   }
 
   @Override
-  List<MenuEvent> raiseApplicationEvents(Menu menu,
-                                         UpdateCategoryCommand command) {
-    return Arrays.asList(new MenuUpdatedEvent(command),
-            new CategoryUpdatedEvent(command, command.getCategoryId()));
+  List<MenuEvent> raiseApplicationEvents(Menu menu, UpdateCategoryCommand command) {
+    return Arrays.asList(
+        new MenuUpdatedEvent(command), new CategoryUpdatedEvent(command, command.getCategoryId()));
   }
 
   Category getCategory(Menu menu, UpdateCategoryCommand command) {
-    return findCategory(menu, command.getCategoryId()).orElseThrow(() ->
-            new CategoryDoesNotExistException(command, command.getCategoryId()));
+    return findCategory(menu, command.getCategoryId())
+        .orElseThrow(() -> new CategoryDoesNotExistException(command, command.getCategoryId()));
   }
 }

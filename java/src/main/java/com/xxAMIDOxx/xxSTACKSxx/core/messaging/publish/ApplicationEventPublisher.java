@@ -4,5 +4,5 @@ import com.xxAMIDOxx.xxSTACKSxx.core.messaging.event.ApplicationEvent;
 
 public interface ApplicationEventPublisher {
 
-    void publish(ApplicationEvent applicationEvent);
+  void publish(ApplicationEvent applicationEvent);
 }
