@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ErrorResponse {
 
-    int errorCode;
-    int operationCode;
-    String correlationId;
-    String description;
+  int errorCode;
+  int operationCode;
+  String correlationId;
+  String description;
 }
