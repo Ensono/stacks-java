@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.CategoryHelper.createCategory;
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.MenuHelper.createMenu;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
 import static java.util.UUID.randomUUID;
@@ -197,5 +198,71 @@ class CreateItemControllerImplTest {
         // Then
         then(response).isNotNull();
         then(response.getStatusCode()).isEqualTo(CONFLICT);
+    }
+
+    @Test
+    void testNoItemNameReturnsBadRequest() {
+        // Given
+        Menu menu = createMenu(1);
+        Category category = createCategory(1);
+        menu.addUpdateCategory(category);
+
+        when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+        when(menuRepository.save(any(Menu.class))).thenReturn(menu);
+        CreateItemRequest request = new CreateItemRequest("", "Some Description",
+            13.56d, true );
+
+        // When
+        var response = this.testRestTemplate.postForEntity(String.format("%s/v1/menu/%s/category/%s/items",
+                    getBaseURL(port), menu.getId(), category.getId()), request, ErrorResponse.class);
+
+        // Then
+        then(response).isNotNull();
+        then(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+        then(response.getBody().getDescription()).isEqualTo("Invalid Request: {name=must not be blank}");
+    }
+
+    @Test
+    void testNoItemDescriptionReturnsBadRequest() {
+        // Given
+        Menu menu = createMenu(1);
+        Category category = createCategory(1);
+        menu.addUpdateCategory(category);
+
+        when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+        when(menuRepository.save(any(Menu.class))).thenReturn(menu);
+        CreateItemRequest request = new CreateItemRequest("Some name", "",
+            13.56d, true );
+
+        // When
+        var response = this.testRestTemplate.postForEntity(String.format("%s/v1/menu/%s/category/%s/items",
+            getBaseURL(port), menu.getId(), category.getId()), request, ErrorResponse.class);
+
+        // Then
+        then(response).isNotNull();
+        then(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+        then(response.getBody().getDescription()).isEqualTo("Invalid Request: {description=must not be blank}");
+    }
+
+    @Test
+    void testInvalidPriceDescriptionReturnsBadRequest() {
+        // Given
+        Menu menu = createMenu(1);
+        Category category = createCategory(1);
+        menu.addUpdateCategory(category);
+
+        when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+        when(menuRepository.save(any(Menu.class))).thenReturn(menu);
+        CreateItemRequest request = new CreateItemRequest("Some name", "Item description",
+            0d, true );
+
+        // When
+        var response = this.testRestTemplate.postForEntity(String.format("%s/v1/menu/%s/category/%s/items",
+            getBaseURL(port), menu.getId(), category.getId()), request, ErrorResponse.class);
+
+        // Then
+        then(response).isNotNull();
+        then(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+        then(response.getBody().getDescription()).isEqualTo("Invalid Request: {price=Price must be greater than zero}");
     }
 }

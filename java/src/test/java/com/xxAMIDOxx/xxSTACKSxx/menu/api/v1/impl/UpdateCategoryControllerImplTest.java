@@ -23,6 +23,7 @@ import org.springframework.http.HttpMethod;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.http.HttpStatus;
 
 import static com.azure.data.cosmos.internal.Utils.randomUUID;
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.CategoryHelper.createCategories;
@@ -70,7 +71,7 @@ class UpdateCategoryControllerImplTest {
 
     // When
     String requestUrl = String.format("%s/v1/menu/%s/category/%s",
-            getBaseURL(port), UUID.fromString(menu.getId()), UUID.fromString(category.getId()));
+            getBaseURL(port), menu.getId(), category.getId());
 
     var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
             new HttpEntity<>(request, getRequestHttpEntity()), ResourceUpdatedResponse.class);
@@ -120,7 +121,7 @@ class UpdateCategoryControllerImplTest {
 
     // When
     String requestUrl = String.format("%s/v1/menu/%s/category/%s",
-            getBaseURL(port), UUID.fromString(menu.getId()), UUID.randomUUID());
+            getBaseURL(port), menu.getId(), UUID.randomUUID());
 
     var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
             new HttpEntity<>(request, getRequestHttpEntity()), ErrorResponse.class);
@@ -145,7 +146,7 @@ class UpdateCategoryControllerImplTest {
 
     // When
     String requestUrl = String.format("%s/v1/menu/%s/category/%s",
-            getBaseURL(port), UUID.fromString(menu.getId()), UUID.fromString(categoryList.get(1).getId()));
+            getBaseURL(port), menu.getId(), categoryList.get(1).getId());
     var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
             new HttpEntity<>(request, getRequestHttpEntity()), ErrorResponse.class);
 
@@ -186,5 +187,51 @@ class UpdateCategoryControllerImplTest {
             .findFirst();
     then(updatedCategory.get().getDescription()).isEqualTo(request.getDescription());
     then(updatedCategory.get().getName()).isEqualTo(request.getName());
+  }
+
+  @Test
+  void testUpdateCategoryWithNoNameReturnsBadRequest() {
+    // Given
+    Menu menu = createMenu(0);
+    Category category = createCategory(0);
+    menu.addUpdateCategory(category);
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    UpdateCategoryRequest request =
+        new UpdateCategoryRequest("", "new Description");
+
+    // When
+    String requestUrl = String.format("%s/v1/menu/%s/category/%s",
+        getBaseURL(port), menu.getId(), category.getId());
+
+    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
+        new HttpEntity<>(request, getRequestHttpEntity()), ErrorResponse.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    then(response.getBody().getDescription()).isEqualTo("Invalid Request: {name=must not be blank}");
+  }
+
+  @Test
+  void testUpdateCategoryWithNoDescriptionReturnsBadRequest() {
+    // Given
+    Menu menu = createMenu(0);
+    Category category = createCategory(0);
+    menu.addUpdateCategory(category);
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    UpdateCategoryRequest request =
+        new UpdateCategoryRequest("Updated Name", "");
+
+    // When
+    String requestUrl = String.format("%s/v1/menu/%s/category/%s",
+        getBaseURL(port), menu.getId(), category.getId());
+
+    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
+        new HttpEntity<>(request, getRequestHttpEntity()), ErrorResponse.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    then(response.getBody().getDescription()).isEqualTo("Invalid Request: {description=must not be blank}");
   }
 }

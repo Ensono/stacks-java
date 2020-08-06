@@ -22,7 +22,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 
 import java.util.Optional;
-import java.util.UUID;
+import org.springframework.http.HttpStatus;
 
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.CategoryHelper.createCategory;
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.MenuHelper.createMenu;
@@ -160,4 +160,84 @@ class UpdateItemControllerImplTest {
     verify(menuRepository, times(0)).save(captor.capture());
   }
 
+  @Test
+  void testUpdateItemWithNoNameReturnsBadRequest() {
+    // Given
+    Menu menu = createMenu(0);
+    Category category = createCategory(0);
+    Item item =
+        new Item(randomUUID().toString(), "New Item", "Item description", 12.2d, true);
+    category.addUpdateItem(item);
+    menu.addUpdateCategory(category);
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    UpdateItemRequest request = new UpdateItemRequest("",
+        "Some Description",
+        13.56d,
+        true);
+
+    // When
+    String requestUrl = String.format("%s/v1/menu/%s/category/%s/items/%s",
+        getBaseURL(port), menu.getId(), category.getId(), randomUUID());
+
+    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
+        new HttpEntity<>(request, getRequestHttpEntity()), ErrorResponse.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    then(response.getBody().getDescription()).isEqualTo("Invalid Request: {name=must not be blank}");
+  }
+
+  @Test
+  void testUpdateItemWithNoDescriptionReturnsBadRequest() {
+    // Given
+    Menu menu = createMenu(0);
+    Category category = createCategory(0);
+    Item item =
+        new Item(randomUUID().toString(), "New Item", "Item description", 12.2d, true);
+    category.addUpdateItem(item);
+    menu.addUpdateCategory(category);
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    UpdateItemRequest request = new UpdateItemRequest("Updated Name",
+        "",
+        13.56d,
+        true);
+
+    // When
+    String requestUrl = String.format("%s/v1/menu/%s/category/%s/items/%s",
+        getBaseURL(port), menu.getId(), category.getId(), randomUUID());
+
+    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
+        new HttpEntity<>(request, getRequestHttpEntity()), ErrorResponse.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    then(response.getBody().getDescription()).isEqualTo("Invalid Request: {description=must not be blank}");
+  }
+
+  @Test
+  void testUpdateItemWithInvalidPriceReturnsBadRequest() {
+    // Given
+    Menu menu = createMenu(0);
+    Category category = createCategory(0);
+    Item item =
+        new Item(randomUUID().toString(), "New Item", "Item description", 12.2d, true);
+    category.addUpdateItem(item);
+    menu.addUpdateCategory(category);
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    UpdateItemRequest request = new UpdateItemRequest("Updated Name", "la alal", 0d, true);
+
+    // When
+    String requestUrl = String.format("%s/v1/menu/%s/category/%s/items/%s",
+        getBaseURL(port), menu.getId(), category.getId(), randomUUID());
+
+    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
+        new HttpEntity<>(request, getRequestHttpEntity()), ErrorResponse.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    then(response.getBody().getDescription()).isEqualTo("Invalid Request: {price=Price must be greater than zero}");
+  }
 }
