@@ -6,10 +6,10 @@ Java Web API Application Scaffolding for Amido Stacks
 ### Formatter
 
 #### Installation
-Please install the [intellij-java-google-style.xml](../tools/intellij-java-google-style.xml) formatter configuration file in the IDE.
+Please install the [intellij-java-google-style.xml](../tools/formatter/intellij-java-google-style.xml) formatter configuration file in the IDE.
 
 #### Usage
-The Java source code will automatically be reforamtted to comply with [Google Java Style](https://google.github.io/styleguide/javaguide.html). <br /><br />
+The Java source code will automatically be reformatted to comply with [Google Java Style](https://google.github.io/styleguide/javaguide.html). <br /><br />
 You can override the settings in the codebase, for example:<br />
 ```//@formatter:off```<br />
 ```manually formatted code```<br />
@@ -20,6 +20,9 @@ You can override the settings in the codebase, for example:<br />
 
 #### Apply the formatting to the source files
 `./mvnw com.coveo:fmt-maven-plugin:format`
+
+#### Validate the source code style
+`./mvnw checkstyle:check `
  
 ## Run Locally
 
