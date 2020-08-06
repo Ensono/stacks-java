@@ -1,13 +1,10 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.commands;
 
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
-
-/**
- * @author ArathyKrishna
- */
+/** @author ArathyKrishna */
 @Getter
 @Setter
 public class UpdateItemCommand extends MenuCommand {
@@ -19,9 +16,15 @@ public class UpdateItemCommand extends MenuCommand {
   private Double price;
   private Boolean available;
 
-  public UpdateItemCommand(String correlationId, UUID menuId, UUID categoryId,
-                           UUID itemId, String name, String description,
-                           Double price, Boolean available) {
+  public UpdateItemCommand(
+      String correlationId,
+      UUID menuId,
+      UUID categoryId,
+      UUID itemId,
+      String name,
+      String description,
+      Double price,
+      Boolean available) {
     super(OperationCode.UPDATE_MENU_ITEM, correlationId, menuId);
     this.name = name;
     this.description = description;
@@ -30,5 +33,4 @@ public class UpdateItemCommand extends MenuCommand {
     this.price = price;
     this.available = available;
   }
-
 }
