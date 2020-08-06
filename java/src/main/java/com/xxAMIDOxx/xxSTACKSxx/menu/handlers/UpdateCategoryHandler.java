@@ -32,10 +32,10 @@ public class UpdateCategoryHandler extends MenuBaseCommandHandler<UpdateCategory
   }
 
   /**
-   * if the request is to update the name and description of a category then checks if there is a
-   * category with the same name exists. If there is a category with the same name but the update is
-   * trying to update the description then allow that else throw a category already exists exception
-   * if a category with the same name doesn't exits then update the requested category.
+   * if the request is to update the name and description of a category If there is a category with
+   * the same name but only updating the description then allow that else throw a category already
+   * exists exception if a category with the same name doesn't exits then update the requested
+   * category.
    *
    * @param menu menu
    * @param command update category request
