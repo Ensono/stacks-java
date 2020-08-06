@@ -1,5 +1,8 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.mappers;
 
+import static java.util.UUID.randomUUID;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.CategoryDTO;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ItemDTO;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.MenuDTO;
@@ -7,15 +10,11 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
-
-import static java.util.UUID.randomUUID;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 @Tag("Unit")
 class DomainToDtoMapperTest {
@@ -30,8 +29,14 @@ class DomainToDtoMapperTest {
     String description = "xxxxxxxx";
     Boolean enabled = true;
 
-    Menu menu = new Menu(id.toString(), restaurantId.toString(), name, description,
-            Collections.emptyList(), enabled);
+    Menu menu =
+        new Menu(
+            id.toString(),
+            restaurantId.toString(),
+            name,
+            description,
+            Collections.emptyList(),
+            enabled);
 
     // When
     MenuDTO menuDTO = DomainToDtoMapper.toMenuDto(menu);
@@ -55,8 +60,7 @@ class DomainToDtoMapperTest {
     String description = "xxxxxxxx";
     Boolean enabled = true;
 
-    Menu menu = new Menu(id.toString(), restaurantId.toString(), name, description,
-            null, enabled);
+    Menu menu = new Menu(id.toString(), restaurantId.toString(), name, description, null, enabled);
 
     // When
     MenuDTO menuDTO = DomainToDtoMapper.toMenuDto(menu);
@@ -81,13 +85,16 @@ class DomainToDtoMapperTest {
     Boolean enabled = true;
 
     UUID categoryId = randomUUID();
-    Category category = new Category(categoryId.toString(),
-            "aaaaaa", "bbbbbb", null);
+    Category category = new Category(categoryId.toString(), "aaaaaa", "bbbbbb", null);
 
     Menu menu =
-            new Menu(
-                    id.toString(), restaurantId.toString(), name, description,
-                    Arrays.asList(category), enabled);
+        new Menu(
+            id.toString(),
+            restaurantId.toString(),
+            name,
+            description,
+            Arrays.asList(category),
+            enabled);
 
     // When
     MenuDTO menuDTO = DomainToDtoMapper.toMenuDto(menu);
@@ -100,10 +107,10 @@ class DomainToDtoMapperTest {
     assertThat(menuDTO.getEnabled()).isEqualTo(enabled);
     assertThat(menuDTO.getCategories().size()).isEqualTo(1);
     assertThat(menuDTO.getCategories().get(0).getName()).isEqualTo(category.getName());
-    assertThat(menuDTO.getCategories().get(0).getDescription()).isEqualTo(category.getDescription());
+    assertThat(menuDTO.getCategories().get(0).getDescription())
+        .isEqualTo(category.getDescription());
     assertThat(menuDTO.getCategories().get(0).getId()).isEqualTo(category.getId());
     assertThat(menuDTO.getCategories().get(0).getItems()).isNull();
-
   }
 
   @Test
@@ -116,8 +123,7 @@ class DomainToDtoMapperTest {
     String description = "xxxxxxxx";
     Boolean enabled = true;
 
-    Menu menu = new Menu(id.toString(), restaurantId.toString(), name, description,
-            null, enabled);
+    Menu menu = new Menu(id.toString(), restaurantId.toString(), name, description, null, enabled);
 
     // When
     SearchMenuResultItem resultItem = DomainToDtoMapper.toSearchMenuResultItem(menu);
@@ -170,6 +176,4 @@ class DomainToDtoMapperTest {
     assertThat(categoryDTO.getDescription()).isEqualTo(description);
     assertThat(categoryDTO.getItems()).isEqualTo(Collections.emptyList());
   }
-
-
 }

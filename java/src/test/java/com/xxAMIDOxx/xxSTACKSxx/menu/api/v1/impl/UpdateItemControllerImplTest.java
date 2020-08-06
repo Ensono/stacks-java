@@ -1,31 +1,5 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 
-import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
-import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateItemRequest;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
-import org.hibernate.validator.internal.IgnoreForbiddenApisErrors;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.CategoryHelper.createCategory;
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.ItemHelper.createItem;
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.ItemHelper.createItems;
@@ -39,27 +13,44 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.OK;
 
-/**
- * @author ArathyKrishna
- */
+import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
+import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateItemRequest;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
+import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+
+/** @author ArathyKrishna */
+/** @author ArathyKrishna */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@EnableAutoConfiguration(exclude = {
-        CosmosDbRepositoriesAutoConfiguration.class,
-        CosmosAutoConfiguration.class
-})
+@EnableAutoConfiguration(
+    exclude = {CosmosDbRepositoriesAutoConfiguration.class, CosmosAutoConfiguration.class})
 @Tag("Integration")
 class UpdateItemControllerImplTest {
 
   public static final String UPDATE_ITEM = "%s/v1/menu/%s/category/%s/items/%s";
 
-  @LocalServerPort
-  private int port;
+  @LocalServerPort private int port;
 
-  @Autowired
-  private TestRestTemplate testRestTemplate;
+  @Autowired private TestRestTemplate testRestTemplate;
 
-  @MockBean
-  private MenuRepository menuRepository;
+  @MockBean private MenuRepository menuRepository;
 
   @AfterEach
   void teaDown() {
@@ -76,17 +67,19 @@ class UpdateItemControllerImplTest {
     menu.addUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
-    UpdateItemRequest request = new UpdateItemRequest("Some Name",
-            "Some Description",
-            13.56d,
-            true);
+    UpdateItemRequest request =
+        new UpdateItemRequest("Some Name", "Some Description", 13.56d, true);
 
     // When
-    String requestUrl = String.format(UPDATE_ITEM, getBaseURL(port),
-            menu.getId(), category.getId(), item.getId());
+    String requestUrl =
+        String.format(UPDATE_ITEM, getBaseURL(port), menu.getId(), category.getId(), item.getId());
 
-    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
-            new HttpEntity<>(request, getRequestHttpEntity()), ResourceUpdatedResponse.class);
+    var response =
+        this.testRestTemplate.exchange(
+            requestUrl,
+            HttpMethod.PUT,
+            new HttpEntity<>(request, getRequestHttpEntity()),
+            ResourceUpdatedResponse.class);
 
     // Then
     then(response).isNotNull();
@@ -116,17 +109,20 @@ class UpdateItemControllerImplTest {
     menu.addUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
-    UpdateItemRequest request = new UpdateItemRequest(items.get(0).getName(),
-            "Some Description2",
-            13.56d,
-            true);
+    UpdateItemRequest request =
+        new UpdateItemRequest(items.get(0).getName(), "Some Description2", 13.56d, true);
 
     // When
-    String requestUrl = String.format(UPDATE_ITEM, getBaseURL(port),
-            menu.getId(), category.getId(), items.get(0).getId());
+    String requestUrl =
+        String.format(
+            UPDATE_ITEM, getBaseURL(port), menu.getId(), category.getId(), items.get(0).getId());
 
-    var response = this.testRestTemplate.exchange(requestUrl, HttpMethod.PUT,
-            new HttpEntity<>(request, getRequestHttpEntity()), ResourceUpdatedResponse.class);
+    var response =
+        this.testRestTemplate.exchange(
+            requestUrl,
+            HttpMethod.PUT,
+            new HttpEntity<>(request, getRequestHttpEntity()),
+            ResourceUpdatedResponse.class);
 
     // Then
     then(response).isNotNull();

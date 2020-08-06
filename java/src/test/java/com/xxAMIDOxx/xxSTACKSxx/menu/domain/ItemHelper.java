@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * @author ArathyKrishna
- */
+/** @author ArathyKrishna */
 public class ItemHelper {
 
   public static Item createItem(int counter) {
-    return new Item(UUID.randomUUID().toString(), counter + " New item",
-            "New item Description", 12.1d, true);
+    return new Item(
+        UUID.randomUUID().toString(), counter + " New item", "New item Description", 12.1d, true);
   }
 
   public static List<Item> createItems(int count) {
@@ -21,5 +19,4 @@ public class ItemHelper {
     }
     return itemList;
   }
-
 }
