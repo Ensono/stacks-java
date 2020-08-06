@@ -73,7 +73,7 @@ class CreateCategoryControllerImplTest {
     }
 
     @Test
-    void testInvalidRequestObjectGivenReturnsBadRequest() {
+    void testNoDescriptionGivenReturnsBadRequest() {
         // Given
         CreateCategoryRequest request = new CreateCategoryRequest("test Category Name",
                 "");
@@ -88,6 +88,8 @@ class CreateCategoryControllerImplTest {
         // Then
         then(response).isNotNull();
         then(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+        then(response.getBody().getDescription())
+            .isEqualTo("Invalid Request: {description=must not be blank}");
     }
 
     @Test
@@ -169,5 +171,23 @@ class CreateCategoryControllerImplTest {
         // Then
         then(response).isNotNull();
         then(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    }
+
+    @Test
+    void testNoNameGivenReturnsBadRequest() {
+        // Given
+        CreateCategoryRequest request = new CreateCategoryRequest("", "Some description");
+
+        // When
+        var response =
+            this.testRestTemplate.postForEntity(
+                String.format("%s/v1/menu/%s/category", getBaseURL(port), randomUUID()),
+                request,
+                ErrorResponse.class);
+
+        // Then
+        then(response).isNotNull();
+        then(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+        then(response.getBody().getDescription()).isEqualTo("Invalid Request: {name=must not be blank}");
     }
 }
