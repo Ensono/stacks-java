@@ -29,25 +29,46 @@ public class UpdateItemHandler extends MenuBaseCommandHandler<UpdateItemCommand>
 
   @Override
   Optional<UUID> handleCommand(Menu menu, UpdateItemCommand command) {
-    menu.addUpdateCategory(updateItem(menu, command));
+    Category category = getCategory(menu, command);
+    Item updated = updateItem(command, category);
+    menu.addUpdateCategory(category.addUpdateItem(updated));
     menuRepository.save(menu);
     return Optional.of(command.getItemId());
   }
 
-  Category updateItem(Menu menu, UpdateItemCommand command) {
-    Category category = getCategory(menu, command);
+  /**
+   * If the request is to update the description/available/price of an existing item then allow that
+   * if the request is to update an item but an item with that name already exists then throw an
+   * exception if there are no item with the same name then allow that
+   *
+   * @param command update item request
+   * @param category category
+   * @return item
+   */
+  Item updateItem(UpdateItemCommand command, Category category) {
     Item item = getItem(category, command);
-    if (category.getItems().stream()
-        .anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
-      throw new ItemAlreadyExistsException(command, command.getCategoryId(), command.getName());
-    } else {
-      item.setAvailable(command.getAvailable());
-      item.setDescription(command.getDescription());
-      item.setName(command.getName());
-      item.setPrice(command.getPrice());
-      category.addUpdateItem(item);
-    }
-    return category;
+
+    category
+        .getItems()
+        .forEach(
+            t -> {
+              if (t.getName().equalsIgnoreCase(command.getName())) {
+                if (t.getId().equalsIgnoreCase(command.getItemId().toString())) {
+                  item.setAvailable(command.getAvailable());
+                  item.setDescription(command.getDescription());
+                  item.setPrice(command.getPrice());
+                } else {
+                  throw new ItemAlreadyExistsException(
+                      command, command.getCategoryId(), command.getName());
+                }
+              } else {
+                item.setAvailable(command.getAvailable());
+                item.setDescription(command.getDescription());
+                item.setName(command.getName());
+                item.setPrice(command.getPrice());
+              }
+            });
+    return item;
   }
 
   @Override
@@ -59,29 +80,15 @@ public class UpdateItemHandler extends MenuBaseCommandHandler<UpdateItemCommand>
   }
 
   Category getCategory(Menu menu, UpdateItemCommand command) {
-    Optional<Category> existing = Optional.empty();
-
-    if (menu.getCategories() != null && !menu.getCategories().isEmpty()) {
-      existing =
-          menu.getCategories().stream()
-              .filter(c -> c.getId().equals(command.getCategoryId().toString()))
-              .findFirst();
-    }
-    return existing.orElseThrow(
-        () -> new CategoryDoesNotExistException(command, command.getCategoryId()));
+    return findCategory(menu, command.getCategoryId())
+        .orElseThrow(() -> new CategoryDoesNotExistException(command, command.getCategoryId()));
   }
 
   Item getItem(Category category, UpdateItemCommand command) {
-
-    Optional<Item> existing = Optional.empty();
-    if (category.getItems() != null && !category.getItems().isEmpty()) {
-      existing =
-          category.getItems().stream()
-              .filter(t -> t.getId().equals(command.getItemId().toString()))
-              .findFirst();
-    }
-    return existing.orElseThrow(
-        () ->
-            new ItemDoesNotExistsException(command, command.getCategoryId(), command.getItemId()));
+    return findItem(category, command.getItemId())
+        .orElseThrow(
+            () ->
+                new ItemDoesNotExistsException(
+                    command, command.getCategoryId(), command.getItemId()));
   }
 }

@@ -23,7 +23,7 @@ import org.springframework.test.context.TestPropertySource;
 @EnableAutoConfiguration(
     exclude = {CosmosDbRepositoriesAutoConfiguration.class, CosmosAutoConfiguration.class})
 @Tag("Component")
-public class ActuatorTest {
+class ActuatorTest {
 
   @Value("${local.management.port}")
   private int mgt;
@@ -33,14 +33,14 @@ public class ActuatorTest {
   @MockBean private MenuRepository menuRepository;
 
   @Test
-  public void shouldReturn200WhenSendingRequestToHealthEndpoint() {
+  void shouldReturn200WhenSendingRequestToHealthEndpoint() {
 
     var entity = this.testRestTemplate.getForEntity(getBaseURL(this.mgt) + "/health", Map.class);
     then(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
   @Test
-  public void shouldReturn200WhenSendingRequestToManagementEndpoint() {
+  void shouldReturn200WhenSendingRequestToManagementEndpoint() {
 
     var entity = this.testRestTemplate.getForEntity(getBaseURL(this.mgt) + "/info", Map.class);
     then(entity.getStatusCode()).isEqualTo(HttpStatus.OK);

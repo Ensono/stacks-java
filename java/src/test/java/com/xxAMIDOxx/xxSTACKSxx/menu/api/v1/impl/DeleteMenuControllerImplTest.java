@@ -37,6 +37,8 @@ import org.springframework.http.ResponseEntity;
 @Tag("Integration")
 class DeleteMenuControllerImplTest {
 
+  public static final String DELETE_MENU = "%s/v1/menu/%s";
+
   @LocalServerPort private int port;
 
   @Autowired private TestRestTemplate testRestTemplate;
@@ -56,7 +58,7 @@ class DeleteMenuControllerImplTest {
 
     var response =
         this.testRestTemplate.exchange(
-            String.format("%s/v1/menu/%s", getBaseURL(port), menu.getId()),
+            String.format(DELETE_MENU, getBaseURL(port), menu.getId()),
             HttpMethod.DELETE,
             new HttpEntity<>(getRequestHttpEntity()),
             ResponseEntity.class);
@@ -73,7 +75,7 @@ class DeleteMenuControllerImplTest {
 
     var response =
         this.testRestTemplate.exchange(
-            String.format("%s/v1/menu/%s", getBaseURL(port), UUID.randomUUID().toString()),
+            String.format(DELETE_MENU, getBaseURL(port), UUID.randomUUID().toString()),
             HttpMethod.DELETE,
             new HttpEntity<>(getRequestHttpEntity()),
             ErrorResponse.class);

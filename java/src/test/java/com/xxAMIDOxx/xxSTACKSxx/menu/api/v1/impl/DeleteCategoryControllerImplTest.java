@@ -42,6 +42,8 @@ import org.springframework.http.HttpMethod;
 @Tag("Integration")
 class DeleteCategoryControllerImplTest {
 
+  public static final String DELETE_CATEGORY = "%s/v1/menu/%s/category/%s";
+
   @LocalServerPort private int port;
 
   @Autowired private TestRestTemplate testRestTemplate;
@@ -63,8 +65,7 @@ class DeleteCategoryControllerImplTest {
 
     // When
     String requestUrl =
-        String.format(
-            "%s/v1/menu/%s/category/%s", getBaseURL(port), menu.getId(), category.getId());
+        String.format(DELETE_CATEGORY, getBaseURL(port), menu.getId(), category.getId());
     var response =
         this.testRestTemplate.exchange(
             requestUrl,
@@ -90,8 +91,7 @@ class DeleteCategoryControllerImplTest {
 
     // When
     String requestUrl =
-        String.format(
-            "%s/v1/menu/%s/category/%s", getBaseURL(port), menu.getId(), category.getId());
+        String.format(DELETE_CATEGORY, getBaseURL(port), menu.getId(), category.getId());
     var response =
         this.testRestTemplate.exchange(
             requestUrl,
@@ -114,7 +114,7 @@ class DeleteCategoryControllerImplTest {
 
     // When
     String requestUrl =
-        String.format("%s/v1/menu/%s/category/%s", getBaseURL(port), menu.getId(), menu.getId());
+        String.format(DELETE_CATEGORY, getBaseURL(port), menu.getId(), menu.getId());
     var response =
         this.testRestTemplate.exchange(
             requestUrl,
@@ -137,8 +137,7 @@ class DeleteCategoryControllerImplTest {
 
     // When
     String requestUrl =
-        String.format(
-            "%s/v1/menu/%s/category/%s", getBaseURL(port), menu.getId(), categories.get(0).getId());
+        String.format(DELETE_CATEGORY, getBaseURL(port), menu.getId(), categories.get(0).getId());
     var response =
         this.testRestTemplate.exchange(
             requestUrl,
