@@ -9,21 +9,20 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryAlreadyExistsException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.stereotype.Component;
 
 @Component
 public class CreateCategoryHandler extends MenuBaseCommandHandler<CreateCategoryCommand> {
 
   private UUID categoryId;
 
-  public CreateCategoryHandler(MenuRepository menuRepository,
-                               ApplicationEventPublisher applicationEventPublisher) {
+  public CreateCategoryHandler(
+      MenuRepository menuRepository, ApplicationEventPublisher applicationEventPublisher) {
     super(menuRepository, applicationEventPublisher);
   }
 
@@ -35,28 +34,26 @@ public class CreateCategoryHandler extends MenuBaseCommandHandler<CreateCategory
   }
 
   @Override
-  List<MenuEvent> raiseApplicationEvents(Menu menu,
-                                         CreateCategoryCommand command) {
+  List<MenuEvent> raiseApplicationEvents(Menu menu, CreateCategoryCommand command) {
     return Arrays.asList(
-            new MenuUpdatedEvent(command),
-            new CategoryCreatedEvent(command, categoryId)
-    );
+        new MenuUpdatedEvent(command), new CategoryCreatedEvent(command, categoryId));
   }
 
   List<Category> addCategory(Menu menu, CreateCategoryCommand command) {
     categoryId = UUID.randomUUID();
-    List<Category> categories = menu.getCategories() == null ? new ArrayList<>()
-            : menu.getCategories();
+    List<Category> categories =
+        menu.getCategories() == null ? new ArrayList<>() : menu.getCategories();
 
     if (categories.stream().anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
       throw new CategoryAlreadyExistsException(command, command.getName());
     } else {
-      categories.add(new Category(categoryId.toString(),
+      categories.add(
+          new Category(
+              categoryId.toString(),
               command.getName(),
               command.getDescription(),
               new ArrayList<>()));
       return categories;
     }
   }
-
 }

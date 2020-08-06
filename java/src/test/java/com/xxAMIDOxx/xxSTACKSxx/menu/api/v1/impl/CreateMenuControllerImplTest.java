@@ -17,6 +17,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.UUID;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,38 +32,35 @@ import org.springframework.http.HttpStatus;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(
-    exclude = {
-        CosmosDbRepositoriesAutoConfiguration.class,
-        CosmosAutoConfiguration.class
-    })
+    exclude = {CosmosDbRepositoriesAutoConfiguration.class, CosmosAutoConfiguration.class})
 @Tag("Integration")
 class CreateMenuControllerImplTest {
 
-  @LocalServerPort
-  private int port;
+  public static final String CREATE_MENU = "/v1/menu";
 
-  @Autowired
-  private TestRestTemplate testRestTemplate;
+  @LocalServerPort private int port;
 
-  @MockBean
-  private MenuRepository menuRepository;
+  @Autowired private TestRestTemplate testRestTemplate;
+
+  @MockBean private MenuRepository menuRepository;
 
   @Test
   void testCreateNewMenu() {
     // Given
     Menu m = createMenu(1);
-    CreateMenuRequest request = new CreateMenuRequest(m.getName(),
-        m.getDescription(), fromString(m.getRestaurantId()), m.getEnabled());
+    CreateMenuRequest request =
+        new CreateMenuRequest(
+            m.getName(), m.getDescription(), UUID.fromString(m.getRestaurantId()), m.getEnabled());
 
     when(menuRepository.findAllByRestaurantIdAndName(
-        eq(m.getRestaurantId()), eq(m.getName()), any(Pageable.class)))
+            eq(m.getRestaurantId()), eq(m.getName()), any(Pageable.class)))
         .thenReturn(new PageImpl<>(Collections.emptyList()));
     when(menuRepository.save(any(Menu.class))).thenReturn(m);
 
     // When
     var response =
-        this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu", request,
-            ResourceCreatedResponse.class);
+        this.testRestTemplate.postForEntity(
+            getBaseURL(port) + CREATE_MENU, request, ResourceCreatedResponse.class);
 
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -72,17 +70,18 @@ class CreateMenuControllerImplTest {
   void testThrowsErrorOnExists() {
     // Given
     Menu m = createMenu(1);
-    CreateMenuRequest request = new CreateMenuRequest(m.getName(),
-        m.getDescription(), fromString(m.getRestaurantId()), m.getEnabled());
+    CreateMenuRequest request =
+        new CreateMenuRequest(
+            m.getName(), m.getDescription(), UUID.fromString(m.getRestaurantId()), m.getEnabled());
 
     when(menuRepository.findAllByRestaurantIdAndName(
-        eq(m.getRestaurantId()), eq(m.getName()), any(Pageable.class)))
+            eq(m.getRestaurantId()), eq(m.getName()), any(Pageable.class)))
         .thenReturn(new PageImpl<>(Arrays.asList(m)));
 
     // When
     var response =
-        this.testRestTemplate.postForEntity(getBaseURL(port) + "/v1/menu", request,
-            ErrorResponse.class);
+        this.testRestTemplate.postForEntity(
+            getBaseURL(port) + CREATE_MENU, request, ErrorResponse.class);
 
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
@@ -92,16 +91,14 @@ class CreateMenuControllerImplTest {
   void testWhenDescriptionNotGivenReturnsBadRequest() {
     // Given
     Menu m = createMenu(1);
-    CreateMenuRequest request = new CreateMenuRequest(m.getName(),
-        "", fromString(m.getRestaurantId()), m.getEnabled());
+    CreateMenuRequest request =
+        new CreateMenuRequest(m.getName(), "", fromString(m.getRestaurantId()), m.getEnabled());
 
     when(menuRepository.save(any(Menu.class))).thenReturn(m);
     // When
     var response =
         this.testRestTemplate.postForEntity(
-            getBaseURL(port) + "/v1/menu",
-            request,
-            ErrorResponse.class);
+            getBaseURL(port) + "/v1/menu", request, ErrorResponse.class);
 
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -113,16 +110,15 @@ class CreateMenuControllerImplTest {
   void testWhenNoNameReturnsBadRequest() {
     // Given
     Menu m = createMenu(1);
-    CreateMenuRequest request = new CreateMenuRequest("",
-        m.getDescription(), fromString(m.getRestaurantId()), m.getEnabled());
+    CreateMenuRequest request =
+        new CreateMenuRequest(
+            "", m.getDescription(), fromString(m.getRestaurantId()), m.getEnabled());
 
     when(menuRepository.save(any(Menu.class))).thenReturn(m);
     // When
     var response =
         this.testRestTemplate.postForEntity(
-            getBaseURL(port) + "/v1/menu",
-            request,
-            ErrorResponse.class);
+            getBaseURL(port) + "/v1/menu", request, ErrorResponse.class);
 
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
