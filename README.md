@@ -24,7 +24,7 @@ You can override the settings in the codebase, for example:<br />
 #### Validate the source code style
 `./mvnw checkstyle:check `
 
-#### Verify that there are no common programming flaws in the source code
+#### Verify that there are no common programming flaws in the byte code
 `./mvnw spotbugs:check `
  
 ## Run Locally
