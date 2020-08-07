@@ -56,7 +56,7 @@ steps:
 
   - task: Bash@3
     inputs:
-      inline: |
+      script: |
         tar -cvzf "${{ parameters.functional_test_artefact_path }}" "${{ parameters.functional_test_project_root_dir }}"
       workingDirectory: "${{ parameters.repo_root_dir }}"
     target:
