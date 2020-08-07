@@ -36,6 +36,8 @@
         <equals-verifier.version>3.4.1</equals-verifier.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <owasp-dependency-check-plugin.version>5.3.2</owasp-dependency-check-plugin.version>
+        <auth0-spring-security-api.version>1.4.0</auth0-spring-security-api.version>
+
         <fmt-maven-plugin.version>2.10</fmt-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
         <puppycrawl-tools-checkstyle.version>8.35</puppycrawl-tools-checkstyle.version>
@@ -179,6 +181,13 @@
             <artifactId>equalsverifier</artifactId>
             <version>${equals-verifier.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Registering the Auth0 Dependency-->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>auth0-spring-security-api</artifactId>
+            <version>${auth0-spring-security-api.version}</version>
         </dependency>
 
         <dependency>
