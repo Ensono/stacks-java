@@ -63,6 +63,7 @@ Feature: Update categories
     Then the returned status code is 400
 
 
+  @Ignore
   Scenario: Update category 'description' field only
     When I update the category with the following data:
       | name          | description                                  |
