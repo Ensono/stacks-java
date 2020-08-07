@@ -408,10 +408,11 @@ stages:
                     targetType: 'inline'
                     script: |
                       ls -laR
-                    workingDirectory: "${{ parameters.repo_root_dir }}"
-                  target:
-                    container: ${{ parameters.docker_build_container }}
-                  displayName: "Create Artefact for Functional Tests (${{ parameters.project_type }})"
+                    workingDirectory: "$(self_repo_dir)"
+                  # target:
+                  #   container:
+                  #     'foo'
+                  displayName: "Debug"
 
 
 
