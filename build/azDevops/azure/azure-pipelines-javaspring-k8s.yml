@@ -374,7 +374,7 @@ stages:
                     namespace: "$(namespace)"
                     deployment_status_timeout: "90s"
                     azure_client_id: "$(azure_client_id)"
-                    azure_client_secret: "$(zure_client_secret)"
+                    azure_client_secret: "$(azure_client_secret)"
                     azure_tenant_id: "$(azure_tenant_id)"
                     azure_subscription_id: "$(azure_subscription_id)"
 
@@ -570,6 +570,6 @@ stages:
                     namespace: "$(namespace)"
                     deployment_status_timeout: "90s"
                     azure_client_id: "$(prod_azure_client_id)"
-                    azure_client_secret: "$(prod_zure_client_secret)"
+                    azure_client_secret: "$(prod_azure_client_secret)"
                     azure_tenant_id: "$(prod_azure_tenant_id)"
                     azure_subscription_id: "$(prod_azure_subscription_id)"
