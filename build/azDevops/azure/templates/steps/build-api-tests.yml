@@ -45,7 +45,7 @@ steps:
     inputs:
       filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-post-deploy-untagged-test-check.bash"
       arguments: >
-        -a "${{ parameters.allowed_post_deploy_test_tags }}"
+        -a "${{ parameters.maven_allowed_post_deploy_test_tags }}"
         -Y "${{ parameters.maven_ignored_post_deploy_test_tags }}"
         -Z "${{ parameters.maven_cache_directory }}"
       workingDirectory: "${{ parameters.functional_test_project_root_dir }}"
