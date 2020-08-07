@@ -39,6 +39,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(
@@ -254,5 +255,59 @@ class UpdateCategoryControllerImplTest {
     Category originalCategory = updated.getCategories().get(0);
     then(originalCategory.getDescription()).isEqualTo(categoryList.get(0).getDescription());
     then(originalCategory.getName()).isEqualTo(categoryList.get(0).getName());
+  }
+
+  @Test
+  void testUpdateCategoryWithNoNameReturnsBadRequest() {
+    // Given
+    Menu menu = createMenu(0);
+    Category category = createCategory(0);
+    menu.addUpdateCategory(category);
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    UpdateCategoryRequest request = new UpdateCategoryRequest("", "new Description");
+
+    // When
+    String requestUrl =
+        String.format(UPDATE_CATEGORY, getBaseURL(port), menu.getId(), category.getId());
+
+    var response =
+        this.testRestTemplate.exchange(
+            requestUrl,
+            HttpMethod.PUT,
+            new HttpEntity<>(request, getRequestHttpEntity()),
+            ErrorResponse.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    then(response.getBody().getDescription())
+        .isEqualTo("Invalid Request: {name=must not be blank}");
+  }
+
+  @Test
+  void testUpdateCategoryWithNoDescriptionReturnsBadRequest() {
+    // Given
+    Menu menu = createMenu(0);
+    Category category = createCategory(0);
+    menu.addUpdateCategory(category);
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    UpdateCategoryRequest request = new UpdateCategoryRequest("Updated Name", "");
+
+    // When
+    String requestUrl =
+        String.format(UPDATE_CATEGORY, getBaseURL(port), menu.getId(), category.getId());
+
+    var response =
+        this.testRestTemplate.exchange(
+            requestUrl,
+            HttpMethod.PUT,
+            new HttpEntity<>(request, getRequestHttpEntity()),
+            ErrorResponse.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    then(response.getBody().getDescription())
+        .isEqualTo("Invalid Request: {description=must not be blank}");
   }
 }
