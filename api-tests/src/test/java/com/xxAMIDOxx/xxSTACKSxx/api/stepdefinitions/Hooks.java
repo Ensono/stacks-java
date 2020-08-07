@@ -15,7 +15,6 @@ import java.util.List;
 import static net.serenitybdd.rest.SerenityRest.lastResponse;
 import static net.serenitybdd.rest.SerenityRest.restAssuredThat;
 
-
 public class Hooks {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(Hooks.class);
@@ -50,4 +49,3 @@ public class Hooks {
         }
     }
 }
-
