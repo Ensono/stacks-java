@@ -20,9 +20,9 @@ public interface DeleteCategoryController {
   @DeleteMapping(produces = "application/json")
   @Operation(
       tags = "Category",
-      summary = "Update a category in the menu",
-      description = "Update a category to menu",
-      operationId = "UpdateMenuCategory",
+      summary = "Removes a category and it's items from menu",
+      description = "Removes a category and its items from menu",
+      operationId = "DeleteCategory",
       responses = {
         @ApiResponse(
             responseCode = "200",
