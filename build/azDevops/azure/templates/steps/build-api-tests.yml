@@ -53,13 +53,3 @@ steps:
     target:
       container: ${{ parameters.docker_build_container }}
     displayName: "Maven: Invalid Test Tag Check (${{ parameters.project_type }})"
-
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: |
-        tar -cvzf "${{ parameters.functional_test_artefact_path }}" "${{ parameters.functional_test_project_root_dir }}"
-      workingDirectory: "${{ parameters.repo_root_dir }}"
-    target:
-      container: ${{ parameters.docker_build_container }}
-    displayName: "Create Artefact for Functional Tests (${{ parameters.project_type }})"

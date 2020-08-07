@@ -74,6 +74,7 @@ Feature: Update Item
       | Bifteki | Greek style burger patties served with cheese and tomatoes. | 11.95 | false     |
 
 
+  @Ignore
   Scenario: Update the existing item - item already exist
     Given I update the item with the following data:
       | name    | description                                                 | price | available |

@@ -61,7 +61,7 @@ variables:
   self_repo: stacks-java
   self_remote_repo: "amido/$(self_repo)"
   self_repo_src: java
-  self_api_test_src: api-tests
+  self_post_deploy_test_src: api-tests
   self_repo_dir: "$(Agent.BuildDirectory)/s/$(self_repo)"
   self_project_dir: "$(self_repo_dir)/$(self_repo_src)"
   self_functional_testproject_dir: "$(self_repo_dir)/$(self_api_test_src)"
@@ -117,8 +117,7 @@ variables:
   yamllint_scan_directory: "."
   # Functional Tests
   functional_test_path: "$(self_functional_testproject_dir)"
-  functional_test_artefact_tar_name: "post-deploy-tests.tgz"
-  functional_test_artefact_path: "$(self_repo_dir)/$(functional_test_artefact_tar_name)"
+  functional_test_artefact_path: "$(self_repo_dir)/$(self_post_deploy_test_src)"
   functional_test_artefact_name: "post-deploy-test-artefact"
 
 stages:
@@ -252,6 +251,7 @@ stages:
           ARM_CLIENT_ID: $(azure_client_id)
           ARM_CLIENT_SECRET: "$(azure_client_secret)"
           ARM_TENANT_ID: $(azure_tenant_id)
+
         pool:
           vmImage: ubuntu-18.04
         container: terraform_custom
@@ -331,6 +331,10 @@ stages:
             value: "stacks-java-api"
           - name: namespace
             value: "dev-java-api"
+          - name: dns_pointer
+            value: "dev-java-api.$(base_domain_prod)"
+          - name: k8s_app_path
+            value: "/api"
         pool:
           vmImage: ubuntu-18.04
         environment: dev
@@ -364,9 +368,9 @@ stages:
                         base: $(self_repo_dir)/deploy/k8s/app/base_api-deploy.yml,
                         displayName: AppDeployment,
                         env_vars: {
-                          dns_pointer: dev-java-api.$(base_domain_nonprod),
+                          dns_pointer: "$(dns_pointer)",
                           tls_domain: $(base_domain_nonprod),
-                          k8s_app_path: "/api",
+                          k8s_app_path: "$(k8s_app_path)",
                           log_level: "Debug",
                           k8s_image: '$(k8s_docker_registry_nonprod)/$(docker_image_name):$(docker_image_tag)',
                           aadpodidentitybinding: stacks-webapp-identity,
@@ -383,8 +387,7 @@ stages:
                   parameters:
                     scripts_dir: $(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts
                     test_artefact: "$(functional_test_artefact_name)"
-                    test_baseurl: "/"
-                    functional_test: false
+                    functional_test: true
                     performance_test: false
                     smoke_test: false
                     # Kubernetes Config
@@ -399,6 +402,18 @@ stages:
                     resource_def_name: "$(resource_def_name)"
                     namespace: "$(namespace)"
                     deployment_status_timeout: "90s"
+
+                - task: Bash@3
+                  inputs:
+                    targetType: 'inline'
+                    script: |
+                      ls -laR
+                    workingDirectory: "${{ parameters.repo_root_dir }}"
+                  target:
+                    container: ${{ parameters.docker_build_container }}
+                  displayName: "Create Artefact for Functional Tests (${{ parameters.project_type }})"
+
+
 
   - stage: Prod
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -523,6 +538,10 @@ stages:
             value: "stacks-java-api"
           - name: namespace
             value: "prod-java-api"
+          - name: dns_pointer
+            value: "prod-java-api.$(base_domain_prod)"
+          - name: k8s_app_path
+            value: "/api"
         pool:
           vmImage: ubuntu-18.04
         environment: prod
@@ -556,9 +575,9 @@ stages:
                         base: $(self_repo_dir)/deploy/k8s/app/base_api-deploy.yml,
                         displayName: AppDeployment,
                         env_vars: {
-                          dns_pointer: prod-java-api.$(base_domain_prod),
+                          dns_pointer: "$(dns_pointer)",
                           tls_domain: $(base_domain_prod),
-                          k8s_app_path: "/api",
+                          k8s_app_path: "$(k8s_app_path)",
                           log_level: "Debug",
                           k8s_image: '$(k8s_docker_registry_prod)/$(docker_image_name):$(docker_image_tag)',
                           aadpodidentitybinding: stacks-webapp-identity,
