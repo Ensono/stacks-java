@@ -14,10 +14,10 @@ parameters:
 steps:
   - task: Cache@2
     inputs:
-      key: 'maven | "$(Agent.OS)" | ${{ parameters.functional_test_project_root_dir }}/pom.xml'
+      key: 'maven-api-tests | "$(Agent.OS)" | ${{ parameters.functional_test_project_root_dir }}/pom.xml'
       restoreKeys: |
-        maven | "$(Agent.OS)"
-        maven
+        maven-api-tests | "$(Agent.OS)"
+        maven-api-tests
       path: "${{ parameters.functional_test_project_root_dir }}/${{ parameters.maven_cache_directory }}"
     displayName: Cache Maven packages (${{ parameters.project_type }})
 
