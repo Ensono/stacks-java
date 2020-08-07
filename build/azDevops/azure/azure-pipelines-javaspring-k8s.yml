@@ -245,8 +245,7 @@ stages:
     variables:
       - group: amido-stacks-infra-credentials-nonprod
     jobs:
-      - deployment: DeployDev
-        dependsOn: AppInfraDev
+      - deployment: DeployDebug
         container: k8s_deploy
         variables:
           - name: cosmosdb_database_name
