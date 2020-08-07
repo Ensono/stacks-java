@@ -2,6 +2,7 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.MenuHelper.createMenu;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
+import static java.util.UUID.fromString;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -87,12 +88,11 @@ class CreateMenuControllerImplTest {
   }
 
   @Test
-  void testWhenNotAllFieldsGivenReturnsBadRequest() {
+  void testWhenDescriptionNotGivenReturnsBadRequest() {
     // Given
     Menu m = createMenu(1);
     CreateMenuRequest request =
-        new CreateMenuRequest(
-            m.getName(), "", UUID.fromString(m.getRestaurantId()), m.getEnabled());
+        new CreateMenuRequest(m.getName(), "", fromString(m.getRestaurantId()), m.getEnabled());
 
     when(menuRepository.save(any(Menu.class))).thenReturn(m);
     // When
@@ -102,5 +102,27 @@ class CreateMenuControllerImplTest {
 
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    then(response.getBody().getDescription())
+        .isEqualTo("Invalid Request: {description=must not be blank}");
+  }
+
+  @Test
+  void testWhenNoNameReturnsBadRequest() {
+    // Given
+    Menu m = createMenu(1);
+    CreateMenuRequest request =
+        new CreateMenuRequest(
+            "", m.getDescription(), fromString(m.getRestaurantId()), m.getEnabled());
+
+    when(menuRepository.save(any(Menu.class))).thenReturn(m);
+    // When
+    var response =
+        this.testRestTemplate.postForEntity(
+            getBaseURL(port) + CREATE_MENU, request, ErrorResponse.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    then(response.getBody().getDescription())
+        .isEqualTo("Invalid Request: {name=must not be blank}");
   }
 }
