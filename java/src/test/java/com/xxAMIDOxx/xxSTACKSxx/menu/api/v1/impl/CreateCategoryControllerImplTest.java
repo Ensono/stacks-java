@@ -168,7 +168,7 @@ class CreateCategoryControllerImplTest {
     // When
     var response =
         this.testRestTemplate.postForEntity(
-            String.format("%s/v1/menu/%s/category", getBaseURL(port), randomUUID()),
+            String.format(CREATE_CATEGORY, getBaseURL(port), randomUUID()),
             request,
             ErrorResponse.class);
 

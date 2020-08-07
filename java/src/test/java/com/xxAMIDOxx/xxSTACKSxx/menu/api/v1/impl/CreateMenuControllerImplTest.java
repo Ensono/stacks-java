@@ -98,7 +98,7 @@ class CreateMenuControllerImplTest {
     // When
     var response =
         this.testRestTemplate.postForEntity(
-            getBaseURL(port) + "/v1/menu", request, ErrorResponse.class);
+            getBaseURL(port) + CREATE_MENU, request, ErrorResponse.class);
 
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -118,7 +118,7 @@ class CreateMenuControllerImplTest {
     // When
     var response =
         this.testRestTemplate.postForEntity(
-            getBaseURL(port) + "/v1/menu", request, ErrorResponse.class);
+            getBaseURL(port) + CREATE_MENU, request, ErrorResponse.class);
 
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);

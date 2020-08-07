@@ -269,8 +269,7 @@ class UpdateCategoryControllerImplTest {
 
     // When
     String requestUrl =
-        String.format(
-            "%s/v1/menu/%s/category/%s", getBaseURL(port), menu.getId(), category.getId());
+        String.format(UPDATE_CATEGORY, getBaseURL(port), menu.getId(), category.getId());
 
     var response =
         this.testRestTemplate.exchange(
@@ -297,8 +296,7 @@ class UpdateCategoryControllerImplTest {
 
     // When
     String requestUrl =
-        String.format(
-            "%s/v1/menu/%s/category/%s", getBaseURL(port), menu.getId(), category.getId());
+        String.format(UPDATE_CATEGORY, getBaseURL(port), menu.getId(), category.getId());
 
     var response =
         this.testRestTemplate.exchange(
