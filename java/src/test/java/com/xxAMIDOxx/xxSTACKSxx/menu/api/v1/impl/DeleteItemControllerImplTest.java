@@ -41,6 +41,8 @@ import org.springframework.http.ResponseEntity;
 @Tag("Integration")
 class DeleteItemControllerImplTest {
 
+  public static final String DELETE_ITEM = "%s/v1/menu/%s/category/%s/items/%s";
+
   @LocalServerPort private int port;
 
   @Autowired private TestRestTemplate testRestTemplate;
@@ -64,9 +66,7 @@ class DeleteItemControllerImplTest {
 
     // When
     String requestUrl =
-        String.format(
-            "%s/v1/menu/%s/category/%s/items/%s",
-            getBaseURL(port), menu.getId(), category.getId(), item.getId());
+        String.format(DELETE_ITEM, getBaseURL(port), menu.getId(), category.getId(), item.getId());
 
     var response =
         this.testRestTemplate.exchange(
@@ -92,9 +92,7 @@ class DeleteItemControllerImplTest {
 
     // When
     String requestUrl =
-        String.format(
-            "%s/v1/menu/%s/category/%s/items/%s",
-            getBaseURL(port), menu.getId(), item.getId(), item.getId());
+        String.format(DELETE_ITEM, getBaseURL(port), menu.getId(), item.getId(), item.getId());
 
     var response =
         this.testRestTemplate.exchange(
@@ -121,8 +119,7 @@ class DeleteItemControllerImplTest {
     // When
     String requestUrl =
         String.format(
-            "%s/v1/menu/%s/category/%s/items/%s",
-            getBaseURL(port), menu.getId(), category.getId(), UUID.randomUUID());
+            DELETE_ITEM, getBaseURL(port), menu.getId(), category.getId(), UUID.randomUUID());
 
     var response =
         this.testRestTemplate.exchange(

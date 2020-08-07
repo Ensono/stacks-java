@@ -108,7 +108,7 @@ class UpdateMenuControllerImplTest {
     // When
     var response =
         this.testRestTemplate.exchange(
-            String.format("%s/v1/menu/%s", getBaseURL(port), menu.getId()),
+            String.format(UPDATE_MENU, getBaseURL(port), menu.getId()),
             HttpMethod.PUT,
             new HttpEntity<>(request, getRequestHttpEntity()),
             ErrorResponse.class);
@@ -130,7 +130,7 @@ class UpdateMenuControllerImplTest {
     // When
     var response =
         this.testRestTemplate.exchange(
-            String.format("%s/v1/menu/%s", getBaseURL(port), menu.getId()),
+            String.format(UPDATE_MENU, getBaseURL(port), menu.getId()),
             HttpMethod.PUT,
             new HttpEntity<>(request, getRequestHttpEntity()),
             ErrorResponse.class);

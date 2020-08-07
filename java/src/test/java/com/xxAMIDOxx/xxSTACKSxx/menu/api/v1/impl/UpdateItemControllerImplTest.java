@@ -164,9 +164,7 @@ class UpdateItemControllerImplTest {
 
     // When
     String requestUrl =
-        String.format(
-            "%s/v1/menu/%s/category/%s/items/%s",
-            getBaseURL(port), menu.getId(), randomUUID(), item.getId());
+        String.format(UPDATE_ITEM, getBaseURL(port), menu.getId(), randomUUID(), item.getId());
 
     var response =
         this.testRestTemplate.exchange(
@@ -198,9 +196,7 @@ class UpdateItemControllerImplTest {
 
     // When
     String requestUrl =
-        String.format(
-            "%s/v1/menu/%s/category/%s/items/%s",
-            getBaseURL(port), menu.getId(), category.getId(), randomUUID());
+        String.format(UPDATE_ITEM, getBaseURL(port), menu.getId(), category.getId(), randomUUID());
 
     var response =
         this.testRestTemplate.exchange(
@@ -231,9 +227,7 @@ class UpdateItemControllerImplTest {
 
     // When
     String requestUrl =
-        String.format(
-            "%s/v1/menu/%s/category/%s/items/%s",
-            getBaseURL(port), menu.getId(), category.getId(), randomUUID());
+        String.format(UPDATE_ITEM, getBaseURL(port), menu.getId(), category.getId(), randomUUID());
 
     var response =
         this.testRestTemplate.exchange(
@@ -262,9 +256,7 @@ class UpdateItemControllerImplTest {
 
     // When
     String requestUrl =
-        String.format(
-            "%s/v1/menu/%s/category/%s/items/%s",
-            getBaseURL(port), menu.getId(), category.getId(), randomUUID());
+        String.format(UPDATE_ITEM, getBaseURL(port), menu.getId(), category.getId(), randomUUID());
 
     var response =
         this.testRestTemplate.exchange(
@@ -293,9 +285,7 @@ class UpdateItemControllerImplTest {
 
     // When
     String requestUrl =
-        String.format(
-            "%s/v1/menu/%s/category/%s/items/%s",
-            getBaseURL(port), menu.getId(), category.getId(), randomUUID());
+        String.format(UPDATE_ITEM, getBaseURL(port), menu.getId(), category.getId(), randomUUID());
 
     var response =
         this.testRestTemplate.exchange(

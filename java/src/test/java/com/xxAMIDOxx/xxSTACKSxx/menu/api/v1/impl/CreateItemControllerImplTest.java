@@ -182,9 +182,7 @@ class CreateItemControllerImplTest {
     // When
     var response =
         this.testRestTemplate.postForEntity(
-            String.format(
-                "%s/v1/menu/%s/category/%s/items",
-                getBaseURL(port), menu.getId(), category.getId()),
+            String.format(CREATE_ITEM, getBaseURL(port), menu.getId(), category.getId()),
             request,
             ErrorResponse.class);
 
@@ -209,9 +207,7 @@ class CreateItemControllerImplTest {
     // When
     var response =
         this.testRestTemplate.postForEntity(
-            String.format(
-                "%s/v1/menu/%s/category/%s/items",
-                getBaseURL(port), menu.getId(), category.getId()),
+            String.format(CREATE_ITEM, getBaseURL(port), menu.getId(), category.getId()),
             request,
             ErrorResponse.class);
 
@@ -236,9 +232,7 @@ class CreateItemControllerImplTest {
     // When
     var response =
         this.testRestTemplate.postForEntity(
-            String.format(
-                "%s/v1/menu/%s/category/%s/items",
-                getBaseURL(port), menu.getId(), category.getId()),
+            String.format(CREATE_ITEM, getBaseURL(port), menu.getId(), category.getId()),
             request,
             ErrorResponse.class);
 
