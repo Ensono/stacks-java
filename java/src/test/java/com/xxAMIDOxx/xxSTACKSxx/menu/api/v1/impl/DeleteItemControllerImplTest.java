@@ -41,6 +41,8 @@ import org.springframework.http.ResponseEntity;
 @Tag("Integration")
 class DeleteItemControllerImplTest {
 
+  public static final String DELETE_ITEM = "%s/v1/menu/%s/category/%s/items/%s";
+
   @LocalServerPort private int port;
 
   @Autowired private TestRestTemplate testRestTemplate;
@@ -64,9 +66,7 @@ class DeleteItemControllerImplTest {
 
     // When
     String requestUrl =
-        String.format(
-            "%s/v1/menu/%s/category/%s/items/%s",
-            getBaseURL(port), menu.getId(), category.getId(), item.getId());
+        String.format(DELETE_ITEM, getBaseURL(port), menu.getId(), category.getId(), item.getId());
 
     var response =
         this.testRestTemplate.exchange(
@@ -92,9 +92,34 @@ class DeleteItemControllerImplTest {
 
     // When
     String requestUrl =
+        String.format(DELETE_ITEM, getBaseURL(port), menu.getId(), item.getId(), item.getId());
+
+    var response =
+        this.testRestTemplate.exchange(
+            requestUrl,
+            HttpMethod.DELETE,
+            new HttpEntity<>(getRequestHttpEntity()),
+            ErrorResponse.class);
+
+    // Then
+    verify(repository, times(0)).save(menu);
+    then(response.getStatusCode()).isEqualTo(NOT_FOUND);
+  }
+
+  @Test
+  void testDeleteItemWithInvalidItemId() {
+    // Given
+    Menu menu = createMenu(1);
+    Category category = createCategory(0);
+    Item item = new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
+    category.addUpdateItem(item);
+    menu.addUpdateCategory(category);
+    when(repository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    // When
+    String requestUrl =
         String.format(
-            "%s/v1/menu/%s/category/%s/items/%s",
-            getBaseURL(port), menu.getId(), item.getId(), item.getId());
+            DELETE_ITEM, getBaseURL(port), menu.getId(), category.getId(), UUID.randomUUID());
 
     var response =
         this.testRestTemplate.exchange(

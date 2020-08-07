@@ -96,4 +96,48 @@ class UpdateMenuControllerImplTest {
     then(response).isNotNull();
     then(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
+
+  @Test
+  void testUpdateMenuWithNoNameReturnsBadRequest() {
+    // Given
+    Menu menu = createMenu(0);
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    UpdateMenuRequest request = new UpdateMenuRequest("", "new description", false);
+
+    // When
+    var response =
+        this.testRestTemplate.exchange(
+            String.format(UPDATE_MENU, getBaseURL(port), menu.getId()),
+            HttpMethod.PUT,
+            new HttpEntity<>(request, getRequestHttpEntity()),
+            ErrorResponse.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    then(response.getBody().getDescription())
+        .isEqualTo("Invalid Request: {name=must not be blank}");
+  }
+
+  @Test
+  void testUpdateMenuWithNoDescriptionReturnsBadRequest() {
+    // Given
+    Menu menu = createMenu(0);
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    UpdateMenuRequest request = new UpdateMenuRequest("Updated Name", "", false);
+
+    // When
+    var response =
+        this.testRestTemplate.exchange(
+            String.format(UPDATE_MENU, getBaseURL(port), menu.getId()),
+            HttpMethod.PUT,
+            new HttpEntity<>(request, getRequestHttpEntity()),
+            ErrorResponse.class);
+
+    // Then
+    then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    then(response.getBody().getDescription())
+        .isEqualTo("Invalid Request: {description=must not be blank}");
+  }
 }

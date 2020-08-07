@@ -66,4 +66,15 @@ public class MenuApiExceptionHandler {
         ex.getCorrelationId(),
         ex.getMessage());
   }
+
+  @ResponseBody
+  @ExceptionHandler(ItemDoesNotExistsException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  ErrorResponse itemDontNotExistsExceptionHandler(ItemDoesNotExistsException ex) {
+    return new ErrorResponse(
+        ex.getExceptionCode().getCode(),
+        ex.getOperationCode().getCode(),
+        ex.getCorrelationId(),
+        ex.getMessage());
+  }
 }
