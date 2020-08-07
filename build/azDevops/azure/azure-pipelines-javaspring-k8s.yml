@@ -61,10 +61,10 @@ variables:
   self_repo: stacks-java
   self_remote_repo: "amido/$(self_repo)"
   self_repo_src: java
-  self_post_deploy_test_src: api-tests
+  self_post_deploy_test_src: "api-tests"
   self_repo_dir: "$(Agent.BuildDirectory)/s/$(self_repo)"
   self_project_dir: "$(self_repo_dir)/$(self_repo_src)"
-  self_functional_testproject_dir: "$(self_repo_dir)/$(self_api_test_src)"
+  self_functional_testproject_dir: "$(self_repo_dir)/$(self_post_deploy_test_src)"
   self_repo_tf_src: deploy/azure/app/kube
   self_repo_tf_dir: "$(self_repo_dir)/$(self_repo_tf_src)"
   self_generic_name: stacks-api
