@@ -117,8 +117,9 @@ variables:
   yamllint_scan_directory: "."
   # Functional Tests
   functional_test_path: "$(self_functional_testproject_dir)"
-  functional_test_artefact_path: "$(self_functional_testproject_dir)/post-deploy-tests.tgz"
-  functional_test_artefact_name: "test-artefact"
+  functional_test_artefact_tar_name: "post-deploy-tests.tgz"
+  functional_test_artefact_path: "$(self_repo_dir)/$(functional_test_artefact_tar_name)"
+  functional_test_artefact_name: "post-deploy-test-artefact"
 
 stages:
   - stage: Build
@@ -178,6 +179,7 @@ stages:
             parameters:
               repo_root_dir: "$(self_repo_dir)"
               functional_test_project_root_dir: "$(self_functional_testproject_dir)"
+              functional_test_artefact_path: "$(functional_test_artefact_path)"
               pipeline_scripts_directory: $(self_pipeline_scripts_dir)
               # Maven
               maven_cache_directory: "$(maven_cache_directory)"
