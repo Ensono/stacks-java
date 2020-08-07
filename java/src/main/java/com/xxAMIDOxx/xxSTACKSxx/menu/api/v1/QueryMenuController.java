@@ -1,6 +1,5 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1;
 
-import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.MenuDTO;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.SearchMenuResult;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,13 +33,7 @@ public interface QueryMenuController {
                 @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = SearchMenuResult.class))),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Bad Request",
-            content =
-                @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ErrorResponse.class)))
+        @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content)
       })
   ResponseEntity<SearchMenuResult> searchMenu(
       @RequestParam(value = "searchTerm", required = false) String searchTerm,
@@ -63,20 +56,8 @@ public interface QueryMenuController {
                 @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = MenuDTO.class))),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Menu Not Found",
-            content =
-                @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Bad Request",
-            content =
-                @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ErrorResponse.class)))
+        @ApiResponse(responseCode = "404", description = "Menu Not Found", content = @Content),
+        @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content)
       })
   ResponseEntity<MenuDTO> getMenu(
       @PathVariable(name = "id") UUID id,
