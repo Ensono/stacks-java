@@ -26,7 +26,7 @@ steps:
         inputs:
           path: "${{ parameters.functional_test_artefact_path }}"
           artifact: "${{ parameters.functional_test_artefact_name }}"
-        displayName: "Publish: Functional Tests Artifact"
+        displayName: "Publish: Functional Tests Artefact"
 
   - ${{ if eq(parameters.build_file, true) }}:
       - task: PublishPipelineArtifact@1
