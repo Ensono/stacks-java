@@ -8,6 +8,8 @@ parameters:
   # maven_surefire_reports_dir: ""
   maven_allowed_post_deploy_test_tags: ""
   maven_ignored_post_deploy_test_tags: ""
+  maven_post_deploy_html_report_directory: ""
+  maven_post_deploy_failsafe_reports_directory: ""
   # Docker Config
   docker_build_container: ""
   project_type: ""
@@ -47,6 +49,8 @@ steps:
       filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-post-deploy-untagged-test-check.bash"
       arguments: >
         -a "${{ parameters.maven_allowed_post_deploy_test_tags }}"
+        -W "${{ parameters.maven_post_deploy_html_report_directory }}"
+        -X "${{ parameters.maven_post_deploy_failsafe_reports_directory }}"
         -Y "${{ parameters.maven_ignored_post_deploy_test_tags }}"
         -Z "${{ parameters.maven_cache_directory }}"
       workingDirectory: "${{ parameters.functional_test_project_root_dir }}"
