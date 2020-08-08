@@ -1,6 +1,6 @@
 parameters:
   project_root_dir: ""
-  functional_test: ""
+  functional_test: true
   functional_test_artefact_path: ""
   functional_test_artefact_name: ""
   build_file: ""
