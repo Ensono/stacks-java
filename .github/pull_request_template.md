@@ -29,4 +29,3 @@ Notes for QA
 - [ ] Passing any exploratory testing?
 - [ ] Rebased/merged with latest changes from development and re-tested?
 - [ ] Meeting the Coding Standards?
-
