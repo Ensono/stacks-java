@@ -46,7 +46,7 @@ Feature: Add menu item
     Then the returned status code is 409
     And the 'item already exist' message is returned
 
-
+  @Ignore
   Scenario: Create an item - 400 Bad request for empty 'category id' and 'menu id' fields
     Given the following item data:
       | name           | description           | price | available |
