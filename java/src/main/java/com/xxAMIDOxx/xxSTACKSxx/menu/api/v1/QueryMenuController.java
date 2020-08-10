@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/v1/menu")
 public interface QueryMenuController {
 
-  @GetMapping(produces = "application/json")
+  @GetMapping(produces = "application/json; charset=utf-8")
   @Operation(
       tags = "Menu",
       summary = "Get or search a list of menus",
@@ -49,7 +49,7 @@ public interface QueryMenuController {
       @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber)
       throws IOException;
 
-  @GetMapping(value = "/{id}", produces = "application/json")
+  @GetMapping(value = "/{id}", produces = "application/json; charset=utf-8")
   @Operation(
       tags = "Menu",
       summary = "Get a menu",

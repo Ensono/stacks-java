@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/v1/menu/{id}/category/{categoryId}")
 public interface DeleteCategoryController {
 
-  @DeleteMapping(produces = "application/json")
+  @DeleteMapping(produces = "application/json; charset=utf-8")
   @Operation(
       tags = "Category",
       summary = "Removes a category and it's items from menu",

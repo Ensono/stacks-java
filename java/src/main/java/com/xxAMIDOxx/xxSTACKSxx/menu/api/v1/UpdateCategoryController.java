@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/v1/menu/{id}/category/{categoryId}")
 public interface UpdateCategoryController {
 
-  @PutMapping(consumes = "application/json", produces = "application/json")
+  @PutMapping(consumes = "application/json", produces = "application/json; charset=utf-8")
   @Operation(
       tags = "Category",
       summary = "Update a category in the menu",
