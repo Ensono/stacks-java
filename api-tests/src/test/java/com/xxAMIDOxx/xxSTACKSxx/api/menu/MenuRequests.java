@@ -48,5 +48,4 @@ public class MenuRequests {
     public static void getMenusBySearchTerm(String searchTerm) {
         SerenityRest.get(menuUrl.concat("?searchTerm=").concat(searchTerm));
     }
-
 }
