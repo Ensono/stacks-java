@@ -41,6 +41,11 @@
         <puppycrawl-tools-checkstyle.version>8.33</puppycrawl-tools-checkstyle.version>
         <spotbugs-maven-plugin.version>4.0.4</spotbugs-maven-plugin.version>
         <spotbugs.version>4.1.1</spotbugs.version>
+        <pact.version>3.5.24</pact.version>
+
+        <!--       Set 'pact.broker.url' and 'pact.broker.token' -->
+        <pact.broker.url></pact.broker.url>
+        <pact.broker.token></pact.broker.token>
     </properties>
 
     <dependencies>
@@ -176,6 +181,19 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>au.com.dius</groupId>
+            <artifactId>pact-jvm-provider-spring</artifactId>
+            <version>4.0.10</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>au.com.dius.pact</groupId>
+            <artifactId>consumer</artifactId>
+            <version>4.1.6</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <reporting>
@@ -289,6 +307,36 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>au.com.dius.pact.provider</groupId>
+                <artifactId>maven</artifactId>
+                <version>4.1.6</version>
+                <configuration>
+                    <pactBrokerUrl>${pact.broker.url}</pactBrokerUrl>
+                    <pactBrokerToken>${pact.broker.token}</pactBrokerToken>
+                    <systemPropertyVariables>
+                        <pact.verifier.publishResults>true</pact.verifier.publishResults>
+                    </systemPropertyVariables>
+
+                    <serviceProviders>
+                        <serviceProvider>
+                            <name>JavaMenuAPI</name>
+                            <protocol>http</protocol>
+                            <host>localhost</host>
+                            <port>9000</port>
+                        </serviceProvider>
+                    </serviceProviders>
+
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.coveo</groupId>
                 <artifactId>fmt-maven-plugin</artifactId>
                 <version>${fmt-maven-plugin.version}</version>
@@ -296,7 +344,7 @@
                     <displayFiles>false</displayFiles>
                     <verbose>true</verbose>
                     <filesNamePattern>.*\.java</filesNamePattern>
-                    <additionalSourceDirectories />
+                    <additionalSourceDirectories/>
                     <skip>false</skip>
                     <skipSortingImports>false</skipSortingImports>
                     <style>google</style>

@@ -12,6 +12,7 @@ parameters:
   # # Vulnerability Scanning
   # vulnerability_scan: false
   # vulnerability_workdir: ""
+  project_type: ""
 
 steps:
   - task: Cache@2
@@ -21,7 +22,7 @@ steps:
         maven | "$(Agent.OS)"
         maven
       path: "${{ parameters.project_root_dir }}/${{ parameters.maven_cache_directory }}"
-    displayName: Cache Maven packages
+    displayName: Cache Maven packages (${{ parameters.project_type }})
 
   - task: Bash@3
     inputs:
@@ -31,17 +32,17 @@ steps:
       workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: ${{ parameters.docker_build_container }}
-    displayName: "Maven: Install Packages"
+    displayName: "Maven: Install Packages (${{ parameters.project_type }})"
 
   - task: Bash@3
     inputs:
-      filePath: "${{ parameters.pipeline_scripts_directory }}/build-maven-install.bash"
+      filePath: "${{ parameters.pipeline_scripts_directory }}/build-maven-compile.bash"
       arguments: >
         -Z "${{ parameters.maven_cache_directory }}"
       workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: ${{ parameters.docker_build_container }}
-    displayName: "Maven: Compile Application"
+    displayName: "Maven: Compile Application (${{ parameters.project_type }})"
 
   - task: Bash@3
     inputs:
@@ -53,7 +54,7 @@ steps:
       workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: ${{ parameters.docker_build_container }}
-    displayName: "Test: Download Test Deps"
+    displayName: "Test: Download Test Deps (${{ parameters.project_type }})"
 
   - task: Bash@3
     inputs:
@@ -64,7 +65,7 @@ steps:
       workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: ${{ parameters.docker_build_container }}
-    displayName: "Test: Unit tests"
+    displayName: "Test: Unit tests (${{ parameters.project_type }})"
 
   - task: Bash@3
     inputs:
@@ -75,7 +76,7 @@ steps:
       workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: ${{ parameters.docker_build_container }}
-    displayName: "Test: Component tests"
+    displayName: "Test: Component tests (${{ parameters.project_type }})"
 
   - task: Bash@3
     inputs:
@@ -86,7 +87,7 @@ steps:
       workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: ${{ parameters.docker_build_container }}
-    displayName: "Test: Integration tests"
+    displayName: "Test: Integration tests (${{ parameters.project_type }})"
 
   - task: Bash@3
     inputs:
@@ -96,7 +97,7 @@ steps:
       workingDirectory: "${{ parameters.project_root_dir }}"
     target:
       container: ${{ parameters.docker_build_container }}
-    displayName: "Generate Jacoco coverage reports"
+    displayName: "Generate Jacoco coverage reports (${{ parameters.project_type }})"
 
   # TODO: Pull this out into a bash script?
   - bash: |
@@ -108,4 +109,4 @@ steps:
     workingDirectory: "${{ parameters.project_root_dir }}/target/site/"
     target:
       container: node
-    displayName: "Gulp: Inline Jacoco report assets"
+    displayName: "Gulp: Inline Jacoco report assets (${{ parameters.project_type }})"

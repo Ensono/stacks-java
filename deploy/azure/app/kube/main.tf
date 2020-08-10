@@ -13,7 +13,8 @@ module "default_label" {
   name       = "${lookup(var.location_name_map, var.resource_group_location, "uksouth")}-${var.name_domain}"
   attributes = var.attributes
   delimiter  = "-"
-  tags       = var.tags
+
+  tags = var.tags
 }
 
 module "app" {
@@ -38,3 +39,17 @@ module "app" {
   # Alternatively if you want you can pass in the IP directly and remove the need for a lookup
   # dns_a_records                        = ["0.1.23.45"]
 }
+
+# resource "azurerm_storage_account" "test_report" {
+#   name                = substr(module.default_label.id, 0, 24)
+#   resource_group_name = module.app.resource_group
+#   location            = var.resource_group_location
+
+#   account_kind             = var.test_report_account_kind
+#   account_tier             = var.test_report_account_tier
+#   account_replication_type = var.test_report_account_replication_type
+
+#   static_website {}
+
+#   tags = var.tags
+# }
