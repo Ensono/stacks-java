@@ -1,11 +1,16 @@
 parameters:
   project_root_dir: ""
+  functional_test_project_root_dir: ""
   functional_test: true
   functional_test_artefact_path: ""
   functional_test_artefact_name: ""
   build_file: ""
   build_file_path: ""
   build_file_artefact_name: ""
+  vulerability_scan: ""
+  vulerability_scan_report: ""
+  java_project_type: ""
+  functional_test_project_type: ""
 
 steps:
   - task: PublishTestResults@2
@@ -19,6 +24,22 @@ steps:
       summaryFileLocation: "${{ parameters.project_root_dir }}/target/site/jacoco/jacoco.xml"
       reportDirectory: "${{ parameters.project_root_dir }}/target/site/jacoco-inline"
     displayName: "Publish JaCoCo Coverage Results"
+
+  # Publish Vulnerability Artefacts if required
+  - ${{ if eq(parameters.vulnerability_scan, true) }}:
+      - task: PublishPipelineArtifact@1
+        condition: always()
+        inputs:
+          path: "${{ parameters.project_root_dir }}/${{ parameters.vulerability_scan_report }}"
+          artifact: "owasp-vulnerability-report-java"
+        displayName: "Publish: Vulnerability Scan Report Artefact (${{ parameters.java_project_type }})"
+
+      - task: PublishPipelineArtifact@1
+        condition: always()
+        inputs:
+          path: "${{ parameters.functional_test_project_root_dir }}/${{ parameters.vulerability_scan_report }}"
+          artifact: "owasp-vulnerability-report-functional-test"
+        displayName: "Publish: Vulnerability Scan Report Artefact (${{ parameters.functional_test_project_type }})"
 
   # Publish Artefacts if required
   - ${{ if eq(parameters.functional_test, true) }}:
