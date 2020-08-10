@@ -33,7 +33,7 @@ Feature: Delete Item
     Then the returned status code is 200
     And the item is successfully deleted
 
-  @Ignore
+
   Scenario: Remove an item that does not exist
     When I delete the item with "d222f2ee-2c22-2b22-22e6-d701722f2222" id
     Then the returned status code is 404

@@ -63,13 +63,15 @@ Feature: Update categories
     Then the returned status code is 400
 
 
-  @Ignore
   Scenario: Update category 'description' field only
     When I update the category with the following data:
-      | name          | description                                  |
-      | Fish Category | This compartment contain all fish delicacies |
-    Then the returned status code is 409
-    And the 'category already exists' message is returned
+      | name          | description                                            |
+      | Fish Category | This compartment contain all fish delicacies - Updated |
+    Then the returned status code is 200
+    When I search the updated menu
+    Then the menu should include the following category data:
+      | name          | description                                            |
+      | Fish Category | This compartment contain all fish delicacies - Updated |
 
 
   Scenario: Update the category for the menu that does not exist
