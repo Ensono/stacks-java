@@ -38,7 +38,6 @@ Feature: Update Item
       | Updated name | Greek style burger patties served with cheese and tomatoes. | 11.95 | true      |
 
 
-  @Ignore
   Scenario: Update the existing item - update description only
     Given I update the item with the following data:
       | name    | description          | price | available |
@@ -50,7 +49,6 @@ Feature: Update Item
       | Bifteki | New Description Here | 11.95 | true      |
 
 
-  @Ignore
   Scenario: Update the existing item - update price only
     Given I update the item with the following data:
       | name    | description                                                 | price | available |
@@ -62,7 +60,6 @@ Feature: Update Item
       | Bifteki | Greek style burger patties served with cheese and tomatoes. | 15.95 | true      |
 
 
-  @Ignore
   Scenario: Update the existing item - update the availability only
     Given I update the item with the following data:
       | name    | description                                                 | price | available |
@@ -74,13 +71,15 @@ Feature: Update Item
       | Bifteki | Greek style burger patties served with cheese and tomatoes. | 11.95 | false     |
 
 
-  @Ignore
   Scenario: Update the existing item - item already exist
     Given I update the item with the following data:
       | name    | description                                                 | price | available |
       | Bifteki | Greek style burger patties served with cheese and tomatoes. | 11.95 | true      |
-    Then the returned status code is 409
-    And the 'item already exist' message is returned
+    Then the returned status code is 200
+    When I search the updated menu
+    Then the item should include the following data:
+      | name    | description                                                 | price | available |
+      | Bifteki | Greek style burger patties served with cheese and tomatoes. | 11.95 | true      |
 
 
   Scenario: Update the existing item with empty 'name' field
