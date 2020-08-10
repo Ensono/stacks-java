@@ -115,6 +115,10 @@ variables:
   maven_ignored_post_deploy_test_tags: "@Ignore"
   maven_post_deploy_html_report_directory: "target/site/serenity"
   maven_post_deploy_failsafe_reports_directory: "target/failsafe-reports"
+  # Vulnerability Scan
+  vulnerability_scan: true
+  vulerability_scan_report: "target/dependency-check-report.html"
+  vulnerability_scan_fail_build_on_detection: false
   # Yamllint
   yamllint_config_file: "${{ variables.self_repo_dir }}/yamllint.conf"
   yamllint_scan_directory: "."
@@ -124,6 +128,9 @@ variables:
   functional_test_artefact_path: "${{ variables.self_repo_dir }}/${{ variables.self_post_deploy_test_src }}"
   functional_test_artefact_name: "post-deploy-test-artefact"
   functional_test_artefact_download_location: "$(Pipeline.Workspace)/${{ variables.functional_test_artefact_name }}"
+  # Build Task Naming
+  java_project_type: "Java App"
+  functional_test_project_type: "Functional API Tests"
 
 stages:
   - stage: Build
@@ -172,11 +179,10 @@ stages:
               maven_allowed_test_tags: "${{ variables.maven_allowed_test_tags}}"
               # Docker
               docker_build_container: "${{ variables.docker_java_image }}"
-              # TODO: Vulnerability Scans
               # Vulnerability Scanning
-              # vulnerability_scan: false
-              # vulnerability_workdir: "$(Build.ArtifactStagingDirectory)"
-              project_type: "Java App"
+              vulnerability_scan: "${{ variables.vulnerability_scan }}"
+              vulnerability_scan_fail_build_on_detection: "${{ variables.vulnerability_scan_fail_build_on_detection }}"
+              project_type: "${{ variables.java_project_type }}"
 
           # Builds the Java API Tests
           - template: templates/steps/build-api-tests.yml
@@ -193,7 +199,10 @@ stages:
               maven_post_deploy_failsafe_reports_directory: "${{ variables.maven_post_deploy_failsafe_reports_directory }}"
               # Docker
               docker_build_container: "${{ variables.docker_java_image }}"
-              project_type: "Functional API Tests"
+              # Vulnerability Scan
+              vulnerability_scan: "${{ variables.vulnerability_scan }}"
+              vulnerability_scan_fail_build_on_detection: "${{ variables.vulnerability_scan_fail_build_on_detection }}"
+              project_type: "${{ variables.functional_test_project_type }}"
 
           # Performs stati code analysis, such as Sonar Cloud
           - template: templates/steps/test-static-code-analysis.yml
@@ -238,6 +247,7 @@ stages:
           - template: templates/steps/post-build-tasks.yml
             parameters:
               project_root_dir: "${{ variables.self_project_dir }}"
+              functional_test_project_root_dir: "${{ variables.self_functional_testproject_dir }}"
               # Build Output File
               # files to be persisted across stages
               build_file: true
@@ -247,6 +257,10 @@ stages:
               functional_test: ${{ variables.functional_test }}
               functional_test_artefact_name: "${{ variables.functional_test_artefact_name }}"
               functional_test_artefact_path: "${{ variables.functional_test_artefact_path }}"
+              vulnerability_scan: "${{ variables.vulnerability_scan }}"
+              vulerability_scan_report: "${{ variables.vulnerability_scan_report }}"
+              java_project_type: "${{ variables.java_project_type }}"
+              functional_test_project_type: "${{ variables.functional_test_project_type }}"
 
   - stage: Dev
     variables:
