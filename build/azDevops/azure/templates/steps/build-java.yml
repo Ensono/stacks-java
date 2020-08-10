@@ -41,6 +41,8 @@ steps:
             -Y "${{ parameters.vulnerability_scan_fail_build_on_detection }}"
             -Z "${{ parameters.maven_cache_directory }}"
           workingDirectory: "${{ parameters.project_root_dir }}"
+        env:
+          LC_ALL: "C.UTF-8"
         target:
           container: ${{ parameters.docker_build_container }}
         displayName: "Maven: OWASP Vulnerability Scan (${{ parameters.project_type }})"
