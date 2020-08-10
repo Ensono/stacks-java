@@ -7,8 +7,8 @@ parameters:
   build_file: ""
   build_file_path: ""
   build_file_artefact_name: ""
-  vulerability_scan: ""
-  vulerability_scan_report: ""
+  vulnerability_scan: ""
+  vulnerability_scan_report: ""
   java_project_type: ""
   functional_test_project_type: ""
 
@@ -30,14 +30,14 @@ steps:
       - task: PublishPipelineArtifact@1
         condition: always()
         inputs:
-          path: "${{ parameters.project_root_dir }}/${{ parameters.vulerability_scan_report }}"
+          path: "${{ parameters.project_root_dir }}/${{ parameters.vulnerability_scan_report }}"
           artifact: "owasp-vulnerability-report-java"
         displayName: "Publish: Vulnerability Scan Report Artefact (${{ parameters.java_project_type }})"
 
       - task: PublishPipelineArtifact@1
         condition: always()
         inputs:
-          path: "${{ parameters.functional_test_project_root_dir }}/${{ parameters.vulerability_scan_report }}"
+          path: "${{ parameters.functional_test_project_root_dir }}/${{ parameters.vulnerability_scan_report }}"
           artifact: "owasp-vulnerability-report-functional-test"
         displayName: "Publish: Vulnerability Scan Report Artefact (${{ parameters.functional_test_project_type }})"
 
