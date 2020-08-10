@@ -117,7 +117,7 @@ variables:
   maven_post_deploy_failsafe_reports_directory: "target/failsafe-reports"
   # Vulnerability Scan
   vulnerability_scan: true
-  vulerability_scan_report: "target/dependency-check-report.html"
+  vulnerability_scan_report: "target/dependency-check-report.html"
   vulnerability_scan_fail_build_on_detection: false
   # Yamllint
   yamllint_config_file: "${{ variables.self_repo_dir }}/yamllint.conf"
@@ -258,7 +258,7 @@ stages:
               functional_test_artefact_name: "${{ variables.functional_test_artefact_name }}"
               functional_test_artefact_path: "${{ variables.functional_test_artefact_path }}"
               vulnerability_scan: "${{ variables.vulnerability_scan }}"
-              vulerability_scan_report: "${{ variables.vulnerability_scan_report }}"
+              vulnerability_scan_report: "${{ variables.vulnerability_scan_report }}"
               java_project_type: "${{ variables.java_project_type }}"
               functional_test_project_type: "${{ variables.functional_test_project_type }}"
 
