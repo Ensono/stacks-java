@@ -76,6 +76,9 @@ class DeleteCategoryControllerImplTest {
     // Then
     verify(repository, times(1)).save(menu);
     then(response.getStatusCode()).isEqualTo(OK);
+    Optional<Menu> optMenu = repository.findById(menu.getId());
+    Menu updated = optMenu.get();
+    then(updated.getCategories()).isNotNull();
   }
 
   @Test
