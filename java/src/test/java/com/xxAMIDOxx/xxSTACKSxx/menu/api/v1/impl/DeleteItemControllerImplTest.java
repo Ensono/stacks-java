@@ -78,6 +78,10 @@ class DeleteItemControllerImplTest {
     // Then
     verify(repository, times(1)).save(menu);
     then(response.getStatusCode()).isEqualTo(OK);
+    Optional<Menu> optMenu = repository.findById(menu.getId());
+    Menu updated = optMenu.get();
+    then(updated.getCategories()).hasSize(1);
+    then(updated.getCategories().get(0).getItems()).isNotNull();
   }
 
   @Test
