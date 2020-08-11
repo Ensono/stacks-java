@@ -6,17 +6,17 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
-import org.springframework.stereotype.Component;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.stereotype.Component;
 
 @Component
 public class UpdateMenuHandler extends MenuBaseCommandHandler<UpdateMenuCommand> {
 
-  public UpdateMenuHandler(MenuRepository menuRepository, ApplicationEventPublisher applicationEventPublisher) {
+  public UpdateMenuHandler(
+      MenuRepository menuRepository, ApplicationEventPublisher applicationEventPublisher) {
     super(menuRepository, applicationEventPublisher);
   }
 
@@ -31,8 +31,6 @@ public class UpdateMenuHandler extends MenuBaseCommandHandler<UpdateMenuCommand>
 
   @Override
   List<MenuEvent> raiseApplicationEvents(Menu menu, UpdateMenuCommand command) {
-    return Collections.singletonList(
-            new MenuUpdatedEvent(command)
-    );
+    return Collections.singletonList(new MenuUpdatedEvent(command));
   }
 }

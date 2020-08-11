@@ -75,8 +75,11 @@ Feature: Update Item
     Given I update the item with the following data:
       | name    | description                                                 | price | available |
       | Bifteki | Greek style burger patties served with cheese and tomatoes. | 11.95 | true      |
-    Then the returned status code is 409
-    And the 'item already exist' message is returned
+    Then the returned status code is 200
+    When I search the updated menu
+    Then the item should include the following data:
+      | name    | description                                                 | price | available |
+      | Bifteki | Greek style burger patties served with cheese and tomatoes. | 11.95 | true      |
 
 
   Scenario: Update the existing item with empty 'name' field
