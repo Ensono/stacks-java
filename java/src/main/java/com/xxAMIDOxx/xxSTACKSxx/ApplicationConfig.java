@@ -45,10 +45,7 @@ public class ApplicationConfig extends WebSecurityConfigurerAdapter {
    *
    * /api/public: available for non-authenticated requests.
    * /api/private: available for authenticated requests containing an Access-Token with no additional scopes.
-   * /api/private-scoped: available for authenticated requests containing an Access-Token with the
-   * read:messages scope granted
    *
-   * The hasAuthority() method provides a way to specify the required scope.
    *
    * @param http
    * @throws Exception
@@ -62,7 +59,7 @@ public class ApplicationConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/v1/menu").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/v1/menu/{id}").authenticated()
-                .antMatchers(HttpMethod.POST, "/v1/menu").hasAuthority("create:menu");
+                .antMatchers(HttpMethod.POST, "/v1/menu").authenticated();
     }
 
 }
