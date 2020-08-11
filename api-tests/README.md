@@ -7,11 +7,11 @@
 3. Execute tests by run one of the following commands:
 
   a. Run all tests: `mvn clean verify`
-  
-  b. Run Smoke tests only: `mvn clean verify -Dcucumber.options="--tags @Smoke`
-  
-  c. Run Functional tests only: `mvn clean verify -Dcucumber.options="--tags @Functional`
-  
+
+  b. Run Smoke tests only: `mvn clean verify -Dcucumber.options="--tags @Smoke"`
+
+  c. Run Functional tests only: `mvn clean verify -Dcucumber.options="--tags @Functional"`
+
   d. Run tests by other tags and ignore tests that contain @Ignore tags:
   `mvn clean verify  verify -Dcucumber.options="--tags ~@Ignore --tags @YourTag"`
 
