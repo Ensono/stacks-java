@@ -19,6 +19,9 @@ import java.util.Arrays;
 @EnableWebSecurity(debug = true)
 public class ApplicationConfig extends WebSecurityConfigurerAdapter {
 
+  private static final String V1_MENU_ENDPOINT = "/v1/menu";
+  private static final String V2_MENU_ENDPOINT = "/v2/menu";
+
     @Value(value = "${auth0.apiAudience}")
     private String apiAudience;
     @Value(value = "${auth0.issuer}")
@@ -57,9 +60,11 @@ public class ApplicationConfig extends WebSecurityConfigurerAdapter {
                 .forRS256(apiAudience, issuer)
                 .configure(http)
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/v1/menu").authenticated()
-                .antMatchers(HttpMethod.DELETE, "/v1/menu/{id}").authenticated()
-                .antMatchers(HttpMethod.POST, "/v1/menu").authenticated();
+                .antMatchers(HttpMethod.GET, V1_MENU_ENDPOINT).authenticated()
+                .antMatchers(HttpMethod.GET, V2_MENU_ENDPOINT).authenticated()
+                .antMatchers(HttpMethod.DELETE, V1_MENU_ENDPOINT).authenticated()
+                .antMatchers(HttpMethod.PUT, V1_MENU_ENDPOINT).authenticated()
+                .antMatchers(HttpMethod.POST, V1_MENU_ENDPOINT).authenticated();
     }
 
 }
