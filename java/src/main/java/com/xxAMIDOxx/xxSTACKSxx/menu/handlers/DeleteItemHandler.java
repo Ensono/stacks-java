@@ -41,7 +41,7 @@ public class DeleteItemHandler extends MenuBaseCommandHandler<DeleteItemCommand>
             .collect(Collectors.toList());
     category.setItems(!itemList.isEmpty() ? itemList : Collections.emptyList());
 
-    menuRepository.save(menu.addUpdateCategory(category));
+    menuRepository.save(menu.addOrUpdateCategory(category));
 
     return Optional.empty();
   }

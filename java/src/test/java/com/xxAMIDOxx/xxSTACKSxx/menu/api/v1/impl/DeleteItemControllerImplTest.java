@@ -60,8 +60,8 @@ class DeleteItemControllerImplTest {
     Menu menu = createMenu(1);
     Category category = createCategory(0);
     Item item = new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
-    category.addUpdateItem(item);
-    menu.addUpdateCategory(category);
+    category.addOrUpdateItem(item);
+    menu.addOrUpdateCategory(category);
     when(repository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     // When
@@ -90,8 +90,8 @@ class DeleteItemControllerImplTest {
     Menu menu = createMenu(1);
     Category category = createCategory(0);
     Item item = new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
-    category.addUpdateItem(item);
-    menu.addUpdateCategory(category);
+    category.addOrUpdateItem(item);
+    menu.addOrUpdateCategory(category);
     when(repository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     // When
@@ -116,8 +116,8 @@ class DeleteItemControllerImplTest {
     Menu menu = createMenu(1);
     Category category = createCategory(0);
     Item item = new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
-    category.addUpdateItem(item);
-    menu.addUpdateCategory(category);
+    category.addOrUpdateItem(item);
+    menu.addOrUpdateCategory(category);
     when(repository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     // When
