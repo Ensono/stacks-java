@@ -47,16 +47,6 @@ Feature: Add menu item
     And the 'item already exist' message is returned
 
 
-  Scenario: Create an item - 400 Bad request for empty 'category id' and 'menu id' fields
-    Given the following item data:
-      | name           | description           | price | available |
-      | Test Item Name | Test Item Description | 1.5   | true      |
-    When I create an item for the following menu and category:
-      | menuId     |  |
-      | categoryId |  |
-    Then the returned status code is 400
-
-
   Scenario: Create an item - 400 Bad request for invalid 'category id' field
     Given the following item data:
       | name           | description           | price | available |

@@ -234,4 +234,9 @@ public class MenuStepDefinitions {
             LOGGER.info(String.format("The menu with '%s' id was successfully deleted.", currentMenu.getId()));
         }
     }
+
+    @Given("I delete all menus from previous tests")
+    public void i_delete_all_existing_menus_from_test_data() {
+        Hooks.deleteAllMenusFromPreviousRun();
+    }
 }
