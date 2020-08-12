@@ -28,7 +28,7 @@ public class Menu {
 
   private Boolean enabled;
 
-  public Menu addUpdateCategory(Category category) {
+  public Menu addOrUpdateCategory(Category category) {
     if (this.categories == null) {
       this.categories = new ArrayList<>();
     }

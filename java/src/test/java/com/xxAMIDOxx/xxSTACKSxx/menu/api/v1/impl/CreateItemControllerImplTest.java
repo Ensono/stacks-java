@@ -53,7 +53,7 @@ class CreateItemControllerImplTest {
     Menu menu = createMenu(1);
     Category category =
         new Category(randomUUID().toString(), "cat name", "cat description", new ArrayList<>());
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
 
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
     when(menuRepository.save(any(Menu.class))).thenReturn(menu);
@@ -146,7 +146,7 @@ class CreateItemControllerImplTest {
     Category category =
         new Category(
             UUID.randomUUID().toString(), "cat name", "cat description", Arrays.asList(item));
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
 
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
@@ -173,7 +173,7 @@ class CreateItemControllerImplTest {
     // Given
     Menu menu = createMenu(1);
     Category category = createCategory(1);
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
 
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
     when(menuRepository.save(any(Menu.class))).thenReturn(menu);
@@ -198,7 +198,7 @@ class CreateItemControllerImplTest {
     // Given
     Menu menu = createMenu(1);
     Category category = createCategory(1);
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
 
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
     when(menuRepository.save(any(Menu.class))).thenReturn(menu);
@@ -223,7 +223,7 @@ class CreateItemControllerImplTest {
     // Given
     Menu menu = createMenu(1);
     Category category = createCategory(1);
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
 
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
     when(menuRepository.save(any(Menu.class))).thenReturn(menu);
