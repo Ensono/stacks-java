@@ -20,7 +20,7 @@ public interface DeleteCategoryController {
   @DeleteMapping(produces = "application/json; charset=utf-8")
   @Operation(
       tags = "Category",
-      summary = "Removes a category and it's items from menu",
+      summary = "Removes a category and its items from menu",
       description = "Removes a category and its items from menu",
       operationId = "DeleteCategory",
       responses = {

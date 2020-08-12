@@ -8,10 +8,9 @@ parameters:
   maven_allowed_test_tags: ""
   # Docker Config
   docker_build_container: ""
-  # TODO: Vulnerability Scans
-  # # Vulnerability Scanning
-  # vulnerability_scan: false
-  # vulnerability_workdir: ""
+  # Vulnerability Scanning
+  vulnerability_scan: true
+  vulnerability_scan_fail_build_on_detection: true
   project_type: ""
 
 steps:
@@ -33,6 +32,20 @@ steps:
     target:
       container: ${{ parameters.docker_build_container }}
     displayName: "Maven: Install Packages (${{ parameters.project_type }})"
+
+  - ${{ if eq(parameters.vulnerability_scan, true) }}:
+      - task: Bash@3
+        inputs:
+          filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-owasp-dependency-check.bash"
+          arguments: >
+            -Y "${{ parameters.vulnerability_scan_fail_build_on_detection }}"
+            -Z "${{ parameters.maven_cache_directory }}"
+          workingDirectory: "${{ parameters.project_root_dir }}"
+        env:
+          LC_ALL: "C.UTF-8"
+        target:
+          container: ${{ parameters.docker_build_container }}
+        displayName: "Maven: OWASP Vulnerability Scan (${{ parameters.project_type }})"
 
   - task: Bash@3
     inputs:
