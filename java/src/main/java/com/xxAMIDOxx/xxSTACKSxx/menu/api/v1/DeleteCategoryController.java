@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/v1/menu/{id}/category/{categoryId}")
 public interface DeleteCategoryController {
 
-  @DeleteMapping(produces = "application/json")
+  @DeleteMapping(produces = "application/json; charset=utf-8")
   @Operation(
       tags = "Category",
-      summary = "Update a category in the menu",
-      description = "Update a category to menu",
-      operationId = "UpdateMenuCategory",
+      summary = "Removes a category and its items from menu",
+      description = "Removes a category and its items from menu",
+      operationId = "DeleteCategory",
       responses = {
         @ApiResponse(
             responseCode = "200",

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/v1/menu")
 public interface CreateMenuController {
 
-  @PostMapping(consumes = "application/json", produces = "application/json")
+  @PostMapping(consumes = "application/json", produces = "application/json; charset=utf-8")
   @Operation(
       tags = "Menu",
       summary = "Create a menu",
