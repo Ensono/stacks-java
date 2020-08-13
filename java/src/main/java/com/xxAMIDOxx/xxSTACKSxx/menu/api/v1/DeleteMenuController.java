@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/v1/menu/{id}")
 public interface DeleteMenuController {
 
-  @DeleteMapping(produces = "application/json")
+  @DeleteMapping(produces = "application/json; charset=utf-8")
   @Operation(
       tags = "Menu",
       summary = "Removes a Menu with all it's Categories and Items",

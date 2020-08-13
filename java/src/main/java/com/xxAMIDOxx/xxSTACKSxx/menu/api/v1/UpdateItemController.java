@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 /** @author ArathyKrishna */
 @RequestMapping("/v1/menu/{id}/category/{categoryId}/items/{itemId}")
 public interface UpdateItemController {
-  @PutMapping(consumes = "application/json", produces = "application/json")
+  @PutMapping(consumes = "application/json", produces = "application/json; charset=utf-8")
   @Operation(
       tags = "Item",
       summary = "Update an item in the menu",
