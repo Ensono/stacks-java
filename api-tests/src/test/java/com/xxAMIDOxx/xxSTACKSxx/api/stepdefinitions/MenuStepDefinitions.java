@@ -5,6 +5,7 @@ import com.xxAMIDOxx.xxSTACKSxx.api.WebServiceEndPoints;
 import com.xxAMIDOxx.xxSTACKSxx.api.menu.MenuActions;
 import com.xxAMIDOxx.xxSTACKSxx.api.menu.MenuRequests;
 import com.xxAMIDOxx.xxSTACKSxx.api.models.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.api.models.ResponseWrapper;
 import com.xxAMIDOxx.xxSTACKSxx.api.templates.FieldValues;
 import com.xxAMIDOxx.xxSTACKSxx.api.templates.MergeFrom;
 import com.xxAMIDOxx.xxSTACKSxx.api.templates.TemplateResponse;
@@ -12,7 +13,6 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.rest.SerenityRest;
 import net.thucydides.core.annotations.Steps;
@@ -59,9 +59,7 @@ public class MenuStepDefinitions {
 
     @Given("the menu list is not empty")
     public void get_all_existing_menus() {
-        SerenityRest.get(WebServiceEndPoints.BASE_URL.getUrl()
-                + WebServiceEndPoints.MENU.getUrl());
-
+        menuRequest.getAllMenus();
         restAssuredThat(response -> response.statusCode(200));
         restAssuredThat(lastResponse -> lastResponse.body("results", Matchers.notNullValue()));
     }
@@ -76,8 +74,8 @@ public class MenuStepDefinitions {
         getMenuByParameter(menuId);
     }
 
-    public Response getMenuByParameter(String parameter) {
-        return SerenityRest.get(BASE_URL + WebServiceEndPoints.MENU.getUrl() + "/" + parameter);
+    public void getMenuByParameter(String parameter) {
+        SerenityRest.get(BASE_URL.concat(WebServiceEndPoints.MENU.getUrl()).concat("/").concat(parameter));
     }
 
     @When("I search the menu by:")
@@ -107,7 +105,7 @@ public class MenuStepDefinitions {
     @When("I search the menu by restaurant id")
     public void getMenuById() {
         String restaurant_id = String.valueOf(Serenity.getCurrentSession().get("RestaurantId"));
-        String parametrisedPath = BASE_URL.concat(WebServiceEndPoints.MENU.getUrl()).concat("?restaurantId=") + restaurant_id ;
+        String parametrisedPath = BASE_URL.concat(WebServiceEndPoints.MENU.getUrl()).concat("?restaurantId=") + restaurant_id;
 
         SerenityRest.get(parametrisedPath);
     }
@@ -136,8 +134,8 @@ public class MenuStepDefinitions {
 
         String id = menuActions.getIdOfLastCreatedObject();
         Menu expectedMenu = MenuActions.mapToMenu(menuDetails.get(0), id);
-        Menu actualMenu = menuActions.responseToMenu(lastResponse());
 
+        Menu actualMenu = lastResponse().getBody().as(Menu.class);
         assertThat(expectedMenu).isEqualToIgnoringGivenFields(actualMenu, "categories");
     }
 
@@ -212,5 +210,33 @@ public class MenuStepDefinitions {
 
         restAssuredThat(response -> response.statusCode(404));
         menuActions.check_exception_message(ExceptionMessages.MENU_DOES_NOT_EXIST, lastResponse());
+    }
+
+    @Given("the menu list is empty")
+    public void the_menu_list_is_empty() {
+        menuRequest.getAllMenus();
+        ResponseWrapper responseWrapper = lastResponse().body().as(ResponseWrapper.class);
+
+        restAssuredThat(response -> response.statusCode(200));
+        Assert.assertEquals(0, responseWrapper.getResults().size());
+    }
+
+
+    @Given("I delete all existing menus")
+    public void i_delete_all_existing_menus() {
+        ResponseWrapper responseWrapper = lastResponse().body().as(ResponseWrapper.class);
+        List<Menu> allMenus = responseWrapper.getResults();
+
+        for (Menu currentMenu : allMenus) {
+            menuRequest.deleteTheMenu(currentMenu.getId());
+            restAssuredThat(response -> response.statusCode(200));
+
+            LOGGER.info(String.format("The menu with '%s' id was successfully deleted.", currentMenu.getId()));
+        }
+    }
+
+    @Given("I delete all menus from previous tests")
+    public void i_delete_all_existing_menus_from_test_data() {
+        Hooks.deleteAllMenusFromPreviousRun();
     }
 }

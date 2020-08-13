@@ -9,7 +9,6 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.MenuNotFoundException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,8 +19,8 @@ public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements C
 
   private ApplicationEventPublisher applicationEventPublisher;
 
-  public MenuBaseCommandHandler(MenuRepository menuRepository,
-                                ApplicationEventPublisher applicationEventPublisher) {
+  public MenuBaseCommandHandler(
+      MenuRepository menuRepository, ApplicationEventPublisher applicationEventPublisher) {
     this.menuRepository = menuRepository;
     this.applicationEventPublisher = applicationEventPublisher;
   }
@@ -29,7 +28,8 @@ public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements C
   @Override
   public Optional<UUID> handle(T command) {
 
-    Menu menu = menuRepository
+    Menu menu =
+        menuRepository
             .findById(command.getMenuId().toString())
             .orElseThrow(() -> new MenuNotFoundException(command));
 
@@ -51,15 +51,15 @@ public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements C
   /**
    * find a category for the id provided
    *
-   * @param menu       menu object
+   * @param menu menu object
    * @param categoryId category id
    * @return category if found else optional.empty
    */
   public Optional<Category> findCategory(Menu menu, UUID categoryId) {
     Optional<Category> existing = Optional.empty();
     if (menu.getCategories() != null && !menu.getCategories().isEmpty()) {
-      existing = menu.getCategories()
-              .stream()
+      existing =
+          menu.getCategories().stream()
               .filter(c -> c.getId().equals(categoryId.toString()))
               .findFirst();
     }
@@ -70,10 +70,8 @@ public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements C
     Optional<Item> existing = Optional.empty();
 
     if (category.getItems() != null && !category.getItems().isEmpty()) {
-      existing = category.getItems()
-              .stream()
-              .filter(t -> t.getId().equals(itemId.toString()))
-              .findFirst();
+      existing =
+          category.getItems().stream().filter(t -> t.getId().equals(itemId.toString())).findFirst();
     }
     return existing;
   }

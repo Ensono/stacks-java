@@ -14,29 +14,28 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableConfigurationProperties(ServiceBusProperties.class)
 @ConditionalOnProperty(
-        value = "azure.servicebus.enabled",
-        havingValue = "true",
-        matchIfMissing = false)
+    value = "azure.servicebus.enabled",
+    havingValue = "true",
+    matchIfMissing = false)
 public class ServiceBusConfiguration {
 
-    private final ServiceBusProperties properties;
+  private final ServiceBusProperties properties;
 
-    public ServiceBusConfiguration(ServiceBusProperties properties) {
-        this.properties = properties;
-    }
+  public ServiceBusConfiguration(ServiceBusProperties properties) {
+    this.properties = properties;
+  }
 
-    @Bean
-    public TopicClient topicSender() throws ServiceBusException, InterruptedException {
-        return new TopicClient(
-                new ConnectionStringBuilder(properties.getConnectionString(),
-                        properties.getTopicName()));
-    }
+  @Bean
+  public TopicClient topicSender() throws ServiceBusException, InterruptedException {
+    return new TopicClient(
+        new ConnectionStringBuilder(properties.getConnectionString(), properties.getTopicName()));
+  }
 
-    @Bean
-    public JsonMapper jsonMapper() {
-        return JsonMapper.builder()
-                .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-                .addModule(new JavaTimeModule())
-                .build();
-    }
+  @Bean
+  public JsonMapper jsonMapper() {
+    return JsonMapper.builder()
+        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+        .addModule(new JavaTimeModule())
+        .build();
+  }
 }

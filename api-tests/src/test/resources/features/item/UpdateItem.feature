@@ -6,8 +6,8 @@ Feature: Update Item
     # 1. Create menu
     Given the application is running
     And the following menu data:
-      | name                | description   | tenantId                             | enabled |
-      | Andy's Greek Tavern | Greek Cuisine | d333f1ee-3c56-4b01-90e6-d701748f5656 | true    |
+      | name                                      | description   | tenantId                             | enabled |
+      | Andy's Greek Tavern (Automated Test Data) | Greek Cuisine | d333f1ee-3c56-4b01-90e6-d701748f5656 | true    |
     When I create the menu
     Then the menu was successfully created
     And the returned status code is 201
@@ -75,8 +75,11 @@ Feature: Update Item
     Given I update the item with the following data:
       | name    | description                                                 | price | available |
       | Bifteki | Greek style burger patties served with cheese and tomatoes. | 11.95 | true      |
-    Then the returned status code is 409
-    And the 'item already exist' message is returned
+    Then the returned status code is 200
+    When I search the updated menu
+    Then the item should include the following data:
+      | name    | description                                                 | price | available |
+      | Bifteki | Greek style burger patties served with cheese and tomatoes. | 11.95 | true      |
 
 
   Scenario: Update the existing item with empty 'name' field
