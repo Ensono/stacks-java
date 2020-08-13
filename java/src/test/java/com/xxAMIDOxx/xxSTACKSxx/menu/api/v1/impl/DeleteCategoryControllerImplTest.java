@@ -10,7 +10,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -100,8 +99,11 @@ class DeleteCategoryControllerImplTest {
             ErrorResponse.class);
 
     // Then
-    verify(repository, times(0)).save(menu);
-    then(response.getStatusCode()).isEqualTo(CONFLICT);
+    verify(repository, times(1)).save(menu);
+    then(response.getStatusCode()).isEqualTo(OK);
+    Optional<Menu> optMenu = repository.findById(menu.getId());
+    Menu updatedMenu = optMenu.get();
+    then(updatedMenu.getCategories()).isNull();
   }
 
   @Test
