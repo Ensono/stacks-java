@@ -44,7 +44,8 @@ Feature: Delete category
     And the returned status code is 201
    # 4. Delete the category
     When I delete the created category
-    Then the returned status code is 409
+    Then the returned status code is 200
+    And the category is successfully deleted
 
 
   Scenario: Remove a category that does not exist
