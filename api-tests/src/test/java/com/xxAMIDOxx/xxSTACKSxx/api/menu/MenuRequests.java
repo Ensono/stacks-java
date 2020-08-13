@@ -6,7 +6,7 @@ import net.thucydides.core.annotations.Step;
 
 public class MenuRequests {
 
-    String menuUrl = WebServiceEndPoints.BASE_URL.getUrl() + WebServiceEndPoints.MENU.getUrl();
+    private static String menuUrl = WebServiceEndPoints.BASE_URL.getUrl().concat(WebServiceEndPoints.MENU.getUrl());
 
     @Step("Create a new menu")
     public void createMenu(String body) {
@@ -33,10 +33,19 @@ public class MenuRequests {
     }
 
     @Step("Delete the menu")
-    public void deleteTheMenu(String id) {
+    public static void deleteTheMenu(String id) {
         SerenityRest.given()
                 .contentType("application/json")
                 .when()
                 .delete(menuUrl.concat("/").concat(id));
+    }
+
+    @Step("Get all menus")
+    public void getAllMenus() {
+        SerenityRest.get(menuUrl);
+    }
+
+    public static void getMenusBySearchTerm(String searchTerm) {
+        SerenityRest.get(menuUrl.concat("?searchTerm=").concat(searchTerm));
     }
 }

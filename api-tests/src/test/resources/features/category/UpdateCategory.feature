@@ -6,8 +6,8 @@ Feature: Update categories
      # 1. Create menu
     Given the application is running
     And the following menu data:
-      | name      | description    | tenantId                             | enabled |
-      | Le Renoir | French Cuisine | d211f1ee-6c56-4b01-90e6-d701748f5656 | true    |
+      | name                            | description    | tenantId                             | enabled |
+      | Le Renoir (Automated Test Data) | French Cuisine | d211f1ee-6c56-4b01-90e6-d701748f5656 | true    |
     When I create the menu
     Then the menu was successfully created
     And the returned status code is 201
@@ -65,10 +65,13 @@ Feature: Update categories
 
   Scenario: Update category 'description' field only
     When I update the category with the following data:
-      | name          | description                                  |
-      | Fish Category | This compartment contain all fish delicacies |
-    Then the returned status code is 409
-    And the 'category already exists' message is returned
+      | name          | description                                            |
+      | Fish Category | This compartment contain all fish delicacies - Updated |
+    Then the returned status code is 200
+    When I search the updated menu
+    Then the menu should include the following category data:
+      | name          | description                                            |
+      | Fish Category | This compartment contain all fish delicacies - Updated |
 
 
   Scenario: Update the category for the menu that does not exist

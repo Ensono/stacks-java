@@ -147,3 +147,24 @@ variable "cosmosdb_offer_type" {
   default     = "Standard"
   description = "Specify the offer type"
 }
+
+###########################
+# Storage Account for Test Reports
+##########################
+# variable "test_report_account_kind" {
+#   type        = string
+#   default     = "StorageV2"
+#   description = "Specify the Storage Account kind for Test Reports"
+# }
+
+# variable "test_report_account_tier" {
+#   type        = string
+#   default     = "Standard"
+#   description = "Specify the Storage Account tier for Test Reports"
+# }
+
+# variable "test_report_account_replication_type" {
+#   type        = string
+#   default     = "LRS"
+#   description = "Specify the Storage Account replication type for Test Reports"
+# }

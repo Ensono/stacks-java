@@ -1,5 +1,20 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 
+import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.CategoryHelper.createCategory;
+import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.MenuHelper.createMenu;
+import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
+import static java.util.UUID.randomUUID;
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
@@ -9,7 +24,10 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
-import org.junit.jupiter.api.AfterEach;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -21,187 +39,212 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.UUID;
-
-import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.MenuHelper.createMenu;
-import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
-import static java.util.UUID.randomUUID;
-import static org.assertj.core.api.BDDAssertions.then;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpStatus.*;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(
-        exclude = {
-                CosmosDbRepositoriesAutoConfiguration.class,
-                CosmosAutoConfiguration.class
-        })
+    exclude = {CosmosDbRepositoriesAutoConfiguration.class, CosmosAutoConfiguration.class})
 @Tag("Integration")
 class CreateItemControllerImplTest {
 
+  public static final String CREATE_ITEM = "%s/v1/menu/%s/category/%s/items";
+  @LocalServerPort private int port;
 
-    @LocalServerPort
-    private int port;
+  @Autowired private TestRestTemplate testRestTemplate;
 
-    @Autowired
-    private TestRestTemplate testRestTemplate;
+  @MockBean private MenuRepository menuRepository;
 
-    @MockBean
-    private MenuRepository menuRepository;
+  @Test
+  void testAddItem() {
+    // Given
+    Menu menu = createMenu(1);
+    Category category =
+        new Category(randomUUID().toString(), "cat name", "cat description", new ArrayList<>());
+    menu.addUpdateCategory(category);
 
-    @AfterEach
-    void tearDown() {
-        menuRepository.deleteAll();
-    }
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepository.save(any(Menu.class))).thenReturn(menu);
 
-    @Test
-    void testAddItem() {
-        // Given
-        Menu menu = createMenu(1);
-        Category category = new Category(randomUUID().toString(),
-                "cat name",
-                "cat description",
-                new ArrayList<>());
-        menu.addUpdateCategory(category);
+    CreateItemRequest request =
+        new CreateItemRequest("Some Name", "Some Description", 13.56d, true);
 
-        when(menuRepository.findById(eq(menu.getId())))
-                .thenReturn(Optional.of(menu));
-        when(menuRepository.save(any(Menu.class))).thenReturn(menu);
+    // When
+    var response =
+        this.testRestTemplate.postForEntity(
+            String.format(CREATE_ITEM, getBaseURL(port), menu.getId(), category.getId()),
+            request,
+            ResourceCreatedResponse.class);
 
-        CreateItemRequest request = new CreateItemRequest(
-                "Some Name",
-                "Some Description",
-                13.56d,
-                true
-        );
+    // Then
+    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
+    verify(menuRepository, times(1)).save(captor.capture());
+    Menu created = captor.getValue();
 
-        // When
-        var response =
-                this.testRestTemplate.postForEntity(
-                        String.format("%s/v1/menu/%s/category/%s/items",
-                                getBaseURL(port), menu.getId(), category.getId()),
-                        request,
-                        ResourceCreatedResponse.class);
+    then(created.getName()).isEqualTo(menu.getName());
+    then(created.getDescription()).isEqualTo(menu.getDescription());
+    then(created.getCategories().size()).isEqualTo(1);
+    then(created.getCategories().get(0).getName()).isEqualTo(category.getName());
+    then(created.getCategories().get(0).getDescription()).isEqualTo(category.getDescription());
 
-        // Then
-        ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
-        verify(menuRepository, times(1)).save(captor.capture());
-        Menu created = captor.getValue();
+    then(created.getCategories().get(0).getItems()).isNotNull();
+    then(created.getCategories().get(0).getItems().size()).isEqualTo(1);
 
-        then(created.getName()).isEqualTo(menu.getName());
-        then(created.getDescription()).isEqualTo(menu.getDescription());
-        then(created.getCategories().size()).isEqualTo(1);
-        then(created.getCategories().get(0).getName()).isEqualTo(category.getName());
-        then(created.getCategories().get(0).getDescription()).isEqualTo(category.getDescription());
+    Item createdItem = created.getCategories().get(0).getItems().get(0);
+    then(createdItem.getName()).isEqualTo(request.getName());
+    then(createdItem.getDescription()).isEqualTo(request.getDescription());
+    then(createdItem.getPrice()).isEqualTo(request.getPrice());
+    then(createdItem.getAvailable()).isEqualTo(request.getAvailable());
 
-        then(created.getCategories().get(0).getItems()).isNotNull();
-        then(created.getCategories().get(0).getItems().size()).isEqualTo(1);
+    then(response).isNotNull();
+    then(response.getBody()).isNotNull();
+    then(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    then(createdItem.getId()).isEqualTo(response.getBody().getId().toString());
+  }
 
-        Item createdItem = created.getCategories().get(0).getItems().get(0);
-        then(createdItem.getName()).isEqualTo(request.getName());
-        then(createdItem.getDescription()).isEqualTo(request.getDescription());
-        then(createdItem.getPrice()).isEqualTo(request.getPrice());
-        then(createdItem.getAvailable()).isEqualTo(request.getAvailable());
+  @Test
+  void testInvalidCategoryIdWilThrowBadRequest() {
 
-        then(response).isNotNull();
-        then(response.getBody()).isNotNull();
-        then(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        then(createdItem.getId()).isEqualTo(response.getBody().getId().toString());
-    }
+    // Given
+    CreateItemRequest request =
+        new CreateItemRequest("Some Name", "Some Description", 13.56d, true);
 
-    @Test
-    void testInvalidCategoryIdWilThrowBadRequest() {
+    // When
+    var response =
+        this.testRestTemplate.postForEntity(
+            String.format(CREATE_ITEM, getBaseURL(port), randomUUID(), "xyz"),
+            request,
+            ErrorResponse.class);
 
-        // Given
-        CreateItemRequest request = new CreateItemRequest(
-                "Some Name",
-                "Some Description",
-                13.56d,
-                true
-        );
+    // Then
+    then(response).isNotNull();
+    then(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+  }
 
-        // When
-        var response =
-                this.testRestTemplate.postForEntity(
-                        String.format("%s/v1/menu/%s/category/%s/items",
-                                getBaseURL(port), randomUUID(), "xyz"),
-                        request,
-                        ErrorResponse.class);
+  @Test
+  void testAddItemWhenInvalidCategoryIdGiven() {
 
-        // Then
-        then(response).isNotNull();
-        then(response.getStatusCode()).isEqualTo(BAD_REQUEST);
-    }
+    // Given
+    Menu menu = createMenu(1);
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
-    @Test
-    void testAddItemWhenInvalidCategoryIdGiven() {
+    CreateItemRequest request =
+        new CreateItemRequest("Some Name", "Some Description", 13.56d, true);
 
-        // Given
-        Menu menu = createMenu(1);
-        when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    // When
+    var response =
+        this.testRestTemplate.postForEntity(
+            String.format(CREATE_ITEM, getBaseURL(port), menu.getId(), randomUUID()),
+            request,
+            ErrorResponse.class);
 
-        CreateItemRequest request = new CreateItemRequest(
-                "Some Name",
-                "Some Description",
-                13.56d,
-                true
-        );
+    // Then
+    verify(menuRepository, never()).save(any(Menu.class));
 
-        // When
-        var response =
-                this.testRestTemplate.postForEntity(
-                        String.format("%s/v1/menu/%s/category/%s/items",
-                                getBaseURL(port), menu.getId(), randomUUID()),
-                        request,
-                        ErrorResponse.class);
+    // Then
+    then(response).isNotNull();
+    then(response.getStatusCode()).isEqualTo(NOT_FOUND);
+  }
 
-        // Then
-        verify(menuRepository, never()).save(any(Menu.class));
+  @Test
+  void testCannotAddItemWhichAlreadyExists() {
+    // Given
+    Menu menu = createMenu(1);
+    Item item = new Item(randomUUID().toString(), "item name", "item description", 5.99d, true);
+    Category category =
+        new Category(
+            UUID.randomUUID().toString(), "cat name", "cat description", Arrays.asList(item));
+    menu.addUpdateCategory(category);
 
-        // Then
-        then(response).isNotNull();
-        then(response.getStatusCode()).isEqualTo(NOT_FOUND);
-    }
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
-    @Test
-    void testCannotAddItemWhichAlreadyExists() {
-        // Given
-        Menu menu = createMenu(1);
-        Item item = new Item(randomUUID().toString(), "item name",
-                "item description", 5.99d, true);
-        Category category =
-                new Category(UUID.randomUUID().toString(), "cat name",
-                        "cat description", Arrays.asList(item));
-        menu.addUpdateCategory(category);
+    CreateItemRequest request =
+        new CreateItemRequest(item.getName(), "Some Description", 13.56d, true);
 
-        when(menuRepository.findById(eq(menu.getId())))
-                .thenReturn(Optional.of(menu));
+    // When
+    var response =
+        this.testRestTemplate.postForEntity(
+            String.format(CREATE_ITEM, getBaseURL(port), menu.getId(), category.getId()),
+            request,
+            ErrorResponse.class);
 
-        CreateItemRequest request = new CreateItemRequest(
-                item.getName(),
-                "Some Description",
-                13.56d,
-                true
-        );
+    // Then
+    verify(menuRepository, never()).save(any(Menu.class));
 
-        // When
-        var response =
-                this.testRestTemplate.postForEntity(
-                        String.format("%s/v1/menu/%s/category/%s/items",
-                                getBaseURL(port), menu.getId(), category.getId()),
-                        request,
-                        ErrorResponse.class);
+    // Then
+    then(response).isNotNull();
+    then(response.getStatusCode()).isEqualTo(CONFLICT);
+  }
 
-        // Then
-        verify(menuRepository, never()).save(any(Menu.class));
+  @Test
+  void testNoItemNameReturnsBadRequest() {
+    // Given
+    Menu menu = createMenu(1);
+    Category category = createCategory(1);
+    menu.addUpdateCategory(category);
 
-        // Then
-        then(response).isNotNull();
-        then(response.getStatusCode()).isEqualTo(CONFLICT);
-    }
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepository.save(any(Menu.class))).thenReturn(menu);
+    CreateItemRequest request = new CreateItemRequest("", "Some Description", 13.56d, true);
+
+    // When
+    var response =
+        this.testRestTemplate.postForEntity(
+            String.format(CREATE_ITEM, getBaseURL(port), menu.getId(), category.getId()),
+            request,
+            ErrorResponse.class);
+
+    // Then
+    then(response).isNotNull();
+    then(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+    then(response.getBody().getDescription())
+        .isEqualTo("Invalid Request: {name=must not be blank}");
+  }
+
+  @Test
+  void testNoItemDescriptionReturnsBadRequest() {
+    // Given
+    Menu menu = createMenu(1);
+    Category category = createCategory(1);
+    menu.addUpdateCategory(category);
+
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepository.save(any(Menu.class))).thenReturn(menu);
+    CreateItemRequest request = new CreateItemRequest("Some name", "", 13.56d, true);
+
+    // When
+    var response =
+        this.testRestTemplate.postForEntity(
+            String.format(CREATE_ITEM, getBaseURL(port), menu.getId(), category.getId()),
+            request,
+            ErrorResponse.class);
+
+    // Then
+    then(response).isNotNull();
+    then(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+    then(response.getBody().getDescription())
+        .isEqualTo("Invalid Request: {description=must not be blank}");
+  }
+
+  @Test
+  void testInvalidPriceDescriptionReturnsBadRequest() {
+    // Given
+    Menu menu = createMenu(1);
+    Category category = createCategory(1);
+    menu.addUpdateCategory(category);
+
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepository.save(any(Menu.class))).thenReturn(menu);
+    CreateItemRequest request = new CreateItemRequest("Some name", "Item description", 0d, true);
+
+    // When
+    var response =
+        this.testRestTemplate.postForEntity(
+            String.format(CREATE_ITEM, getBaseURL(port), menu.getId(), category.getId()),
+            request,
+            ErrorResponse.class);
+
+    // Then
+    then(response).isNotNull();
+    then(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+    then(response.getBody().getDescription())
+        .isEqualTo("Invalid Request: {price=Price must be greater than zero}");
+  }
 }

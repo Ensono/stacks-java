@@ -6,8 +6,8 @@ Feature: Add menu item
     # 1. Create menu
     Given the application is running
     And the following menu data:
-      | name                | description   | tenantId                             | enabled |
-      | Andy's Greek Tavern | Greek Cuisine | d333f1ee-3c56-4b01-90e6-d701748f5656 | true    |
+      | name                                      | description   | tenantId                             | enabled |
+      | Andy's Greek Tavern (Automated Test Data) | Greek Cuisine | d333f1ee-3c56-4b01-90e6-d701748f5656 | true    |
     When I create the menu
     Then the menu was successfully created
     And the returned status code is 201
@@ -45,16 +45,6 @@ Feature: Add menu item
     When I create an item for the previous menu and category
     Then the returned status code is 409
     And the 'item already exist' message is returned
-
-
-  Scenario: Create an item - 400 Bad request for empty 'category id' and 'menu id' fields
-    Given the following item data:
-      | name           | description           | price | available |
-      | Test Item Name | Test Item Description | 1.5   | true      |
-    When I create an item for the following menu and category:
-      | menuId     |  |
-      | categoryId |  |
-    Then the returned status code is 400
 
 
   Scenario: Create an item - 400 Bad request for invalid 'category id' field
