@@ -13,6 +13,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryDoesNotExistException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ItemDoesNotExistsException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,9 +39,9 @@ public class DeleteItemHandler extends MenuBaseCommandHandler<DeleteItemCommand>
         category.getItems().stream()
             .filter(t -> !Objects.equals(t, item))
             .collect(Collectors.toList());
-    category.setItems(!itemList.isEmpty() ? itemList : null);
+    category.setItems(!itemList.isEmpty() ? itemList : Collections.emptyList());
 
-    menuRepository.save(menu.addUpdateCategory(category));
+    menuRepository.save(menu.addOrUpdateCategory(category));
 
     return Optional.empty();
   }

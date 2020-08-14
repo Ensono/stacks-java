@@ -10,6 +10,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryDoesNotExistException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -32,7 +33,7 @@ public class DeleteCategoryHandler extends MenuBaseCommandHandler<DeleteCategory
         menu.getCategories().stream()
             .filter(t -> !Objects.equals(t, category))
             .collect(Collectors.toList());
-    menu.setCategories(!collect.isEmpty() ? collect : null);
+    menu.setCategories(!collect.isEmpty() ? collect : Collections.emptyList());
     menuRepository.save(menu);
     return Optional.empty();
   }
