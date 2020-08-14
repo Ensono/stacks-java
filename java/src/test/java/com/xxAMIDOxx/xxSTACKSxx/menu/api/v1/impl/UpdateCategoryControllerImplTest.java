@@ -65,7 +65,7 @@ class UpdateCategoryControllerImplTest {
     // Given
     Menu menu = createMenu(0);
     Category category = createCategory(0);
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateCategoryRequest request = new UpdateCategoryRequest("new Category", "new Description");
@@ -262,7 +262,7 @@ class UpdateCategoryControllerImplTest {
     // Given
     Menu menu = createMenu(0);
     Category category = createCategory(0);
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateCategoryRequest request = new UpdateCategoryRequest("", "new Description");
@@ -289,7 +289,7 @@ class UpdateCategoryControllerImplTest {
     // Given
     Menu menu = createMenu(0);
     Category category = createCategory(0);
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateCategoryRequest request = new UpdateCategoryRequest("Updated Name", "");
