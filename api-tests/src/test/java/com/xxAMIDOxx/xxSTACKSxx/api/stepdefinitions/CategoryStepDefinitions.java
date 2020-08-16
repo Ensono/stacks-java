@@ -117,7 +117,7 @@ public class CategoryStepDefinitions {
         menuRequests.getMenu(menuId);
         Menu actualMenu = menuActions.responseToMenu(lastResponse());
 
-        Assert.assertNull(actualMenu.getCategories());
+        Assert.assertEquals(0, actualMenu.getCategories().size());
     }
 
     @Then("the 'category does not exist' message is returned")
