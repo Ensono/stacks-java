@@ -18,7 +18,7 @@ public class Category {
 
   private List<Item> items;
 
-  public Category addUpdateItem(Item item) {
+  public Category addOrUpdateItem(Item item) {
     if (this.items == null) {
       this.items = new ArrayList<>();
     }
