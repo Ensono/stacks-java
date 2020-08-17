@@ -103,7 +103,7 @@ public class ItemStepDefinitions {
         menuRequest.getMenu(menuId);
         Menu actualMenu = menuActions.responseToMenu(lastResponse());
 
-        Assert.assertNull(actualMenu.getCategories().get(0).getItems());
+        Assert.assertEquals(0, actualMenu.getCategories().get(0).getItems().size());
     }
 
 

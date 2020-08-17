@@ -31,7 +31,7 @@ public class UpdateItemHandler extends MenuBaseCommandHandler<UpdateItemCommand>
   Optional<UUID> handleCommand(Menu menu, UpdateItemCommand command) {
     Category category = getCategory(menu, command);
     Item updated = updateItem(command, category);
-    menu.addUpdateCategory(category.addUpdateItem(updated));
+    menu.addOrUpdateCategory(category.addOrUpdateItem(updated));
     menuRepository.save(menu);
     return Optional.of(command.getItemId());
   }
