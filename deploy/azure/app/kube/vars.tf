@@ -7,35 +7,35 @@
 ############################################
 
 variable "name_company" {
-  type    = string
+  type = string
 }
 
 variable "name_project" {
-  type    = string
+  type = string
 }
 
 variable "name_domain" {
-  type    = string
+  type = string
 }
 
 variable "name_component" {
-  type    = string
+  type = string
 }
 
 variable "name_role" {
-  type    = string
+  type = string
 }
 
 variable "name_environment" {
-  type    = string
+  type = string
 }
 
 variable "attributes" {
-  list(string)
+  type = list(string)
 }
 
 variable "tags" {
-  type    = map(string)
+  type = map(string)
 }
 
 # Each region must have corresponding a shortend name for resource naming purposes
@@ -102,11 +102,11 @@ variable "create_cache" {
 }
 
 variable "create_dns_record" {
-  type    = bool
+  type = bool
 }
 
 variable "create_cdn_endpoint" {
-  type    = bool
+  type = bool
 }
 ###########################
 # CosmosDB SETTINGS

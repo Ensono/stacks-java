@@ -154,7 +154,7 @@ stages:
             displayName: 'Update: Build Number'
 
           # Validates all YAML files in the repo to check they adhere to standards
-          - template: templates/steps/test-validate-yaml.yml
+          - template: templates/steps/build/test-validate-yaml.yml
             parameters:
               pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
               container: "k8s_deploy"
@@ -162,14 +162,14 @@ stages:
               yamllint_scan_directory: "${{ variables.yamllint_scan_directory }}"
 
           # Runs a terraform fomatting check and a validation check
-          - template: templates/steps/test-validate-terraform.yml
+          - template: templates/steps/build/test-validate-terraform.yml
             parameters:
               pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
               terraform_container: "terraform_custom"
               terraform_directory: "${{ variables.self_repo_tf_dir }}"
 
           # Builds the Java app and runs tests
-          - template: templates/steps/build-java.yml
+          - template: templates/steps/build/build-java.yml
             parameters:
               repo_root_dir: "${{ variables.self_repo_dir }}"
               project_root_dir: "${{ variables.self_project_dir }}"
@@ -186,7 +186,7 @@ stages:
               project_type: "${{ variables.java_project_type }}"
 
           # Builds the Java API Tests
-          - template: templates/steps/build-api-tests.yml
+          - template: templates/steps/build/build-api-tests.yml
             parameters:
               repo_root_dir: "${{ variables.self_repo_dir }}"
               functional_test_project_root_dir: "${{ variables.self_functional_testproject_dir }}"
@@ -206,7 +206,7 @@ stages:
               project_type: "${{ variables.functional_test_project_type }}"
 
           # Performs stati code analysis, such as Sonar Cloud
-          - template: templates/steps/test-static-code-analysis.yml
+          - template: templates/steps/build/test-static-code-analysis.yml
             parameters:
               project_root_dir: "${{ variables.self_project_dir }}"
               pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir}}"
@@ -229,7 +229,7 @@ stages:
               docker_image_tag: "${{ variables.docker_image_tag }}"
 
           # Builds the Docker image and pushes it to an ACR
-          - template: templates/steps/build-docker-image.yml
+          - template: templates/steps/build/build-docker-image.yml
             parameters:
               project_root_dir: "${{ variables.self_project_dir }}"
               pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
@@ -245,7 +245,7 @@ stages:
               azure_subscription_id: "$(AZURE_SUBSCRIPTION_ID)"
 
           # Post build tasks, such as Test and Coverage upload, and publishing artefacts
-          - template: templates/steps/post-build-tasks.yml
+          - template: templates/steps/build/post-build-tasks.yml
             parameters:
               project_root_dir: "${{ variables.self_project_dir }}"
               functional_test_project_root_dir: "${{ variables.self_functional_testproject_dir }}"
@@ -369,7 +369,7 @@ stages:
 
                 - checkout: templates
 
-                - template: templates/deploy/deploy-app.yml
+                - template: templates/steps/deploy/deploy-app.yml
                   parameters:
                     pipeline_scripts_directory: $(self_pipeline_scripts_dir)
                     shared_replacements: {
