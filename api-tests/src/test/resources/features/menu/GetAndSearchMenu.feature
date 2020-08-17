@@ -2,39 +2,47 @@
 Feature: Search menu
   Description - These are the scenarios related to getting menu read API
 
-  Scenario: Search menu by multiple criteria
-    Given the menu list is not empty
-    When I search the menu by criteria
-      | pageSize   | 1 |
-      | pageNumber | 3 |
-    Then the returned status code is 200
-
-
+  @DeleteCreatedMenu @Smoke
   Scenario: Get menu by id
-    Given the menu list is not empty
-    When I search the menu by:
-      | id                                   |
-      | f91d2f8c-35cc-45dd-92b0-86ca548e0119 |
+    Given the application is running
+    And the following menu data:
+      | name                            | description    | tenantId                             | enabled |
+      | Le Renoir (Automated Test Data) | French Cuisine | d211f1ee-6c54-4b01-90e6-d701748f0852 | true    |
+    When I create the menu
+    Then the menu was successfully created
+    And the returned status code is 201
+    And I search the created menu by id
     Then the returned status code is 200
+    And the menu should include the following data:
+      | name                            | description    | tenantId                             | enabled |
+      | Le Renoir (Automated Test Data) | French Cuisine | d211f1ee-6c54-4b01-90e6-d701748f0852 | true    |
 
 
+  @DeleteCreatedMenu
   Scenario: Search menu by search term
-    Given the menu list is not empty
+    Given the application is running
+    And the following menu data:
+      | name                             | description                           | tenantId                             | enabled |
+      | Lunch Menu (Automated Test Data) | A delicious food selection for lunch. | d211f1ee-6c54-4b01-90e6-d701748f0852 | false   |
+    When I create the menu
+    Then the menu was successfully created
+    And the returned status code is 201
+    And the menu list is not empty
     When I search the menu by criteria
-      | searchTerm | Test |
+      | searchTerm | Lunch Menu |
     Then the returned status code is 200
 
 
   Scenario: Search menu by invalid id
-    Given the menu list is not empty
+    Given the application is running
     When I search the menu by:
       | id            |
       | InvalidMenuID |
     Then the returned status code is 400
 
 
-  Scenario: Search menu by non-existent id
-    Given the menu list is not empty
+  Scenario: Search menu with id that does not exist
+    Given the application is running
     When I search the menu by:
       | id                                   |
       | f91d2f8c-35cc-45dd-11b1-11ca548e1111 |
@@ -42,8 +50,8 @@ Feature: Search menu
     And the 'menu does not exist' message is returned
 
 
-  Scenario: Search menu by incorrect id format
-    Given the menu list is not empty
+  Scenario: Search menu by incorrect 'id' format
+    Given the application is running
     When I search the menu by:
       | id  |
       | abc |
@@ -51,33 +59,55 @@ Feature: Search menu
 
 
   Scenario: Search menu by invalid name
-    Given the menu list is not empty
+    Given the application is running
     When I search the menu by:
       | name        |
       | InvalidName |
     Then the returned status code is 400
 
 
+  @DeleteCreatedMenu
   Scenario: Search menu by restaurant Id
-    Given the menu list is not empty
+    Given the application is running
+    And the following menu data:
+      | name                             | description                           | tenantId                             | enabled |
+      | Lunch Menu (Automated Test Data) | A delicious food selection for lunch. | d211f1ee-6c54-4b01-90e6-d701748f0852 | false   |
+    When I create the menu
+    Then the menu was successfully created
+    And the returned status code is 201
+
     When I search the menu by criteria
-      | restaurantId | d290f1ee-6c54-4b01-90e6-d701748f0851 |
+      | restaurantId | d211f1ee-6c54-4b01-90e6-d701748f0852 |
     Then the returned status code is 200
     And the menu should include the following details:
-      | id                                   | restaurantId                         | name                 | description                 | enabled |
-      | 08068766-ecb7-4034-ba48-485adba2d228 | d290f1ee-6c54-4b01-90e6-d701748f0851 | Name of menu created | Description of menu created | true    |
+      | name                             | description                           | tenantId                             | enabled |
+      | Lunch Menu (Automated Test Data) | A delicious food selection for lunch. | d211f1ee-6c54-4b01-90e6-d701748f0852 | false   |
 
-
-  Scenario: Get menu by page size
-    Given the menu list is not empty
+  @DeleteCreatedMenu
+  Scenario: Get menus by page size
+    Given the application is running
+    And the following menu data:
+      | name                             | description                           | tenantId                             | enabled |
+      | Lunch Menu (Automated Test Data) | A delicious food selection for lunch. | d211f1ee-6c54-4b01-90e6-d701748f0852 | false   |
+    When I create the menu
+    Then the menu was successfully created
+    And the menu list is not empty
     When I search the menu by criteria
-      | pageSize | 2 |
+      | pageSize | 1 |
     And the returned status code is 200
-    Then the 2 items are returned
+    Then the 1 items are returned
 
 
-  Scenario: Get menu by page size - invalid page size data
-    Given the menu list is not empty
+  Scenario: Get menu by page size - invalid page size input
+    Given the application is running
     When I search the menu by criteria
       | pageSize | abc |
     Then the returned status code is 400
+
+
+  Scenario: Search menu by multiple criteria
+    Given the application is running
+    When I search the menu by criteria
+      | pageSize   | 1 |
+      | pageNumber | 2 |
+    Then the returned status code is 200
