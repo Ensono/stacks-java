@@ -1,0 +1,83 @@
+parameters:
+  pipeline_scripts_directory: ""
+  shared_replacements: {}
+  template_input: []
+  cat_template_output: false
+steps:
+  # Template Substitutions
+  - ${{ each template in parameters.template_input }}:
+      - task: Bash@3
+        inputs:
+          filePath: "$(self_pipeline_scripts_dir)/deploy-k8s-envsubst.bash"
+          arguments: >
+            -a "${{ template.base }}"
+            -b "${{ template.additional_args }}"
+            -Y "${{ parameters.cat_template_output }}"
+            -Z "${{ template.out }}"
+        env:
+          ${{ each var in parameters.shared_replacements }}:
+            ${{ var.key }}: ${{ var.value }}
+          ${{ each var in template.replacements }}:
+            ${{ var.key }}: ${{ var.value }}
+        displayName: "K8s: Yaml ${{ template.displayName }}"
+
+  # Deploy App
+
+  # Rollout Check
+
+  # - template: azDevOps/azure/templates/v2/steps/yaml-k8s-templater.yml@templates
+  #   parameters:
+  #     scripts_dir: $(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts
+  #     shared_env_vars: {
+  #       namespace: $(namespace),
+  #       role: $(role),
+  #       company: $(company),
+  #       project: $(project),
+  #       domain: $(domain),
+  #       component: api,
+  #       app_name: java-api,
+  #       resource_def_name: "$(resource_def_name)",
+  #       version: $(docker_image_tag),
+  #       environment: dev,
+  #     }
+  #     enable_debug: "yes" # uncomment for debug and if you want to see the templated out file in the STDOUT of pipeline
+  #     template_input: [
+  #       {
+  #         base: $(self_repo_dir)/deploy/k8s/app/base_api-deploy.yml,
+  #         displayName: AppDeployment,
+  #         env_vars: {
+  #           dns_pointer: dev-java-api.$(base_domain_nonprod),
+  #           tls_domain: $(base_domain_nonprod),
+  #           k8s_app_path: "/api",
+  #           log_level: "Debug",
+  #           k8s_image: '$(k8s_docker_registry_nonprod)/$(docker_image_name):$(docker_image_tag)',
+  #           aadpodidentitybinding: stacks-webapp-identity,
+  #           app_insights_key: $(app_insights_instrumentation_key),
+  #           cosmosdb_key: $(cosmosdb_primary_master_key),
+  #           cosmosdb_endpoint: $(cosmosdb_endpoint),
+  #           cosmosdb_name: $(cosmosdb_database_name),
+  #         },
+  #         args: "-no-empty", # -no-unset is present by default
+  #       }
+  #     ]
+
+  # - template: azDevOps/azure/templates/v2/steps/deploy-k8s-app-kubectl.yml@templates
+  #   parameters:
+  #     scripts_dir: $(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts
+  #     test_artefact: "tests"
+  #     test_baseurl: "/"
+  #     functional_test: false
+  #     performance_test: false
+  #     smoke_test: false
+  #     # Kubernetes Config
+  #     kubernetes_clusterrg: amido-stacks-nonprod-eun-core
+  #     kubernetes_clustername: amido-stacks-nonprod-eun-core
+  #     # Mutation Information
+  #     kubectl_filepath:
+  #       - $(self_repo_dir)/deploy/k8s/app/api-deploy.yml
+  #     # ReleaseNote Information
+  #     releasenote: false
+  #     kubectl_check_deployment: true
+  #     resource_def_name: "$(resource_def_name)"
+  #     namespace: "$(namespace)"
+  #     deployment_status_timeout: "90s"
