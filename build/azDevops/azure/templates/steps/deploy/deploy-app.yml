@@ -3,6 +3,13 @@ parameters:
   shared_replacements: {}
   template_input: []
   cat_template_output: false
+  azure_client_id: ""
+  azure_client_secret: ""
+  azure_tenant_id: ""
+  azure_subscription_id: ""
+  aks_cluster_resourcegroup: ""
+  aks_cluster_name: ""
+  deployments: []
 steps:
   # Template Substitutions
   - ${{ each template in parameters.template_input }}:
@@ -19,65 +26,40 @@ steps:
             ${{ var.key }}: ${{ var.value }}
           ${{ each var in template.replacements }}:
             ${{ var.key }}: ${{ var.value }}
-        displayName: "K8s: Yaml ${{ template.displayName }}"
+        displayName: "K8s: Yaml '${{ template.displayName }}'"
 
-  # Deploy App
+  - task: Bash@3
+    inputs:
+      filePath: "${{ parameters.pipeline_scripts_directory }}/util-azure-login.bash"
+      arguments: >
+        -a "${{ parameters.azure_client_id }}"
+        -b "${{ parameters.azure_client_secret }}"
+        -c "${{ parameters.azure_tenant_id }}"
+        -d "${{ parameters.azure_subscription_id }}"
+    displayName: "Login: Azure CLI"
 
-  # Rollout Check
+  - task: Bash@3
+    inputs:
+      filePath: "${{ parameters.pipeline_scripts_directory }}/util-azure-aks-login.bash"
+      arguments: >
+        -a "${{ parameters.aks_cluster_resourcegroup }}"
+        -b "${{ parameters.aks_cluster_name }}"
+    displayName: "Login: Azure AKS Cluster Login"
 
-  # - template: azDevOps/azure/templates/v2/steps/yaml-k8s-templater.yml@templates
-  #   parameters:
-  #     scripts_dir: $(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts
-  #     shared_env_vars: {
-  #       namespace: $(namespace),
-  #       role: $(role),
-  #       company: $(company),
-  #       project: $(project),
-  #       domain: $(domain),
-  #       component: api,
-  #       app_name: java-api,
-  #       resource_def_name: "$(resource_def_name)",
-  #       version: $(docker_image_tag),
-  #       environment: dev,
-  #     }
-  #     enable_debug: "yes" # uncomment for debug and if you want to see the templated out file in the STDOUT of pipeline
-  #     template_input: [
-  #       {
-  #         base: $(self_repo_dir)/deploy/k8s/app/base_api-deploy.yml,
-  #         displayName: AppDeployment,
-  #         env_vars: {
-  #           dns_pointer: dev-java-api.$(base_domain_nonprod),
-  #           tls_domain: $(base_domain_nonprod),
-  #           k8s_app_path: "/api",
-  #           log_level: "Debug",
-  #           k8s_image: '$(k8s_docker_registry_nonprod)/$(docker_image_name):$(docker_image_tag)',
-  #           aadpodidentitybinding: stacks-webapp-identity,
-  #           app_insights_key: $(app_insights_instrumentation_key),
-  #           cosmosdb_key: $(cosmosdb_primary_master_key),
-  #           cosmosdb_endpoint: $(cosmosdb_endpoint),
-  #           cosmosdb_name: $(cosmosdb_database_name),
-  #         },
-  #         args: "-no-empty", # -no-unset is present by default
-  #       }
-  #     ]
+  - ${{ each template in parameters.template_input }}:
+      - task: Bash@3
+        inputs:
+          filePath: "${{ parameters.pipeline_scripts_directory }}/deploy-k8s-apply.bash"
+          arguments: >
+            -a "${{ template.out }}"
+        displayName: "Deploy: Kubectl Apply (${{ template.out }})"
 
-  # - template: azDevOps/azure/templates/v2/steps/deploy-k8s-app-kubectl.yml@templates
-  #   parameters:
-  #     scripts_dir: $(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts
-  #     test_artefact: "tests"
-  #     test_baseurl: "/"
-  #     functional_test: false
-  #     performance_test: false
-  #     smoke_test: false
-  #     # Kubernetes Config
-  #     kubernetes_clusterrg: amido-stacks-nonprod-eun-core
-  #     kubernetes_clustername: amido-stacks-nonprod-eun-core
-  #     # Mutation Information
-  #     kubectl_filepath:
-  #       - $(self_repo_dir)/deploy/k8s/app/api-deploy.yml
-  #     # ReleaseNote Information
-  #     releasenote: false
-  #     kubectl_check_deployment: true
-  #     resource_def_name: "$(resource_def_name)"
-  #     namespace: "$(namespace)"
-  #     deployment_status_timeout: "90s"
+  - ${{ each deployment in parameters.deployments }}:
+      - task: Bash@3
+        inputs:
+          filePath: "${{ parameters.pipeline_scripts_directory }}/deploy-k8s-rollout-status.bash"
+          arguments: >
+            -a "${{ deployment.name }}"
+            -b "${{ deployment.namespace }}"
+            -Z "${{ deployment.timeout }}"
+        displayName: "Deploy: Kubectl Rollout Status Check (${{ deployment.name }} @ ${{ deployment.namespace }})"
