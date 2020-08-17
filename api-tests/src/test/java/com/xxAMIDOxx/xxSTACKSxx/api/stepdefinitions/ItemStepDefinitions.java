@@ -53,10 +53,57 @@ public class ItemStepDefinitions {
     @When("I create an item for the following menu and category:")
     public void create_item_for_menu_and_category(DataTable table) {
         List<List<String>> data = table.asLists(String.class);
-        menuId = data.get(0).get(1);
-        categoryId = data.get(1).get(1);
+        String menu_id = data.get(0).get(1);
+        String category_id = data.get(1).get(1);
 
+        itemRequest.createItem(itemBody, menu_id, category_id);
+    }
+
+    @When("I create an item for the following {string} menu and {string} category")
+    public void create_item_for_menu_and_category(String menu_id, String category_id) {
+        itemRequest.createItem(itemBody, menu_id, category_id);
+    }
+
+    @When("I create an item for the menu with {string} id")
+    public void create_item_for_given_menu(String menu_id) {
+        create_item_for_menu_and_category(menu_id,
+                Serenity.getCurrentSession().get("CategoryId").toString());
+    }
+
+    @When("I create an item for the category with {string} id")
+    public void create_item_for_given_category(String category_id) {
+        create_item_for_menu_and_category(Serenity.getCurrentSession().get("MenuId").toString(),
+                category_id);
+    }
+
+    @When("I create an item for the previous menu and category")
+    public void create_item_for_menu_and_category() {
+        menuId = Serenity.getCurrentSession().get("MenuId").toString();
+        categoryId = Serenity.getCurrentSession().get("CategoryId").toString();
         itemRequest.createItem(itemBody, menuId, categoryId);
+    }
+
+    @When("I delete the created item")
+    public void i_delete_the_last_created_item() {
+        itemRequest.deleteTheItem(menuId, categoryId, itemId);
+    }
+
+    @When("I delete the item for the menu with {string} id")
+    public void i_delete_the_item_for_given_menuId(String menu_id) {
+        itemRequest.deleteTheItem(menu_id, categoryId, itemId);
+    }
+
+    @When("I delete the item for the category with {string} id")
+    public void i_delete_the_item_for_given_categoryId(String category_id) {
+        itemRequest.deleteTheItem(menuId, category_id, itemId);
+    }
+
+    @When("the item is successfully deleted")
+    public void the_category_was_successfully_deleted() {
+        menuRequest.getMenu(menuId);
+        Menu actualMenu = menuActions.responseToMenu(lastResponse());
+
+        Assert.assertNull(actualMenu.getCategories().get(0).getItems());
     }
 
 
@@ -83,8 +130,48 @@ public class ItemStepDefinitions {
         Assert.assertTrue(actualItems.contains(expectedItem));
     }
 
+
+    @Then("the item should include the following data:")
+    public void the_updated_item_contain_correct_data(List<Map<String, String>> itemDetails) {
+        the_created_item_contain_correct_data(itemDetails);
+    }
+
     @Then("the 'item already exist' message is returned")
     public void i_check_the_menu_already_exist_message() {
         menuActions.check_exception_message(ExceptionMessages.ITEM_ALREADY_EXISTS, lastResponse());
+    }
+
+    @Then("the 'item does not exist' message is returned")
+    public void i_check_the_menu_does_not_exist_message() {
+        menuActions.check_exception_message(ExceptionMessages.ITEM_DOES_NOT_EXIST, lastResponse());
+    }
+
+    @When("I delete the item with {string} id")
+    public void i_delete_item_by_id(String item_id) {
+        String menu_id = String.valueOf(Serenity.getCurrentSession().get("MenuId"));
+        String category_id = String.valueOf(Serenity.getCurrentSession().get("CategoryId"));
+
+        itemRequest.deleteTheItem(menu_id, category_id, item_id);
+    }
+
+    @Then("I update the item with the following data:")
+    public void i_update_the_menu_with_following_data(List<Map<String, String>> itemDetails) throws IOException {
+        menuId = Serenity.getCurrentSession().get("MenuId").toString();
+        categoryId = Serenity.getCurrentSession().get("CategoryId").toString();
+        the_following_item_data(itemDetails);
+
+        itemRequest.updateItem(itemBody, menuId, categoryId, itemId);
+    }
+
+    @Then("I update the item with the following data for the menu with {string} id:")
+    public void i_update_the_menu_for_given_menu(String menu_id, List<Map<String, String>> itemDetails) throws IOException {
+        the_following_item_data(itemDetails);
+        itemRequest.updateItem(itemBody, menu_id, categoryId, itemId);
+    }
+
+    @Then("I update the item with the following data for the category with {string} id:")
+    public void i_update_the_menu_for_given_category(String category_id, List<Map<String, String>> itemDetails) throws IOException {
+        the_following_item_data(itemDetails);
+        itemRequest.updateItem(itemBody, menuId, category_id, itemId);
     }
 }

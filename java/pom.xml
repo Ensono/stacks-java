@@ -19,13 +19,13 @@
     <properties>
         <java.version>11</java.version>
         <org.projectlombok.version>1.18.0</org.projectlombok.version>
-        <org.springdoc-openapi.version>1.4.3</org.springdoc-openapi.version>
+        <org.springdoc-openapi.version>1.4.4</org.springdoc-openapi.version>
         <applicationinsights.version>2.6.1</applicationinsights.version>
         <cosmosdb.version>2.3.2</cosmosdb.version>
         <azure.springboot.version>2.3.2</azure.springboot.version>
         <azure.servicebus.version>3.4.0</azure.servicebus.version>
         <jackson.version>2.11.0</jackson.version>
-        <mockito.version>3.4.4</mockito.version>
+        <mockito.version>3.4.6</mockito.version>
         <lombok.version>1.18.12</lombok.version>
         <hamcrest.version>2.2</hamcrest.version>
         <pitest.version>1.5.2</pitest.version>
@@ -185,6 +185,19 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>au.com.dius</groupId>
+            <artifactId>pact-jvm-provider-spring</artifactId>
+            <version>4.0.10</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>au.com.dius.pact</groupId>
+            <artifactId>consumer</artifactId>
+            <version>4.1.6</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <reporting>
@@ -196,6 +209,28 @@
             </plugin>
         </plugins>
     </reporting>
+
+    <profiles>
+        <profile>
+            <id>owasp-dependency-check</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>${owasp-dependency-check-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
@@ -288,10 +323,17 @@
 
                     <serviceProviders>
                         <serviceProvider>
+<<<<<<< HEAD
                             <name>${pact.api.name}</name>
                             <protocol>${pact.api.protocol}</protocol>
                             <host>${pact.api.host}</host>
                             <port>${pact.api.port}</port>
+=======
+                            <name>JavaMenuAPI</name>
+                            <protocol>http</protocol>
+                            <host>localhost</host>
+                            <port>9000</port>
+>>>>>>> 5f457abbd44c85ed5d63bc6d7926f798b6788a04
                         </serviceProvider>
                     </serviceProviders>
 

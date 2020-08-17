@@ -1,51 +1,46 @@
+@DeleteCreatedMenu
 @Functional
 Feature: Create categories
 
-  @Ignore
-  Scenario: Create category for an existing menu
-    Given the menu list is not empty
-    When I search the menu by:
-      | id                                   |
-      | f91d2f8c-35cc-45dd-92b0-86ca548e0119 |
-    Then the returned status code is 200
+  Background: Create menu in the background before the scenarios
+     # 1. Create menu
+    Given the application is running
+    And the following menu data:
+      | name                            | description    | tenantId                             | enabled |
+      | Le Renoir (Automated Test Data) | French Cuisine | d211f1ee-6c56-4b01-90e6-d701748f5656 | true    |
+    When I create the menu
+    Then the menu was successfully created
+    And the returned status code is 201
 
+  @Smoke
+  Scenario: Create the category - Happy path
+     # 2. Create category
     Given the following category data:
-      | name                       | description                       |
-      | Name of category created26 | Description of category created26 |
+      | name          | description                                  |
+      | Fish Category | This compartment contain all fish delicacies |
     When I create a new category for the existing menu
     Then the category was successfully created
     And the returned status code is 201
-
     And the created category should include the following data:
-      | name                       | description                       |
-      | Name of category created26 | Description of category created26 |
+      | name          | description                                  |
+      | Fish Category | This compartment contain all fish delicacies |
 
-  @Ignore
+
   Scenario: Create category that already exist
-    Given the menu list is not empty
-    When I search the menu by:
-      | id                                   |
-      | bffeb312-ac48-460a-95a9-3b3956c8a117 |
-    Then the returned status code is 200
     Given the following category data:
-      | name                      | description                      |
-      | Name of category created2 | Description of category created2 |
+      | name          | description                                  |
+      | Meat Category | This compartment contain all meat delicacies |
     When I create a new category for the existing menu
     Then the category was successfully created
     And the returned status code is 201
     When the following category data:
-      | name                      | description                      |
-      | Name of category created2 | Description of category created2 |
-    When I create a new category for the menu with "bffeb312-ac48-460a-95a9-3b3956c8a117" id
+      | name          | description                                  |
+      | Meat Category | This compartment contain all meat delicacies |
+    When I create a new category for the existing menu
     And the returned status code is 409
 
 
   Scenario: Bad request for create category - 'name' field is empty
-    Given the menu list is not empty
-    When I search the menu by:
-      | id                                   |
-      | bffeb312-ac48-460a-95a9-3b3956c8a117 |
-    Then the returned status code is 200
     Given the following category data:
       | name | description                      |
       |      | Description of category created2 |
@@ -54,14 +49,9 @@ Feature: Create categories
 
 
   Scenario: Bad request for create category - 'description' field is empty
-    Given the menu list is not empty
-    When I search the menu by:
-      | id                                   |
-      | bffeb312-ac48-460a-95a9-3b3956c8a117 |
-    Then the returned status code is 200
     Given the following category data:
-      | name      | description |
-      | Test Name |             |
+      | name              | description |
+      | Surprise Category |             |
     When I create a new category for the existing menu
     And the returned status code is 400
 
