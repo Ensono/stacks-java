@@ -21,11 +21,17 @@ pipeline {
     self_repo_k8s_src="deploy/k8s"
     self_generic_name="stacks-java-jenkins"
     self_pipeline_repo="stacks-pipeline-templates"
+    self_post_deploy_test_src="api-tests"
+    self_functional_testproject_dir="${self_post_deploy_test_src}"
     yamllint_config="yamllint.conf"
     // Maven
     maven_cache_directory="./.m2"
     maven_surefire_repots_dir="./target/surefire-reports"
     maven_allowed_test_tags="Unit | Component | Integration | Functional | Performance | Smoke"
+    maven_allowed_post_deploy_test_tags="@Functional or @Smoke or @Performance"
+    maven_ignored_post_deploy_test_tags="@Ignore"
+    maven_post_deploy_html_report_directory="target/site/serenity"
+    maven_post_deploy_failsafe_reports_directory="target/failsafe-reports"
     // TF STATE CONFIG"
     tf_state_rg="amido-stacks-rg-uks"
     tf_state_storage="amidostackstfstategbl"
@@ -57,6 +63,10 @@ pipeline {
     docker_tag_latest_nonprod="false"
     docker_tag_latest_promotion="false"
     build_artifact_deploy_name="${self_generic_name}"
+    // Vulnerability Scan
+    vulnerability_scan_report_path="target"
+    vulnerability_scan_report_filename="dependency-check-report.html"
+    vulnerability_scan_fail_build_on_detection="false"
     // SonarScanner variables
     static_code_analysis="true"
     sonar_host_url="https://sonarcloud.io"
@@ -75,6 +85,15 @@ pipeline {
     // Infra
     base_domain_nonprod="nonprod.amidostacks.com"
     base_domain_prod="prod.amidostacks.com"
+    // Functional Tests
+    functional_test="true"
+    // functional_test_path: "${{ variables.self_functional_testproject_dir }}"
+    // functional_test_artefact_path: "${{ variables.self_repo_dir }}/${{ variables.self_post_deploy_test_src }}"
+    // functional_test_artefact_name: "post-deploy-test-artefact"
+    // functional_test_artefact_download_location: "$(Pipeline.Workspace)/${{ variables.functional_test_artefact_name }}"
+    // Build Task Naming
+    java_project_type="Java App"
+    functional_test_project_type="Functional API Tests"
   }
 
   stages {
@@ -182,7 +201,7 @@ pipeline {
         stage('Build') {
           stages {
 
-            stage('Java Build') {
+            stage("Java Build (Java App)") {
               agent {
                 docker {
                   // add additional args if you need to here
@@ -198,7 +217,17 @@ pipeline {
                       bash ${dynamic_build_scripts_directory}/build-maven-install.bash \
                         -Z "${maven_cache_directory}"
                     """,
-                    label: "Maven: Install Packages"
+                    label: "Maven: Install Packages (${java_project_type})"
+                  )
+
+                  sh(
+                    script: """#!/bin/bash
+                      export LC_ALL="C.UTF-8"
+                      bash ${dynamic_build_scripts_directory}/test-maven-owasp-dependency-check.bash \
+                        -Y "${vulnerability_scan_fail_build_on_detection}" \
+                        -Z "${maven_cache_directory}"
+                    """,
+                    label: "Maven: OWASP Vulnerability Scan"
                   )
 
                   sh(
@@ -206,7 +235,7 @@ pipeline {
                       bash ${dynamic_build_scripts_directory}/build-maven-compile.bash \
                         -Z "${maven_cache_directory}"
                     """,
-                    label: "Maven: Compile Application"
+                    label: "Maven: Compile Application (${java_project_type})"
                   )
 
                   sh(
@@ -218,7 +247,7 @@ pipeline {
                         -Y "${maven_surefire_repots_dir}" \
                         -Z "${maven_cache_directory}"
                     """,
-                    label: "Test: Download Test Deps"
+                    label: "Test: Download Test Deps (${java_project_type})"
                   )
 
                   sh(
@@ -227,7 +256,7 @@ pipeline {
                         -a "Unit" \
                         -Z "${maven_cache_directory}"
                     """,
-                    label: "Test: Unit tests"
+                    label: "Test: Unit tests (${java_project_type})"
                   )
 
                   sh(
@@ -236,7 +265,7 @@ pipeline {
                         -a "Component" \
                         -Z "${maven_cache_directory}"
                     """,
-                    label: "Test: Component tests"
+                    label: "Test: Component tests (${java_project_type})"
                   )
 
                   sh(
@@ -245,7 +274,7 @@ pipeline {
                         -a "Integration" \
                         -Z "${maven_cache_directory}"
                     """,
-                    label: "Test: Integration tests"
+                    label: "Test: Integration tests (${java_project_type})"
                   )
 
                   sh(
@@ -253,7 +282,7 @@ pipeline {
                       bash ${dynamic_build_scripts_directory}/test-maven-generate-jacoco-report.bash \
                         -Z "${maven_cache_directory}"
                     """,
-                    label: "Generate Jacoco coverage reports"
+                    label: "Generate Jacoco coverage reports (${java_project_type})"
                   )
                 }
 
@@ -262,6 +291,7 @@ pipeline {
               post {
                 always {
                   dir("${self_repo_src}") {
+                    // Publish Test Results
                     junit 'target/**/*.xml'
 
                     // See:
@@ -273,11 +303,103 @@ pipeline {
                       sourcePattern: 'src/main/java',
                       exclusionPattern: 'src/test*'
                     )
+
+                    // Publish OWASP Report
+                    publishHTML (
+                      target : [
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: "${vulnerability_scan_report_path}",
+                        reportFiles: "${vulnerability_scan_report_filename}",
+                        reportName: "OWASP Report (${java_project_type})",
+                        reportTitles: "OWASP Report (${java_project_type})"
+                      ]
+                    )
                   }
                 }
               } // post end
 
             } // End of Java Build Stage
+
+            stage("Java Build (Functional Test)") {
+              when {
+                expression { "${functional_test}" == "true" }
+              }
+
+              agent {
+                docker {
+                  // add additional args if you need to here
+                  image "azul/zulu-openjdk-debian:11"
+                }
+              }
+
+              steps {
+                dir("${self_functional_testproject_dir}") {
+
+                  sh(
+                    script: """#!/bin/bash
+                      bash ${dynamic_build_scripts_directory}/build-maven-install.bash \
+                        -Z "${maven_cache_directory}"
+                    """,
+                    label: "Maven: Install Packages (${functional_test_project_type})"
+                  )
+
+                  sh(
+                    script: """#!/bin/bash
+                      export LC_ALL="C.UTF-8"
+                      bash ${dynamic_build_scripts_directory}/test-maven-owasp-dependency-check.bash \
+                        -Y "${vulnerability_scan_fail_build_on_detection}" \
+                        -Z "${maven_cache_directory}"
+                    """,
+                    label: "Maven: OWASP Vulnerability Scan (${functional_test_project_type})"
+                  )
+
+                  sh(
+                    script: """#!/bin/bash
+                      bash ${dynamic_build_scripts_directory}/build-maven-compile.bash \
+                        -Z "${maven_cache_directory}"
+                    """,
+                    label: "Maven: Compile Application (${functional_test_project_type})"
+                  )
+
+                  sh(
+                    script: """#!/bin/bash
+                      rm -rf "${maven_surefire_repots_dir}"
+
+                      bash ${dynamic_build_scripts_directory}/test-maven-post-deploy-untagged-test-check.bash \
+                        -a "${maven_allowed_post_deploy_test_tags}" \
+                        -W "${maven_post_deploy_html_report_directory}" \
+                        -X "${maven_post_deploy_failsafe_reports_directory}" \
+                        -Y "${maven_ignored_post_deploy_test_tags}" \
+                        -Z "${maven_cache_directory}"
+                    """,
+                    label: "Maven: Invalid Test Tag Check (${functional_test_project_type})"
+                  )
+                }
+
+              }
+
+              post {
+                always {
+                  dir("${self_functional_testproject_dir}") {
+                    // Publish OWASP Report for API Tests
+                    publishHTML (
+                      target : [
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: "${vulnerability_scan_report_path}",
+                        reportFiles: "${vulnerability_scan_report_filename}",
+                        reportName: "OWASP Report (${functional_test_project_type})",
+                        reportTitles: "OWASP Report (${functional_test_project_type})"
+                      ]
+                    )
+                  }
+                }
+              } // post end
+
+            } // End of Java Build (API) Stage
 
             stage('SonarScanner') {
               when {
