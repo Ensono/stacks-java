@@ -171,7 +171,7 @@ public class MenuStepDefinitions {
         menuActions.check_exception_message(ExceptionMessages.MENU_DOES_NOT_EXIST, lastResponse());
     }
 
-    @Then("the 'menu already exist' message is returned")
+    @Then("the 'menu already exists' message is returned")
     public void i_check_the_menu_already_exist_message() {
         menuActions.check_exception_message(ExceptionMessages.MENU_ALREADY_EXISTS, lastResponse());
     }
