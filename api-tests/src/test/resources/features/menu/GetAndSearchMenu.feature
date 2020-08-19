@@ -58,6 +58,47 @@ Feature: Search menu
     Then the returned status code is 400
 
 
+  @DeleteCreatedMenu @Smoke
+  Scenario: Get menu by id - v2
+    Given the application is running
+    And the following menu data:
+      | name                               | description                 | tenantId                             | enabled |
+      | Andy's Pizza (Automated Test Data) | The best pizza in your town | d211f1ee-6c54-4b01-90e6-d755748f0852 | true    |
+    When I create the menu
+    Then the menu was successfully created
+    And the returned status code is 201
+    And I search the created menu by id in the v2 app version
+    Then the returned status code is 200
+    And the menu should include the following data:
+      | name                               | description                 | tenantId                             | enabled |
+      | Andy's Pizza (Automated Test Data) | The best pizza in your town | d211f1ee-6c54-4b01-90e6-d755748f0852 | true    |
+
+
+  Scenario: Search menu by invalid id - v2
+    Given the application is running
+    When in the v2 app version I search the menu by:
+      | id            |
+      | InvalidMenuID |
+    Then the returned status code is 400
+
+
+  Scenario: Search menu with id that does not exist - v2
+    Given the application is running
+    When in the v2 app version I search the menu by:
+      | id                                   |
+      | f91d2f8c-35cc-45dd-11b1-11ca548e1111 |
+    Then the returned status code is 404
+    And the 'menu does not exist' message is returned
+
+
+  Scenario: Search menu by incorrect 'id' format - v2
+    Given the application is running
+    When in the v2 app version I search the menu by:
+      | id  |
+      | abc |
+    Then the returned status code is 400
+
+
   Scenario: Search menu by invalid name
     Given the application is running
     When I search the menu by:
