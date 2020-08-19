@@ -4,6 +4,9 @@ Java Web API Application Scaffolding for Amido Stacks
 ## Overview
 This is a sample Java application showcasing
 best coding practices and Integrating with Azure and scaffolding for Amido Stacks
+This application implemented [Application Insights](https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) for performance management
+[Cosmos DB](https://docs.microsoft.com/en-us/azure/cosmos-db/introduction) is the cloud db used. 
+
 
 # Table of Contents
 
@@ -23,34 +26,34 @@ best coding practices and Integrating with Azure and scaffolding for Amido Stack
  - [Swagger/OAS](#swagger-oas) 
  - [Health Check](#health-check)
 
-# Licence information
-
 ## Versioning
 
-This is the v1.0 of the stacks-java
+This is the 1.0.0 of the stacks-java
 
 ### Getting Started
 
 #### CONFIGURATION
 
-The following environment variables are required:
+The following environment variables are required(Speak to dev ops team to provide the below keys):
+For local environments use Cosmos DB emulator(CosmosDB Emulator has a known fixed key
+For AppInsights change the app to not crash if it can't get to AI, and just log to terminal instead).
 
 - AZURE_COSMOSDB_KEY
 - AZURE_APPLICATION_INSIGHTS_INSTRUMENTATION_KEY
-
-Speak to a member of the team for keys
 
 #### Prerequisites
 
 Must have minimum Java 11 installed. 
 
 #### Building
-
-`./mvnw spring-boot:compile`
+```
+./mvnw spring-boot:compile
+```
 
 #### Run Locally
-
-`./mvnw spring-boot:run`
+```
+./mvnw spring-boot:run
+```
 
 #### Code quality
 
@@ -67,43 +70,59 @@ You can override the settings in the codebase, for example:<br />
 ```///@formatter:on````<br />
 
 ###### Validate the formatting
-
-`./mvnw com.coveo:fmt-maven-plugin:check`
+```
+./mvnw com.coveo:fmt-maven-plugin:check
+```
 
 ###### Apply the formatting to the source files
-
-`./mvnw com.coveo:fmt-maven-plugin:format`
+```
+./mvnw com.coveo:fmt-maven-plugin:format
+```
 
 ###### Validate the source code style
-
-`./mvnw checkstyle:check `
+```
+./mvnw checkstyle:check
+```
 
 ###### Verify that there are no common programming flaws in the byte code
-
-`./mvnw spotbugs:check `
+```
+./mvnw spotbugs:check
+```
 
 ##### Reports
 
 ###### Test reports
 
 ####### Check the code test coverage
-`./mvnw jacoco:check `
+```
+./mvnw jacoco:check
+```
 
 ####### Generate code coverage report
-`./mvnw jacoco:report `
+```
+./mvnw jacoco:report
+```
+
+Generated report can be viewed under – target/site/jacoco/index.html
  
 ####### Runs the unit tests of the application and Generate maven test report
- Surefire creates a reports in 2 format. Xml and HTML.
- `./mvnw surefire:test `
+ 
+Surefire creates a reports in 2 format. Xml and HTML.
+ ```
+ ./mvnw surefire:test
+ ```
  
 ####### View The Test Report
- `..stacks-java/api-tests/target/site/serenity/index.html`
+```
+..stacks-java/api-tests/target/site/serenity/index.html
+```
  
 #### Docker
  
 ##### Build Docker Image
-
-`docker build -t image-tag .`
+```
+docker build -t image-tag .
+```
 
 ###### Dependency-Checker
 
@@ -112,7 +131,11 @@ Detects publicly disclosed vulnerabilities contained within a Project's
 dependencies.
 
 ####### Generate a Dependency vulnerability checker for maven libraries
-`mvn clean install -Powasp-dependency-check `
+```
+mvn clean install -Powasp-dependency-check
+```
+
+Generated report can be viewed under – target/dependency-check.html
 
 ###### View generated Dependency Checker report
 Dependency checker creates a Html folder inside the target folder 
@@ -131,17 +154,24 @@ Available at: http://localhost:9000/health
 (This can also be configured to run on another port)
 
 #### Testing
+
 Set an env variable BASE_URL (e.g. local is http://localhost:9000) 
 (from project path: stacks-java/api-tests)
 
 ##### Run all Tests
-`mvn clean verify `
+```
+mvn clean verify
+```
 
 ##### Run Smoke tests
-`mvn clean verify -Dcucumber.options=“--tags @Smoke” `
+```
+mvn clean verify -Dcucumber.options=“--tags @Smoke”
+```
 
 ##### Run Functional tests
-`mvn clean verify -Dcucumber.options=“--tags @Functional” `
+```
+mvn clean verify -Dcucumber.options=“--tags @Functional”
+```
  
 ### IDE plugins
  
