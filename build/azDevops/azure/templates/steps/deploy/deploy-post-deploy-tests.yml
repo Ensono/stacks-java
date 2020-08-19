@@ -82,7 +82,7 @@ steps:
         condition: always()
         inputs:
           path: "${{ parameters.functional_test_artefact_download_location }}/${{ parameters.maven_post_deploy_html_report_directory }}"
-          artifact: "${{ parameters.environment }}-${{ parameters.functional_test_artefact_name }}-report"
+          artifact: "${{ parameters.environment }}-${{ parameters.functional_test_artefact_name }}-report-$(System.JobAttempt)"
         displayName: "Publish: Post-Deploy Tests Artefact"
 
       - task: PublishTestResults@2
