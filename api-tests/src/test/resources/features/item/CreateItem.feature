@@ -3,7 +3,7 @@
 Feature: Add menu item
 
   Background: Create menu and category before the scenarios
-    # 1. Create menu
+    # 1. Create a menu
     Given the application is running
     And the following menu data:
       | name                                      | description   | tenantId                             | enabled |
@@ -11,10 +11,10 @@ Feature: Add menu item
     When I create the menu
     Then the menu was successfully created
     And the returned status code is 201
-    # 2. Create category
+    # 2. Create a category
     Given the following category data:
-      | name  | description                                                        |
-      | Mains | This compartment contain all meat, fish or another protein source. |
+      | name  | description                                                         |
+      | Mains | This compartment contains all meat, fish or another protein source. |
     When I create a new category for the existing menu
     Then the category was successfully created
     And the returned status code is 201
@@ -23,28 +23,28 @@ Feature: Add menu item
   Scenario: Create an item for the menu
     Given the following item data:
       | name    | description                                                 | price | available |
-      | Bifteki | Greek style burger patties served with cheese and tomatoes. | 11.95 | true      |
+      | Bifteki | Greek-style burger patties served with cheese and tomatoes. | 11.95 | true      |
     When I create an item for the previous menu and category
     Then the item was successfully created
     And the returned status code is 201
     And the created item should include the following data:
       | name    | description                                                 | price | available |
-      | Bifteki | Greek style burger patties served with cheese and tomatoes. | 11.95 | true      |
+      | Bifteki | Greek-style burger patties served with cheese and tomatoes. | 11.95 | true      |
 
 
   Scenario: Create an item - 409 Code the item already exists
     Given the following item data:
-      | name    | description                                    | price | available |
-      | Stifado | Beef stew cooked with onions for extra flavor. | 12.95 | true      |
+      | name    | description                                     | price | available |
+      | Stifado | Beef stew cooked with onions for extra flavour. | 12.95 | true      |
     When I create an item for the previous menu and category
     Then the returned status code is 201
 #    Create the same item twice
     Given the following item data:
-      | name    | description                                    | price | available |
-      | Stifado | Beef stew cooked with onions for extra flavor. | 12.95 | true      |
+      | name    | description                                     | price | available |
+      | Stifado | Beef stew cooked with onions for extra flavour. | 12.95 | true      |
     When I create an item for the previous menu and category
     Then the returned status code is 409
-    And the 'item already exist' message is returned
+    And the 'item already exists' message is returned
 
 
   Scenario: Create an item - 400 Bad request for invalid 'category id' field
@@ -84,7 +84,7 @@ Feature: Add menu item
   Scenario: Create an item for the menu - empty name
     Given the following item data:
       | name | description                                                 | price | available |
-      |      | Greek style burger patties served with cheese and tomatoes. | 10.5  | true      |
+      |      | Greek-style burger patties served with cheese and tomatoes. | 10.5  | true      |
     When I create an item for the previous menu and category
     And the returned status code is 400
 
@@ -98,13 +98,13 @@ Feature: Add menu item
   Scenario: Create an item for the menu - empty name
     Given the following item data:
       | name    | description                                                 | price | available |
-      | Bifteki | Greek style burger patties served with cheese and tomatoes. |       | true      |
+      | Bifteki | Greek-style burger patties served with cheese and tomatoes. |       | true      |
     When I create an item for the previous menu and category
     And the returned status code is 400
 
   Scenario: Create an item for the menu - empty name
     Given the following item data:
       | name    | description                                                 | price | available |
-      | Bifteki | Greek style burger patties served with cheese and tomatoes. | 10.5  |           |
+      | Bifteki | Greek-style burger patties served with cheese and tomatoes. | 10.5  |           |
     When I create an item for the previous menu and category
     And the returned status code is 400

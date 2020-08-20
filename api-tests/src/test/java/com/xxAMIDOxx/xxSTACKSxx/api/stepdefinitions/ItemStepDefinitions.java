@@ -136,7 +136,7 @@ public class ItemStepDefinitions {
         the_created_item_contain_correct_data(itemDetails);
     }
 
-    @Then("the 'item already exist' message is returned")
+    @Then("the 'item already exists' message is returned")
     public void i_check_the_menu_already_exist_message() {
         menuActions.check_exception_message(ExceptionMessages.ITEM_ALREADY_EXISTS, lastResponse());
     }
