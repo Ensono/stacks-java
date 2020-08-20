@@ -12,7 +12,8 @@ pipeline {
     company="amido"
     project="stacks"
     domain="java-jenkins"
-    // SelfConfig"
+    component="api"
+    role="backend"
     source_branch_ref="${CHANGE_BRANCH ?: BRANCH_NAME}"
     target_branch_ref="${CHANGE_TARGET ?: " "}" // Set to a space as Jenkins doesn't support blank vars
     pull_request_number="${CHANGE_ID ?: " "}" // Set to a space as Jenkins doesn't support blank vars
@@ -32,18 +33,18 @@ pipeline {
     maven_ignored_post_deploy_test_tags="@Ignore"
     maven_post_deploy_html_report_directory="target/site/serenity"
     maven_post_deploy_failsafe_reports_directory="target/failsafe-reports"
-    // TF STATE CONFIG"
-    tf_state_rg="amido-stacks-rg-uks"
-    tf_state_storage="amidostackstfstategbl"
-    tf_state_container="tfstate"
-    // Stacks operates Terraform states based on workspaces **IT IS VERY IMPORTANT** that you ensure a unique name for each application definition"
-    // Furthermore **IT IS VERY IMPORTANT** that you change the name of a workspace for each deployment stage"
-    // there are some best practices around this if you are going for feature based environments"
-    // - we suggest you create a runtime variable that is dynamically set based on a branch currently running"
-    // **`terraform_state_workspace="`** "
-    // avoid running anything past dev that is not on master"
-    // sample value="company-webapp"
-    tf_state_key="java-jenkins"
+    // TF STATE CONFIG
+    terraform_state_rg="amido-stacks-rg-uks"
+    terraform_state_storage="amidostackstfstategbl"
+    terraform_state_container="tfstate"
+    // Stacks operates Terraform states based on workspaces **IT IS VERY IMPORTANT** that you ensure a unique name for each application definition
+    // Furthermore **IT IS VERY IMPORTANT** that you change the name of a workspace for each deployment stage
+    // there are some best practices around this if you are going for feature based environments
+    // - we suggest you create a runtime variable that is dynamically set based on a branch currently running
+    // **`terraform_state_workspace: `**
+    // avoid running anything past dev that is not on master
+    // sample value: company-webapp
+    terraform_state_key="stacks-api-java-jenkins"
     // Versioning
     version_major="0"
     version_minor="0"
@@ -78,19 +79,25 @@ pipeline {
     sonar_remote_repo="amido/stacks-java"
     sonar_pullrequest_provider="github"
     // AKS/AZURE
-    // AZURE_CLIENT_ID - Please define this as a Jenkins credential.
-    // AZURE_CLIENT_SECRET - Please define this as a Jenkins credential.
-    // AZURE_TENANT_ID - Please define this as a Jenkins credential.
-    // AZURE_SUBSCRIPTION_ID - Please define this as a Jenkins credential.
+    // NONPROD_AZURE_CLIENT_ID - Please define this as a Jenkins credential.
+    // NONPROD_AZURE_CLIENT_SECRET - Please define this as a Jenkins credential.
+    // NONPROD_AZURE_TENANT_ID - Please define this as a Jenkins credential.
+    // NONPROD_AZURE_SUBSCRIPTION_ID - Please define this as a Jenkins credential.
+    // PROD_AZURE_CLIENT_ID - Please define this as a Jenkins credential.
+    // PROD_AZURE_CLIENT_SECRET - Please define this as a Jenkins credential.
+    // PROD_AZURE_TENANT_ID - Please define this as a Jenkins credential.
+    // PROD_AZURE_SUBSCRIPTION_ID - Please define this as a Jenkins credential.
     // Infra
     base_domain_nonprod="nonprod.amidostacks.com"
+    base_domain_internal_nonprod="nonprod.amidostacks.internal"
     base_domain_prod="prod.amidostacks.com"
+    base_domain_internal_prod="prod.amidostacks.internal"
     // Functional Tests
     functional_test="true"
-    // functional_test_path: "${{ variables.self_functional_testproject_dir }}"
-    // functional_test_artefact_path: "${{ variables.self_repo_dir }}/${{ variables.self_post_deploy_test_src }}"
+    // functional_test_path: "${self_functional_testproject_dir }}"
+    // functional_test_artefact_path: "${self_repo_dir }}/${self_post_deploy_test_src }}"
     // functional_test_artefact_name: "post-deploy-test-artefact"
-    // functional_test_artefact_download_location: "$(Pipeline.Workspace)/${{ variables.functional_test_artefact_name }}"
+    // functional_test_artefact_download_location: "$(Pipeline.Workspace)/${functional_test_artefact_name }}"
     // Build Task Naming
     java_project_type="Java App"
     functional_test_project_type="Functional API Tests"
@@ -148,7 +155,7 @@ pipeline {
               ])
             }
           }
-        }
+        } // End of Checkout Dependencies stage
 
         stage('Yaml Lint') {
           agent {
@@ -161,7 +168,7 @@ pipeline {
           steps {
             sh(
               script: """#!/bin/bash
-                bash ${dynamic_build_scripts_directory}/test-validate-yaml.bash \
+                bash "${dynamic_build_scripts_directory}/test-validate-yaml.bash" \
                   -a "${yamllint_config}" \
                   -b "."
               """,
@@ -183,14 +190,14 @@ pipeline {
             dir("${self_repo_tf_src}") {
               sh(
                 script: """#!/bin/bash
-                  bash ${dynamic_build_scripts_directory}/test-terraform-fmt-check.bash
+                  bash "${dynamic_build_scripts_directory}/test-terraform-fmt-check.bash"
                 """,
                 label: "Terraform: Format Check"
               )
 
               sh(
                 script: """#!/bin/bash
-                  bash ${dynamic_build_scripts_directory}/test-terraform-validate.bash
+                  bash "${dynamic_build_scripts_directory}/test-terraform-validate.bash"
                 """,
                 label: "Terraform: Validate Check"
               )
@@ -214,7 +221,7 @@ pipeline {
 
                   sh(
                     script: """#!/bin/bash
-                      bash ${dynamic_build_scripts_directory}/build-maven-install.bash \
+                      bash "${dynamic_build_scripts_directory}/build-maven-install.bash" \
                         -Z "${maven_cache_directory}"
                     """,
                     label: "Maven: Install Packages (${java_project_type})"
@@ -223,7 +230,7 @@ pipeline {
                   sh(
                     script: """#!/bin/bash
                       export LC_ALL="C.UTF-8"
-                      bash ${dynamic_build_scripts_directory}/test-maven-owasp-dependency-check.bash \
+                      bash "${dynamic_build_scripts_directory}/test-maven-owasp-dependency-check.bash" \
                         -Y "${vulnerability_scan_fail_build_on_detection}" \
                         -Z "${maven_cache_directory}"
                     """,
@@ -232,7 +239,7 @@ pipeline {
 
                   sh(
                     script: """#!/bin/bash
-                      bash ${dynamic_build_scripts_directory}/build-maven-compile.bash \
+                      bash "${dynamic_build_scripts_directory}/build-maven-compile.bash" \
                         -Z "${maven_cache_directory}"
                     """,
                     label: "Maven: Compile Application (${java_project_type})"
@@ -242,7 +249,7 @@ pipeline {
                     script: """#!/bin/bash
                       rm -rf "${maven_surefire_repots_dir}"
 
-                      bash ${dynamic_build_scripts_directory}/test-maven-download-test-deps.bash \
+                      bash "${dynamic_build_scripts_directory}/test-maven-download-test-deps.bash" \
                         -X "${maven_allowed_test_tags}" \
                         -Y "${maven_surefire_repots_dir}" \
                         -Z "${maven_cache_directory}"
@@ -252,7 +259,7 @@ pipeline {
 
                   sh(
                     script: """#!/bin/bash
-                      bash ${dynamic_build_scripts_directory}/test-maven-tagged-test-run.bash \
+                      bash "${dynamic_build_scripts_directory}/test-maven-tagged-test-run.bash" \
                         -a "Unit" \
                         -Z "${maven_cache_directory}"
                     """,
@@ -261,7 +268,7 @@ pipeline {
 
                   sh(
                     script: """#!/bin/bash
-                      bash ${dynamic_build_scripts_directory}/test-maven-tagged-test-run.bash \
+                      bash "${dynamic_build_scripts_directory}/test-maven-tagged-test-run.bash" \
                         -a "Component" \
                         -Z "${maven_cache_directory}"
                     """,
@@ -270,7 +277,7 @@ pipeline {
 
                   sh(
                     script: """#!/bin/bash
-                      bash ${dynamic_build_scripts_directory}/test-maven-tagged-test-run.bash \
+                      bash "${dynamic_build_scripts_directory}/test-maven-tagged-test-run.bash" \
                         -a "Integration" \
                         -Z "${maven_cache_directory}"
                     """,
@@ -279,7 +286,7 @@ pipeline {
 
                   sh(
                     script:"""#!/bin/bash
-                      bash ${dynamic_build_scripts_directory}/test-maven-generate-jacoco-report.bash \
+                      bash "${dynamic_build_scripts_directory}/test-maven-generate-jacoco-report.bash" \
                         -Z "${maven_cache_directory}"
                     """,
                     label: "Generate Jacoco coverage reports (${java_project_type})"
@@ -306,7 +313,7 @@ pipeline {
 
                     // Publish OWASP Report
                     publishHTML (
-                      target : [
+                      target: [
                         allowMissing: false,
                         alwaysLinkToLastBuild: true,
                         keepAll: true,
@@ -339,7 +346,7 @@ pipeline {
 
                   sh(
                     script: """#!/bin/bash
-                      bash ${dynamic_build_scripts_directory}/build-maven-install.bash \
+                      bash "${dynamic_build_scripts_directory}/build-maven-install.bash" \
                         -Z "${maven_cache_directory}"
                     """,
                     label: "Maven: Install Packages (${functional_test_project_type})"
@@ -348,7 +355,7 @@ pipeline {
                   sh(
                     script: """#!/bin/bash
                       export LC_ALL="C.UTF-8"
-                      bash ${dynamic_build_scripts_directory}/test-maven-owasp-dependency-check.bash \
+                      bash "${dynamic_build_scripts_directory}/test-maven-owasp-dependency-check.bash" \
                         -Y "${vulnerability_scan_fail_build_on_detection}" \
                         -Z "${maven_cache_directory}"
                     """,
@@ -357,7 +364,7 @@ pipeline {
 
                   sh(
                     script: """#!/bin/bash
-                      bash ${dynamic_build_scripts_directory}/build-maven-compile.bash \
+                      bash "${dynamic_build_scripts_directory}/build-maven-compile.bash" \
                         -Z "${maven_cache_directory}"
                     """,
                     label: "Maven: Compile Application (${functional_test_project_type})"
@@ -365,9 +372,9 @@ pipeline {
 
                   sh(
                     script: """#!/bin/bash
-                      rm -rf "${maven_surefire_repots_dir}"
+                      rm -rf "${maven_post_deploy_html_report_directory}"
 
-                      bash ${dynamic_build_scripts_directory}/test-maven-post-deploy-untagged-test-check.bash \
+                      bash "${dynamic_build_scripts_directory}/test-maven-post-deploy-untagged-test-check.bash" \
                         -a "${maven_allowed_post_deploy_test_tags}" \
                         -W "${maven_post_deploy_html_report_directory}" \
                         -X "${maven_post_deploy_failsafe_reports_directory}" \
@@ -385,7 +392,7 @@ pipeline {
                   dir("${self_functional_testproject_dir}") {
                     // Publish OWASP Report for API Tests
                     publishHTML (
-                      target : [
+                      target: [
                         allowMissing: false,
                         alwaysLinkToLastBuild: true,
                         keepAll: true,
@@ -395,6 +402,15 @@ pipeline {
                         reportTitles: "OWASP Report (${functional_test_project_type})"
                       ]
                     )
+
+                    // TODO: This puts strain on the master and may want to be replaced with other methods...
+                    // This or something similar would be needed on a multi-agent build run.
+                    // stash(
+                    //   name: "functional-tests-artefact",
+                    //   allowEmpty: false,
+                    //   excludes: "src/**",
+                    //   includes: "**,src/test/resources/"
+                    // )
                   }
                 }
               } // post end
@@ -438,7 +454,7 @@ pipeline {
                           BASH_PULL_REQUEST_NUMBER="${pull_request_number}"
                         fi
 
-                        bash ${dynamic_build_scripts_directory}/test-sonar-scanner.bash \
+                        bash "${dynamic_build_scripts_directory}/test-sonar-scanner.bash" \
                           -a "${sonar_host_url}" \
                           -b "${sonar_project_name}" \
                           -c "${sonar_project_key}" \
@@ -473,7 +489,7 @@ pipeline {
 
                   sh(
                     script: """#!/bin/bash
-                      bash ${dynamic_build_scripts_directory}/build-docker-image.bash \
+                      bash "${dynamic_build_scripts_directory}/build-docker-image.bash" \
                         -a "${docker_build_additional_args}" \
                         -b "${docker_image_name}" \
                         -c "${dynamic_docker_image_tag}" \
@@ -491,7 +507,7 @@ pipeline {
                   ]) {
                     sh(
                       script: """#!/bin/bash
-                        bash ${dynamic_build_scripts_directory}/util-azure-login.bash \
+                        bash "${dynamic_build_scripts_directory}/util-azure-login.bash" \
                           -a "${NONPROD_AZURE_CLIENT_ID}" \
                           -b "${NONPROD_AZURE_CLIENT_SECRET}" \
                           -c "${NONPROD_AZURE_TENANT_ID}" \
@@ -503,7 +519,7 @@ pipeline {
 
                   sh(
                     script: """#!/bin/bash
-                      bash ${dynamic_build_scripts_directory}/util-docker-image-push.bash \
+                      bash "${dynamic_build_scripts_directory}/util-docker-image-push.bash" \
                         -a "${docker_image_name}" \
                         -b "${dynamic_docker_image_tag}" \
                         -c "${docker_container_registry_name_nonprod}" \
@@ -526,6 +542,684 @@ pipeline {
       } // End of CI stages
 
     } // End of CI Stage
+
+    stage("Dev") {
+      environment {
+        environment_name="dev"
+        dns_name="${environment_name}-java-api-jenkins"
+        core_resource_group="amido-stacks-nonprod-eun-core"
+        k8s_app_path="/api"
+        dns_pointer="${dns_name}.${base_domain_nonprod}"
+        functional_test_base_url="https://${dns_pointer}${k8s_app_path}"
+      }
+
+      stages {
+
+        stage("AppInfraDev") {
+          agent {
+            docker {
+              image "amidostacks/ci-tf:0.0.4"
+            }
+          }
+
+          environment {
+            terraform_state_workspace="${environment_name}"
+            TF_VAR_name_company="${company}"
+            TF_VAR_name_project="${project}"
+            TF_VAR_name_domain="${domain}"
+            TF_VAR_name_component="${component}"
+            TF_VAR_name_role="${role}"
+            TF_VAR_name_environment="${environment_name}"
+            TF_VAR_attributes="[]"
+            TF_VAR_tags="{}"
+            TF_VAR_resource_group_location="northeurope"
+            TF_VAR_app_gateway_frontend_ip_name="amido-stacks-nonprod-eun-core"
+            TF_VAR_dns_record="${dns_name}"
+            TF_VAR_dns_zone_name="${base_domain_nonprod}"
+            TF_VAR_dns_zone_resource_group="${core_resource_group}"
+            TF_VAR_core_resource_group="${core_resource_group}"
+            TF_VAR_internal_dns_zone_name="${base_domain_internal_nonprod}"
+            TF_VAR_create_cosmosdb="true"
+            TF_VAR_create_cache="false"
+            TF_VAR_create_dns_record="true"
+            TF_VAR_create_cdn_endpoint="false"
+            TF_VAR_cosmosdb_sql_container="Menu"
+            TF_VAR_cosmosdb_sql_container_partition_key="/id"
+            TF_VAR_cosmosdb_kind="GlobalDocumentDB"
+            TF_VAR_cosmosdb_offer_type="Standard"
+            TF_VAR_app_insights_name="amido-stacks-nonprod-eun-core"
+          }
+
+          steps {
+            dir("${self_repo_tf_src}") {
+
+              withCredentials([
+                string(credentialsId: 'NONPROD_AZURE_CLIENT_ID', variable: 'NONPROD_AZURE_CLIENT_ID'),
+                string(credentialsId: 'NONPROD_AZURE_CLIENT_SECRET', variable: 'NONPROD_AZURE_CLIENT_SECRET'),
+                string(credentialsId: 'NONPROD_AZURE_TENANT_ID', variable: 'NONPROD_AZURE_TENANT_ID'),
+                string(credentialsId: 'NONPROD_AZURE_SUBSCRIPTION_ID', variable: 'NONPROD_AZURE_SUBSCRIPTION_ID')
+              ]) {
+                sh(
+                  script: """#!/bin/bash
+                    bash "${dynamic_build_scripts_directory}/util-azure-login.bash" \
+                      -a "${NONPROD_AZURE_CLIENT_ID}" \
+                      -b "${NONPROD_AZURE_CLIENT_SECRET}" \
+                      -c "${NONPROD_AZURE_TENANT_ID}" \
+                      -d "${NONPROD_AZURE_SUBSCRIPTION_ID}"
+                  """,
+                  label: "Login: Azure CLI"
+                )
+              }
+
+              sh(
+                script: """#!/bin/bash
+                  bash "${dynamic_build_scripts_directory}/util-azure-register-pod-identity.bash"
+                """,
+                label: "Register Pod Identity Previews"
+              )
+
+              withCredentials([
+                string(credentialsId: 'NONPROD_AZURE_CLIENT_ID', variable: 'NONPROD_TERRAFORM_BACKEND_AZURE_CLIENT_ID'),
+                string(credentialsId: 'NONPROD_AZURE_CLIENT_SECRET', variable: 'NONPROD_TERRAFORM_BACKEND_AZURE_CLIENT_SECRET'),
+                string(credentialsId: 'NONPROD_AZURE_TENANT_ID', variable: 'NONPROD_TERRAFORM_BACKEND_AZURE_TENANT_ID'),
+                string(credentialsId: 'NONPROD_AZURE_SUBSCRIPTION_ID', variable: 'NONPROD_TERRAFORM_BACKEND_AZURE_SUBSCRIPTION_ID')
+              ]) {
+                sh(
+                  script: """#!/bin/bash
+                    bash "${dynamic_build_scripts_directory}/deploy-azure-terraform-init.bash" \
+                      -a "${NONPROD_TERRAFORM_BACKEND_AZURE_CLIENT_ID}" \
+                      -b "${NONPROD_TERRAFORM_BACKEND_AZURE_CLIENT_SECRET}" \
+                      -c "${NONPROD_TERRAFORM_BACKEND_AZURE_TENANT_ID}" \
+                      -d "${NONPROD_TERRAFORM_BACKEND_AZURE_SUBSCRIPTION_ID}" \
+                      -e "${terraform_state_rg}" \
+                      -f "${terraform_state_storage}" \
+                      -g "${terraform_state_container}" \
+                      -h "${terraform_state_key}" \
+                      -i "${terraform_state_workspace}"
+                  """,
+                  label: "Terraform: Initialise and Set Workspace"
+                )
+              }
+
+              withCredentials([
+                string(credentialsId: 'NONPROD_AZURE_CLIENT_ID', variable: 'NONPROD_AZURE_CLIENT_ID'),
+                string(credentialsId: 'NONPROD_AZURE_CLIENT_SECRET', variable: 'NONPROD_AZURE_CLIENT_SECRET'),
+                string(credentialsId: 'NONPROD_AZURE_TENANT_ID', variable: 'NONPROD_AZURE_TENANT_ID'),
+                string(credentialsId: 'NONPROD_AZURE_SUBSCRIPTION_ID', variable: 'NONPROD_AZURE_SUBSCRIPTION_ID')
+              ]) {
+                sh(
+                  script: """#!/bin/bash
+                    bash "${dynamic_build_scripts_directory}/deploy-azure-terraform-plan.bash" \
+                      -a "${NONPROD_AZURE_CLIENT_ID}" \
+                      -b "${NONPROD_AZURE_CLIENT_SECRET}" \
+                      -c "${NONPROD_AZURE_TENANT_ID}" \
+                      -d "${NONPROD_AZURE_SUBSCRIPTION_ID}"
+                  """,
+                  label: "Terraform: Plan"
+                )
+
+                sh(
+                  script: """#!/bin/bash
+                    bash "${dynamic_build_scripts_directory}/deploy-azure-terraform-apply.bash" \
+                      -a "${NONPROD_AZURE_CLIENT_ID}" \
+                      -b "${NONPROD_AZURE_CLIENT_SECRET}" \
+                      -c "${NONPROD_AZURE_TENANT_ID}" \
+                      -d "${NONPROD_AZURE_SUBSCRIPTION_ID}"
+                  """,
+                  label: "Terraform: Apply"
+                )
+              }
+
+              // Extract needed Terraform Outputs into Jenkins Variables
+              // These are used in the next stage
+              script {
+                env.dynamic_cosmosdb_endpoint = sh(
+                  script:"""#!/bin/bash
+                    terraform output cosmosdb_endpoint
+                  """,
+                  returnStdout: true,
+                  label: "Terraform: Extract ComsosDB Endpoint URL"
+                )
+
+                env.dynamic_cosmosdb_primary_master_key = sh(
+                  script:"""#!/bin/bash
+                    terraform output cosmosdb_primary_master_key
+                  """,
+                  returnStdout: true,
+                  label: "Terraform: Extract ComsosDB Primary Master Key"
+                )
+
+                env.dynamic_app_insights_instrumentation_key = sh(
+                  script:"""#!/bin/bash
+                    terraform output app_insights_instrumentation_key
+                  """,
+                  returnStdout: true,
+                  label: "Terraform: Extract Application Insights Key"
+                )
+              }
+
+            }
+          }
+
+        } // End of AppInfraDev
+
+        stage("DeployDev") {
+          agent {
+            docker {
+              image "amidostacks/ci-k8s:0.0.11"
+            }
+          }
+
+          environment {
+            cat_template_output="false"
+            additional_args="-no-empty"
+            // App Variables
+            resource_def_name="stacks-java-api-jenkins"
+            namespace="${environment_name}-java-api-jenkins"
+            aks_cluster_resourcegroup="${core_resource_group}"
+            aks_cluster_name="amido-stacks-nonprod-eun-core"
+            app_name="java-api-jenkins"
+            version="${dynamic_docker_image_tag}"
+            environment="${environment_name}"
+            tls_domain="${base_domain_nonprod}"
+            aadpodidentitybinding="stacks-webapp-identity" // Unused currently
+            k8s_image="${k8s_docker_registry_nonprod}/${docker_image_name}:${dynamic_docker_image_tag}"
+            log_level="Debug"
+            // Template 1
+            k8s_deploy_template_1="api-deploy.yml"
+            base_k8s_deploy_template_1="${self_repo_k8s_src}/app/base_${k8s_deploy_template_1}"
+            output_k8s_deploy_template_1="${self_repo_k8s_src}/app/${k8s_deploy_template_1}"
+            // Deployment 1
+            deployment_name_1="deploy/${resource_def_name}"
+            deployment_namespace_1="${namespace}"
+            deployment_timeout_1="120s"
+            // Terraform outputs from AppInfraDev
+            cosmosdb_endpoint="${dynamic_cosmosdb_endpoint}"
+            cosmosdb_key="${dynamic_cosmosdb_primary_master_key}"
+            app_insights_key="${dynamic_app_insights_instrumentation_key}"
+          }
+
+          steps {
+            // Copy this for each template you may have changing:
+            // `base_k8s_deploy_template_1` to another template
+            // and `output_k8s_deploy_template_1` to another template
+            sh(
+              script: """#!/bin/bash
+                bash "${dynamic_build_scripts_directory}/deploy-k8s-envsubst.bash" \
+                  -a "${base_k8s_deploy_template_1}" \
+                  -b "${additional_args}" \
+                  -Y "${cat_template_output}" \
+                  -Z "${output_k8s_deploy_template_1}"
+              """,
+              label: "K8s: Yaml (${output_k8s_deploy_template_1})"
+            )
+            /////
+
+            withCredentials([
+              string(credentialsId: 'NONPROD_AZURE_CLIENT_ID', variable: 'NONPROD_AZURE_CLIENT_ID'),
+              string(credentialsId: 'NONPROD_AZURE_CLIENT_SECRET', variable: 'NONPROD_AZURE_CLIENT_SECRET'),
+              string(credentialsId: 'NONPROD_AZURE_TENANT_ID', variable: 'NONPROD_AZURE_TENANT_ID'),
+              string(credentialsId: 'NONPROD_AZURE_SUBSCRIPTION_ID', variable: 'NONPROD_AZURE_SUBSCRIPTION_ID')
+            ]) {
+              sh(
+                script: """#!/bin/bash
+                  bash "${dynamic_build_scripts_directory}/util-azure-login.bash" \
+                    -a "${NONPROD_AZURE_CLIENT_ID}" \
+                    -b "${NONPROD_AZURE_CLIENT_SECRET}" \
+                    -c "${NONPROD_AZURE_TENANT_ID}" \
+                    -d "${NONPROD_AZURE_SUBSCRIPTION_ID}"
+                """,
+                label: "Login: Azure CLI"
+              )
+            }
+
+            sh(
+              script: """#!/bin/bash
+                bash "${dynamic_build_scripts_directory}/util-azure-aks-login.bash" \
+                  -a "${aks_cluster_resourcegroup}" \
+                  -b "${aks_cluster_name}"
+              """,
+              label: "Login: Azure AKS Cluster Login"
+            )
+
+            // Copy this for each template you may have changing:
+            // `output_k8s_deploy_template_1` to another template
+            sh(
+              script: """#!/bin/bash
+                bash "${dynamic_build_scripts_directory}/deploy-k8s-apply.bash" \
+                  -a "${output_k8s_deploy_template_1}"
+              """,
+              label: "Deploy: Kubectl Apply (${output_k8s_deploy_template_1})"
+            )
+            /////
+
+            // Copy this for each template you may have changing:
+            // `deployment_name_1` to another deployment,
+            // `deployment_namespace_1` to another namespace for the new deployment
+            // and `deployment_timeout_1` for how much time you want to wait for the app to deploy
+            sh(
+              script: """#!/bin/bash
+                bash "${dynamic_build_scripts_directory}/deploy-k8s-rollout-status.bash" \
+                  -a "${deployment_name_1}" \
+                  -b "${deployment_namespace_1}" \
+                  -Z "${deployment_timeout_1}"
+              """,
+              label: "Deploy: Kubectl Rollout Status Check (${deployment_name_1} @ ${deployment_namespace_1})"
+            )
+            /////
+
+          }
+
+        } // End of DeployDev
+
+        stage("PostDeployDev") {
+          agent {
+            docker {
+              image "azul/zulu-openjdk-debian:11"
+            }
+          }
+
+          steps {
+            dir("${self_functional_testproject_dir}") {
+              // Copy this for each tag you have, for example @Functional and @Smoke etc.
+              // Note: Don't forget to update the `maven_allowed_post_deploy_test_tags` in the root pipeline file.
+              sh(
+                script: """#!/bin/bash
+                  bash "${dynamic_build_scripts_directory}/test-maven-post-deploy-tagged-test-run.bash" \
+                    -a "@Functional" \
+                    -b "${functional_test_base_url}" \
+                    -Y "${maven_ignored_post_deploy_test_tags}" \
+                    -Z "${maven_cache_directory}"
+                """,
+                label: "Post-Deploy Test: Run Functional Tests"
+              )
+
+              sh(
+                script: """#!/bin/bash
+                  bash "${dynamic_build_scripts_directory}/test-maven-serenity-aggregate.bash" \
+                    -Z "${maven_cache_directory}"
+                """,
+                label: "Post-Deploy Test: Serenity Report Aggregate"
+              )
+
+              sh(
+                script: """#!/bin/bash
+                  bash "${dynamic_build_scripts_directory}/test-maven-post-deploy-test-verify.bash" \
+                    -Z "${maven_cache_directory}"
+                """,
+                label: "Post-Deploy Test: Verify Test Run"
+              )
+            }
+          }
+
+          post {
+            always {
+              dir("${self_functional_testproject_dir}") {
+                // Publish Test Results
+                junit "${maven_post_deploy_failsafe_reports_directory}/*.xml"
+
+                // Publish Serenity Report
+                publishHTML (
+                  target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: "${maven_post_deploy_html_report_directory}",
+                    reportFiles: "**/*",
+                    reportName: "${environment_name} - Serenity Report",
+                    reportTitles: "${environment_name} - Serenity Report"
+                  ]
+                )
+              }
+            }
+          } // post end
+
+        } // End of PostDeployDev
+
+      } // End of Dev Stages
+
+    } // End of Dev Stage
+
+    stage("Prod") {
+      when {
+          branch 'master'
+      }
+
+      environment {
+        environment_name="prod"
+        dns_name="${environment_name}-java-api-jenkins"
+        core_resource_group="amido-stacks-prod-eun-core"
+        k8s_app_path="/api"
+        dns_pointer="${dns_name}.${base_domain_prod}"
+        functional_test_base_url="https://${dns_pointer}${k8s_app_path}"
+      }
+
+      stages {
+
+        stage("AppInfraProd") {
+          agent {
+            docker {
+              image "amidostacks/ci-tf:0.0.4"
+            }
+          }
+
+          environment {
+            terraform_state_workspace="${environment_name}"
+            TF_VAR_name_company="${company}"
+            TF_VAR_name_project="${project}"
+            TF_VAR_name_domain="${domain}"
+            TF_VAR_name_component="${component}"
+            TF_VAR_name_role="${role}"
+            TF_VAR_name_environment="${environment_name}"
+            TF_VAR_attributes="[]"
+            TF_VAR_tags="{}"
+            TF_VAR_resource_group_location="northeurope"
+            TF_VAR_app_gateway_frontend_ip_name="amido-stacks-prod-eun-core"
+            TF_VAR_dns_record="${dns_name}"
+            TF_VAR_dns_zone_name="${base_domain_prod}"
+            TF_VAR_dns_zone_resource_group="${core_resource_group}"
+            TF_VAR_core_resource_group="${core_resource_group}"
+            TF_VAR_internal_dns_zone_name="${base_domain_internal_prod}"
+            TF_VAR_create_cosmosdb="true"
+            TF_VAR_create_cache="false"
+            TF_VAR_create_dns_record="true"
+            TF_VAR_create_cdn_endpoint="false"
+            TF_VAR_cosmosdb_sql_container="Menu"
+            TF_VAR_cosmosdb_sql_container_partition_key="/id"
+            TF_VAR_cosmosdb_kind="GlobalDocumentDB"
+            TF_VAR_cosmosdb_offer_type="Standard"
+            TF_VAR_app_insights_name="amido-stacks-prod-eun-core"
+          }
+
+          steps {
+            dir("${self_repo_tf_src}") {
+
+              withCredentials([
+                string(credentialsId: 'PROD_AZURE_CLIENT_ID', variable: 'PROD_AZURE_CLIENT_ID'),
+                string(credentialsId: 'PROD_AZURE_CLIENT_SECRET', variable: 'PROD_AZURE_CLIENT_SECRET'),
+                string(credentialsId: 'PROD_AZURE_TENANT_ID', variable: 'PROD_AZURE_TENANT_ID'),
+                string(credentialsId: 'PROD_AZURE_SUBSCRIPTION_ID', variable: 'PROD_AZURE_SUBSCRIPTION_ID')
+              ]) {
+                sh(
+                  script: """#!/bin/bash
+                    bash "${dynamic_build_scripts_directory}/util-azure-login.bash" \
+                      -a "${PROD_AZURE_CLIENT_ID}" \
+                      -b "${PROD_AZURE_CLIENT_SECRET}" \
+                      -c "${PROD_AZURE_TENANT_ID}" \
+                      -d "${PROD_AZURE_SUBSCRIPTION_ID}"
+                  """,
+                  label: "Login: Azure CLI"
+                )
+              }
+
+              sh(
+                script: """#!/bin/bash
+                  bash "${dynamic_build_scripts_directory}/util-azure-register-pod-identity.bash"
+                """,
+                label: "Register Pod Identity Previews"
+              )
+
+              withCredentials([
+                string(credentialsId: 'PROD_AZURE_CLIENT_ID', variable: 'PROD_TERRAFORM_BACKEND_AZURE_CLIENT_ID'),
+                string(credentialsId: 'PROD_AZURE_CLIENT_SECRET', variable: 'PROD_TERRAFORM_BACKEND_AZURE_CLIENT_SECRET'),
+                string(credentialsId: 'PROD_AZURE_TENANT_ID', variable: 'PROD_TERRAFORM_BACKEND_AZURE_TENANT_ID'),
+                string(credentialsId: 'PROD_AZURE_SUBSCRIPTION_ID', variable: 'PROD_TERRAFORM_BACKEND_AZURE_SUBSCRIPTION_ID')
+              ]) {
+                sh(
+                  script: """#!/bin/bash
+                    bash "${dynamic_build_scripts_directory}/deploy-azure-terraform-init.bash" \
+                      -a "${PROD_TERRAFORM_BACKEND_AZURE_CLIENT_ID}" \
+                      -b "${PROD_TERRAFORM_BACKEND_AZURE_CLIENT_SECRET}" \
+                      -c "${PROD_TERRAFORM_BACKEND_AZURE_TENANT_ID}" \
+                      -d "${PROD_TERRAFORM_BACKEND_AZURE_SUBSCRIPTION_ID}" \
+                      -e "${terraform_state_rg}" \
+                      -f "${terraform_state_storage}" \
+                      -g "${terraform_state_container}" \
+                      -h "${terraform_state_key}" \
+                      -i "${terraform_state_workspace}"
+                  """,
+                  label: "Terraform: Initialise and Set Workspace"
+                )
+              }
+
+              withCredentials([
+                string(credentialsId: 'PROD_AZURE_CLIENT_ID', variable: 'PROD_AZURE_CLIENT_ID'),
+                string(credentialsId: 'PROD_AZURE_CLIENT_SECRET', variable: 'PROD_AZURE_CLIENT_SECRET'),
+                string(credentialsId: 'PROD_AZURE_TENANT_ID', variable: 'PROD_AZURE_TENANT_ID'),
+                string(credentialsId: 'PROD_AZURE_SUBSCRIPTION_ID', variable: 'PROD_AZURE_SUBSCRIPTION_ID')
+              ]) {
+                sh(
+                  script: """#!/bin/bash
+                    bash "${dynamic_build_scripts_directory}/deploy-azure-terraform-plan.bash" \
+                      -a "${PROD_AZURE_CLIENT_ID}" \
+                      -b "${PROD_AZURE_CLIENT_SECRET}" \
+                      -c "${PROD_AZURE_TENANT_ID}" \
+                      -d "${PROD_AZURE_SUBSCRIPTION_ID}"
+                  """,
+                  label: "Terraform: Plan"
+                )
+
+                sh(
+                  script: """#!/bin/bash
+                    bash "${dynamic_build_scripts_directory}/deploy-azure-terraform-apply.bash" \
+                      -a "${PROD_AZURE_CLIENT_ID}" \
+                      -b "${PROD_AZURE_CLIENT_SECRET}" \
+                      -c "${PROD_AZURE_TENANT_ID}" \
+                      -d "${PROD_AZURE_SUBSCRIPTION_ID}"
+                  """,
+                  label: "Terraform: Apply"
+                )
+              }
+
+              // Extract needed Terraform Outputs into Jenkins Variables
+              // These are used in the next stage
+              script {
+                env.dynamic_cosmosdb_endpoint = sh(
+                  script:"""#!/bin/bash
+                    terraform output cosmosdb_endpoint
+                  """,
+                  returnStdout: true,
+                  label: "Terraform: Extract ComsosDB Endpoint URL"
+                )
+
+                env.dynamic_cosmosdb_primary_master_key = sh(
+                  script:"""#!/bin/bash
+                    terraform output cosmosdb_primary_master_key
+                  """,
+                  returnStdout: true,
+                  label: "Terraform: Extract ComsosDB Primary Master Key"
+                )
+
+                env.dynamic_app_insights_instrumentation_key = sh(
+                  script:"""#!/bin/bash
+                    terraform output app_insights_instrumentation_key
+                  """,
+                  returnStdout: true,
+                  label: "Terraform: Extract Application Insights Key"
+                )
+              }
+
+            }
+          }
+
+        } // End of AppInfraProd
+
+        stage("DeployProd") {
+          agent {
+            docker {
+              image "amidostacks/ci-k8s:0.0.11"
+            }
+          }
+
+          environment {
+            cat_template_output="false"
+            additional_args="-no-empty"
+            // App Variables
+            resource_def_name="stacks-java-api-jenkins"
+            namespace="${environment_name}-java-api-jenkins"
+            aks_cluster_resourcegroup="${core_resource_group}"
+            aks_cluster_name="amido-stacks-prod-eun-core"
+            app_name="java-api-jenkins"
+            version="${dynamic_docker_image_tag}"
+            environment="${environment_name}"
+            tls_domain="${base_domain_prod}"
+            aadpodidentitybinding="stacks-webapp-identity" // Unused currently
+            k8s_image="${k8s_docker_registry_prod}/${docker_image_name}:${dynamic_docker_image_tag}"
+            log_level="Debug"
+            // Template 1
+            k8s_deploy_template_1="api-deploy.yml"
+            base_k8s_deploy_template_1="${self_repo_k8s_src}/app/base_${k8s_deploy_template_1}"
+            output_k8s_deploy_template_1="${self_repo_k8s_src}/app/${k8s_deploy_template_1}"
+            // Deployment 1
+            deployment_name_1="deploy/${resource_def_name}"
+            deployment_namespace_1="${namespace}"
+            deployment_timeout_1="120s"
+            // Terraform outputs from AppInfraProd
+            cosmosdb_endpoint="${dynamic_cosmosdb_endpoint}"
+            cosmosdb_key="${dynamic_cosmosdb_primary_master_key}"
+            app_insights_key="${dynamic_app_insights_instrumentation_key}"
+          }
+
+          steps {
+            // Copy this for each template you may have changing:
+            // `base_k8s_deploy_template_1` to another template
+            // and `output_k8s_deploy_template_1` to another template
+            sh(
+              script: """#!/bin/bash
+                bash "${dynamic_build_scripts_directory}/deploy-k8s-envsubst.bash" \
+                  -a "${base_k8s_deploy_template_1}" \
+                  -b "${additional_args}" \
+                  -Y "${cat_template_output}" \
+                  -Z "${output_k8s_deploy_template_1}"
+              """,
+              label: "K8s: Yaml (${output_k8s_deploy_template_1})"
+            )
+            /////
+
+            withCredentials([
+              string(credentialsId: 'PROD_AZURE_CLIENT_ID', variable: 'PROD_AZURE_CLIENT_ID'),
+              string(credentialsId: 'PROD_AZURE_CLIENT_SECRET', variable: 'PROD_AZURE_CLIENT_SECRET'),
+              string(credentialsId: 'PROD_AZURE_TENANT_ID', variable: 'PROD_AZURE_TENANT_ID'),
+              string(credentialsId: 'PROD_AZURE_SUBSCRIPTION_ID', variable: 'PROD_AZURE_SUBSCRIPTION_ID')
+            ]) {
+              sh(
+                script: """#!/bin/bash
+                  bash "${dynamic_build_scripts_directory}/util-azure-login.bash" \
+                    -a "${PROD_AZURE_CLIENT_ID}" \
+                    -b "${PROD_AZURE_CLIENT_SECRET}" \
+                    -c "${PROD_AZURE_TENANT_ID}" \
+                    -d "${PROD_AZURE_SUBSCRIPTION_ID}"
+                """,
+                label: "Login: Azure CLI"
+              )
+            }
+
+            sh(
+              script: """#!/bin/bash
+                bash "${dynamic_build_scripts_directory}/util-azure-aks-login.bash" \
+                  -a "${aks_cluster_resourcegroup}" \
+                  -b "${aks_cluster_name}"
+              """,
+              label: "Login: Azure AKS Cluster Login"
+            )
+
+            // Copy this for each template you may have changing:
+            // `output_k8s_deploy_template_1` to another template
+            sh(
+              script: """#!/bin/bash
+                bash "${dynamic_build_scripts_directory}/deploy-k8s-apply.bash" \
+                  -a "${output_k8s_deploy_template_1}"
+              """,
+              label: "Deploy: Kubectl Apply (${output_k8s_deploy_template_1})"
+            )
+            /////
+
+            // Copy this for each template you may have changing:
+            // `deployment_name_1` to another deployment,
+            // `deployment_namespace_1` to another namespace for the new deployment
+            // and `deployment_timeout_1` for how much time you want to wait for the app to deploy
+            sh(
+              script: """#!/bin/bash
+                bash "${dynamic_build_scripts_directory}/deploy-k8s-rollout-status.bash" \
+                  -a "${deployment_name_1}" \
+                  -b "${deployment_namespace_1}" \
+                  -Z "${deployment_timeout_1}"
+              """,
+              label: "Deploy: Kubectl Rollout Status Check (${deployment_name_1} @ ${deployment_namespace_1})"
+            )
+            /////
+
+          }
+
+        } // End of DeployProd
+
+        stage("PostDeployProd") {
+          agent {
+            docker {
+              image "azul/zulu-openjdk-debian:11"
+            }
+          }
+
+          steps {
+            dir("${self_functional_testproject_dir}") {
+              // Copy this for each tag you have, for example @Functional and @Smoke etc.
+              // Note: Don't forget to update the `maven_allowed_post_deploy_test_tags` in the root pipeline file.
+              sh(
+                script: """#!/bin/bash
+                  bash "${dynamic_build_scripts_directory}/test-maven-post-deploy-tagged-test-run.bash" \
+                    -a "@Functional" \
+                    -b "${functional_test_base_url}" \
+                    -Y "${maven_ignored_post_deploy_test_tags}" \
+                    -Z "${maven_cache_directory}"
+                """,
+                label: "Post-Deploy Test: Run Functional Tests"
+              )
+
+              sh(
+                script: """#!/bin/bash
+                  bash "${dynamic_build_scripts_directory}/test-maven-serenity-aggregate.bash" \
+                    -Z "${maven_cache_directory}"
+                """,
+                label: "Post-Deploy Test: Serenity Report Aggregate"
+              )
+
+              sh(
+                script: """#!/bin/bash
+                  bash "${dynamic_build_scripts_directory}/test-maven-post-deploy-test-verify.bash" \
+                    -Z "${maven_cache_directory}"
+                """,
+                label: "Post-Deploy Test: Verify Test Run"
+              )
+            }
+          }
+
+          post {
+            always {
+              dir("${self_functional_testproject_dir}") {
+                // Publish Test Results
+                junit "${maven_post_deploy_failsafe_reports_directory}/*.xml"
+
+                // Publish Serenity Report
+                publishHTML (
+                  target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: "${maven_post_deploy_html_report_directory}",
+                    reportFiles: "**/*",
+                    reportName: "${environment_name} - Serenity Report",
+                    reportTitles: "${environment_name} - Serenity Report"
+                  ]
+                )
+              }
+            }
+          } // post end
+
+        } // End of PostDeployProd
+
+      } // End of Prod Stages
+
+    } // End of Prod Stage
 
   } // End of Stages
 
