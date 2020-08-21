@@ -16,8 +16,9 @@ public class CucumberTestSuite {
 
     @BeforeClass
     public static void setup() {
+        Hooks.obtainAuthorizationToken();
+
         System.out.println("Delete all data from previous automated test");
         Hooks.deleteAllMenusFromPreviousRun();
     }
-
 }
