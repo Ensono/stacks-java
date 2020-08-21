@@ -1,5 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.stepdefinitions;
 
+import com.xxAMIDOxx.xxSTACKSxx.api.menu.MenuActions;
 import com.xxAMIDOxx.xxSTACKSxx.api.menu.MenuRequests;
 import com.xxAMIDOxx.xxSTACKSxx.api.models.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.api.models.ResponseWrapper;
@@ -32,6 +33,12 @@ public class Hooks {
             LOGGER.info(String.format("The menu with '%s' id was successfully deleted.", currentMenu.getId()));
         }
     }
+
+    public static void obtainAuthorizationToken() {
+        LOGGER.info("Get the Authorization Token");
+        MenuActions.getAuthToken();
+    }
+
 
 
     @Before

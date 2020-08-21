@@ -94,7 +94,7 @@ public class MenuStepDefinitions {
         String xPath = MenuActions.createUrlWithCriteria(data);
         String parametrisedPath = BASE_URL + WebServiceEndPoints.MENU.getUrl() + "?" + xPath;
 
-        SerenityRest.get(parametrisedPath);
+        MenuRequests.getMenuByParametrisedPath(parametrisedPath);
     }
 
     @When("I get the restaurant id for last created menu")

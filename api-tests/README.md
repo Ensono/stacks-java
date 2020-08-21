@@ -60,3 +60,15 @@ The following environment variables are required:
 
 - BASE_URL
 e.g. http://localhost:9000
+
+### Access token configuration
+
+To get the right access token please provide values for following variables in the ``serenity.conf`` file:
+
+```
+client_id = "client id value",
+client_secret = "client secret value",
+audience = "path",
+grant_type = "client credentials"
+oauth.token.url = "oauth token url"
+```
