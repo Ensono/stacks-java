@@ -525,19 +525,19 @@ stages:
                     pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
                     docker_terraform_container: "terraform_custom"
                     # Azure Credenitals (For Deploying)
-                    azure_client_id: "$(azure_client_id)"
-                    azure_client_secret: "$(azure_client_secret)"
-                    azure_tenant_id: "$(azure_tenant_id)"
-                    azure_subscription_id: "$(azure_subscription_id)"
+                    azure_client_id: "$(prod_azure_client_id)"
+                    azure_client_secret: "$(prod_azure_client_secret)"
+                    azure_tenant_id: "$(prod_azure_tenant_id)"
+                    azure_subscription_id: "$(prod_azure_subscription_id)"
                     # Terraform
                     terraform_directory: '$(self_repo_tf_dir)'
                     # Backend Azure State Storage Credentials
                     # Change these if your state storage is in a different
                     # location to your deployment
-                    terraform_backend_azure_client_id: "$(azure_client_id)"
-                    terraform_backend_azure_client_secret: "$(azure_client_secret)"
-                    terraform_backend_azure_tenant_id: "$(azure_tenant_id)"
-                    terraform_backend_azure_subscription_id: "$(azure_subscription_id)"
+                    terraform_backend_azure_client_id: "$(prod_azure_client_id)"
+                    terraform_backend_azure_client_secret: "$(prod_azure_client_secret)"
+                    terraform_backend_azure_tenant_id: "$(prod_azure_tenant_id)"
+                    terraform_backend_azure_subscription_id: "$(prod_azure_subscription_id)"
                     terraform_state_rg: ${{ variables.tf_state_rg }}
                     terraform_state_storage: ${{ variables.tf_state_storage }}
                     terraform_state_container: ${{ variables.tf_state_container }}
@@ -688,10 +688,10 @@ stages:
                         additional_args: "-no-empty",
                       },
                     ]
-                    azure_client_id: "$(azure_client_id)"
-                    azure_client_secret: "$(azure_client_secret)"
-                    azure_tenant_id: "$(azure_tenant_id)"
-                    azure_subscription_id: "$(azure_subscription_id)"
+                    azure_client_id: "$(prod_azure_client_id)"
+                    azure_client_secret: "$(prod_azure_client_secret)"
+                    azure_tenant_id: "$(prod_azure_tenant_id)"
+                    azure_subscription_id: "$(prod_azure_subscription_id)"
                     aks_cluster_resourcegroup: "${{ variables.aks_cluster_resourcegroup }}"
                     aks_cluster_name: "${{ variables.aks_cluster_name }}"
                     # Used to do a `kubectl rollout status`
