@@ -94,7 +94,7 @@ public class MenuStepDefinitions {
         String xPath = MenuActions.createUrlWithCriteria(data);
         String parametrisedPath = BASE_URL + WebServiceEndPoints.MENU.getUrl() + "?" + xPath;
 
-        SerenityRest.get(parametrisedPath);
+        MenuRequests.getMenuByParametrisedPath(parametrisedPath);
     }
 
     @When("I get the restaurant id for last created menu")
@@ -171,7 +171,7 @@ public class MenuStepDefinitions {
         menuActions.check_exception_message(ExceptionMessages.MENU_DOES_NOT_EXIST, lastResponse());
     }
 
-    @Then("the 'menu already exist' message is returned")
+    @Then("the 'menu already exists' message is returned")
     public void i_check_the_menu_already_exist_message() {
         menuActions.check_exception_message(ExceptionMessages.MENU_ALREADY_EXISTS, lastResponse());
     }
@@ -194,13 +194,13 @@ public class MenuStepDefinitions {
     @When("I delete the menu")
     public void i_delete_the_menu() {
         menuId = menuActions.getIdOfLastCreatedObject();
-        menuRequest.deleteTheMenu(menuId);
+        MenuRequests.deleteTheMenu(menuId);
         LOGGER.info(String.format("The menu with '%s' id was successfully deleted.", menuId));
     }
 
     @When("I delete the menu with {string} id")
     public void i_delete_the_menu_by_id(String menuId) {
-        menuRequest.deleteTheMenu(menuId);
+        MenuRequests.deleteTheMenu(menuId);
     }
 
     @Then("the menu is successfully deleted")
@@ -228,10 +228,34 @@ public class MenuStepDefinitions {
         List<Menu> allMenus = responseWrapper.getResults();
 
         for (Menu currentMenu : allMenus) {
-            menuRequest.deleteTheMenu(currentMenu.getId());
+            MenuRequests.deleteTheMenu(currentMenu.getId());
             restAssuredThat(response -> response.statusCode(200));
 
             LOGGER.info(String.format("The menu with '%s' id was successfully deleted.", currentMenu.getId()));
         }
+    }
+
+    @Given("I delete all menus from previous tests")
+    public void i_delete_all_existing_menus_from_test_data() {
+        Hooks.deleteAllMenusFromPreviousRun();
+    }
+
+    @When("I search the created menu by id in the v2 app version")
+    public void i_search_the_last_created_menu_by_id_v2() {
+        getMenuByParameter_v2(menuId);
+    }
+
+    public void getMenuByParameter_v2(String parameter) {
+        SerenityRest.get(BASE_URL.concat(WebServiceEndPoints.MENU_V2.getUrl()).concat("/").concat(parameter));
+    }
+
+    @When("in the v2 app version I search the menu by:")
+    public void search_the_menu_by_parameter_v2(DataTable table) {
+        List<List<String>> data = table.asLists(String.class);
+        String parameter = data.get(1).get(0);
+        String value = data.get(0).get(0);
+
+        getMenuByParameter_v2(parameter);
+        Serenity.setSessionVariable(value).to(parameter);
     }
 }

@@ -1,5 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.stepdefinitions;
 
+import com.xxAMIDOxx.xxSTACKSxx.api.menu.MenuActions;
 import com.xxAMIDOxx.xxSTACKSxx.api.menu.MenuRequests;
 import com.xxAMIDOxx.xxSTACKSxx.api.models.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.api.models.ResponseWrapper;
@@ -14,7 +15,6 @@ import java.util.List;
 
 import static net.serenitybdd.rest.SerenityRest.lastResponse;
 import static net.serenitybdd.rest.SerenityRest.restAssuredThat;
-
 
 public class Hooks {
 
@@ -34,6 +34,12 @@ public class Hooks {
         }
     }
 
+    public static void obtainAuthorizationToken() {
+        LOGGER.info("Get the Authorization Token");
+        MenuActions.getAuthToken();
+    }
+
+
 
     @Before
     public void before() {
@@ -50,4 +56,3 @@ public class Hooks {
         }
     }
 }
-

@@ -19,7 +19,7 @@
     <properties>
         <java.version>11</java.version>
         <org.projectlombok.version>1.18.0</org.projectlombok.version>
-        <org.springdoc-openapi.version>1.4.3</org.springdoc-openapi.version>
+        <org.springdoc-openapi.version>1.4.4</org.springdoc-openapi.version>
         <applicationinsights.version>2.6.1</applicationinsights.version>
         <cosmosdb.version>2.3.2</cosmosdb.version>
         <azure.springboot.version>2.3.2</azure.springboot.version>
@@ -38,6 +38,16 @@
         <owasp-dependency-check-plugin.version>5.3.2</owasp-dependency-check-plugin.version>
         <auth0-spring-security-api.version>1.4.0</auth0-spring-security-api.version>
 
+        <fmt-maven-plugin.version>2.10</fmt-maven-plugin.version>
+        <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
+        <puppycrawl-tools-checkstyle.version>8.35</puppycrawl-tools-checkstyle.version>
+        <spotbugs-maven-plugin.version>4.0.4</spotbugs-maven-plugin.version>
+        <spotbugs.version>4.1.1</spotbugs.version>
+        <pact.version>3.5.24</pact.version>
+
+        <!--       Set 'pact.broker.url' and 'pact.broker.token' -->
+        <pact.broker.url></pact.broker.url>
+        <pact.broker.token></pact.broker.token>
     </properties>
 
     <dependencies>
@@ -180,6 +190,19 @@
             <version>${auth0-spring-security-api.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>au.com.dius</groupId>
+            <artifactId>pact-jvm-provider-spring</artifactId>
+            <version>4.0.10</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>au.com.dius.pact</groupId>
+            <artifactId>consumer</artifactId>
+            <version>4.1.6</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <reporting>
@@ -291,6 +314,99 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>au.com.dius.pact.provider</groupId>
+                <artifactId>maven</artifactId>
+                <version>4.1.6</version>
+                <configuration>
+                    <pactBrokerUrl>${pact.broker.url}</pactBrokerUrl>
+                    <pactBrokerToken>${pact.broker.token}</pactBrokerToken>
+                    <systemPropertyVariables>
+                        <pact.verifier.publishResults>true</pact.verifier.publishResults>
+                    </systemPropertyVariables>
+
+                    <serviceProviders>
+                        <serviceProvider>
+                            <name>JavaMenuAPI</name>
+                            <protocol>http</protocol>
+                            <host>localhost</host>
+                            <port>9000</port>
+                        </serviceProvider>
+                    </serviceProviders>
+
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.coveo</groupId>
+                <artifactId>fmt-maven-plugin</artifactId>
+                <version>${fmt-maven-plugin.version}</version>
+                <configuration>
+                    <displayFiles>false</displayFiles>
+                    <verbose>true</verbose>
+                    <filesNamePattern>.*\.java</filesNamePattern>
+                    <additionalSourceDirectories/>
+                    <skip>false</skip>
+                    <skipSortingImports>false</skipSortingImports>
+                    <style>google</style>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version>
+                <dependencies>
+                    <!--Specify Dependent checkstyle Edition-->
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${puppycrawl-tools-checkstyle.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <configLocation>google_checks.xml</configLocation>
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs-maven-plugin.version}</version>
+                <dependencies>
+                    <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
+                    <dependency>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs</artifactId>
+                        <version>${spotbugs.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

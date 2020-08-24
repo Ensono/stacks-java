@@ -20,8 +20,14 @@ management:
 springdoc:
   swagger-ui:
     disable-swagger-default-url: true
-    path: /swagger/index.html # TODO: Swagger keeps redirecting, it'd be good to stop it if possible.
-  packagesToScan: com.xxAMIDOxx.xxSTACKSxx.menu.api.v1
+    display-operation-id: true
+    path: /swagger/index.html # TODO: Swagger keeps redirecting, it'd be good to stop it if possible
+  packagesToScan: com.xxAMIDOxx.xxSTACKSxx.menu.api
+  api-docs:
+    groups:
+      enabled: true
+    enabled: true
+    path: /swagger/oas-json
 
 azure:
   cosmosdb:

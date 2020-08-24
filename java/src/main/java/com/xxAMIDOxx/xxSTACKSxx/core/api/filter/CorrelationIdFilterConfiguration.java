@@ -9,24 +9,24 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "config.correlation")
 public class CorrelationIdFilterConfiguration {
 
-    public static final String DEFAULT_CORRELATION_REQUEST_HEADER = "x-correlation-id";
-    public static final String DEFAULT_RESPONSE_TOKEN_HEADER = "x-correlation-id";
-    public static final String DEFAULT_MDC_UUID_TOKEN_KEY = "CorrelationId";
+  public static final String DEFAULT_CORRELATION_REQUEST_HEADER = "x-correlation-id";
+  public static final String DEFAULT_RESPONSE_TOKEN_HEADER = "x-correlation-id";
+  public static final String DEFAULT_MDC_UUID_TOKEN_KEY = "CorrelationId";
 
-    private String requestHeader = DEFAULT_CORRELATION_REQUEST_HEADER;
-    private String responseHeader = DEFAULT_RESPONSE_TOKEN_HEADER;
-    private String logTokenKey = DEFAULT_MDC_UUID_TOKEN_KEY;
+  private String requestHeader = DEFAULT_CORRELATION_REQUEST_HEADER;
+  private String responseHeader = DEFAULT_RESPONSE_TOKEN_HEADER;
+  private String logTokenKey = DEFAULT_MDC_UUID_TOKEN_KEY;
 
-    @Bean
-    public FilterRegistrationBean<CorrelationIdFilter> servletRegistrationBean() {
+  @Bean
+  public FilterRegistrationBean<CorrelationIdFilter> servletRegistrationBean() {
 
-        final FilterRegistrationBean<CorrelationIdFilter>
-                registrationBean = new FilterRegistrationBean<>();
+    final FilterRegistrationBean<CorrelationIdFilter> registrationBean =
+        new FilterRegistrationBean<>();
 
-        final CorrelationIdFilter logFilter = new CorrelationIdFilter(
-                responseHeader, logTokenKey, requestHeader);
+    final CorrelationIdFilter logFilter =
+        new CorrelationIdFilter(responseHeader, logTokenKey, requestHeader);
 
-        registrationBean.setFilter(logFilter);
-        return registrationBean;
-    }
+    registrationBean.setFilter(logFilter);
+    return registrationBean;
+  }
 }
