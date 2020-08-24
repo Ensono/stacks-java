@@ -154,7 +154,7 @@ pipeline {
               checkout([
                 $class: 'GitSCM',
                 // TODO: move to a tag
-                branches: [[name: 'refs/heads/feature/cycle4']],
+                branches: [[name: 'refs/tags/v1.4.6']],
                 userRemoteConfigs: [[url: "https://github.com/amido/${self_pipeline_repo}"]]
               ])
             }
