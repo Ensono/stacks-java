@@ -1,9 +1,8 @@
 package com.xxAMIDOxx.xxSTACKSxx;
 
 import com.auth0.spring.security.api.JwtWebSecurityConfigurer;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.Arrays;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,9 +10,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
-import java.util.Arrays;
-
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity(debug = true)
@@ -22,51 +21,93 @@ public class ApplicationConfig extends WebSecurityConfigurerAdapter {
   private static final String V1_MENU_ENDPOINT = "/v1/menu";
   private static final String V2_MENU_ENDPOINT = "/v2/menu";
 
-    @Value(value = "${auth0.apiAudience}")
-    private String apiAudience;
-    @Value(value = "${auth0.issuer}")
-    private String issuer;
+  @Value(value = "${auth0.apiAudience}")
+  private String apiAudience;
+
+  @Value(value = "${auth0.issuer}")
+  private String issuer;
+
+  @Value(value = "${auth0.isEnabled}")
+  private boolean isEnabled;
 
   /**
    * Provide CorsConfiguration for each request
    *
-   * @return */
+   * @return
+   */
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("DELETE", "GET", "POST", "PATCH", "PUT"));
-        configuration.setAllowCredentials(true);
-        configuration.addAllowedHeader("Authorization");
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(Arrays.asList("*"));
+    configuration.setAllowedMethods(Arrays.asList("DELETE", "GET", "POST", "PATCH", "PUT"));
+    configuration.setAllowCredentials(true);
+    configuration.addAllowedHeader("Authorization");
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
 
   /**
-   * Configure your API to use the RS256 and protect and API endpoints.
+   * Configure your API to use the RS256 and protect and API endpoints. Config switch is put in
+   * place to enable or disable Auth - isEnabled
    *
-   * /api/public: available for non-authenticated requests.
-   * /api/private: available for authenticated requests containing an Access-Token with no additional scopes.
-   *
+   * <p>/api/public: available for non-authenticated requests. /api/private: available for
+   * authenticated requests containing an Access-Token with no additional scopes.
    *
    * @param http
    * @throws Exception
    */
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-        http.cors();
-        JwtWebSecurityConfigurer
-                .forRS256(apiAudience, issuer)
-                .configure(http)
-                .authorizeRequests()
-                .antMatchers(HttpMethod.GET, V1_MENU_ENDPOINT).authenticated()
-                .antMatchers(HttpMethod.GET, V2_MENU_ENDPOINT).authenticated()
-                .antMatchers(HttpMethod.DELETE, V1_MENU_ENDPOINT).authenticated()
-                .antMatchers(HttpMethod.PUT, V1_MENU_ENDPOINT).authenticated()
-                .antMatchers(HttpMethod.POST, V1_MENU_ENDPOINT).authenticated();
+    http.cors();
+    if (BooleanUtils.isTrue(isEnabled)) {
+      enableAuth0(http);
+    } else {
+      disableAuth0(http);
     }
+  }
 
+  /**
+   * authenticated() - endpoints are protected
+   *
+   * @param http
+   * @throws Exception
+   */
+  private void enableAuth0(HttpSecurity http) throws Exception {
+    JwtWebSecurityConfigurer.forRS256(apiAudience, issuer)
+        .configure(http)
+        .authorizeRequests()
+        .antMatchers(HttpMethod.GET, V1_MENU_ENDPOINT)
+        .authenticated()
+        .antMatchers(HttpMethod.GET, V2_MENU_ENDPOINT)
+        .authenticated()
+        .antMatchers(HttpMethod.DELETE, V1_MENU_ENDPOINT)
+        .authenticated()
+        .antMatchers(HttpMethod.PUT, V1_MENU_ENDPOINT)
+        .authenticated()
+        .antMatchers(HttpMethod.POST, V1_MENU_ENDPOINT)
+        .authenticated();
+  }
+
+  /**
+   * permitAll() - endpoints are not protected
+   *
+   * @param http
+   * @throws Exception
+   */
+  private void disableAuth0(HttpSecurity http) throws Exception {
+    JwtWebSecurityConfigurer.forRS256(apiAudience, issuer)
+        .configure(http)
+        .authorizeRequests()
+        .antMatchers(HttpMethod.GET, V1_MENU_ENDPOINT)
+        .permitAll()
+        .antMatchers(HttpMethod.GET, V2_MENU_ENDPOINT)
+        .permitAll()
+        .antMatchers(HttpMethod.DELETE, V1_MENU_ENDPOINT)
+        .permitAll()
+        .antMatchers(HttpMethod.PUT, V1_MENU_ENDPOINT)
+        .permitAll()
+        .antMatchers(HttpMethod.POST, V1_MENU_ENDPOINT)
+        .permitAll();
+  }
 }
-
-
