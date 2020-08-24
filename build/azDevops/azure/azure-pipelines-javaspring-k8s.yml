@@ -555,10 +555,10 @@ stages:
                       TF_VAR_resource_group_location: "${{ variables.resource_group_location }}",
                       TF_VAR_app_gateway_frontend_ip_name: "${{ variables.app_gateway_frontend_ip_name }}",
                       TF_VAR_dns_record: "${{ variables.dns_name }}",
-                      TF_VAR_dns_zone_name: "${{ variables.base_domain_nonprod }}",
+                      TF_VAR_dns_zone_name: "${{ variables.base_domain_prod }}",
                       TF_VAR_dns_zone_resource_group: "${{ variables.dns_zone_resource_group }}",
                       TF_VAR_core_resource_group: "${{ variables.core_resource_group }}",
-                      TF_VAR_internal_dns_zone_name: "${{ variables.base_domain_internal_nonprod }}",
+                      TF_VAR_internal_dns_zone_name: "${{ variables.base_domain_internal_prod }}",
                       TF_VAR_create_cosmosdb: "${{ variables.create_cosmosdb }}",
                       TF_VAR_create_cache: "${{ variables.create_cache }}",
                       TF_VAR_create_dns_record: "${{ variables.create_dns_record }}",
@@ -635,7 +635,7 @@ stages:
           - name: k8s_app_path
             value: "/api"
           - name: dns_pointer
-            value: "${{ variables.dns_name }}.${{ variables.base_domain_nonprod }}"
+            value: "${{ variables.dns_name }}.${{ variables.base_domain_prod }}"
           - name: functional_test_base_url
             value: "https://${{ variables.dns_pointer }}/${{ variables.k8s_app_path }}"
           - name: aks_cluster_resourcegroup
@@ -675,10 +675,10 @@ stages:
                         displayName: "App Deployment",
                         replacements: {
                           dns_pointer: "${{ variables.dns_pointer }}",
-                          tls_domain: "${{ variables.base_domain_nonprod }}",
+                          tls_domain: "${{ variables.base_domain_prod }}",
                           k8s_app_path: "${{ variables.k8s_app_path }}",
                           log_level: "Debug",
-                          k8s_image: '${{ variables.k8s_docker_registry_nonprod }}/${{ variables.docker_image_name }}:${{ variables.docker_image_tag }}',
+                          k8s_image: '${{ variables.k8s_docker_registry_prod }}/${{ variables.docker_image_name }}:${{ variables.docker_image_tag }}',
                           aadpodidentitybinding: stacks-webapp-identity,
                           app_insights_key: "$(app_insights_instrumentation_key)",
                           cosmosdb_key: "$(cosmosdb_primary_master_key)",
