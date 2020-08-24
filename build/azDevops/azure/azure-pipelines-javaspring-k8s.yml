@@ -61,11 +61,13 @@ variables:
   self_repo: stacks-java
   self_remote_repo: "amido/$(self_repo)"
   self_repo_src: java
+  self_post_deploy_test_src: "api-tests"
   self_repo_dir: "$(Agent.BuildDirectory)/s/$(self_repo)"
   self_project_dir: "$(self_repo_dir)/$(self_repo_src)"
+  self_functional_testproject_dir: "$(self_repo_dir)/$(self_post_deploy_test_src)"
   self_repo_tf_src: deploy/azure/app/kube
   self_repo_tf_dir: "$(self_repo_dir)/$(self_repo_tf_src)"
-  self_generic_name: stacks-api
+  self_generic_name: stacks-java
   self_pipeline_repo: "$(Agent.BuildDirectory)/s/stacks-pipeline-templates"
   self_pipeline_scripts_dir: "$(self_pipeline_repo)/scripts"
   # TF STATE CONFIG
@@ -91,14 +93,15 @@ variables:
   # Docker Config
   docker_dockerfile_path: "."
   docker_image_name: $(self_generic_name)
-  docker_image_tag: "$(version_major).$(version_minor).$(version_revision)-$(build.sourcebranchname)"
+  docker_image_tag: "${{ variables.version_major }}.${{ variables.version_minor }}.$(version_revision)-$(Build.SourceBranchName)"
   docker_container_registry_name_nonprod: amidostacksnonprodeuncore
-  k8s_docker_registry_nonprod: $(docker_container_registry_name_nonprod).azurecr.io
+  docker_java_image: "azul_java"
+  k8s_docker_registry_nonprod: "${{ variables.docker_container_registry_name_nonprod }}.azurecr.io"
   docker_container_registry_name_prod: amidostacksprodeuncore
-  k8s_docker_registry_prod: $(docker_container_registry_name_prod).azurecr.io
+  k8s_docker_registry_prod: "${{ variables.docker_container_registry_name_prod }}.azurecr.io"
   # BUILD ARTIFACTS across stages
-  build_artifact_deploy_path: $(self_repo_dir)/deploy/k8s/app
-  build_artifact_deploy_name: $(self_generic_name)
+  build_artifact_deploy_path: "${{ variables.self_repo_dir }}/deploy/k8s/app"
+  build_artifact_deploy_name: "${{ variables.self_generic_name }}"
   # Infra
   base_domain_nonprod: nonprod.amidostacks.com
   base_domain_internal_nonprod: nonprod.amidostacks.internal
@@ -107,10 +110,27 @@ variables:
   # Maven
   maven_cache_directory: "./.m2"
   maven_surefire_reports_dir: "target/surefire-reports"
-  maven_allowed_test_tags: "Unit | Component | Integration | Functional | Performance | Smoke"
+  maven_allowed_test_tags: "Unit | Component | Integration"
+  maven_allowed_post_deploy_test_tags: "@Functional or @Smoke or @Performance"
+  maven_ignored_post_deploy_test_tags: "@Ignore"
+  maven_post_deploy_html_report_directory: "target/site/serenity"
+  maven_post_deploy_failsafe_reports_directory: "target/failsafe-reports"
+  # Vulnerability Scan
+  vulnerability_scan: true
+  vulnerability_scan_report: "target/dependency-check-report.html"
+  vulnerability_scan_fail_build_on_detection: false
   # Yamllint
-  yamllint_config_file: "$(self_repo_dir)/yamllint.conf"
+  yamllint_config_file: "${{ variables.self_repo_dir }}/yamllint.conf"
   yamllint_scan_directory: "."
+  # Functional Tests
+  functional_test: true
+  functional_test_path: "${{ variables.self_functional_testproject_dir }}"
+  functional_test_artefact_path: "${{ variables.self_repo_dir }}/${{ variables.self_post_deploy_test_src }}"
+  functional_test_artefact_name: "post-deploy-test-artefact"
+  functional_test_artefact_download_location: "$(Pipeline.Workspace)/${{ variables.functional_test_artefact_name }}"
+  # Build Task Naming
+  java_project_type: "Java App"
+  functional_test_project_type: "Functional API Tests"
 
 stages:
   - stage: Build
@@ -129,46 +149,66 @@ stages:
 
           # Updates the build number in Azure DevOps (requires refresh in the UI to see)
           - bash: |
-              echo '##vso[build.updatebuildnumber]$(docker_image_tag)'
+              echo '##vso[build.updatebuildnumber]${{ variables.docker_image_tag }}'
             displayName: 'Update: Build Number'
 
           # Validates all YAML files in the repo to check they adhere to standards
           - template: templates/steps/test-validate-yaml.yml
             parameters:
-              pipeline_scripts_directory: "$(self_pipeline_scripts_dir)"
+              pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
               container: "k8s_deploy"
-              yamllint_config_file: "$(yamllint_config_file)"
-              yamllint_scan_directory: "$(yamllint_scan_directory)"
+              yamllint_config_file: "${{ variables.yamllint_config_file }}"
+              yamllint_scan_directory: "${{ variables.yamllint_scan_directory }}"
 
           # Runs a terraform fomatting check and a validation check
           - template: templates/steps/test-validate-terraform.yml
             parameters:
-              pipeline_scripts_directory: "$(self_pipeline_scripts_dir)"
+              pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
               terraform_container: "terraform_custom"
-              terraform_directory: "$(self_repo_tf_dir)"
+              terraform_directory: "${{ variables.self_repo_tf_dir }}"
 
           # Builds the Java app and runs tests
           - template: templates/steps/build-java.yml
             parameters:
-              repo_root_dir: "$(self_repo_dir)"
-              project_root_dir: "$(self_project_dir)"
-              pipeline_scripts_directory: $(self_pipeline_scripts_dir)
+              repo_root_dir: "${{ variables.self_repo_dir }}"
+              project_root_dir: "${{ variables.self_project_dir }}"
+              pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
               # Maven
-              maven_cache_directory: "$(maven_cache_directory)"
-              maven_surefire_reports_dir: "$(maven_surefire_reports_dir)"
-              maven_allowed_test_tags: "$(maven_allowed_test_tags)"
+              maven_cache_directory: "${{ variables.maven_cache_directory }}"
+              maven_surefire_reports_dir: "${{ variables.maven_surefire_reports_dir }}"
+              maven_allowed_test_tags: "${{ variables.maven_allowed_test_tags}}"
               # Docker
-              docker_build_container: "azul_java"
-              # TODO: Vulnerability Scans
+              docker_build_container: "${{ variables.docker_java_image }}"
               # Vulnerability Scanning
-              # vulnerability_scan: false
-              # vulnerability_workdir: "$(Build.ArtifactStagingDirectory)"
+              vulnerability_scan: "${{ variables.vulnerability_scan }}"
+              vulnerability_scan_fail_build_on_detection: "${{ variables.vulnerability_scan_fail_build_on_detection }}"
+              project_type: "${{ variables.java_project_type }}"
+
+          # Builds the Java API Tests
+          - template: templates/steps/build-api-tests.yml
+            parameters:
+              repo_root_dir: "${{ variables.self_repo_dir }}"
+              functional_test_project_root_dir: "${{ variables.self_functional_testproject_dir }}"
+              functional_test_artefact_path: "${{ variables.functional_test_artefact_path }}"
+              pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
+              # Maven
+              maven_cache_directory: "${{ variables.maven_cache_directory }}"
+              maven_allowed_post_deploy_test_tags: "${{ variables.maven_allowed_post_deploy_test_tags }}"
+              maven_ignored_post_deploy_test_tags: "${{ variables.maven_ignored_post_deploy_test_tags }}"
+              maven_post_deploy_html_report_directory: "${{ variables.maven_post_deploy_html_report_directory }}"
+              maven_post_deploy_failsafe_reports_directory: "${{ variables.maven_post_deploy_failsafe_reports_directory }}"
+              # Docker
+              docker_build_container: "${{ variables.docker_java_image }}"
+              # Vulnerability Scan
+              vulnerability_scan: "${{ variables.vulnerability_scan }}"
+              vulnerability_scan_fail_build_on_detection: "${{ variables.vulnerability_scan_fail_build_on_detection }}"
+              project_type: "${{ variables.functional_test_project_type }}"
 
           # Performs stati code analysis, such as Sonar Cloud
           - template: templates/steps/test-static-code-analysis.yml
             parameters:
-              project_root_dir: "$(self_project_dir)"
-              pipeline_scripts_directory: "$(self_pipeline_scripts_dir)"
+              project_root_dir: "${{ variables.self_project_dir }}"
+              pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir}}"
               # PR / Branch vars
               source_branch_ref: "$(source_branch_ref)"
               target_branch_ref: "$(target_branch_ref)"
@@ -182,21 +222,21 @@ stages:
               sonar_token: "$(SONAR_TOKEN)"
               sonar_organisation: "$(SONAR_ORGANIZATION)"
               sonar_pullrequest_provider: "GitHub" # Probably `GitHub` or `vsts`
-              sonar_remote_repo: "$(self_remote_repo)"
+              sonar_remote_repo: "${{ variables.self_remote_repo }}"
               sonar_command: "sonar-scanner"
               # Docker
-              docker_image_tag: "$(docker_image_tag)"
+              docker_image_tag: "${{ variables.docker_image_tag }}"
 
           # Builds the Docker image and pushes it to an ACR
           - template: templates/steps/build-docker-image.yml
             parameters:
-              project_root_dir: "$(self_project_dir)"
-              pipeline_scripts_directory: $(self_pipeline_scripts_dir)
+              project_root_dir: "${{ variables.self_project_dir }}"
+              pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
               docker_k8s_container: "k8s_deploy"
               docker_build_additional_args: "."
-              docker_image_name: "$(docker_image_name)"
-              docker_image_tag: "$(docker_image_tag)"
-              docker_container_registry_name: "$(docker_container_registry_name_nonprod)"
+              docker_image_name: "${{ variables.docker_image_name }}"
+              docker_image_tag: "${{ variables.docker_image_tag }}"
+              docker_container_registry_name: "${{ variables.docker_container_registry_name_nonprod }}"
               # Azure
               azure_client_id: "$(AZURE_CLIENT_ID)"
               azure_client_secret: "$(AZURE_CLIENT_SECRET)"
@@ -206,105 +246,121 @@ stages:
           # Post build tasks, such as Test and Coverage upload, and publishing artefacts
           - template: templates/steps/post-build-tasks.yml
             parameters:
-              project_root_dir: "$(self_project_dir)"
-              functional_test: false
-              functional_test_path: ""
-              functional_test_artefact: ""
+              project_root_dir: "${{ variables.self_project_dir }}"
+              functional_test_project_root_dir: "${{ variables.self_functional_testproject_dir }}"
               # Build Output File
               # files to be persisted across stages
               build_file: true
-              build_file_path: "$(build_artifact_deploy_path)"
-              build_file_artefact: "$(build_artifact_deploy_name)"
+              build_file_path: "${{ variables.build_artifact_deploy_path }}"
+              build_file_artefact_name: "${{ variables.build_artifact_deploy_name }}"
+              # Functional tests
+              functional_test: ${{ variables.functional_test }}
+              functional_test_artefact_name: "${{ variables.functional_test_artefact_name }}"
+              functional_test_artefact_path: "${{ variables.functional_test_artefact_path }}"
+              vulnerability_scan: "${{ variables.vulnerability_scan }}"
+              vulnerability_scan_report: "${{ variables.vulnerability_scan_report }}"
+              java_project_type: "${{ variables.java_project_type }}"
+              functional_test_project_type: "${{ variables.functional_test_project_type }}"
 
   - stage: Dev
     variables:
       - group: amido-stacks-infra-credentials-nonprod
     jobs:
-      - job: AppInfraDev
-        variables:
-          ARM_SUBSCRIPTION_ID: $(azure_subscription_id)
-          ARM_CLIENT_ID: $(azure_client_id)
-          ARM_CLIENT_SECRET: "$(azure_client_secret)"
-          ARM_TENANT_ID: $(azure_tenant_id)
+      - deployment: AppInfraDev
+        container: terraform_custom
         pool:
           vmImage: ubuntu-18.04
-        container: terraform_custom
-        steps:
-          - checkout: self
+        environment: dev
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
 
-          - checkout: templates
+                - checkout: templates
 
-          # Create TF infra
-          - template: azDevOps/azure/templates/v2/steps/deploy-terraform-resource.yml@templates
-            parameters:
-              # Terraform Basic Config
-              terraform_working_dir: '$(self_repo_tf_dir)'
-              # changing this would require changing the downstream consumers of these outputs
-              #
-              terraform_output_artefact: 'tfoutputs'
-              # Terraform State Config
-              terraform_backend_client_id: $(ARM_CLIENT_ID)
-              terraform_backend_client_secret: $(ARM_CLIENT_SECRET)
-              terraform_backend_tenant_id: $(ARM_TENANT_ID)
-              terraform_backend_subscription_id: $(ARM_SUBSCRIPTION_ID)
-              terraform_state_rg: $(tf_state_rg)
-              terraform_state_storage: $(tf_state_storage)
-              terraform_state_container: $(tf_state_container)
-              terraform_state_key: $(tf_state_key)
-              # for branch based builds this can be $(Build.SourceBranchName)
-              terraform_state_workspace: dev
-              # Global Config
-              company: $(company)
-              project: $(project)
-              environment: ''
-              azure_cli_providers: [
-                { name: MSIPreview, namespace: Microsoft.ContainerService },
-              ]
-              # Azure config
-              tags: ''
-              # Terraform Resource Specific Config
-              terraform_extra_properties: {
-                TF_VAR_resource_group_location: northeurope,
-                TF_VAR_create_cdn_endpoint: false,
-                TF_VAR_cosmosdb_sql_container: "Menu",
-                TF_VAR_cosmosdb_sql_container_partition_key: "/id",
-                TF_VAR_cosmosdb_kind: "GlobalDocumentDB",
-                TF_VAR_cosmosdb_offer_type: "Standard",
-                TF_VAR_create_dns_record: true,
-                TF_VAR_app_gateway_frontend_ip_name: "amido-stacks-nonprod-eun-core",
-                TF_VAR_core_resource_group: "amido-stacks-nonprod-eun-core",
-                TF_VAR_app_insights_name: "amido-stacks-nonprod-eun-core",
-                TF_VAR_name_company: $(company),
-                TF_VAR_name_project: $(project),
-                TF_VAR_name_domain: $(domain),
-                TF_VAR_create_cosmosdb: true,
-                TF_VAR_name_environment: dev,
-                TF_VAR_dns_record: dev-java-api,
-                TF_VAR_dns_zone_name: $(base_domain_nonprod),
-                TF_VAR_internal_dns_zone_name: $(base_domain_internal_nonprod),
-                TF_VAR_stage: dev,
-              }
-              terraform_output_commands: |
-                raw_tf=$(terraform output -json | jq -r 'keys[] as $k | "##vso[task.setvariable variable=\($k);isOutput=true]\(.[$k] | .value)"')
-                readarray -t outputs <<<"$raw_tf"
-                for i in "${outputs[@]}"; do echo "$i"; done
+                # Create TF infra
+                - template: azDevOps/azure/templates/v2/steps/deploy-terraform-resource.yml@templates
+                  parameters:
+                    # Terraform Basic Config
+                    terraform_working_dir: '${{ variables.self_repo_tf_dir }}'
+                    # changing this would require changing the downstream consumers of these outputs
+                    #
+                    terraform_output_artefact: 'tfoutputs'
+                    # Terraform State Config
+                    terraform_backend_client_id: "$(azure_client_id)"
+                    terraform_backend_client_secret: "$(azure_client_secret)"
+                    terraform_backend_tenant_id: "$(azure_tenant_id)"
+                    terraform_backend_subscription_id: "$(azure_subscription_id)"
+                    terraform_state_rg: "${{ variables.tf_state_rg }}"
+                    terraform_state_storage: "${{ variables.tf_state_storage }}"
+                    terraform_state_container: "${{ variables.tf_state_container }}"
+                    terraform_state_key: "${{ variables.tf_state_key }}"
+                    # for branch based builds this can be $(Build.SourceBranchName)
+                    terraform_state_workspace: "$(Environment.Name)"
+                    # Azure Config for Terraform
+                    azure_client_id: "$(azure_client_id)"
+                    azure_client_secret: "$(azure_client_secret)"
+                    azure_tenant_id: "$(azure_tenant_id)"
+                    azure_subscription_id: "$(azure_subscription_id)"
+                    # Global Config
+                    company: "${{ variables.company }}"
+                    project: "${{ variables.project }}"
+                    environment: ''
+                    azure_cli_providers: [
+                      { name: MSIPreview, namespace: Microsoft.ContainerService },
+                    ]
+                    # Azure config
+                    tags: ''
+                    # Terraform Resource Specific Config
+                    terraform_extra_properties: {
+                      TF_VAR_resource_group_location: northeurope,
+                      TF_VAR_create_cdn_endpoint: false,
+                      TF_VAR_cosmosdb_sql_container: "Menu",
+                      TF_VAR_cosmosdb_sql_container_partition_key: "/id",
+                      TF_VAR_cosmosdb_kind: "GlobalDocumentDB",
+                      TF_VAR_cosmosdb_offer_type: "Standard",
+                      TF_VAR_create_dns_record: true,
+                      TF_VAR_app_gateway_frontend_ip_name: "amido-stacks-nonprod-eun-core",
+                      TF_VAR_core_resource_group: "amido-stacks-nonprod-eun-core",
+                      TF_VAR_app_insights_name: "amido-stacks-nonprod-eun-core",
+                      TF_VAR_name_company: "${{ variables.company }}",
+                      TF_VAR_name_project: "${{ variables.project }}",
+                      TF_VAR_name_domain: "${{ variables.domain }}",
+                      TF_VAR_create_cosmosdb: true,
+                      TF_VAR_name_environment: "$(Environment.Name)",
+                      TF_VAR_dns_record: "$(Environment.Name)-java-api",
+                      TF_VAR_dns_zone_name: "$(base_domain_nonprod)",
+                      TF_VAR_internal_dns_zone_name: "${{ variables.base_domain_internal_nonprod }}",
+                      TF_VAR_stage: "$(Environment.Name)",
+                    }
+                    terraform_output_commands: |
+                      raw_tf=$(terraform output -json | jq -r 'keys[] as $k | "##vso[task.setvariable variable=\($k);isOutput=true]\(.[$k] | .value)"')
+                      readarray -t outputs <<< "$raw_tf"
+                      for i in "${outputs[@]}"; do echo "$i"; done
 
       - deployment: DeployDev
         dependsOn: AppInfraDev
         container: k8s_deploy
         variables:
           - name: cosmosdb_database_name
-            value: "$[ dependencies.AppInfraDev.outputs['tfoutputs.cosmosdb_database_name'] ]"
+            value: "$[ dependencies.AppInfraDev.outputs['AppInfraDev.tfoutputs.cosmosdb_database_name'] ]"
           - name: cosmosdb_endpoint
-            value: "$[ dependencies.AppInfraDev.outputs['tfoutputs.cosmosdb_endpoint'] ]"
+            value: "$[ dependencies.AppInfraDev.outputs['AppInfraDev.tfoutputs.cosmosdb_endpoint'] ]"
           - name: cosmosdb_primary_master_key
-            value: $[ dependencies.AppInfraDev.outputs['tfoutputs.cosmosdb_primary_master_key'] ]
+            value: "$[ dependencies.AppInfraDev.outputs['AppInfraDev.tfoutputs.cosmosdb_primary_master_key'] ]"
           - name: app_insights_instrumentation_key
-            value: $[ dependencies.AppInfraDev.outputs['tfoutputs.app_insights_instrumentation_key'] ]
+            value: "$[ dependencies.AppInfraDev.outputs['AppInfraDev.tfoutputs.app_insights_instrumentation_key'] ]"
           - name: resource_def_name
             value: "stacks-java-api"
           - name: namespace
-            value: "dev-java-api"
+            value: "$(Environment.Name)-java-api"
+          - name: dns_pointer
+            value: "$(Environment.Name)-java-api.${{ variables.base_domain_nonprod }}"
+          - name: k8s_app_path
+            value: "/api"
+          - name: functional_test_base_url
+            value: "https://${{ variables.dns_pointer }}/${{ variables.k8s_app_path }}"
         pool:
           vmImage: ubuntu-18.04
         environment: dev
@@ -319,35 +375,35 @@ stages:
                 # Deploy Dev
                 - template: azDevOps/azure/templates/v2/steps/yaml-k8s-templater.yml@templates
                   parameters:
-                    scripts_dir: $(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts
+                    scripts_dir: "$(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts"
                     shared_env_vars: {
-                      namespace: $(namespace),
-                      role: $(role),
-                      company: $(company),
-                      project: $(project),
-                      domain: $(domain),
+                      namespace: "${{ variables.namespace }}",
+                      role: "${{ variables.role }}",
+                      company: "${{ variables.company}}",
+                      project: "${{ variables.project }}",
+                      domain: "${{ variables.domain }}",
                       component: api,
                       app_name: java-api,
-                      resource_def_name: "$(resource_def_name)",
-                      version: $(docker_image_tag),
-                      environment: dev,
+                      resource_def_name: "${{ variables.resource_def_name }}",
+                      version: "${{ variables.docker_image_tag }}",
+                      environment: $(Environment.Name),
                     }
                     enable_debug: "yes" # uncomment for debug and if you want to see the templated out file in the STDOUT of pipeline
                     template_input: [
                       {
-                        base: $(self_repo_dir)/deploy/k8s/app/base_api-deploy.yml,
+                        base: "${{ variables.self_repo_dir }}/deploy/k8s/app/base_api-deploy.yml",
                         displayName: AppDeployment,
                         env_vars: {
-                          dns_pointer: dev-java-api.$(base_domain_nonprod),
-                          tls_domain: $(base_domain_nonprod),
-                          k8s_app_path: "/api",
+                          dns_pointer: "${{ variables.dns_pointer }}",
+                          tls_domain: "${{ variables.base_domain_nonprod }}",
+                          k8s_app_path: "${{ variables.k8s_app_path }}",
                           log_level: "Debug",
-                          k8s_image: '$(k8s_docker_registry_nonprod)/$(docker_image_name):$(docker_image_tag)',
+                          k8s_image: '${{ variables.k8s_docker_registry_nonprod }}/${{ variables.docker_image_name }}:${{ variables.docker_image_tag }}',
                           aadpodidentitybinding: stacks-webapp-identity,
-                          app_insights_key: $(app_insights_instrumentation_key),
-                          cosmosdb_key: $(cosmosdb_primary_master_key),
-                          cosmosdb_endpoint: $(cosmosdb_endpoint),
-                          cosmosdb_name: $(cosmosdb_database_name),
+                          app_insights_key: "$(app_insights_instrumentation_key)",
+                          cosmosdb_key: "$(cosmosdb_primary_master_key)",
+                          cosmosdb_endpoint: "$(cosmosdb_endpoint)",
+                          cosmosdb_name: "$(cosmosdb_database_name)",
                         },
                         args: "-no-empty", # -no-unset is present by default
                       }
@@ -355,9 +411,7 @@ stages:
 
                 - template: azDevOps/azure/templates/v2/steps/deploy-k8s-app-kubectl.yml@templates
                   parameters:
-                    scripts_dir: $(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts
-                    test_artefact: "tests"
-                    test_baseurl: "/"
+                    scripts_dir: "$(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts"
                     functional_test: false
                     performance_test: false
                     smoke_test: false
@@ -366,87 +420,108 @@ stages:
                     kubernetes_clustername: amido-stacks-nonprod-eun-core
                     # Mutation Information
                     kubectl_filepath:
-                      - $(self_repo_dir)/deploy/k8s/app/api-deploy.yml
+                      - "${{ variables.self_repo_dir }}/deploy/k8s/app/api-deploy.yml"
                     # ReleaseNote Information
                     releasenote: false
                     kubectl_check_deployment: true
-                    resource_def_name: "$(resource_def_name)"
-                    namespace: "$(namespace)"
-                    deployment_status_timeout: "90s"
+                    resource_def_name: "${{ variables.resource_def_name }}"
+                    namespace: "${{ variables.namespace }}"
+                    deployment_status_timeout: "120s"
+                    azure_client_id: "$(azure_client_id)"
+                    azure_client_secret: "$(azure_client_secret)"
+                    azure_tenant_id: "$(azure_tenant_id)"
+                    azure_subscription_id: "$(azure_subscription_id)"
+
+                - template: templates/steps/deploy/deploy-post-deploy-tests.yml
+                  parameters:
+                    environment: "$(Environment.Name)"
+                    pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
+                    functional_test: ${{ variables.functional_test }}
+                    functional_test_artefact_name: "${{ variables.functional_test_artefact_name }}"
+                    functional_test_artefact_download_location: "${{ variables.functional_test_artefact_download_location }}"
+                    functional_test_base_url: "${{ variables.functional_test_base_url }}"
+                    maven_cache_directory: "${{ variables.maven_cache_directory }}"
+                    maven_ignored_post_deploy_test_tags: "${{ variables.maven_ignored_post_deploy_test_tags }}"
+                    maven_post_deploy_html_report_directory: "${{ variables.maven_post_deploy_html_report_directory }}"
+                    docker_java_container: "${{ variables.docker_java_image }}"
 
   - stage: Prod
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
       - group: amido-stacks-infra-credentials-prod
     jobs:
-      - job: AppInfraProd
-        variables:
-          ARM_SUBSCRIPTION_ID: $(prod_azure_subscription_id)
-          ARM_CLIENT_ID: $(prod_azure_client_id)
-          ARM_CLIENT_SECRET: "$(prod_azure_client_secret)"
-          ARM_TENANT_ID: $(prod_azure_tenant_id)
+      - deployment: AppInfraProd
+        container: terraform_custom
         pool:
           vmImage: ubuntu-18.04
-        container: terraform_custom
-        steps:
-          - checkout: self
+        environment: prod
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
 
-          - checkout: templates
+                - checkout: templates
 
-          # Create TF infra
-          - template: azDevOps/azure/templates/v2/steps/deploy-terraform-resource.yml@templates
-            parameters:
-              # Terraform Basic Config
-              terraform_working_dir: '$(self_repo_tf_dir)'
-              # changing this would require changing the downstream consumers of these outputs
-              #
-              terraform_output_artefact: 'tfoutputs'
-              # Terraform State Config
-              terraform_backend_client_id: $(ARM_CLIENT_ID)
-              terraform_backend_client_secret: $(ARM_CLIENT_SECRET)
-              terraform_backend_tenant_id: $(ARM_TENANT_ID)
-              terraform_backend_subscription_id: $(ARM_SUBSCRIPTION_ID)
-              terraform_state_rg: $(tf_state_rg)
-              terraform_state_storage: $(tf_state_storage)
-              terraform_state_container: $(tf_state_container)
-              terraform_state_key: $(tf_state_key)
-              # for branch based builds this can be $(Build.SourceBranchName)
-              terraform_state_workspace: prod
-              # Global Config
-              company: $(company)
-              project: $(project)
-              environment: ''
-              azure_cli_providers: [
-                { name: MSIPreview, namespace: Microsoft.ContainerService },
-              ]
-              # Azure config
-              tags: ''
-              # Terraform Resource Specific Config
-              terraform_extra_properties: {
-                TF_VAR_resource_group_location: northeurope,
-                TF_VAR_create_cdn_endpoint: false,
-                TF_VAR_cosmosdb_sql_container: "Menu",
-                TF_VAR_cosmosdb_sql_container_partition_key: "/id",
-                TF_VAR_cosmosdb_kind: "GlobalDocumentDB",
-                TF_VAR_cosmosdb_offer_type: "Standard",
-                TF_VAR_create_dns_record: true,
-                TF_VAR_app_gateway_frontend_ip_name: "amido-stacks-prod-eun-core",
-                TF_VAR_core_resource_group: "amido-stacks-prod-eun-core",
-                TF_VAR_app_insights_name: "amido-stacks-prod-eun-core",
-                TF_VAR_name_company: $(company),
-                TF_VAR_name_project: $(project),
-                TF_VAR_name_domain: $(domain),
-                TF_VAR_create_cosmosdb: true,
-                TF_VAR_name_environment: prod,
-                TF_VAR_dns_record: prod-java-api,
-                TF_VAR_dns_zone_name: $(base_domain_prod),
-                TF_VAR_internal_dns_zone_name: $(base_domain_internal_prod),
-                TF_VAR_stage: prod,
-              }
-              terraform_output_commands: |
-                raw_tf=$(terraform output -json | jq -r 'keys[] as $k | "##vso[task.setvariable variable=\($k);isOutput=true]\(.[$k] | .value)"')
-                readarray -t outputs <<<"$raw_tf"
-                for i in "${outputs[@]}"; do echo "$i"; done
+                # Create TF infra
+                - template: azDevOps/azure/templates/v2/steps/deploy-terraform-resource.yml@templates
+                  parameters:
+                    # Terraform Basic Config
+                    terraform_working_dir: '${{ variables.self_repo_tf_dir }}'
+                    # changing this would require changing the downstream consumers of these outputs
+                    #
+                    terraform_output_artefact: 'tfoutputs'
+                    # Terraform State Config
+                    terraform_backend_client_id: "$(prod_azure_client_id)"
+                    terraform_backend_client_secret: "$(prod_azure_client_secret)"
+                    terraform_backend_tenant_id: "$(prod_azure_tenant_id)"
+                    terraform_backend_subscription_id: "$(prod_azure_subscription_id)"
+                    terraform_state_rg: "${{ variables.tf_state_rg }}"
+                    terraform_state_storage: "${{ variables.tf_state_storage }}"
+                    terraform_state_container: "${{ variables.tf_state_container }}"
+                    terraform_state_key: "${{ variables.tf_state_key }}"
+                    # for branch based builds this can be $(Build.SourceBranchName)
+                    terraform_state_workspace: "$(Environment.Name)"
+                    # Azure Config for Terraform
+                    azure_client_id: "$(prod_azure_client_id)"
+                    azure_client_secret: "$(prod_azure_client_secret)"
+                    azure_tenant_id: "$(prod_azure_tenant_id)"
+                    azure_subscription_id: "$(prod_azure_subscription_id)"
+                    # Global Config
+                    company: "${{ variables.company }}"
+                    project: "${{ variables.project }}"
+                    environment: ''
+                    azure_cli_providers: [
+                      { name: MSIPreview, namespace: Microsoft.ContainerService },
+                    ]
+                    # Azure config
+                    tags: ''
+                    # Terraform Resource Specific Config
+                    terraform_extra_properties: {
+                      TF_VAR_resource_group_location: northeurope,
+                      TF_VAR_create_cdn_endpoint: false,
+                      TF_VAR_cosmosdb_sql_container: "Menu",
+                      TF_VAR_cosmosdb_sql_container_partition_key: "/id",
+                      TF_VAR_cosmosdb_kind: "GlobalDocumentDB",
+                      TF_VAR_cosmosdb_offer_type: "Standard",
+                      TF_VAR_create_dns_record: true,
+                      TF_VAR_app_gateway_frontend_ip_name: "amido-stacks-prod-eun-core",
+                      TF_VAR_core_resource_group: "amido-stacks-prod-eun-core",
+                      TF_VAR_app_insights_name: "amido-stacks-prod-eun-core",
+                      TF_VAR_name_company: "${{ variables.company }}",
+                      TF_VAR_name_project: "${{ variables.project }}",
+                      TF_VAR_name_domain: "${{ variables.domain }}",
+                      TF_VAR_create_cosmosdb: true,
+                      TF_VAR_name_environment: "$(Environment.Name)",
+                      TF_VAR_dns_record: "$(Environment.Name)-java-api",
+                      TF_VAR_dns_zone_name: "$(base_domain_prod)",
+                      TF_VAR_internal_dns_zone_name: "${{ variables.base_domain_internal_prod }}",
+                      TF_VAR_stage: "$(Environment.Name)",
+                    }
+                    terraform_output_commands: |
+                      raw_tf=$(terraform output -json | jq -r 'keys[] as $k | "##vso[task.setvariable variable=\($k);isOutput=true]\(.[$k] | .value)"')
+                      readarray -t outputs <<< "$raw_tf"
+                      for i in "${outputs[@]}"; do echo "$i"; done
 
       - job: PromotionProd
         dependsOn: AppInfraProd
@@ -481,22 +556,28 @@ stages:
 
       - deployment: DeployProd
         dependsOn:
-          - PromotionProd
           - AppInfraProd
+          - PromotionProd
         container: k8s_deploy
         variables:
           - name: cosmosdb_database_name
-            value: "$[ dependencies.AppInfraProd.outputs['tfoutputs.cosmosdb_database_name'] ]"
+            value: "$[ dependencies.AppInfraProd.outputs['AppInfraProd.tfoutputs.cosmosdb_database_name'] ]"
           - name: cosmosdb_endpoint
-            value: "$[ dependencies.AppInfraProd.outputs['tfoutputs.cosmosdb_endpoint'] ]"
+            value: "$[ dependencies.AppInfraProd.outputs['AppInfraProd.tfoutputs.cosmosdb_endpoint'] ]"
           - name: cosmosdb_primary_master_key
-            value: $[ dependencies.AppInfraProd.outputs['tfoutputs.cosmosdb_primary_master_key'] ]
+            value: "$[ dependencies.AppInfraProd.outputs['AppInfraProd.tfoutputs.cosmosdb_primary_master_key'] ]"
           - name: app_insights_instrumentation_key
-            value: $[ dependencies.AppInfraProd.outputs['tfoutputs.app_insights_instrumentation_key'] ]
+            value: "$[ dependencies.AppInfraProd.outputs['AppInfraProd.tfoutputs.app_insights_instrumentation_key'] ]"
           - name: resource_def_name
             value: "stacks-java-api"
           - name: namespace
-            value: "prod-java-api"
+            value: "$(Environment.Name)-java-api"
+          - name: dns_pointer
+            value: "$(Environment.Name)-java-api.${{ variables.base_domain_prod }}"
+          - name: k8s_app_path
+            value: "/api"
+          - name: functional_test_base_url
+            value: "https://${{ variables.dns_pointer }}/${{ variables.k8s_app_path }}"
         pool:
           vmImage: ubuntu-18.04
         environment: prod
@@ -508,38 +589,37 @@ stages:
 
                 - checkout: templates
 
-                # Deploy Dev
                 - template: azDevOps/azure/templates/v2/steps/yaml-k8s-templater.yml@templates
                   parameters:
-                    scripts_dir: $(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts
+                    scripts_dir: "$(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts"
                     shared_env_vars: {
-                      namespace: $(namespace),
-                      role: $(role),
-                      company: $(company),
-                      project: $(project),
-                      domain: $(domain),
+                      namespace: "${{ variables.namespace }}",
+                      role: "${{ variables.role }}",
+                      company: "${{ variables.company}}",
+                      project: "${{ variables.project }}",
+                      domain: "${{ variables.domain }}",
                       component: api,
                       app_name: java-api,
-                      resource_def_name: "$(resource_def_name)",
-                      version: $(docker_image_tag),
-                      environment: prod
+                      resource_def_name: "${{ variables.resource_def_name }}",
+                      version: "${{ variables.docker_image_tag }}",
+                      environment: $(Environment.Name),
                     }
                     enable_debug: "yes" # uncomment for debug and if you want to see the templated out file in the STDOUT of pipeline
                     template_input: [
                       {
-                        base: $(self_repo_dir)/deploy/k8s/app/base_api-deploy.yml,
+                        base: "${{ variables.self_repo_dir }}/deploy/k8s/app/base_api-deploy.yml",
                         displayName: AppDeployment,
                         env_vars: {
-                          dns_pointer: prod-java-api.$(base_domain_prod),
-                          tls_domain: $(base_domain_prod),
-                          k8s_app_path: "/api",
+                          dns_pointer: "${{ variables.dns_pointer }}",
+                          tls_domain: "${{ variables.base_domain_prod }}",
+                          k8s_app_path: "${{ variables.k8s_app_path }}",
                           log_level: "Debug",
-                          k8s_image: '$(k8s_docker_registry_prod)/$(docker_image_name):$(docker_image_tag)',
+                          k8s_image: '${{ variables.k8s_docker_registry_prod }}/${{ variables.docker_image_name }}:${{ variables.docker_image_tag }}',
                           aadpodidentitybinding: stacks-webapp-identity,
-                          app_insights_key: $(app_insights_instrumentation_key),
-                          cosmosdb_key: $(cosmosdb_primary_master_key),
-                          cosmosdb_endpoint: $(cosmosdb_endpoint),
-                          cosmosdb_name: $(cosmosdb_database_name),
+                          app_insights_key: "$(app_insights_instrumentation_key)",
+                          cosmosdb_key: "$(cosmosdb_primary_master_key)",
+                          cosmosdb_endpoint: "$(cosmosdb_endpoint)",
+                          cosmosdb_name: "$(cosmosdb_database_name)",
                         },
                         args: "-no-empty", # -no-unset is present by default
                       }
@@ -547,9 +627,7 @@ stages:
 
                 - template: azDevOps/azure/templates/v2/steps/deploy-k8s-app-kubectl.yml@templates
                   parameters:
-                    scripts_dir: $(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts
-                    test_artefact: "tests"
-                    test_baseurl: "/"
+                    scripts_dir: "$(Agent.BuildDirectory)/s/stacks-pipeline-templates/azDevOps/azure/templates/v2/scripts"
                     functional_test: false
                     performance_test: false
                     smoke_test: false
@@ -558,10 +636,28 @@ stages:
                     kubernetes_clustername: amido-stacks-prod-eun-core
                     # Mutation Information
                     kubectl_filepath:
-                      - $(self_repo_dir)/deploy/k8s/app/api-deploy.yml
+                      - "${{ variables.self_repo_dir }}/deploy/k8s/app/api-deploy.yml"
                     # ReleaseNote Information
                     releasenote: false
                     kubectl_check_deployment: true
-                    resource_def_name: "$(resource_def_name)"
-                    namespace: "$(namespace)"
-                    deployment_status_timeout: "90s"
+                    resource_def_name: "${{ variables.resource_def_name }}"
+                    namespace: "${{ variables.namespace }}"
+                    deployment_status_timeout: "120s"
+                    azure_client_id: "$(prod_azure_client_id)"
+                    azure_client_secret: "$(prod_azure_client_secret)"
+                    azure_tenant_id: "$(prod_azure_tenant_id)"
+                    azure_subscription_id: "$(prod_azure_subscription_id)"
+
+                - template: templates/steps/deploy/deploy-post-deploy-tests.yml
+                  parameters:
+                    environment: "$(Environment.Name)"
+                    pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
+                    functional_test: ${{ variables.functional_test }}
+                    functional_test_artefact_name: "${{ variables.functional_test_artefact_name }}"
+                    functional_test_artefact_download_location: "${{ variables.functional_test_artefact_download_location }}"
+                    functional_test_base_url: "${{ variables.functional_test_base_url }}"
+                    maven_cache_directory: "${{ variables.maven_cache_directory }}"
+                    maven_ignored_post_deploy_test_tags: "${{ variables.maven_ignored_post_deploy_test_tags }}"
+                    maven_post_deploy_html_report_directory: "${{ variables.maven_post_deploy_html_report_directory }}"
+                    maven_post_deploy_failsafe_reports_directory: "$(maven_post_deploy_failsafe_reports_directory)"
+                    docker_java_container: "${{ variables.docker_java_image }}"
