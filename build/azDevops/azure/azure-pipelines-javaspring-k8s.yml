@@ -581,6 +581,7 @@ stages:
         container: k8s_deploy
         pool:
           vmImage: ubuntu-18.04
+        environment: prod
         variables:
           - group: amido-stacks-infra-credentials-nonprod
           - group: amido-stacks-infra-credentials-prod
