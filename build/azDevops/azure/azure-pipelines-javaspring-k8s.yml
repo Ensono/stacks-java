@@ -470,7 +470,7 @@ stages:
                     docker_java_container: "${{ variables.docker_java_image }}"
 
   - stage: Prod
-    # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
       - group: amido-stacks-infra-credentials-prod
       - name: dns_name
