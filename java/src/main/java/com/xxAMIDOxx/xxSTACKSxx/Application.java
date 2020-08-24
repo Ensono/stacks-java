@@ -6,9 +6,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 
 @SpringBootApplication
-@PropertySources({
-        @PropertySource("classpath:auth0.properties")
-})
+@PropertySources({@PropertySource("classpath:auth0.properties")})
 public class Application {
   public static void main(String[] args) {
     SpringApplication.run(Application.class, args);
