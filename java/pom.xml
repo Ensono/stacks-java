@@ -45,9 +45,13 @@
         <spotbugs.version>4.1.1</spotbugs.version>
         <pact.version>3.5.24</pact.version>
 
-        <!--       Set 'pact.broker.url' and 'pact.broker.token' -->
+        <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
         <pact.broker.url></pact.broker.url>
         <pact.broker.token></pact.broker.token>
+        <pact.api.name>JavaMenuAPI</pact.api.name>
+        <pact.api.protocol>https</pact.api.protocol>
+        <pact.api.url>localhost</pact.api.url>
+        <pact.api.port>9000</pact.api.port>
     </properties>
 
     <dependencies>
@@ -328,10 +332,10 @@
 
                     <serviceProviders>
                         <serviceProvider>
-                            <name>JavaMenuAPI</name>
-                            <protocol>http</protocol>
-                            <host>localhost</host>
-                            <port>9000</port>
+                            <name>${pact.api.name}</name>
+                            <protocol>${pact.api.protocol}</protocol>
+                            <host>${pact.api.host}</host>
+                            <port>${pact.api.port}</port>
                         </serviceProvider>
                     </serviceProviders>
 
