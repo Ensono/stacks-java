@@ -61,9 +61,9 @@ public class ApplicationConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http.cors();
     if (BooleanUtils.isTrue(isEnabled)) {
-      enableAuth0(http);
+      enableAuth(http);
     } else {
-      disableAuth0(http);
+      permitAll(http);
     }
   }
 
@@ -73,7 +73,7 @@ public class ApplicationConfig extends WebSecurityConfigurerAdapter {
    * @param http
    * @throws Exception
    */
-  private void enableAuth0(HttpSecurity http) throws Exception {
+  private void enableAuth(HttpSecurity http) throws Exception {
     JwtWebSecurityConfigurer.forRS256(apiAudience, issuer)
         .configure(http)
         .authorizeRequests()
@@ -95,7 +95,7 @@ public class ApplicationConfig extends WebSecurityConfigurerAdapter {
    * @param http
    * @throws Exception
    */
-  private void disableAuth0(HttpSecurity http) throws Exception {
+  private void permitAll(HttpSecurity http) throws Exception {
     JwtWebSecurityConfigurer.forRS256(apiAudience, issuer)
         .configure(http)
         .authorizeRequests()
