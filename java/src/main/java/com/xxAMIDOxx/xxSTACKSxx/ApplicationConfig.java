@@ -14,6 +14,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+/**
+ * ApplicationConfig - Configuration class for Auth0 application security.
+ *
+ */
 @Configuration
 @EnableWebSecurity(debug = true)
 public class ApplicationConfig extends WebSecurityConfigurerAdapter {
@@ -48,8 +52,8 @@ public class ApplicationConfig extends WebSecurityConfigurerAdapter {
   }
 
   /**
-   * Configure your API to use the RS256 and protect and API endpoints. Config switch is put in
-   * place to enable or disable Auth - isEnabled
+   * Configure your API to use the RS256 and protect API endpoints. Config switch is put in
+   * place to enable or disable Auth (isEnabled)
    *
    * <p>/api/public: available for non-authenticated requests. /api/private: available for
    * authenticated requests containing an Access-Token with no additional scopes.
