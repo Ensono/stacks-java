@@ -76,13 +76,13 @@ steps:
           workingDirectory: "${{ parameters.functional_test_artefact_download_location }}"
         target:
           container: ${{ parameters.docker_java_container }}
-        displayName: "Post-Deploy Test: Verifies Test Run"
+        displayName: "Post-Deploy Test: Verify Test Run"
 
       - task: PublishPipelineArtifact@1
         condition: always()
         inputs:
           path: "${{ parameters.functional_test_artefact_download_location }}/${{ parameters.maven_post_deploy_html_report_directory }}"
-          artifact: "${{ parameters.environment }}-${{ parameters.functional_test_artefact_name }}-report"
+          artifact: "${{ parameters.environment }}-${{ parameters.functional_test_artefact_name }}-report-$(System.JobAttempt)"
         displayName: "Publish: Post-Deploy Tests Artefact"
 
       - task: PublishTestResults@2

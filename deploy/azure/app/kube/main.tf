@@ -9,7 +9,7 @@ data "azurerm_client_config" "current" {}
 module "default_label" {
   source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.16.0"
   namespace  = "${var.name_company}-${var.name_project}"
-  stage      = var.stage
+  stage      = var.name_environment
   name       = "${lookup(var.location_name_map, var.resource_group_location, "uksouth")}-${var.name_domain}"
   attributes = var.attributes
   delimiter  = "-"
@@ -39,17 +39,3 @@ module "app" {
   # Alternatively if you want you can pass in the IP directly and remove the need for a lookup
   # dns_a_records                        = ["0.1.23.45"]
 }
-
-# resource "azurerm_storage_account" "test_report" {
-#   name                = substr(module.default_label.id, 0, 24)
-#   resource_group_name = module.app.resource_group
-#   location            = var.resource_group_location
-
-#   account_kind             = var.test_report_account_kind
-#   account_tier             = var.test_report_account_tier
-#   account_replication_type = var.test_report_account_replication_type
-
-#   static_website {}
-
-#   tags = var.tags
-# }
