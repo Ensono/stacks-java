@@ -16,7 +16,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /** ApplicationConfig - Configuration class for Auth0 application security. */
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 public class ApplicationConfig extends WebSecurityConfigurerAdapter {
 
   private static final String V1_MENU_ENDPOINT = "/v1/menu";
