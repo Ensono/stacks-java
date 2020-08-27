@@ -52,6 +52,7 @@
         <pact.api.protocol>https</pact.api.protocol>
         <pact.api.url>localhost</pact.api.url>
         <pact.api.port>9000</pact.api.port>
+        <sonar.exclusions>**/ApplicationConfig.java</sonar.exclusions>
     </properties>
 
     <dependencies>
