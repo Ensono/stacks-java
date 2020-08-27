@@ -315,7 +315,9 @@
                                     </limits>
                                 </rule>
                             </rules>
-                            <excludes>**/*Config.</excludes>
+                            <excludes>
+                                <exclude>**/*Config.*</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>
