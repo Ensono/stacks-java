@@ -100,15 +100,7 @@ public class ApplicationConfig extends WebSecurityConfigurerAdapter {
     JwtWebSecurityConfigurer.forRS256(apiAudience, issuer)
         .configure(http)
         .authorizeRequests()
-        .antMatchers(HttpMethod.GET, V1_MENU_ENDPOINT)
-        .permitAll()
-        .antMatchers(HttpMethod.GET, V2_MENU_ENDPOINT)
-        .permitAll()
-        .antMatchers(HttpMethod.DELETE, V1_MENU_ENDPOINT)
-        .permitAll()
-        .antMatchers(HttpMethod.PUT, V1_MENU_ENDPOINT)
-        .permitAll()
-        .antMatchers(HttpMethod.POST, V1_MENU_ENDPOINT)
+        .antMatchers("/**")
         .permitAll();
   }
 }
