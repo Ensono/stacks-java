@@ -10,8 +10,8 @@ public interface MenuQueryService {
   /**
    * Retrieve list of all available Menus
    *
-   * @param pageNumber
-   * @param pageSize
+   * @param pageNumber pageNo
+   * @param pageSize page Size
    * @return List of MenuDTO
    */
   List<Menu> findAll(int pageNumber, int pageSize);
@@ -19,7 +19,7 @@ public interface MenuQueryService {
   /**
    * Retrieve MenuDTO by MenuDTO Id
    *
-   * @param id
+   * @param id menu Id
    * @return Optional MenuDTO
    */
   Optional<Menu> findById(UUID id);
@@ -27,9 +27,9 @@ public interface MenuQueryService {
   /**
    * Retrieve MenuDTO by Restaurant Id Pagination and sorting is done by spring data JPA.
    *
-   * @param restaurantId
-   * @param pageSize
-   * @param pageNumber
+   * @param restaurantId restaurant id
+   * @param pageSize page size
+   * @param pageNumber page no
    * @return List of MenuDTO
    */
   public List<Menu> findAllByRestaurantId(UUID restaurantId, Integer pageSize, Integer pageNumber);
@@ -38,9 +38,9 @@ public interface MenuQueryService {
    * Retrieve MenuDTO's by matching the name (Contains operation) Pagination and sorting is done by
    * spring data JPA.
    *
-   * @param searchTerm
-   * @param pageSize
-   * @param pageNumber
+   * @param searchTerm menu name
+   * @param pageSize page size
+   * @param pageNumber page no
    * @return List of MenuDTO
    */
   public List<Menu> findAllByNameContaining(
@@ -50,10 +50,10 @@ public interface MenuQueryService {
    * Retrieve MenuDTO's by matching the name and the restaurantId (Contains operation) Pagination
    * and sorting is done by spring data JPA.
    *
-   * @param restaurantId
-   * @param searchTerm
-   * @param pageSize
-   * @param pageNumber
+   * @param restaurantId restaurant id
+   * @param searchTerm menu name
+   * @param pageSize page size
+   * @param pageNumber page no
    * @return List of MenuDTO
    */
   List<Menu> findAllByRestaurantIdAndNameContaining(
