@@ -5,6 +5,7 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
+import java.util.ArrayList;
 import java.util.List;
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
@@ -20,8 +21,11 @@ public class OpenApiConfiguration {
   /** OAS/Swagger Configuration. */
   @Bean
   public OpenAPI customOpenApi() {
+    List<Server> servers = new ArrayList<>();
+    servers.add(new Server().url("/api/menu"));
+    servers.add(new Server().url("/"));
     return new OpenAPI()
-        .servers(List.of(new Server().url("/api/menu")))
+        .servers(servers)
         .info(
             new Info()
                 .title("Menu API")
