@@ -18,9 +18,6 @@ management:
       base-path: /
 
 springdoc:
-  api-docs:
-    enabled: true
-    path: /swagger/oas-json
   swagger-ui:
     disable-swagger-default-url: true
     display-operation-id: true
