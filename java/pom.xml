@@ -306,6 +306,10 @@
                             <rules>
                                 <rule>
                                     <element>BUNDLE</element>
+                                    <excludes>
+                                        <exclude>**/*Config.*</exclude>
+                                        <exclude>**/ApplicationConfig.*</exclude>
+                                    </excludes>
                                     <limits>
                                         <limit>
                                             <counter>COMPLEXITY</counter>
@@ -315,10 +319,6 @@
                                     </limits>
                                 </rule>
                             </rules>
-                            <excludes>
-                                <exclude>**/*Config.*</exclude>
-                                <exclude>**/ApplicationConfig.*</exclude>
-                            </excludes>
                         </configuration>
                     </execution>
                 </executions>
