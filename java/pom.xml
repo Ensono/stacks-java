@@ -318,11 +318,6 @@
                         </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <excludes>
-                        <exclude>*ApplicationConfig*</exclude>
-                    </excludes>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>au.com.dius.pact.provider</groupId>
