@@ -316,7 +316,7 @@
                                 </rule>
                             </rules>
                             <excludes>
-                                <exclude>**/ApplicationConfig.class</exclude>
+                                <exclude>*ApplicationConfig*</exclude>
                             </excludes>
                         </configuration>
                     </execution>
