@@ -296,6 +296,11 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>*ApplicationConfig*</exclude>
+                            </excludes>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>default-check</id>
@@ -315,9 +320,6 @@
                                     </limits>
                                 </rule>
                             </rules>
-                            <excludes>
-                                <exclude>*ApplicationConfig*</exclude>
-                            </excludes>
                         </configuration>
                     </execution>
                 </executions>
