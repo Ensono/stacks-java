@@ -296,11 +296,6 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <configuration>
-                            <excludes>
-                                <exclude>*ApplicationConfig*</exclude>
-                            </excludes>
-                        </configuration>
                     </execution>
                     <execution>
                         <id>default-check</id>
@@ -323,6 +318,11 @@
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>*ApplicationConfig*</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>au.com.dius.pact.provider</groupId>
