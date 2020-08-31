@@ -19,7 +19,7 @@
     <properties>
         <java.version>11</java.version>
         <org.projectlombok.version>1.18.0</org.projectlombok.version>
-        <org.springdoc-openapi.version>1.4.4</org.springdoc-openapi.version>
+        <org.springdoc-openapi.version>1.4.5</org.springdoc-openapi.version>
         <applicationinsights.version>2.6.1</applicationinsights.version>
         <cosmosdb.version>2.3.2</cosmosdb.version>
         <azure.springboot.version>2.3.2</azure.springboot.version>
