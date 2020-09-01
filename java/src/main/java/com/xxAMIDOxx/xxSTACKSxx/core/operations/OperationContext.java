@@ -10,6 +10,9 @@ public abstract class OperationContext {
     this.correlationId = correlationId;
   }
 
+  /** No arg constructor. */
+  public OperationContext() {}
+
   public int getOperationCode() {
     return operationCode;
   }

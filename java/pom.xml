@@ -362,13 +362,6 @@
                     <skipSortingImports>false</skipSortingImports>
                     <style>google</style>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>format</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -393,9 +386,6 @@
                     <execution>
                         <id>validate</id>
                         <phase>validate</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>

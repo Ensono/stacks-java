@@ -6,32 +6,27 @@ import com.xxAMIDOxx.xxSTACKSxx.api.models.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.api.models.ResponseWrapper;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import java.util.List;
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.cucumber.suiteslicing.SerenityTags;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
-import static net.serenitybdd.rest.SerenityRest.lastResponse;
-import static net.serenitybdd.rest.SerenityRest.restAssuredThat;
-
 public class Hooks {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(Hooks.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(Hooks.class);
 
+  public static void deleteAllMenusFromPreviousRun() {
+    MenuRequests.getMenusBySearchTerm("(Automated Test Data)");
+    ResponseWrapper responseWrapper = lastResponse().body().as(ResponseWrapper.class);
+    List<Menu> listOfMenusToDelete = responseWrapper.getResults();
 
-    public static void deleteAllMenusFromPreviousRun() {
-        MenuRequests.getMenusBySearchTerm("(Automated Test Data)");
-        ResponseWrapper responseWrapper = lastResponse().body().as(ResponseWrapper.class);
-        List<Menu> listOfMenusToDelete = responseWrapper.getResults();
+    for (Menu currentMenu : listOfMenusToDelete) {
+      MenuRequests.deleteTheMenu(currentMenu.getId());
+      restAssuredThat(response -> response.statusCode(200));
 
-        for (Menu currentMenu : listOfMenusToDelete) {
-            MenuRequests.deleteTheMenu(currentMenu.getId());
-            restAssuredThat(response -> response.statusCode(200));
-
-            LOGGER.info(String.format("The menu with '%s' id was successfully deleted.", currentMenu.getId()));
-        }
+      LOGGER.info(
+          String.format("The menu with '%s' id was successfully deleted.", currentMenu.getId()));
     }
 
     public static void obtainAuthorizationToken() {
@@ -39,13 +34,10 @@ public class Hooks {
         MenuActions.getAuthToken();
     }
 
-
-
     @Before
     public void before() {
         SerenityTags.create().tagScenarioWithBatchingInfo();
     }
-
 
     @After("@DeleteCreatedMenu")
     public void afterFirst() {
@@ -55,4 +47,5 @@ public class Hooks {
             LOGGER.info(String.format("The menu with '%s' id was successfully deleted.", menuId));
         }
     }
+  }
 }
