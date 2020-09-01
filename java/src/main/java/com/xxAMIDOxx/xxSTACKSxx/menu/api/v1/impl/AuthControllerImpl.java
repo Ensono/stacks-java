@@ -36,10 +36,7 @@ public class AuthControllerImpl implements AuthController {
         restTemplate.exchange(
             RESOURCE_URL, HttpMethod.POST, requestEntity, GenerateTokenResponse.class);
 
-    GenerateTokenResponse generateTokenResponse = null;
-    if (responseEntity.getStatusCode() == HttpStatus.OK) {
-      generateTokenResponse = responseEntity.getBody();
-    }
+    GenerateTokenResponse generateTokenResponse = responseEntity.getBody();
 
     return new ResponseEntity<>(generateTokenResponse, responseEntity.getStatusCode());
   }
