@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@RequestMapping("v1/token")
+@RequestMapping("/v1/token")
 public interface AuthController {
 
   @PostMapping(consumes = "application/json", produces = "application/json; charset=utf-8")
