@@ -37,7 +37,6 @@ class AuthControllerImplTest {
 
     // When
     String requestUrl = String.format(GENERATE_TOKEN_URI, getBaseURL(port));
-
     var response =
         this.testRestTemplate.exchange(
             requestUrl,
