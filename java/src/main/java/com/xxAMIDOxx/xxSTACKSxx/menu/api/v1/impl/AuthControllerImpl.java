@@ -41,6 +41,6 @@ public class AuthControllerImpl implements AuthController {
       generateTokenResponse = responseEntity.getBody();
     }
 
-    return new ResponseEntity<>(generateTokenResponse, HttpStatus.OK);
+    return new ResponseEntity<>(generateTokenResponse, responseEntity.getStatusCode());
   }
 }
