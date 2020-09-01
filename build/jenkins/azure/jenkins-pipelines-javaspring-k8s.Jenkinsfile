@@ -153,7 +153,7 @@ pipeline {
             dir("${self_pipeline_repo}") {
               checkout([
                 $class: 'GitSCM',
-                branches: [[name: 'refs/tags/v1.4.6']],
+                branches: [[name: 'refs/tags/v1.4.8']],
                 userRemoteConfigs: [[url: "https://github.com/amido/${self_pipeline_repo}"]]
               ])
             }
@@ -228,6 +228,30 @@ pipeline {
                         -Z "${maven_cache_directory}"
                     """,
                     label: "Maven: Install Packages (${java_project_type})"
+                  )
+
+                  sh(
+                    script: """#!/bin/bash
+                      bash "${dynamic_build_scripts_directory}/test-maven-checkstyle-check.bash" \
+                        -Z "${maven_cache_directory}"
+                    """,
+                    label: "Maven: Checkstyle Check (${java_project_type})"
+                  )
+
+                  sh(
+                    script: """#!/bin/bash
+                      bash "${dynamic_build_scripts_directory}/test-maven-format-check.bash" \
+                        -Z "${maven_cache_directory}"
+                    """,
+                    label: "Maven: Format Check (${java_project_type})"
+                  )
+
+                  sh(
+                    script: """#!/bin/bash
+                      bash "${dynamic_build_scripts_directory}/test-maven-spotbugs-check.bash" \
+                        -Z "${maven_cache_directory}"
+                    """,
+                    label: "Maven: Spotbugs Check (${java_project_type})"
                   )
 
                   sh(
@@ -353,6 +377,30 @@ pipeline {
                         -Z "${maven_cache_directory}"
                     """,
                     label: "Maven: Install Packages (${functional_test_project_type})"
+                  )
+
+                  sh(
+                    script: """#!/bin/bash
+                      bash "${dynamic_build_scripts_directory}/test-maven-checkstyle-check.bash" \
+                        -Z "${maven_cache_directory}"
+                    """,
+                    label: "Maven: Checkstyle Check (${functional_test_project_type})"
+                  )
+
+                  sh(
+                    script: """#!/bin/bash
+                      bash "${dynamic_build_scripts_directory}/test-maven-format-check.bash" \
+                        -Z "${maven_cache_directory}"
+                    """,
+                    label: "Maven: Format Check (${functional_test_project_type})"
+                  )
+
+                  sh(
+                    script: """#!/bin/bash
+                      bash "${dynamic_build_scripts_directory}/test-maven-spotbugs-check.bash" \
+                        -Z "${maven_cache_directory}"
+                    """,
+                    label: "Maven: Spotbugs Check (${functional_test_project_type})"
                   )
 
                   sh(
