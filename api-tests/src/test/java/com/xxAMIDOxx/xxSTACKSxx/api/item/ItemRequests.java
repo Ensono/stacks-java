@@ -25,8 +25,6 @@ public class ItemRequests {
                         .concat(WebServiceEndPoints.CATEGORY.getUrl()).concat("/").concat(categoryID)
                         .concat(WebServiceEndPoints.ITEMS.getUrl()));
 
-    }
-
     @Step("Update the item")
     public void updateItem(String body, String menuID, String categoryID, String itemID) {
         SerenityRest.given()

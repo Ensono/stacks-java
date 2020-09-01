@@ -6,7 +6,6 @@ import net.serenitybdd.rest.SerenityRest;
 import net.thucydides.core.annotations.Step;
 
 public class CategoryRequests {
-
     private static String menuUrl = WebServiceEndPoints.BASE_URL.getUrl() + WebServiceEndPoints.MENU.getUrl();
     private static String authorizationToken;
 
