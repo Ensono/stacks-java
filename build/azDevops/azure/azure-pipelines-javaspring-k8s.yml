@@ -25,8 +25,7 @@ resources:
     - repository: templates
       type: github
       name: amido/stacks-pipeline-templates
-      # TODO: Pin this to a tag soon
-      ref: refs/heads/feature/cycle4
+      ref: refs/tags/v1.4.12
       # EXCHANGE THIS FOR YOUR OWN ENDPOINT CONNECTION TO GITHUB
       # REPOSITORY IS PUBLIC
       endpoint: amidostacks
