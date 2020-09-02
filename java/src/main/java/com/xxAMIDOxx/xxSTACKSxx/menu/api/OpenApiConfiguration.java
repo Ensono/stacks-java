@@ -29,8 +29,8 @@ public class OpenApiConfiguration {
   @Bean
   public OpenAPI customOpenApi() {
     List<Server> servers = new ArrayList<>();
-    servers.add(new Server().url("/api/menu"));
     servers.add(new Server().url("/"));
+    servers.add(new Server().url("/api/menu"));
     return new OpenAPI()
         .servers(servers)
         .info(
