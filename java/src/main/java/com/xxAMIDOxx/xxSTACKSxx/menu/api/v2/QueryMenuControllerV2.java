@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.UUID;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +23,7 @@ public interface QueryMenuControllerV2 {
   @Operation(
       tags = "Menu",
       summary = "Get a menu",
+      security = @SecurityRequirement(name = "bearerAuth"),
       description =
           "By passing the menu id, you can get access to available categories and items in the menu",
       operationId = "GetMenuV2",
