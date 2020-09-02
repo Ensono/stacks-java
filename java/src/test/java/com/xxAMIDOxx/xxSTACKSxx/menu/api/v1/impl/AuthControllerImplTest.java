@@ -4,15 +4,12 @@ import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getRequestHttpEntity;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.OK;
-
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.GenerateTokenRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.GenerateTokenResponse;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
