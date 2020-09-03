@@ -153,7 +153,7 @@ pipeline {
             dir("${self_pipeline_repo}") {
               checkout([
                 $class: 'GitSCM',
-                branches: [[name: 'refs/tags/v1.4.8']],
+                branches: [[name: 'refs/tags/v1.4.12']],
                 userRemoteConfigs: [[url: "https://github.com/amido/${self_pipeline_repo}"]]
               ])
             }
