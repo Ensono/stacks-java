@@ -67,7 +67,7 @@ The Java source code will automatically be reformatted to comply with [Google Ja
 You can override the settings in the codebase, for example:<br />
 ```//@formatter:off```<br />
 ```manually formatted code```<br />
-```///@formatter:on````<br />
+```///@formatter:on```<br />
 
 ###### Validate the formatting
 ```
