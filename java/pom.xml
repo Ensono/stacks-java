@@ -123,6 +123,7 @@
             <scope>compile</scope>
         </dependency>
 
+
         <!--
         <dependency>
             <groupId>com.microsoft.azure</groupId>
@@ -238,6 +239,16 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>test</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>spring.profiles.active</name>
+                    <value>test</value>
+                </property>
+            </activation>
         </profile>
     </profiles>
 

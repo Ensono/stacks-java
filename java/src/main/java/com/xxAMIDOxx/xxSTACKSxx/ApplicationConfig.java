@@ -6,7 +6,8 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,12 +16,15 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /** ApplicationConfig - Configuration class for Auth0 application security. */
-@Configuration
+@Configuration("MySecurityConfig")
 @EnableWebSecurity
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class ApplicationConfig extends WebSecurityConfigurerAdapter {
 
   private static final String V1_MENU_ENDPOINT = "/v1/menu";
+  private static final String V1_MENU = "/v1/menu/**";
   private static final String V2_MENU_ENDPOINT = "/v2/menu";
+  private static final String V2_MENU = "/v2/menu/**";
 
   @Value(value = "${auth0.apiAudience}")
   private String apiAudience;
@@ -78,15 +82,13 @@ public class ApplicationConfig extends WebSecurityConfigurerAdapter {
     JwtWebSecurityConfigurer.forRS256(apiAudience, issuer)
         .configure(http)
         .authorizeRequests()
-        .antMatchers(HttpMethod.GET, V1_MENU_ENDPOINT)
+        .antMatchers(V1_MENU_ENDPOINT)
         .authenticated()
-        .antMatchers(HttpMethod.GET, V2_MENU_ENDPOINT)
+        .antMatchers(V2_MENU_ENDPOINT)
         .authenticated()
-        .antMatchers(HttpMethod.DELETE, V1_MENU_ENDPOINT)
+        .antMatchers(V1_MENU)
         .authenticated()
-        .antMatchers(HttpMethod.PUT, V1_MENU_ENDPOINT)
-        .authenticated()
-        .antMatchers(HttpMethod.POST, V1_MENU_ENDPOINT)
+        .antMatchers(V2_MENU)
         .authenticated();
   }
 
