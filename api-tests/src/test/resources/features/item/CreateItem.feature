@@ -23,13 +23,13 @@ Feature: Add menu item
   Scenario: Create an item for the menu
     Given the following item data:
       | name    | description                                                 | price | available |
-      | Bifteki | Greek-style burger patties served with cheese and tomatoes. | 11.95 | true      |
+      | Bifteki | Greek-style burger patties served with cheese and tomatoes. | 11.90 | true      |
     When I create an item for the previous menu and category
     Then the item was successfully created
     And the returned status code is 201
     And the created item should include the following data:
       | name    | description                                                 | price | available |
-      | Bifteki | Greek-style burger patties served with cheese and tomatoes. | 11.95 | true      |
+      | Bifteki | Greek-style burger patties served with cheese and tomatoes. | 11.90 | true      |
 
 
   Scenario: Create an item - 409 Code the item already exists

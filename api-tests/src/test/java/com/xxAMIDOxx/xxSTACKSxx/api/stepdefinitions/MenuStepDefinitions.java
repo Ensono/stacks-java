@@ -14,6 +14,7 @@ import com.xxAMIDOxx.xxSTACKSxx.api.templates.FieldValues;
 import com.xxAMIDOxx.xxSTACKSxx.api.templates.MergeFrom;
 import com.xxAMIDOxx.xxSTACKSxx.api.templates.TemplateResponse;
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -42,6 +43,12 @@ public class MenuStepDefinitions {
   String menuId;
   String menuBody;
   final String BASE_URL = WebServiceEndPoints.BASE_URL.getUrl();
+
+  @Before
+  public static void setup() {
+    System.out.println("Delete all data from previous automated test");
+    Hooks.deleteAllMenusFromPreviousRun();
+  }
 
   @Given("the following menu data:")
   public void create_menu_body_from_data(List<Map<String, String>> menuDetails) throws IOException {
