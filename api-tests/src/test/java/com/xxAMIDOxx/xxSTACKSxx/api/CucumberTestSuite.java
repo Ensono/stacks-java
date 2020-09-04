@@ -13,11 +13,11 @@ import org.junit.runner.RunWith;
     tags = "(not @Ignore) and (@Smoke or @Regression or @Functional)")
 public class CucumberTestSuite {
 
-    @BeforeClass
-    public static void setup() {
-        Hooks.obtainAuthorizationToken();
+  @BeforeClass
+  public static void setup() {
+    Hooks.obtainAuthorizationToken();
 
-        System.out.println("Delete all data from previous automated test");
-        Hooks.deleteAllMenusFromPreviousRun();
-    }
+    System.out.println("Delete all data from previous automated test");
+    Hooks.deleteAllMenusFromPreviousRun();
+  }
 }
