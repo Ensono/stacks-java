@@ -8,6 +8,9 @@ import com.xxAMIDOxx.xxSTACKSxx.api.ExceptionMessages;
 import com.xxAMIDOxx.xxSTACKSxx.api.models.AuthorizationRequest;
 import com.xxAMIDOxx.xxSTACKSxx.api.models.Menu;
 import io.restassured.response.Response;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.environment.EnvironmentSpecificConfiguration;
 import net.thucydides.core.util.EnvironmentVariables;
@@ -23,34 +26,44 @@ public class MenuActions {
   private static final Logger LOGGER = LoggerFactory.getLogger(MenuActions.class);
   private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    private static EnvironmentVariables environmentVariables = SystemEnvironmentVariables.createEnvironmentVariables();
+  private static EnvironmentVariables environmentVariables =
+      SystemEnvironmentVariables.createEnvironmentVariables();
 
-    private static String client_id = EnvironmentSpecificConfiguration.from(environmentVariables).getProperty("client_id");
-    private static String client_secret = EnvironmentSpecificConfiguration.from(environmentVariables).getProperty("client_secret");
-    private static String audience = EnvironmentSpecificConfiguration.from(environmentVariables).getProperty("audience");
-    private static String grant_type = EnvironmentSpecificConfiguration.from(environmentVariables).getProperty("grant_type");
+  private static String client_id =
+      EnvironmentSpecificConfiguration.from(environmentVariables).getProperty("client_id");
+  private static String client_secret =
+      EnvironmentSpecificConfiguration.from(environmentVariables).getProperty("client_secret");
+  private static String audience =
+      EnvironmentSpecificConfiguration.from(environmentVariables).getProperty("audience");
+  private static String grant_type =
+      EnvironmentSpecificConfiguration.from(environmentVariables).getProperty("grant_type");
 
+  private static String authBody;
 
-    private static String authBody;
-
-    static {
-        try {
-            authBody = objectMapper.writeValueAsString(new AuthorizationRequest(client_id, client_secret, audience, grant_type));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+  static {
+    try {
+      authBody =
+          objectMapper.writeValueAsString(
+              new AuthorizationRequest(client_id, client_secret, audience, grant_type));
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
     }
+  }
 
-    public static String getAuthToken() {
-        MenuRequests.getAuthorizationToken(authBody);
-        String accessToken = lastResponse().jsonPath().get("access_token").toString();
-        Serenity.setSessionVariable("Access Token").to(accessToken);
+  public String getIdOfLastCreatedObject() {
+    return String.valueOf(toJson(lastResponse().getBody().prettyPrint()).get("id"));
+  }
 
-        if (accessToken.isEmpty()){
-            LOGGER.error("The access token could not be obtained");
-        }
-        return accessToken;
+  public static String getAuthToken() {
+    MenuRequests.getAuthorizationToken(authBody);
+    String accessToken = lastResponse().jsonPath().get("access_token").toString();
+    Serenity.setSessionVariable("Access Token").to(accessToken);
+
+    if (accessToken.isEmpty()) {
+      LOGGER.error("The access token could not be obtained");
     }
+    return accessToken;
+  }
 
   public String getRestaurantIdOfLastCreatedMenu() {
     return String.valueOf(toJson(lastResponse().getBody().prettyPrint()).get("restaurantId"));
