@@ -1,26 +1,26 @@
- package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
+package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 
- import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
- import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getRequestHttpEntity;
- import static org.assertj.core.api.BDDAssertions.then;
- import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
+import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getRequestHttpEntity;
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
- import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.GenerateTokenRequest;
- import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.GenerateTokenResponse;
- import org.junit.Ignore;
- import org.junit.jupiter.api.Tag;
- import org.junit.jupiter.api.Test;
- import org.springframework.beans.factory.annotation.Autowired;
- import org.springframework.boot.test.context.SpringBootTest;
- import org.springframework.boot.test.web.client.TestRestTemplate;
- import org.springframework.boot.web.server.LocalServerPort;
- import org.springframework.http.HttpEntity;
- import org.springframework.http.HttpMethod;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.GenerateTokenRequest;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.GenerateTokenResponse;
+import org.junit.Ignore;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 
- @Ignore
- @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
- @Tag("Integration")
- class AuthControllerImplTest {
+@Ignore
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Tag("Integration")
+class AuthControllerImplTest {
 
   public static final String GENERATE_TOKEN_URI = "%s/v1/token";
 
@@ -49,4 +49,4 @@
     // Then
     then(response.getStatusCode()).isEqualTo(INTERNAL_SERVER_ERROR);
   }
- }
+}
