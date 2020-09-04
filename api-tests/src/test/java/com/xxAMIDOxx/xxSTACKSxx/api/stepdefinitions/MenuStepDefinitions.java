@@ -71,8 +71,7 @@ public class MenuStepDefinitions {
   }
 
   public void getMenuByParameter(String parameter) {
-    SerenityRest.get(
-        BASE_URL.concat(WebServiceEndPoints.MENU.getUrl()).concat("/").concat(parameter));
+    MenuRequests.getMenuByParam(parameter);
   }
 
   @When("I search the menu by:")
@@ -238,8 +237,7 @@ public class MenuStepDefinitions {
   }
 
   public void getMenuByParameter_v2(String parameter) {
-    SerenityRest.get(
-        BASE_URL.concat(WebServiceEndPoints.MENU_V2.getUrl()).concat("/").concat(parameter));
+    MenuRequests.getMenuByParam_V2(parameter);
   }
 
   @When("in the v2 app version I search the menu by:")

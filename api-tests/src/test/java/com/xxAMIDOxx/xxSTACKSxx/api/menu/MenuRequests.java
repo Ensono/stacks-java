@@ -1,22 +1,17 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.menu;
 
+import com.xxAMIDOxx.xxSTACKSxx.api.OAuthConfigurations;
 import com.xxAMIDOxx.xxSTACKSxx.api.WebServiceEndPoints;
 import net.serenitybdd.core.Serenity;
-import net.serenitybdd.core.environment.EnvironmentSpecificConfiguration;
 import net.serenitybdd.rest.SerenityRest;
 import net.thucydides.core.annotations.Step;
-import net.thucydides.core.util.EnvironmentVariables;
-import net.thucydides.core.util.SystemEnvironmentVariables;
 
 public class MenuRequests {
-
-  private static EnvironmentVariables environmentVariables =
-      SystemEnvironmentVariables.createEnvironmentVariables();
 
   private static String menuUrl =
       WebServiceEndPoints.BASE_URL.getUrl().concat(WebServiceEndPoints.MENU.getUrl());
   private static String OAUTH_TOKEN_URL =
-      EnvironmentSpecificConfiguration.from(environmentVariables).getProperty("oauth.token.url");
+      OAuthConfigurations.OAUTH_TOKEN_URL.getOauthConfiguration();
   private static String authorizationToken;
 
   public MenuRequests() {
@@ -87,5 +82,24 @@ public class MenuRequests {
 
   private static String retrieveAccessTokenFromSerenity() {
     return String.valueOf(Serenity.getCurrentSession().get("Access Token"));
+  }
+
+  public static void getMenuByParam(String parameter) {
+    SerenityRest.given()
+        .header("Authorization", "Bearer " + authorizationToken)
+        .when()
+        .get(menuUrl.concat("/").concat(parameter));
+  }
+
+  public static void getMenuByParam_V2(String parameter) {
+    SerenityRest.given()
+        .header("Authorization", "Bearer " + authorizationToken)
+        .when()
+        .get(
+            WebServiceEndPoints.BASE_URL
+                .getUrl()
+                .concat(WebServiceEndPoints.MENU_V2.getUrl())
+                .concat("/")
+                .concat(parameter));
   }
 }
