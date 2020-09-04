@@ -13,7 +13,7 @@ public class AuthControllerImpl implements AuthController {
 
   private static final String RESOURCE_URL = "https://amidostacks.eu.auth0.com/oauth/token";
 
-  private RestTemplate restTemplate;
+  private final RestTemplate restTemplate;
 
   public AuthControllerImpl(RestTemplate restTemplate) {
     this.restTemplate = restTemplate;
