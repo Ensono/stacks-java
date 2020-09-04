@@ -1,5 +1,8 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.stepdefinitions;
 
+import static net.serenitybdd.rest.SerenityRest.lastResponse;
+import static net.serenitybdd.rest.SerenityRest.restAssuredThat;
+
 import com.xxAMIDOxx.xxSTACKSxx.api.menu.MenuActions;
 import com.xxAMIDOxx.xxSTACKSxx.api.menu.MenuRequests;
 import com.xxAMIDOxx.xxSTACKSxx.api.models.Menu;
@@ -28,24 +31,24 @@ public class Hooks {
       LOGGER.info(
           String.format("The menu with '%s' id was successfully deleted.", currentMenu.getId()));
     }
+  }
 
-    public static void obtainAuthorizationToken() {
-        LOGGER.info("Get the Authorization Token");
-        MenuActions.getAuthToken();
-    }
+  public static void obtainAuthorizationToken() {
+    LOGGER.info("Get the Authorization Token");
+    MenuActions.getAuthToken();
+  }
 
-    @Before
-    public void before() {
-        SerenityTags.create().tagScenarioWithBatchingInfo();
-    }
+  @Before
+  public void before() {
+    SerenityTags.create().tagScenarioWithBatchingInfo();
+  }
 
-    @After("@DeleteCreatedMenu")
-    public void afterFirst() {
-        String menuId = String.valueOf(Serenity.getCurrentSession().get("MenuId"));
-        if (!menuId.isEmpty()) {
-            MenuRequests.deleteTheMenu(menuId);
-            LOGGER.info(String.format("The menu with '%s' id was successfully deleted.", menuId));
-        }
+  @After("@DeleteCreatedMenu")
+  public void afterFirst() {
+    String menuId = String.valueOf(Serenity.getCurrentSession().get("MenuId"));
+    if (!menuId.isEmpty()) {
+      MenuRequests.deleteTheMenu(menuId);
+      LOGGER.info(String.format("The menu with '%s' id was successfully deleted.", menuId));
     }
   }
 }
