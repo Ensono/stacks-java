@@ -332,9 +332,6 @@
                                     </limits>
                                 </rule>
                             </rules>
-                            <excludes>
-                                <exclude>*AuthControllerImpl*</exclude>
-                            </excludes>
                         </configuration>
                     </execution>
                 </executions>
