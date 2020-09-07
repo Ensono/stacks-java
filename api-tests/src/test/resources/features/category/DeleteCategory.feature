@@ -3,7 +3,7 @@
 Feature: Delete category
 
   Background: Create menu in the background before the scenarios
-     # 1. Create menu
+     # 1. Create a menu
     Given the application is running
     And the following menu data:
       | name                            | description    | tenantId                             | enabled |
@@ -14,7 +14,7 @@ Feature: Delete category
 
   @Smoke
   Scenario: Delete the category - Happy path
-     # 2. Create category
+     # 2. Create a category
     Given the following category data:
       | name     | description                                         |
       | Desserts | This compartment contain the finest French Desserts |
@@ -28,7 +28,7 @@ Feature: Delete category
 
 
   Scenario: Delete the category that contains at least one item
-     # 2. Create category
+     # 2. Create a category
     Given the following category data:
       | name     | description                                         |
       | Desserts | This compartment contain the finest French Desserts |
@@ -44,7 +44,8 @@ Feature: Delete category
     And the returned status code is 201
    # 4. Delete the category
     When I delete the created category
-    Then the returned status code is 409
+    Then the returned status code is 200
+    And the category is successfully deleted
 
 
   Scenario: Remove a category that does not exist
@@ -53,7 +54,7 @@ Feature: Delete category
     And the 'category does not exist' message is returned
 
 
-  Scenario: Remove a category from menu that does not exist
+  Scenario: Remove a category from the menu that does not exist
     Given the application is running
     When I delete the category with "d222f2ee-2c22-2b22-22e6-d701722f2222" id for "d111f1ee-1c11-1b11-11e6-d701711f1111" menu
     Then the returned status code is 404
