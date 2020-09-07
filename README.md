@@ -84,14 +84,7 @@ You can override the settings in the codebase, for example:<br />
 ./mvnw spotbugs:check
 ```
 
-##### Reports
-
-###### Test reports
-
-####### Check the code test coverage
-```
-./mvnw jacoco:check
-```
+##### Test reports
 
 ####### Generate code coverage report
 ```
