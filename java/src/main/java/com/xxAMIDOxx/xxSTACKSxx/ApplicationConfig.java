@@ -26,13 +26,13 @@ public class ApplicationConfig extends WebSecurityConfigurerAdapter {
   private static final String V2_MENU_ENDPOINT = "/v2/menu";
   private static final String V2_MENU = "/v2/menu/**";
 
-  @Value(value = "${auth0.apiAudience}")
+  @Value(value = "${auth.apiAudience}")
   private String apiAudience;
 
-  @Value(value = "${auth0.issuer}")
+  @Value(value = "${auth.issuer}")
   private String issuer;
 
-  @Value(value = "${auth0.isEnabled}")
+  @Value(value = "${auth.isEnabled}")
   private boolean isEnabled;
 
   /**
