@@ -155,7 +155,7 @@ public class MenuQueryControllerImplTest {
     Category category =
         new Category(
             UUID.randomUUID().toString(), "cat name", "cat description", Arrays.asList(item));
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
 
     MenuDTO expectedResponse = DomainToDtoMapper.toMenuDto(menu);
 
