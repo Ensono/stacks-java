@@ -141,7 +141,7 @@ class CreateCategoryControllerImplTest {
     Category category =
         new Category(
             UUID.randomUUID().toString(), "cat name", "cat description", new ArrayList<>());
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
 
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 

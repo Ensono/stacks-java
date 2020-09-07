@@ -1,20 +1,17 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.templates;
 
-import net.serenitybdd.rest.SerenityRest;
-
-import java.util.Map;
-
 import static java.util.stream.Collectors.toMap;
 
-public class TemplateResponse {
-    public Map<String, String> returned() {
-       return mapOfStringsFrom(SerenityRest.lastResponse().getBody().as(Map.class));
-    }
+import java.util.Map;
+import net.serenitybdd.rest.SerenityRest;
 
-    private Map<String,String> mapOfStringsFrom(Map<String, Object> map) {
-        return map.entrySet()
-                .stream()
-                .collect(toMap(Map.Entry::getKey,
-                        entry -> entry.getValue().toString()));
-    }
+public class TemplateResponse {
+  public Map<String, String> returned() {
+    return mapOfStringsFrom(SerenityRest.lastResponse().getBody().as(Map.class));
+  }
+
+  private Map<String, String> mapOfStringsFrom(Map<String, Object> map) {
+    return map.entrySet().stream()
+        .collect(toMap(Map.Entry::getKey, entry -> entry.getValue().toString()));
+  }
 }

@@ -19,7 +19,7 @@ public class Category {
 
   @Builder.Default private List<Item> items = new ArrayList<>();
 
-  public Category addUpdateItem(Item item) {
+  public Category addOrUpdateItem(Item item) {
     if (this.items == null) {
       this.items = new ArrayList<>();
     }
