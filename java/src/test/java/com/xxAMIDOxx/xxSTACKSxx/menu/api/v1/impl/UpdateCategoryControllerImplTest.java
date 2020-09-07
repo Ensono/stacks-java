@@ -27,7 +27,6 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -55,17 +54,12 @@ class UpdateCategoryControllerImplTest {
 
   @MockBean private MenuRepository menuRepository;
 
-  @AfterEach
-  void tearDown() {
-    menuRepository.deleteAll();
-  }
-
   @Test
   void testUpdateCategorySuccess() {
     // Given
     Menu menu = createMenu(0);
     Category category = createCategory(0);
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateCategoryRequest request = new UpdateCategoryRequest("new Category", "new Description");
@@ -262,7 +256,7 @@ class UpdateCategoryControllerImplTest {
     // Given
     Menu menu = createMenu(0);
     Category category = createCategory(0);
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateCategoryRequest request = new UpdateCategoryRequest("", "new Description");
@@ -289,7 +283,7 @@ class UpdateCategoryControllerImplTest {
     // Given
     Menu menu = createMenu(0);
     Category category = createCategory(0);
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateCategoryRequest request = new UpdateCategoryRequest("Updated Name", "");

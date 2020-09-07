@@ -16,7 +16,7 @@ Feature: Create a new menu
       | Cafe de Provence (Automated Test Data) | Cafe de Provence's - French Restaurant | d211f1ee-6c54-4b01-90e6-d701748f0852 | true    |
 
 
-  Scenario: Bad request for create menu - 404 error message
+  Scenario: Bad request for creating menu - 404 error message
     Given the application is running
     And the following menu data:
       | name                                             | description      | tenantId                             | enabled |
@@ -25,7 +25,7 @@ Feature: Create a new menu
     Then the returned status code is 400
 
 
-  Scenario: Bad request for create menu - invalid tenant Id
+  Scenario: Bad request for creating menu - invalid tenant Id
     Given the application is running
     And the following menu data:
       | name                                              | description       | tenantId | enabled |
@@ -34,7 +34,7 @@ Feature: Create a new menu
     Then the returned status code is 400
 
 
-  Scenario: Bad request for create menu - empty tenant Id
+  Scenario: Bad request for creating menu - empty tenant Id
     Given the application is running
     And the following menu data:
       | name                                            | description     | tenantId | enabled |
@@ -43,7 +43,7 @@ Feature: Create a new menu
     Then the returned status code is 400
 
   @DeleteCreatedMenu
-  Scenario: Create menu with the same data - 409
+  Scenario: Create a menu with the same data - 409
     Given the application is running
     And the following menu data:
       | name                                       | description              | tenantId                             | enabled |
@@ -56,4 +56,4 @@ Feature: Create a new menu
       | Bel Canto Restaurant (Automated Test Data) | Vegetarian Friendly Menu | d211f1ee-6c54-4b01-90e6-d701748f0111 | true    |
     And I create the menu
     Then the returned status code is 409
-    And the 'menu already exist' message is returned
+    And the 'menu already exists' message is returned

@@ -7,8 +7,13 @@ import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpStatus.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
@@ -53,7 +58,7 @@ class CreateItemControllerImplTest {
     Menu menu = createMenu(1);
     Category category =
         new Category(randomUUID().toString(), "cat name", "cat description", new ArrayList<>());
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
 
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
     when(menuRepository.save(any(Menu.class))).thenReturn(menu);
@@ -146,7 +151,7 @@ class CreateItemControllerImplTest {
     Category category =
         new Category(
             UUID.randomUUID().toString(), "cat name", "cat description", Arrays.asList(item));
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
 
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
@@ -173,7 +178,7 @@ class CreateItemControllerImplTest {
     // Given
     Menu menu = createMenu(1);
     Category category = createCategory(1);
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
 
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
     when(menuRepository.save(any(Menu.class))).thenReturn(menu);
@@ -198,7 +203,7 @@ class CreateItemControllerImplTest {
     // Given
     Menu menu = createMenu(1);
     Category category = createCategory(1);
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
 
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
     when(menuRepository.save(any(Menu.class))).thenReturn(menu);
@@ -223,7 +228,7 @@ class CreateItemControllerImplTest {
     // Given
     Menu menu = createMenu(1);
     Category category = createCategory(1);
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
 
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
     when(menuRepository.save(any(Menu.class))).thenReturn(menu);
