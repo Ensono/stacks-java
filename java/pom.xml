@@ -19,13 +19,13 @@
     <properties>
         <java.version>11</java.version>
         <org.projectlombok.version>1.18.0</org.projectlombok.version>
-        <org.springdoc-openapi.version>1.4.4</org.springdoc-openapi.version>
+        <org.springdoc-openapi.version>1.4.6</org.springdoc-openapi.version>
         <applicationinsights.version>2.6.1</applicationinsights.version>
         <cosmosdb.version>2.3.2</cosmosdb.version>
-        <azure.springboot.version>2.3.2</azure.springboot.version>
+        <azure.springboot.version>2.3.4</azure.springboot.version>
         <azure.servicebus.version>3.4.0</azure.servicebus.version>
         <jackson.version>2.11.0</jackson.version>
-        <mockito.version>3.5.6</mockito.version>
+        <mockito.version>3.5.10</mockito.version>
         <lombok.version>1.18.12</lombok.version>
         <hamcrest.version>2.2</hamcrest.version>
         <pitest.version>1.5.2</pitest.version>
@@ -38,9 +38,9 @@
         <owasp-dependency-check-plugin.version>5.3.2</owasp-dependency-check-plugin.version>
         <fmt-maven-plugin.version>2.10</fmt-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
-        <puppycrawl-tools-checkstyle.version>8.35</puppycrawl-tools-checkstyle.version>
+        <puppycrawl-tools-checkstyle.version>8.36</puppycrawl-tools-checkstyle.version>
         <spotbugs-maven-plugin.version>4.0.4</spotbugs-maven-plugin.version>
-        <spotbugs.version>4.1.1</spotbugs.version>
+        <spotbugs.version>4.1.2</spotbugs.version>
         <pact.version>3.5.24</pact.version>
 
         <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
@@ -195,7 +195,7 @@
         <dependency>
             <groupId>au.com.dius.pact</groupId>
             <artifactId>consumer</artifactId>
-            <version>4.1.6</version>
+            <version>4.1.7</version>
             <scope>test</scope>
         </dependency>
 
@@ -361,13 +361,6 @@
                     <skipSortingImports>false</skipSortingImports>
                     <style>google</style>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>format</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -392,9 +385,6 @@
                     <execution>
                         <id>validate</id>
                         <phase>validate</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>

@@ -9,10 +9,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <serenity.version>2.1.10</serenity.version>
-        <serenity.maven.version>2.2.12</serenity.maven.version>
-        <serenity.cucumber.version>2.1.2</serenity.cucumber.version>
-        <cucumber.version>4.8.0</cucumber.version>
+        <serenity.version>2.2.0</serenity.version>
+        <serenity.maven.version>2.2.0</serenity.maven.version>
+        <serenity.cucumber.version>2.2.0</serenity.cucumber.version>
+        <cucumber.version>5.5.0</cucumber.version>
         <logback.version>1.2.3</logback.version>
         <encoding>UTF-8</encoding>
         <tags></tags>
@@ -23,6 +23,11 @@
         <pact.broker.url></pact.broker.url>
         <pact.broker.token></pact.broker.token>
         <owasp-dependency-check-plugin.version>5.3.2</owasp-dependency-check-plugin.version>
+        <fmt-maven-plugin.version>2.10</fmt-maven-plugin.version>
+        <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
+        <puppycrawl-tools-checkstyle.version>8.36</puppycrawl-tools-checkstyle.version>
+        <spotbugs-maven-plugin.version>4.0.4</spotbugs-maven-plugin.version>
+        <spotbugs.version>4.1.2</spotbugs.version>
     </properties>
 
     <dependencies>
@@ -79,7 +84,7 @@
         </dependency>
         <dependency>
             <groupId>net.serenity-bdd</groupId>
-            <artifactId>serenity-cucumber4</artifactId>
+            <artifactId>serenity-cucumber5</artifactId>
             <version>${serenity.cucumber.version}</version>
             <scope>test</scope>
         </dependency>
@@ -92,7 +97,7 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.16.1</version>
+            <version>3.17.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -295,6 +300,59 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.coveo</groupId>
+                <artifactId>fmt-maven-plugin</artifactId>
+                <version>${fmt-maven-plugin.version}</version>
+                <configuration>
+                    <displayFiles>false</displayFiles>
+                    <verbose>true</verbose>
+                    <filesNamePattern>.*\.java</filesNamePattern>
+                    <additionalSourceDirectories/>
+                    <skip>false</skip>
+                    <skipSortingImports>false</skipSortingImports>
+                    <style>google</style>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version>
+                <dependencies>
+                    <!--Specify Dependent checkstyle Edition-->
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${puppycrawl-tools-checkstyle.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <configLocation>google_checks.xml</configLocation>
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs-maven-plugin.version}</version>
+                <dependencies>
+                    <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
+                    <dependency>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs</artifactId>
+                        <version>${spotbugs.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
