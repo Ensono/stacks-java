@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
-@PropertySource("classpath:auth0.properties")
+@PropertySource("classpath:auth.properties")
 public class Application {
   public static void main(String[] args) {
     SpringApplication.run(Application.class, args);
