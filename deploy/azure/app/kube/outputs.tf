@@ -39,13 +39,3 @@ output "dns_name" {
   description = "DNS Name if created"
   value       = module.app.dns_name
 }
-
-# output "test_report_account_name" {
-#   description = "The Name of the Blob Storage"
-#   value       = azurerm_storage_account.test_report.name
-# }
-
-# output "test_report_primary_key" {
-#   description = "The primary access key of the Blob Storage"
-#   value       = azurerm_storage_account.test_report.primary_access_key
-# }

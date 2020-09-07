@@ -7,38 +7,35 @@
 ############################################
 
 variable "name_company" {
-  type    = string
-  default = "replace_company_name"
+  type = string
 }
 
 variable "name_project" {
-  type    = string
-  default = "replace_project_name"
-
-}
-
-variable "name_component" {
-  type    = string
-  default = "replace_component_name"
+  type = string
 }
 
 variable "name_domain" {
-  type    = string
-  default = "replace_domain_name"
+  type = string
 }
 
-variable "stage" {
-  type    = string
-  default = "dev"
+variable "name_component" {
+  type = string
+}
+
+variable "name_role" {
+  type = string
+}
+
+variable "name_environment" {
+  type = string
 }
 
 variable "attributes" {
-  default = []
+  type = list(string)
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  type = map(string)
 }
 
 # Each region must have corresponding a shortend name for resource naming purposes
@@ -63,29 +60,23 @@ variable "location_name_map" {
 ############################################
 
 variable "resource_group_location" {
-  type    = string
-  default = "uksouth"
+  type = string
 }
 
 variable "app_gateway_frontend_ip_name" {
-  description = ""
-  type        = string
+  type = string
 }
 
 variable "dns_record" {
-  description = ""
-  type        = string
-  default     = "app"
+  type = string
 }
 
 variable "dns_zone_name" {
-  type    = string
-  default = "nonprod.amidostacks.com"
+  type = string
 }
 
 variable "dns_zone_resource_group" {
-  type    = string
-  default = ""
+  type = string
 }
 
 variable "core_resource_group" {
@@ -93,8 +84,7 @@ variable "core_resource_group" {
 }
 
 variable "internal_dns_zone_name" {
-  type    = string
-  default = "nonprod.amidostacks.internal"
+  type = string
 }
 
 
@@ -104,23 +94,19 @@ variable "internal_dns_zone_name" {
 variable "create_cosmosdb" {
   description = "Whether to create a cosmosdb or not for this application"
   type        = bool
-  default     = true
 }
 
 variable "create_cache" {
   type        = bool
   description = "Whether to create a RedisCache"
-  default     = false
 }
 
 variable "create_dns_record" {
-  type    = bool
-  default = false
+  type = bool
 }
 
-variable create_cdn_endpoint {
-  type    = bool
-  default = false
+variable "create_cdn_endpoint" {
+  type = bool
 }
 ###########################
 # CosmosDB SETTINGS
@@ -147,24 +133,3 @@ variable "cosmosdb_offer_type" {
   default     = "Standard"
   description = "Specify the offer type"
 }
-
-###########################
-# Storage Account for Test Reports
-##########################
-# variable "test_report_account_kind" {
-#   type        = string
-#   default     = "StorageV2"
-#   description = "Specify the Storage Account kind for Test Reports"
-# }
-
-# variable "test_report_account_tier" {
-#   type        = string
-#   default     = "Standard"
-#   description = "Specify the Storage Account tier for Test Reports"
-# }
-
-# variable "test_report_account_replication_type" {
-#   type        = string
-#   default     = "LRS"
-#   description = "Specify the Storage Account replication type for Test Reports"
-# }

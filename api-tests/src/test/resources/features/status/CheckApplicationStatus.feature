@@ -1,5 +1,5 @@
 Feature: Check on application status
-  The `/health` end point returns a status message to indicate that the application is running successfully.
+  The `/health` endpoint returns a status message to indicate that the application is running successfully.
 
   @Smoke @Functional
   Scenario: Application status end-point

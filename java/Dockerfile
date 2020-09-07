@@ -17,7 +17,7 @@ RUN ls -la /root/.m2/repository
 
 RUN ./mvnw dependency:go-offline \
 	&& ./mvnw process-resources \
-	&& ./mvnw package -Dmaven.default-test.skip=true -Dmaven.test.skip=true -DskipTests --no-transfer-progress --offline \
+	&& ./mvnw package -Dmaven.default-test.skip=true -Dmaven.test.skip=true -DskipTests --no-transfer-progress \
 	&& mkdir -p target/dependency && (cd target/dependency; ${JAVA_HOME}/bin/jar -xf ../*.jar)
 
 FROM azul/zulu-openjdk-alpine:11-jre
