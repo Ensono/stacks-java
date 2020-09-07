@@ -1,7 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.api;
 
 public enum WebServiceEndPoints {
-  BASE_URL(System.getenv("BASE_URL")),
+  BASE_URL("https://prod-java-api.prod.amidostacks.com/api"),
   CATEGORY("/category"),
   STATUS("/health"),
   MENU("/v1/menu"),
