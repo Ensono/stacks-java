@@ -195,7 +195,7 @@
         <dependency>
             <groupId>au.com.dius.pact</groupId>
             <artifactId>consumer</artifactId>
-            <version>4.1.6</version>
+            <version>4.1.7</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
