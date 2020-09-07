@@ -18,7 +18,6 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import java.util.Optional;
 import java.util.UUID;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,11 +43,6 @@ class DeleteMenuControllerImplTest {
   @Autowired private TestRestTemplate testRestTemplate;
 
   @MockBean private MenuRepository repository;
-
-  @AfterEach
-  void tearDown() {
-    repository.deleteAll();
-  }
 
   @Test
   void testDeleteMenuSuccess() {
