@@ -2,9 +2,14 @@ package com.xxAMIDOxx.xxSTACKSxx.api.menu;
 
 import com.xxAMIDOxx.xxSTACKSxx.api.OAuthConfigurations;
 import com.xxAMIDOxx.xxSTACKSxx.api.WebServiceEndPoints;
+import java.util.HashMap;
+import java.util.Map;
 import net.serenitybdd.core.Serenity;
+import net.serenitybdd.core.environment.EnvironmentSpecificConfiguration;
 import net.serenitybdd.rest.SerenityRest;
 import net.thucydides.core.annotations.Step;
+import net.thucydides.core.util.EnvironmentVariables;
+import net.thucydides.core.util.SystemEnvironmentVariables;
 
 public class MenuRequests {
 
@@ -14,15 +19,29 @@ public class MenuRequests {
       OAuthConfigurations.OAUTH_TOKEN_URL.getOauthConfiguration();
   private static String authorizationToken;
 
+  private static EnvironmentVariables environmentVariables =
+      SystemEnvironmentVariables.createEnvironmentVariables();
+
+  private static String generateAuthorisation =
+      EnvironmentSpecificConfiguration.from(environmentVariables)
+          .getProperty("generate.auth0.token");
+
+  boolean generateToken = Boolean.parseBoolean(generateAuthorisation);
+  private static final Map<String, String> commonHeaders = new HashMap<>();
+
   public MenuRequests() {
     authorizationToken = String.valueOf(Serenity.getCurrentSession().get("Access Token"));
+
+    if (generateToken) {
+      commonHeaders.put("Authorization", "Bearer " + authorizationToken);
+    }
   }
 
   @Step("Create a new menu")
   public void createMenu(String body) {
     SerenityRest.given()
         .contentType("application/json")
-        .header("Authorization", "Bearer " + authorizationToken)
+        .headers(commonHeaders)
         .body(body)
         .when()
         .post(menuUrl);
@@ -32,7 +51,7 @@ public class MenuRequests {
   public void updateMenu(String body, String id) {
     SerenityRest.given()
         .contentType("application/json")
-        .header("Authorization", "Bearer " + authorizationToken)
+        .headers(commonHeaders)
         .body(body)
         .when()
         .put(menuUrl + "/" + id);
@@ -40,15 +59,13 @@ public class MenuRequests {
 
   @Step("Get the menu")
   public void getMenu(String id) {
-    SerenityRest.given()
-        .header("Authorization", "Bearer " + authorizationToken)
-        .get(menuUrl.concat("/").concat(id));
+    SerenityRest.given().headers(commonHeaders).get(menuUrl.concat("/").concat(id));
   }
 
   @Step("Delete the menu")
   public static void deleteTheMenu(String id) {
     SerenityRest.given()
-        .header("Authorization", "Bearer " + authorizationToken)
+        .headers(commonHeaders)
         .contentType("application/json")
         .when()
         .delete(menuUrl.concat("/").concat(id));
@@ -56,10 +73,7 @@ public class MenuRequests {
 
   @Step("Get all menus")
   public void getAllMenus() {
-    SerenityRest.given()
-        .header("Authorization", "Bearer " + authorizationToken)
-        .when()
-        .get(menuUrl);
+    SerenityRest.given().headers(commonHeaders).when().get(menuUrl);
   }
 
   public static void getMenusBySearchTerm(String searchTerm) {
@@ -70,10 +84,7 @@ public class MenuRequests {
   }
 
   public static void getMenuByParametrisedPath(String parametrisedPath) {
-    SerenityRest.given()
-        .header("Authorization", "Bearer " + authorizationToken)
-        .when()
-        .get(parametrisedPath);
+    SerenityRest.given().headers(commonHeaders).when().get(parametrisedPath);
   }
 
   public static void getAuthorizationToken(String body) {
@@ -85,15 +96,12 @@ public class MenuRequests {
   }
 
   public static void getMenuByParam(String parameter) {
-    SerenityRest.given()
-        .header("Authorization", "Bearer " + authorizationToken)
-        .when()
-        .get(menuUrl.concat("/").concat(parameter));
+    SerenityRest.given().headers(commonHeaders).when().get(menuUrl.concat("/").concat(parameter));
   }
 
   public static void getMenuByParam_V2(String parameter) {
     SerenityRest.given()
-        .header("Authorization", "Bearer " + authorizationToken)
+        .headers(commonHeaders)
         .when()
         .get(
             WebServiceEndPoints.BASE_URL
