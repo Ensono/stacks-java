@@ -1,20 +1,17 @@
-package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
+package com.xxAMIDOxx.xxSTACKSxx.menu.api.v2.impl;
 
 import static com.xxAMIDOxx.xxSTACKSxx.menu.domain.MenuHelper.createMenu;
 import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getBaseURL;
-import static com.xxAMIDOxx.xxSTACKSxx.util.TestHelper.getRequestHttpEntity;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
 
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
-import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.MenuDTO;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.mappers.DomainToDtoMapper;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,55 +23,51 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(
     exclude = {CosmosDbRepositoriesAutoConfiguration.class, CosmosAutoConfiguration.class})
 @Tag("Integration")
-class DeleteMenuControllerImplTest {
+class QueryMenuControllerImplV2Test {
 
-  public static final String DELETE_MENU = "%s/v1/menu/%s";
+  private final String GET_MENU_BY_ID = "%s/v2/menu/%s";
 
   @LocalServerPort private int port;
 
   @Autowired private TestRestTemplate testRestTemplate;
 
-  @MockBean private MenuRepository repository;
+  @MockBean private MenuRepository menuRepository;
 
   @Test
-  void testDeleteMenuSuccess() {
+  void getMenuById() {
     // Given
-    Menu menu = createMenu(1);
-    when(repository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    Menu menu = createMenu(0);
+    MenuDTO expectedResponse = DomainToDtoMapper.toMenuDto(menu);
 
+    when(menuRepository.findById(menu.getId())).thenReturn(Optional.of(menu));
+
+    // When
     var response =
-        this.testRestTemplate.exchange(
-            String.format(DELETE_MENU, getBaseURL(port), menu.getId()),
-            HttpMethod.DELETE,
-            new HttpEntity<>(getRequestHttpEntity()),
-            ResponseEntity.class);
+        this.testRestTemplate.getForEntity(
+            String.format(GET_MENU_BY_ID, getBaseURL(port), menu.getId()), MenuDTO.class);
+
     // Then
-    verify(repository, times(1)).delete(menu);
-    then(response.getStatusCode()).isEqualTo(OK);
+    then(response.getBody()).isEqualTo(expectedResponse);
   }
 
   @Test
-  void testDeleteMenuWithInvalidId() {
+  void getMenuByInvalidId() {
     // Given
-    Menu menu = createMenu(1);
-    when(repository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    Menu menu = createMenu(0);
 
+    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+
+    // When
     var response =
-        this.testRestTemplate.exchange(
-            String.format(DELETE_MENU, getBaseURL(port), UUID.randomUUID().toString()),
-            HttpMethod.DELETE,
-            new HttpEntity<>(getRequestHttpEntity()),
-            ErrorResponse.class);
+        this.testRestTemplate.getForEntity(
+            String.format(GET_MENU_BY_ID, getBaseURL(port), UUID.randomUUID()), MenuDTO.class);
+
     // Then
-    verify(repository, times(0)).delete(menu);
     then(response.getStatusCode()).isEqualTo(NOT_FOUND);
   }
 }

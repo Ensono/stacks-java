@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/v1/menu/{id}/category")
 public interface CreateCategoryController {
 
-  @PostMapping(consumes = "application/json", produces = "application/json")
+  @PostMapping(consumes = "application/json", produces = "application/json; charset=utf-8")
   @Operation(
       tags = "Category",
       summary = "Create a category in the menu",
