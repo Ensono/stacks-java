@@ -27,7 +27,6 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -54,11 +53,6 @@ class UpdateCategoryControllerImplTest {
   @Autowired private TestRestTemplate testRestTemplate;
 
   @MockBean private MenuRepository menuRepository;
-
-  @AfterEach
-  void tearDown() {
-    menuRepository.deleteAll();
-  }
 
   @Test
   void testUpdateCategorySuccess() {
