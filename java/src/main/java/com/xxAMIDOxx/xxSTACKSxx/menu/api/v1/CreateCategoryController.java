@@ -27,6 +27,7 @@ public interface CreateCategoryController {
       summary = "Create a category in the menu",
       security = @SecurityRequirement(name = "bearerAuth"),
       description = "Adds a category to menu",
+      operationId = "AddMenuCategory",
       responses = {
         @ApiResponse(
             responseCode = "201",

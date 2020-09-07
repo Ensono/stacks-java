@@ -25,6 +25,7 @@ public interface CreateMenuController {
       summary = "Create a menu",
       security = @SecurityRequirement(name = "bearerAuth"),
       description = "Adds a menu",
+      operationId = "CreateMenu",
       responses = {
         @ApiResponse(
             responseCode = "201",
