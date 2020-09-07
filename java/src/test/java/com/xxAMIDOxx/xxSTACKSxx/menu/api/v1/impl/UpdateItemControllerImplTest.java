@@ -26,7 +26,6 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -55,19 +54,14 @@ class UpdateItemControllerImplTest {
 
   @MockBean private MenuRepository menuRepository;
 
-  @AfterEach
-  void teaDown() {
-    menuRepository.deleteAll();
-  }
-
   @Test
   void testUpdateItemSuccess() {
     // Given
     Menu menu = createMenu(0);
     Category category = createCategory(0);
     Item item = createItem(0);
-    category.addUpdateItem(item);
-    menu.addUpdateCategory(category);
+    category.addOrUpdateItem(item);
+    menu.addOrUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateItemRequest request =
@@ -109,7 +103,7 @@ class UpdateItemControllerImplTest {
     Category category = createCategory(0);
     List<Item> items = createItems(2);
     category.setItems(items);
-    menu.addUpdateCategory(category);
+    menu.addOrUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateItemRequest request =
@@ -155,8 +149,8 @@ class UpdateItemControllerImplTest {
     Menu menu = createMenu(0);
     Category category = createCategory(0);
     Item item = new Item(randomUUID().toString(), "New Item", "Item description", 12.2d, true);
-    category.addUpdateItem(item);
-    menu.addUpdateCategory(category);
+    category.addOrUpdateItem(item);
+    menu.addOrUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateItemRequest request =
@@ -187,8 +181,8 @@ class UpdateItemControllerImplTest {
     Menu menu = createMenu(0);
     Category category = createCategory(0);
     Item item = new Item(randomUUID().toString(), "New Item", "Item description", 12.2d, true);
-    category.addUpdateItem(item);
-    menu.addUpdateCategory(category);
+    category.addOrUpdateItem(item);
+    menu.addOrUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateItemRequest request =
@@ -219,8 +213,8 @@ class UpdateItemControllerImplTest {
     Menu menu = createMenu(0);
     Category category = createCategory(0);
     Item item = new Item(randomUUID().toString(), "New Item", "Item description", 12.2d, true);
-    category.addUpdateItem(item);
-    menu.addUpdateCategory(category);
+    category.addOrUpdateItem(item);
+    menu.addOrUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateItemRequest request = new UpdateItemRequest("", "Some Description", 13.56d, true);
@@ -248,8 +242,8 @@ class UpdateItemControllerImplTest {
     Menu menu = createMenu(0);
     Category category = createCategory(0);
     Item item = createItem(0);
-    category.addUpdateItem(item);
-    menu.addUpdateCategory(category);
+    category.addOrUpdateItem(item);
+    menu.addOrUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateItemRequest request = new UpdateItemRequest("Updated Name", "", 13.56d, true);
@@ -277,8 +271,8 @@ class UpdateItemControllerImplTest {
     Menu menu = createMenu(0);
     Category category = createCategory(0);
     Item item = createItem(0);
-    category.addUpdateItem(item);
-    menu.addUpdateCategory(category);
+    category.addOrUpdateItem(item);
+    menu.addOrUpdateCategory(category);
     when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateItemRequest request = new UpdateItemRequest("Updated Name", "la alal", 0d, true);
