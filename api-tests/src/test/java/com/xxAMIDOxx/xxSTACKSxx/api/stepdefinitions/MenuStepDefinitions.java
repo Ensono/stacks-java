@@ -38,16 +38,23 @@ public class MenuStepDefinitions {
 
   @Steps TemplateResponse theMenuDetails;
 
-  @Steps MenuActions menuActions;
+  @Steps static MenuActions menuActions;
 
   String menuId;
   String menuBody;
   final String BASE_URL = WebServiceEndPoints.BASE_URL.getUrl();
+  private static boolean firstTestRun = false;
 
   @Before
-  public static void setup() {
-    System.out.println("Delete all data from previous automated test");
-    Hooks.deleteAllMenusFromPreviousRun();
+  public static void beforeAll() {
+    if (!firstTestRun) {
+      LOGGER.info("Get the Authorization Token");
+      MenuActions.getAuthToken();
+
+      System.out.println("Delete all data from previous automated tests:");
+      MenuActions.deleteAllMenusFromPreviousRun();
+      firstTestRun = true;
+    }
   }
 
   @Given("the following menu data:")
@@ -235,7 +242,7 @@ public class MenuStepDefinitions {
 
   @Given("I delete all menus from previous tests")
   public void i_delete_all_existing_menus_from_test_data() {
-    Hooks.deleteAllMenusFromPreviousRun();
+    MenuActions.deleteAllMenusFromPreviousRun();
   }
 
   @When("I search the created menu by id in the v2 app version")

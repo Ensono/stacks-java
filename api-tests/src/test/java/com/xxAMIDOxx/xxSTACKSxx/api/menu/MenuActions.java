@@ -1,6 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.api.menu;
 
 import static net.serenitybdd.rest.SerenityRest.lastResponse;
+import static net.serenitybdd.rest.SerenityRest.restAssuredThat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +9,7 @@ import com.xxAMIDOxx.xxSTACKSxx.api.ExceptionMessages;
 import com.xxAMIDOxx.xxSTACKSxx.api.OAuthConfigurations;
 import com.xxAMIDOxx.xxSTACKSxx.api.models.AuthorizationRequest;
 import com.xxAMIDOxx.xxSTACKSxx.api.models.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.api.models.ResponseWrapper;
 import io.restassured.response.Response;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +47,20 @@ public class MenuActions {
               new AuthorizationRequest(client_id, client_secret, audience, grant_type));
     } catch (JsonProcessingException e) {
       e.printStackTrace();
+    }
+  }
+
+  public static void deleteAllMenusFromPreviousRun() {
+    MenuRequests.getMenusBySearchTerm("(Automated Test Data)");
+    ResponseWrapper responseWrapper = lastResponse().body().as(ResponseWrapper.class);
+    List<Menu> listOfMenusToDelete = responseWrapper.getResults();
+
+    for (Menu currentMenu : listOfMenusToDelete) {
+      MenuRequests.deleteTheMenu(currentMenu.getId());
+      restAssuredThat(response -> response.statusCode(200));
+
+      LOGGER.info(
+          String.format("The menu with '%s' id was successfully deleted.", currentMenu.getId()));
     }
   }
 
