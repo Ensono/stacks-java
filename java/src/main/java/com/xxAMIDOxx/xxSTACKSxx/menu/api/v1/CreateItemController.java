@@ -25,6 +25,7 @@ public interface CreateItemController {
       tags = "Item",
       summary = "Add an item to an existing category in a menu",
       description = "Adds a menu item",
+      operationId = "AddMenuItem",
       responses = {
         @ApiResponse(
             responseCode = "201",
