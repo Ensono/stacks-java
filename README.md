@@ -45,11 +45,6 @@ For AppInsights change the app to not crash if it can't get to AI, and just log 
 
 Must have minimum Java 11 installed. 
 
-#### Building
-```
-./mvnw spring-boot:compile
-```
-
 #### Run Locally
 ```
 ./mvnw spring-boot:run
