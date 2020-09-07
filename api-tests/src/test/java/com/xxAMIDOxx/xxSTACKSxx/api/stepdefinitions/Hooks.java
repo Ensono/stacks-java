@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 public class Hooks {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Hooks.class);
+  private static boolean firstTestRun = false;
 
   public static void deleteAllMenusFromPreviousRun() {
     MenuRequests.getMenusBySearchTerm("(Automated Test Data)");
@@ -33,14 +34,21 @@ public class Hooks {
     }
   }
 
-  public static void obtainAuthorizationToken() {
-    LOGGER.info("Get the Authorization Token");
-    MenuActions.getAuthToken();
-  }
-
   @Before
   public void before() {
     SerenityTags.create().tagScenarioWithBatchingInfo();
+  }
+
+  @Before
+  public static void beforeAll() {
+    if (!firstTestRun) {
+      LOGGER.info("Get the Authorization Token");
+      MenuActions.getAuthToken();
+
+      System.out.println("Delete all data from previous automated tests:");
+      deleteAllMenusFromPreviousRun();
+      firstTestRun = true;
+    }
   }
 
   @After("@DeleteCreatedMenu")
