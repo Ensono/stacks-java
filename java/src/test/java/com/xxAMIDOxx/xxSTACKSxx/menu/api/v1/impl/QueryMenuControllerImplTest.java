@@ -35,12 +35,14 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(
     exclude = {CosmosDbRepositoriesAutoConfiguration.class, CosmosAutoConfiguration.class})
 @Tag("Integration")
-public class MenuQueryControllerImplTest {
+@ActiveProfiles("test")
+public class QueryMenuControllerImplTest {
 
   @LocalServerPort private int port;
 
