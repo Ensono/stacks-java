@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ public interface CreateMenuController {
   @Operation(
       tags = "Menu",
       summary = "Create a menu",
+      security = @SecurityRequirement(name = "bearerAuth"),
       description = "Adds a menu",
       operationId = "CreateMenu",
       responses = {
