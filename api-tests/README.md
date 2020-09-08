@@ -60,3 +60,16 @@ The following environment variables are required:
 
 - BASE_URL
 e.g. http://localhost:9000
+
+### Access token configuration
+In order to make the authenticated requests (pass Bearer Token into headers) for the functional tests, please change the value of ```generate.auth0.token``` from ``serenity.conf`` file config to 'true'.
+Also, to get the right access token please provide values for following variables in the ``environment variables``:
+
+```
+- CLIENT_ID
+- CLIENT_SECRET
+- AUDIENCE
+- GRANT_TYPE
+- OAUTH_TOKEN_URL
+```
+###### Note: In case the Authorization Token is not required the ```generate.auth0.token``` value is false

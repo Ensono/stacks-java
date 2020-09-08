@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.UUID;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ public interface UpdateItemController {
   @Operation(
       tags = "Item",
       summary = "Update an item in the menu",
+      security = @SecurityRequirement(name = "bearerAuth"),
       description = "Update an item in the menu",
       operationId = "UpdateMenuItem",
       responses = {

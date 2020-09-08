@@ -45,13 +45,7 @@ For AppInsights change the app to not crash if it can't get to AI, and just log 
 
 Must have minimum Java 11 installed.
 
-#### Building
-
-```bash
-./mvnw spring-boot:compile
-```
-
-#### Run Locally
+#### Build and Run Locally
 
 ```bash
 ./mvnw spring-boot:run
@@ -96,15 +90,11 @@ You can override the settings in the codebase, for example:<br />
 ./mvnw spotbugs:check
 ```
 
+##### Test reports
+=======
 ##### Reports
 
 ###### Test reports
-
-####### Check the code test coverage
-
-```bash
-./mvnw jacoco:check
-```
 
 ####### Generate code coverage report
 

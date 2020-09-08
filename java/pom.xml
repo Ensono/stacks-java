@@ -36,6 +36,8 @@
         <equals-verifier.version>3.4.2</equals-verifier.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <owasp-dependency-check-plugin.version>5.3.2</owasp-dependency-check-plugin.version>
+        <auth0-spring-security-api.version>1.4.0</auth0-spring-security-api.version>
+
         <fmt-maven-plugin.version>2.10</fmt-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
         <puppycrawl-tools-checkstyle.version>8.36</puppycrawl-tools-checkstyle.version>
@@ -121,6 +123,7 @@
             <scope>compile</scope>
         </dependency>
 
+
         <!--
         <dependency>
             <groupId>com.microsoft.azure</groupId>
@@ -185,6 +188,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Registering the Auth0 Dependency-->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>auth0-spring-security-api</artifactId>
+            <version>${auth0-spring-security-api.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>au.com.dius</groupId>
             <artifactId>pact-jvm-provider-spring</artifactId>
@@ -238,6 +248,16 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>test</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>spring.profiles.active</name>
+                    <value>test</value>
+                </property>
+            </activation>
+        </profile>
     </profiles>
 
     <build>
@@ -283,6 +303,12 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/AuthControllerImpl*</exclude>
+                        <exclude>**/ApplicationConfig*</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
