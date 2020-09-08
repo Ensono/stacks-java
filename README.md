@@ -5,7 +5,7 @@ Java Web API Application Scaffolding for Amido Stacks
 This is a sample Java application showcasing
 best coding practices and Integrating with Azure and scaffolding for Amido Stacks
 This application implemented [Application Insights](https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) for performance management
-[Cosmos DB](https://docs.microsoft.com/en-us/azure/cosmos-db/introduction) is the cloud db used. 
+[Cosmos DB](https://docs.microsoft.com/en-us/azure/cosmos-db/introduction) is the cloud db used.
 
 
 # Table of Contents
@@ -23,7 +23,7 @@ This application implemented [Application Insights](https://docs.microsoft.com/e
    - [Testing](#testing)
    - [Docker](#docker)
  - [IDE Plugins used](#ide-plugins-used)
- - [Swagger/OAS](#swagger-oas) 
+ - [Swagger/OAS](#swagger-oas)
  - [Health Check](#health-check)
 
 ## Versioning
@@ -43,15 +43,11 @@ For AppInsights change the app to not crash if it can't get to AI, and just log 
 
 #### Prerequisites
 
-Must have minimum Java 11 installed. 
+Must have minimum Java 11 installed.
 
-#### Building
-```
-./mvnw spring-boot:compile
-```
+#### Build and Run Locally
 
-#### Run Locally
-```
+```bash
 ./mvnw spring-boot:run
 ```
 
@@ -65,62 +61,75 @@ Please install the [intellij-java-google-style.xml](../tools/formatter/intellij-
 ###### Java google style Usage
 The Java source code will automatically be reformatted to comply with [Google Java Style](https://google.github.io/styleguide/javaguide.html). <br /><br />
 You can override the settings in the codebase, for example:<br />
+
 ```//@formatter:off```<br />
 ```manually formatted code```<br />
 ```///@formatter:on```<br />
 
 ###### Validate the formatting
-```
+
+```bash
 ./mvnw com.coveo:fmt-maven-plugin:check
 ```
 
 ###### Apply the formatting to the source files
-```
+
+```bash
 ./mvnw com.coveo:fmt-maven-plugin:format
 ```
 
 ###### Validate the source code style
-```
+
+```bash
 ./mvnw checkstyle:check
 ```
 
 ###### Verify that there are no common programming flaws in the byte code
-```
+
+```bash
 ./mvnw spotbugs:check
 ```
 
+##### Test reports
+=======
 ##### Reports
 
 ###### Test reports
 
-####### Check the code test coverage
-```
-./mvnw jacoco:check
-```
-
 ####### Generate code coverage report
-```
+
+```bash
 ./mvnw jacoco:report
 ```
 
 Generated report can be viewed under – target/site/jacoco/index.html
- 
 ####### Runs the unit tests of the application and Generate maven test report
- 
-Surefire creates a reports in 2 format. Xml and HTML.
- ```
+Surefire creates a reports in 2 formats. Xml and HTML.
+
+ ```bash
  ./mvnw surefire:test
  ```
  
 ####### View The Test Report
-```
+
+```bash
 ..stacks-java/api-tests/target/site/serenity/index.html
 ```
+
+####### Generate mutation Tests using Pit Test
+The mutation coverage goal analyses all classes in the codebase that match the target tests and target classes filters.
+
+```bash
+mvn org.pitest:pitest-maven:mutationCoverage
+```
+
+Generated report can be viewed under – target/pit-reports/YYYYMMDDHHMI
  
 #### Docker
  
 ##### Build Docker Image
-```
+
+```bash
 docker build -t image-tag .
 ```
 
@@ -131,7 +140,8 @@ Detects publicly disclosed vulnerabilities contained within a Project's
 dependencies.
 
 ####### Generate a Dependency vulnerability checker for maven libraries
-```
+
+```bash
 mvn clean install -Powasp-dependency-check
 ```
 
@@ -146,30 +156,33 @@ attempt to copy the files inside the container and use the cached versions.
 
 ### Swagger/OAS
 
-Automatically generated. Go to: http://localhost:9000/swagger/index.html
+Automatically generated. Go to: <http://localhost:9000/swagger/index.html>
 
 ### Health check
 
-Available at: http://localhost:9000/health
+Available at: <http://localhost:9000/health>
 (This can also be configured to run on another port)
 
 #### Testing
 
-Set an env variable BASE_URL (e.g. local is http://localhost:9000) 
+Set an env variable BASE_URL (e.g. local is <http://localhost:9000>) 
 (from project path: stacks-java/api-tests)
 
 ##### Run all Tests
-```
+
+```bash
 mvn clean verify
 ```
 
 ##### Run Smoke tests
-```
+
+```bash
 mvn clean verify -Dcucumber.options=“--tags @Smoke”
 ```
 
 ##### Run Functional tests
-```
+
+```bash
 mvn clean verify -Dcucumber.options=“--tags @Functional”
 ```
  

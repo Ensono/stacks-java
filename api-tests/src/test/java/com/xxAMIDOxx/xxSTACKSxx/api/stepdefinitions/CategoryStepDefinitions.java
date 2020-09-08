@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import net.serenitybdd.core.Serenity;
-import net.serenitybdd.rest.SerenityRest;
 import net.thucydides.core.annotations.Steps;
 import org.junit.Assert;
 
@@ -135,7 +134,7 @@ public class CategoryStepDefinitions {
   @Then("the created category should include the following data:")
   public void the_category_should_include_the_following_data(
       List<Map<String, String>> categoryDetails) {
-    SerenityRest.get(MENU_URL.concat("/".concat(menuId)));
+    MenuRequests.getMenuByParam(menuId);
     Category expectedCategory = CategoryActions.mapToCategory(categoryDetails.get(0), categoryId);
 
     Menu actualMenu = menuActions.responseToMenu(lastResponse());

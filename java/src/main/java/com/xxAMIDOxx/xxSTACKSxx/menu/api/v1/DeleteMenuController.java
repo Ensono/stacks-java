@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +26,7 @@ public interface DeleteMenuController {
   @Operation(
       tags = "Menu",
       summary = "Removes a Menu with all it's Categories and Items",
+      security = @SecurityRequirement(name = "bearerAuth"),
       description = "Remove a menu from a restaurant",
       operationId = "DeleteMenu",
       responses = {
