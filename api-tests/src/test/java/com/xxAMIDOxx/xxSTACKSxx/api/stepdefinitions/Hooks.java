@@ -3,6 +3,7 @@ package com.xxAMIDOxx.xxSTACKSxx.api.stepdefinitions;
 import static net.serenitybdd.rest.SerenityRest.lastResponse;
 import static net.serenitybdd.rest.SerenityRest.restAssuredThat;
 
+import com.xxAMIDOxx.xxSTACKSxx.api.menu.MenuActions;
 import com.xxAMIDOxx.xxSTACKSxx.api.menu.MenuRequests;
 import com.xxAMIDOxx.xxSTACKSxx.api.models.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.api.models.ResponseWrapper;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 public class Hooks {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Hooks.class);
+  private static boolean firstTestRun = false;
 
   public static void deleteAllMenusFromPreviousRun() {
     MenuRequests.getMenusBySearchTerm("(Automated Test Data)");
@@ -35,6 +37,18 @@ public class Hooks {
   @Before
   public void before() {
     SerenityTags.create().tagScenarioWithBatchingInfo();
+  }
+
+  @Before
+  public static void beforeAll() {
+    if (!firstTestRun) {
+      LOGGER.info("Get the Authorization Token");
+      MenuActions.getAuthToken();
+
+      System.out.println("Delete all data from previous automated tests:");
+      deleteAllMenusFromPreviousRun();
+      firstTestRun = true;
+    }
   }
 
   @After("@DeleteCreatedMenu")

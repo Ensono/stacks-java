@@ -1,16 +1,24 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api;
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
+import java.util.ArrayList;
 import java.util.List;
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@SecurityScheme(
+    name = "bearerAuth",
+    type = SecuritySchemeType.HTTP,
+    bearerFormat = "JWT",
+    scheme = "bearer")
 public class OpenApiConfiguration {
 
   private static final String PROJECT_URL = "https://github.com/amido/stacks-java";
@@ -20,8 +28,11 @@ public class OpenApiConfiguration {
   /** OAS/Swagger Configuration. */
   @Bean
   public OpenAPI customOpenApi() {
+    List<Server> servers = new ArrayList<>();
+    servers.add(new Server().url("/"));
+    servers.add(new Server().url("/api/menu"));
     return new OpenAPI()
-        .servers(List.of(new Server().url("/api/menu")))
+        .servers(servers)
         .info(
             new Info()
                 .title("Menu API")

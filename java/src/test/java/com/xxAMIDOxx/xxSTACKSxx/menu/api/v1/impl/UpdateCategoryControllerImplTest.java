@@ -27,7 +27,6 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -40,11 +39,13 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(
     exclude = {CosmosDbRepositoriesAutoConfiguration.class, CosmosAutoConfiguration.class})
 @Tag("Integration")
+@ActiveProfiles("test")
 class UpdateCategoryControllerImplTest {
 
   public static final String UPDATE_CATEGORY = "%s/v1/menu/%s/category/%s";
@@ -54,11 +55,6 @@ class UpdateCategoryControllerImplTest {
   @Autowired private TestRestTemplate testRestTemplate;
 
   @MockBean private MenuRepository menuRepository;
-
-  @AfterEach
-  void tearDown() {
-    menuRepository.deleteAll();
-  }
 
   @Test
   void testUpdateCategorySuccess() {

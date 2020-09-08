@@ -1,39 +1,35 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.GenerateTokenRequest;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.GenerateTokenResponse;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import java.util.UUID;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-/** @author ArathyKrishna */
-@RequestMapping("/v1/menu/{id}/category/{categoryId}/items/{itemId}")
-public interface DeleteItemController {
+@RequestMapping("/v1/token")
+public interface AuthController {
 
-  @DeleteMapping(produces = "application/json; charset=utf-8")
+  @PostMapping(consumes = "application/json", produces = "application/json; charset=utf-8")
   @Operation(
-      tags = "Item",
-      summary = "Removes an item from menu",
-      security = @SecurityRequirement(name = "bearerAuth"),
-      description = "Removes an item from menu",
-      operationId = "DeleteMenuItem",
+      tags = "Auth",
+      summary = "Authorisation",
+      description = "Generate auth token",
       responses = {
         @ApiResponse(
             responseCode = "200",
             description = "Success",
-            content = @Content(mediaType = "application/json", schema = @Schema(hidden = true))),
-        @ApiResponse(
-            responseCode = "204",
-            description = "No Content",
-            content = @Content(schema = @Schema(hidden = true))),
+            content =
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ResourceCreatedResponse.class))),
         @ApiResponse(
             responseCode = "400",
             description = "Bad Request",
@@ -56,17 +52,13 @@ public interface DeleteItemController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(
-            responseCode = "404",
-            description = "Resource not found",
+            responseCode = "409",
+            description = "Conflict, an item already exists",
             content =
                 @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = ErrorResponse.class)))
       })
-  ResponseEntity<Void> deleteItem(
-      @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
-      @Parameter(description = "Category id", required = true) @PathVariable("categoryId")
-          UUID categoryId,
-      @Parameter(description = "Item id", required = true) @PathVariable("itemId") UUID itemId,
-      @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId);
+  ResponseEntity<GenerateTokenResponse> generateToken(
+      @Valid @RequestBody GenerateTokenRequest generateTokenRequest);
 }

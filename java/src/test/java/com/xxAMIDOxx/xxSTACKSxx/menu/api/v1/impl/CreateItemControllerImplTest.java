@@ -7,8 +7,13 @@ import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpStatus.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
@@ -33,11 +38,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(
     exclude = {CosmosDbRepositoriesAutoConfiguration.class, CosmosAutoConfiguration.class})
 @Tag("Integration")
+@ActiveProfiles("test")
 class CreateItemControllerImplTest {
 
   public static final String CREATE_ITEM = "%s/v1/menu/%s/category/%s/items";

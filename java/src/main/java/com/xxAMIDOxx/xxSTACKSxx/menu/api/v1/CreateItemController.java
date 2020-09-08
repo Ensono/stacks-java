@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.UUID;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,9 @@ public interface CreateItemController {
   @Operation(
       tags = "Item",
       summary = "Add an item to an existing category in a menu",
+      security = @SecurityRequirement(name = "bearerAuth"),
       description = "Adds a menu item",
+      operationId = "AddMenuItem",
       responses = {
         @ApiResponse(
             responseCode = "201",
