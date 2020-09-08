@@ -59,7 +59,7 @@ steps:
 
   - task: Bash@3
     inputs:
-      filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-checkstyle-check.bash"
+      filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-spotbugs-check.bash"
       arguments: >
         -Z "${{ parameters.maven_cache_directory }}"
       workingDirectory: "${{ parameters.functional_test_project_root_dir }}"
