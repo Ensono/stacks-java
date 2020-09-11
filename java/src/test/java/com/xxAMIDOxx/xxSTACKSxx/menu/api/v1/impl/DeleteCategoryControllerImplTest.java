@@ -19,7 +19,7 @@ import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAut
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Tag;
@@ -48,7 +48,7 @@ class DeleteCategoryControllerImplTest {
 
   @Autowired private TestRestTemplate testRestTemplate;
 
-  @MockBean private MenuAdapter menuAdapter;
+  @MockBean private MenuRepositoryAdapter menuRepositoryAdapter;
 
   @Test
   void testDeleteCategorySuccess() {
@@ -56,7 +56,7 @@ class DeleteCategoryControllerImplTest {
     Menu menu = createMenu(1);
     Category category = createCategory(0);
     menu.setCategories(List.of(category));
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     // When
     String requestUrl =
@@ -69,9 +69,9 @@ class DeleteCategoryControllerImplTest {
             ErrorResponse.class);
 
     // Then
-    verify(menuAdapter, times(1)).save(menu);
+    verify(menuRepositoryAdapter, times(1)).save(menu);
     then(response.getStatusCode()).isEqualTo(OK);
-    Optional<Menu> optMenu = menuAdapter.findById(menu.getId());
+    Optional<Menu> optMenu = menuRepositoryAdapter.findById(menu.getId());
     Menu updated = optMenu.get();
     then(updated.getCategories()).isNotNull();
   }
@@ -84,7 +84,7 @@ class DeleteCategoryControllerImplTest {
     category.addOrUpdateItem(createItem(0));
     menu.addOrUpdateCategory(category);
 
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     // When
     String requestUrl =
@@ -99,7 +99,7 @@ class DeleteCategoryControllerImplTest {
     // Then
     then(response.getStatusCode()).isEqualTo(OK);
     ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
-    verify(menuAdapter, times(1)).save(captor.capture());
+    verify(menuRepositoryAdapter, times(1)).save(captor.capture());
     Menu updatedMenu = captor.getValue();
     then(updatedMenu.getCategories()).isNotNull();
   }
@@ -110,7 +110,7 @@ class DeleteCategoryControllerImplTest {
     Menu menu = createMenu(1);
     Category category = createCategory(0);
     menu.setCategories(List.of(category));
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     // When
     String requestUrl =
@@ -123,7 +123,7 @@ class DeleteCategoryControllerImplTest {
             ErrorResponse.class);
 
     // Then
-    verify(menuAdapter, times(0)).save(menu);
+    verify(menuRepositoryAdapter, times(0)).save(menu);
     then(response.getStatusCode()).isEqualTo(NOT_FOUND);
   }
 
@@ -133,7 +133,7 @@ class DeleteCategoryControllerImplTest {
     Menu menu = createMenu(1);
     List<Category> categories = createCategories(2);
     menu.setCategories(categories);
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     // When
     String requestUrl =
@@ -146,9 +146,9 @@ class DeleteCategoryControllerImplTest {
             ErrorResponse.class);
 
     // Then
-    verify(menuAdapter, times(1)).save(menu);
+    verify(menuRepositoryAdapter, times(1)).save(menu);
     then(response.getStatusCode()).isEqualTo(OK);
-    Optional<Menu> byId = menuAdapter.findById(menu.getId());
+    Optional<Menu> byId = menuRepositoryAdapter.findById(menu.getId());
     Menu updatedMenu = byId.get();
     then(updatedMenu.getCategories()).hasSize(1);
   }

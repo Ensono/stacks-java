@@ -23,7 +23,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateCategoryRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -54,7 +54,7 @@ class UpdateCategoryControllerImplTest {
 
   @Autowired private TestRestTemplate testRestTemplate;
 
-  @MockBean private MenuAdapter menuAdapter;
+  @MockBean private MenuRepositoryAdapter menuRepositoryAdapter;
 
   @Test
   void testUpdateCategorySuccess() {
@@ -62,7 +62,7 @@ class UpdateCategoryControllerImplTest {
     Menu menu = createMenu(0);
     Category category = createCategory(0);
     menu.addOrUpdateCategory(category);
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateCategoryRequest request = new UpdateCategoryRequest("new Category", "new Description");
 
@@ -86,7 +86,7 @@ class UpdateCategoryControllerImplTest {
     then(response.getStatusCode()).isEqualTo(OK);
 
     ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
-    verify(menuAdapter, times(1)).save(captor.capture());
+    verify(menuRepositoryAdapter, times(1)).save(captor.capture());
     Menu updated = captor.getValue();
     then(updated.getCategories()).hasSize(1);
     Category updatedCategory = updated.getCategories().get(0);
@@ -98,7 +98,7 @@ class UpdateCategoryControllerImplTest {
   void testCannotUpdateCategoryIfNoMenuExists() {
     // Given
     UUID menuId = randomUUID();
-    when(menuAdapter.findById(eq(menuId.toString()))).thenReturn(Optional.empty());
+    when(menuRepositoryAdapter.findById(eq(menuId.toString()))).thenReturn(Optional.empty());
 
     UpdateCategoryRequest request = new UpdateCategoryRequest("new Category", "new Description");
 
@@ -121,7 +121,7 @@ class UpdateCategoryControllerImplTest {
     // Given
     Menu menu = createMenu(0);
     menu.setCategories(null);
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateCategoryRequest request = new UpdateCategoryRequest("new Category", "new Description");
 
@@ -150,7 +150,7 @@ class UpdateCategoryControllerImplTest {
     categoryList.get(0).setName("new Category");
 
     menu.setCategories(categoryList);
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateCategoryRequest request = new UpdateCategoryRequest("new Category", "new Description");
 
@@ -179,7 +179,7 @@ class UpdateCategoryControllerImplTest {
     Menu menu = createMenu(0);
     List<Category> categories = createCategories(2);
     menu.setCategories(categories);
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateCategoryRequest request = new UpdateCategoryRequest("new Category", "new Description");
 
@@ -199,7 +199,7 @@ class UpdateCategoryControllerImplTest {
     then(response.getStatusCode()).isEqualTo(OK);
 
     ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
-    verify(menuAdapter, times(1)).save(captor.capture());
+    verify(menuRepositoryAdapter, times(1)).save(captor.capture());
     Menu updated = captor.getValue();
     then(updated.getCategories()).hasSize(2);
     Optional<Category> updatedCategory =
@@ -216,7 +216,7 @@ class UpdateCategoryControllerImplTest {
     Menu menu = createMenu(0);
     List<Category> categoryList = createCategories(2);
     menu.setCategories(categoryList);
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateCategoryRequest request =
         new UpdateCategoryRequest(categoryList.get(1).getName(), "new Description");
@@ -240,7 +240,7 @@ class UpdateCategoryControllerImplTest {
     then(response.getStatusCode()).isEqualTo(OK);
 
     ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
-    verify(menuAdapter, times(1)).save(captor.capture());
+    verify(menuRepositoryAdapter, times(1)).save(captor.capture());
     Menu updated = captor.getValue();
     then(updated.getCategories()).hasSize(2);
 
@@ -259,7 +259,7 @@ class UpdateCategoryControllerImplTest {
     Menu menu = createMenu(0);
     Category category = createCategory(0);
     menu.addOrUpdateCategory(category);
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateCategoryRequest request = new UpdateCategoryRequest("", "new Description");
 
@@ -286,7 +286,7 @@ class UpdateCategoryControllerImplTest {
     Menu menu = createMenu(0);
     Category category = createCategory(0);
     menu.addOrUpdateCategory(category);
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateCategoryRequest request = new UpdateCategoryRequest("Updated Name", "");
 

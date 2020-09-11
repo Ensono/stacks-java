@@ -6,7 +6,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateMenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuCreatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.MenuAlreadyExistsException;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,12 +17,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class CreateMenuHandler implements CommandHandler<CreateMenuCommand> {
 
-  protected MenuAdapter menuAdapter;
+  protected MenuRepositoryAdapter menuAdapter;
 
   private ApplicationEventPublisher applicationEventPublisher;
 
   public CreateMenuHandler(
-      MenuAdapter menuAdapter, ApplicationEventPublisher applicationEventPublisher) {
+      MenuRepositoryAdapter menuAdapter, ApplicationEventPublisher applicationEventPublisher) {
     this.menuAdapter = menuAdapter;
     this.applicationEventPublisher = applicationEventPublisher;
   }

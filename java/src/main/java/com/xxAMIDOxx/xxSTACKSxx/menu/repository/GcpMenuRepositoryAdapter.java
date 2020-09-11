@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
-public class GcpMenuRepositoryAdapter implements MenuAdapter {
+public class GcpMenuRepositoryAdapter implements MenuRepositoryAdapter {
 
   @Autowired protected AzureMenuRepository azureMenuRepository;
 

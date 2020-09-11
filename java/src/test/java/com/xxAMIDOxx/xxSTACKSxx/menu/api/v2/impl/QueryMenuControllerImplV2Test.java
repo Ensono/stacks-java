@@ -12,7 +12,7 @@ import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAut
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.MenuDTO;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.mappers.DomainToDtoMapper;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Tag;
@@ -38,7 +38,7 @@ class QueryMenuControllerImplV2Test {
 
   @Autowired private TestRestTemplate testRestTemplate;
 
-  @MockBean private MenuAdapter menuAdapter;
+  @MockBean private MenuRepositoryAdapter menuRepositoryAdapter;
 
   @Test
   void getMenuById() {
@@ -46,7 +46,7 @@ class QueryMenuControllerImplV2Test {
     Menu menu = createMenu(0);
     MenuDTO expectedResponse = DomainToDtoMapper.toMenuDto(menu);
 
-    when(menuAdapter.findById(menu.getId())).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(menu.getId())).thenReturn(Optional.of(menu));
 
     // When
     var response =
@@ -62,7 +62,7 @@ class QueryMenuControllerImplV2Test {
     // Given
     Menu menu = createMenu(0);
 
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     // When
     var response =

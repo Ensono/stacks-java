@@ -8,7 +8,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.events.CategoryCreatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryAlreadyExistsException;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.*;
 import org.springframework.stereotype.Component;
 
@@ -18,14 +18,14 @@ public class CreateCategoryHandler extends MenuBaseCommandHandler<CreateCategory
   private UUID categoryId;
 
   public CreateCategoryHandler(
-      MenuAdapter menuAdapter, ApplicationEventPublisher applicationEventPublisher) {
-    super(menuAdapter, applicationEventPublisher);
+      MenuRepositoryAdapter menuRepositoryAdapter, ApplicationEventPublisher applicationEventPublisher) {
+    super(menuRepositoryAdapter, applicationEventPublisher);
   }
 
   @Override
   Optional<UUID> handleCommand(Menu menu, CreateCategoryCommand command) {
     menu.setCategories(addCategory(menu, command));
-    menuAdapter.save(menu);
+    menuRepositoryAdapter.save(menu);
     return Optional.of(categoryId);
   }
 

@@ -11,8 +11,10 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuItemCreatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryDoesNotExistException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ItemAlreadyExistsException;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.*;
+
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,15 +23,15 @@ public class CreateItemHandler extends MenuBaseCommandHandler<CreateItemCommand>
   private UUID itemId;
 
   public CreateItemHandler(
-      MenuAdapter menuAdapter, ApplicationEventPublisher applicationEventPublisher) {
-    super(menuAdapter, applicationEventPublisher);
+          MenuRepositoryAdapter menuRepositoryAdapter, ApplicationEventPublisher applicationEventPublisher) {
+    super(menuRepositoryAdapter, applicationEventPublisher);
   }
 
   @Override
   Optional<UUID> handleCommand(Menu menu, CreateItemCommand command) {
     itemId = UUID.randomUUID();
     Category category = addItem(getCategory(menu, command), command);
-    menuAdapter.save(menu.addOrUpdateCategory(category));
+    menuRepositoryAdapter.save(menu.addOrUpdateCategory(category));
     return Optional.of(itemId);
   }
 

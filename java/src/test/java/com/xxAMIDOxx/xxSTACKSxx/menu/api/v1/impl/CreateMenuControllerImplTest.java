@@ -14,7 +14,7 @@ import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateMenuRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.UUID;
@@ -44,7 +44,7 @@ class CreateMenuControllerImplTest {
 
   @Autowired private TestRestTemplate testRestTemplate;
 
-  @MockBean private MenuAdapter menuAdapter;
+  @MockBean private MenuRepositoryAdapter menuRepositoryAdapter;
 
   @Test
   void testCreateNewMenu() {
@@ -54,10 +54,10 @@ class CreateMenuControllerImplTest {
         new CreateMenuRequest(
             m.getName(), m.getDescription(), UUID.fromString(m.getRestaurantId()), m.getEnabled());
 
-    when(menuAdapter.findAllByRestaurantIdAndName(
+    when(menuRepositoryAdapter.findAllByRestaurantIdAndName(
             eq(m.getRestaurantId()), eq(m.getName()), any(Pageable.class)))
         .thenReturn(new PageImpl<>(Collections.emptyList()));
-    when(menuAdapter.save(any(Menu.class))).thenReturn(m);
+    when(menuRepositoryAdapter.save(any(Menu.class))).thenReturn(m);
 
     // When
     var response =
@@ -76,7 +76,7 @@ class CreateMenuControllerImplTest {
         new CreateMenuRequest(
             m.getName(), m.getDescription(), UUID.fromString(m.getRestaurantId()), m.getEnabled());
 
-    when(menuAdapter.findAllByRestaurantIdAndName(
+    when(menuRepositoryAdapter.findAllByRestaurantIdAndName(
             eq(m.getRestaurantId()), eq(m.getName()), any(Pageable.class)))
         .thenReturn(new PageImpl<>(Collections.singletonList(m)));
 
@@ -96,7 +96,7 @@ class CreateMenuControllerImplTest {
     CreateMenuRequest request =
         new CreateMenuRequest(m.getName(), "", fromString(m.getRestaurantId()), m.getEnabled());
 
-    when(menuAdapter.save(any(Menu.class))).thenReturn(m);
+    when(menuRepositoryAdapter.save(any(Menu.class))).thenReturn(m);
     // When
     var response =
         this.testRestTemplate.postForEntity(
@@ -116,7 +116,7 @@ class CreateMenuControllerImplTest {
         new CreateMenuRequest(
             "", m.getDescription(), fromString(m.getRestaurantId()), m.getEnabled());
 
-    when(menuAdapter.save(any(Menu.class))).thenReturn(m);
+    when(menuRepositoryAdapter.save(any(Menu.class))).thenReturn(m);
     // When
     var response =
         this.testRestTemplate.postForEntity(

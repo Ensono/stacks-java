@@ -8,7 +8,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.MenuNotFoundException;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,14 +16,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements CommandHandler<T> {
 
-  protected MenuAdapter menuAdapter;
+  protected MenuRepositoryAdapter menuRepositoryAdapter;
 
   private ApplicationEventPublisher applicationEventPublisher;
 
   public MenuBaseCommandHandler(
-      @Qualifier("menuAdapter") MenuAdapter menuAdapter,
+      @Qualifier("menuAdapter") MenuRepositoryAdapter menuAdapter,
       ApplicationEventPublisher applicationEventPublisher) {
-    this.menuAdapter = menuAdapter;
+    this.menuRepositoryAdapter = menuAdapter;
     this.applicationEventPublisher = applicationEventPublisher;
   }
 
@@ -31,7 +31,7 @@ public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements C
   public Optional<UUID> handle(T command) {
 
     Menu menu =
-        menuAdapter
+        menuRepositoryAdapter
             .findById(command.getMenuId().toString())
             .orElseThrow(() -> new MenuNotFoundException(command));
 

@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
  * @author Sursh Krishnan
  * @author Steve Clewer
  */
-public interface MenuAdapter {
+public interface MenuRepositoryAdapter {
 
   Page<Menu> findAllByRestaurantId(String restaurantId, Pageable pageable);
 

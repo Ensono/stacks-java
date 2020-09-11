@@ -16,7 +16,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateCategoryRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
@@ -45,13 +45,13 @@ class CreateCategoryControllerImplTest {
 
   @Autowired private TestRestTemplate testRestTemplate;
 
-  @MockBean private MenuAdapter menuAdapter;
+  @MockBean private MenuRepositoryAdapter menuRepositoryAdapter;
 
   @Test
   void testCanNotAddCategoryIfMenuNotPresent() {
     // Given
     UUID menuId = randomUUID();
-    when(menuAdapter.findById(eq(menuId.toString()))).thenReturn(Optional.empty());
+    when(menuRepositoryAdapter.findById(eq(menuId.toString()))).thenReturn(Optional.empty());
 
     CreateCategoryRequest request =
         new CreateCategoryRequest("test Category Name", "test Category Description");
@@ -106,8 +106,8 @@ class CreateCategoryControllerImplTest {
   void testAddCategory() {
     // Given
     Menu menu = createMenu(1);
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
-    when(menuAdapter.save(any(Menu.class))).thenReturn(menu);
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.save(any(Menu.class))).thenReturn(menu);
 
     CreateCategoryRequest request =
         new CreateCategoryRequest("test Category Name", "test Category Description");
@@ -121,7 +121,7 @@ class CreateCategoryControllerImplTest {
 
     // Then
     ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
-    verify(menuAdapter, times(1)).save(captor.capture());
+    verify(menuRepositoryAdapter, times(1)).save(captor.capture());
     Menu created = captor.getValue();
 
     then(created.getName()).isEqualTo(menu.getName());
@@ -145,7 +145,7 @@ class CreateCategoryControllerImplTest {
             UUID.randomUUID().toString(), "cat name", "cat description", new ArrayList<>());
     menu.addOrUpdateCategory(category);
 
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     CreateCategoryRequest request =
         new CreateCategoryRequest(category.getName(), "test Category Description");

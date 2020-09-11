@@ -1,7 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.service.impl;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
 import java.util.List;
 import java.util.Optional;
@@ -22,20 +22,20 @@ public class CosmosMenuQueryService implements MenuQueryService {
 
   private static Logger logger = LoggerFactory.getLogger(CosmosMenuQueryService.class);
 
-  private MenuAdapter menuAdapter;
+  private MenuRepositoryAdapter menuRepositoryAdapter;
 
-  public CosmosMenuQueryService(@Qualifier("menuAdapter") MenuAdapter menuAdapter) {
-    this.menuAdapter = menuAdapter;
+  public CosmosMenuQueryService(@Qualifier("menuAdapter") MenuRepositoryAdapter menuRepositoryAdapter) {
+    this.menuRepositoryAdapter = menuRepositoryAdapter;
   }
 
   public Optional<Menu> findById(UUID id) {
-    return menuAdapter.findById(id.toString());
+    return menuRepositoryAdapter.findById(id.toString());
   }
 
   public List<Menu> findAll(int pageNumber, int pageSize) {
 
     Page<Menu> page =
-        menuAdapter.findAll(PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, NAME)));
+        menuRepositoryAdapter.findAll(PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, NAME)));
 
     // This is specific and needed due to the way in which CosmosDB handles pagination
     // using a continuationToken and a limitation in the Swagger Specification.
@@ -44,7 +44,7 @@ public class CosmosMenuQueryService implements MenuQueryService {
     while (currentPage < pageNumber && page.hasNext()) {
       currentPage++;
       Pageable nextPageable = page.nextPageable();
-      page = menuAdapter.findAll(nextPageable);
+      page = menuRepositoryAdapter.findAll(nextPageable);
     }
     return page.getContent();
   }
@@ -52,7 +52,7 @@ public class CosmosMenuQueryService implements MenuQueryService {
   @Override
   public List<Menu> findAllByRestaurantId(UUID restaurantId, Integer pageSize, Integer pageNumber) {
 
-    return menuAdapter
+    return menuRepositoryAdapter
         .findAllByRestaurantId(
             restaurantId.toString(), PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, NAME)))
         .getContent();
@@ -62,7 +62,7 @@ public class CosmosMenuQueryService implements MenuQueryService {
   public List<Menu> findAllByNameContaining(
       String searchTerm, Integer pageSize, Integer pageNumber) {
 
-    return menuAdapter
+    return menuRepositoryAdapter
         .findAllByNameContaining(
             searchTerm, PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, NAME)))
         .getContent();
@@ -72,7 +72,7 @@ public class CosmosMenuQueryService implements MenuQueryService {
   public List<Menu> findAllByRestaurantIdAndNameContaining(
       UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber) {
 
-    return menuAdapter
+    return menuRepositoryAdapter
         .findAllByRestaurantIdAndNameContaining(
             restaurantId.toString(),
             searchTerm,

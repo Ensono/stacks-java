@@ -21,7 +21,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.mappers.DomainToDtoMapper;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Tag;
@@ -48,7 +48,7 @@ class QueryMenuControllerImplTest {
 
   @Autowired private TestRestTemplate testRestTemplate;
 
-  @MockBean private MenuAdapter menuAdapter;
+  @MockBean private MenuRepositoryAdapter menuRepositoryAdapter;
 
   final int DEFAULT_PAGE_NUMBER = 1;
   final int DEFAULT_PAGE_SIZE = 20;
@@ -57,7 +57,7 @@ class QueryMenuControllerImplTest {
   void listMenusAndPagination() {
 
     // Given
-    when(menuAdapter.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(createMenus(1)));
+    when(menuRepositoryAdapter.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(createMenus(1)));
 
     int pageNumber = 5;
     int pageSize = 6;
@@ -71,7 +71,7 @@ class QueryMenuControllerImplTest {
     SearchMenuResult actual = response.getBody();
 
     // Then
-    verify(menuAdapter, times(1)).findAll(any(Pageable.class));
+    verify(menuRepositoryAdapter, times(1)).findAll(any(Pageable.class));
     then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(actual, is(notNullValue()));
     assertThat(actual.getPageNumber(), is(pageNumber));
@@ -98,7 +98,7 @@ class QueryMenuControllerImplTest {
     SearchMenuResult expectedResponse =
         new SearchMenuResult(DEFAULT_PAGE_SIZE, DEFAULT_PAGE_NUMBER, expectedMenuList);
 
-    when(menuAdapter.findAllByRestaurantId(eq(restaurantId.toString()), any(Pageable.class)))
+    when(menuRepositoryAdapter.findAllByRestaurantId(eq(restaurantId.toString()), any(Pageable.class)))
         .thenReturn(new PageImpl<>(matching));
 
     // When
@@ -119,7 +119,7 @@ class QueryMenuControllerImplTest {
     final UUID restaurantId = randomUUID();
     final String searchTerm = "searchTermString";
 
-    when(menuAdapter.findAllByRestaurantIdAndNameContaining(
+    when(menuRepositoryAdapter.findAllByRestaurantIdAndNameContaining(
             eq(restaurantId.toString()), eq(searchTerm), any(Pageable.class)))
         .thenReturn(new PageImpl<>(Collections.emptyList()));
 
@@ -129,7 +129,7 @@ class QueryMenuControllerImplTest {
             "%s/v1/menu?restaurantId=%s&searchTerm=%s", getBaseURL(port), restaurantId, searchTerm),
         SearchMenuResult.class);
     // Then
-    verify(menuAdapter, times(1))
+    verify(menuRepositoryAdapter, times(1))
         .findAllByRestaurantIdAndNameContaining(
             eq(restaurantId.toString()), eq(searchTerm), any(Pageable.class));
   }
@@ -139,7 +139,7 @@ class QueryMenuControllerImplTest {
     // Given
     final String searchTerm = "searchTermString";
 
-    when(menuAdapter.findAllByNameContaining(eq(searchTerm), any(Pageable.class)))
+    when(menuRepositoryAdapter.findAllByNameContaining(eq(searchTerm), any(Pageable.class)))
         .thenReturn(new PageImpl<>(createMenus(0)));
 
     // When
@@ -147,7 +147,7 @@ class QueryMenuControllerImplTest {
         String.format("%s/v1/menu?searchTerm=%s", getBaseURL(port), searchTerm),
         SearchMenuResult.class);
     // Then
-    verify(menuAdapter, times(1)).findAllByNameContaining(eq(searchTerm), any(Pageable.class));
+    verify(menuRepositoryAdapter, times(1)).findAllByNameContaining(eq(searchTerm), any(Pageable.class));
   }
 
   @Test
@@ -165,7 +165,7 @@ class QueryMenuControllerImplTest {
 
     MenuDTO expectedResponse = DomainToDtoMapper.toMenuDto(menu);
 
-    when(menuAdapter.findById(menu.getId())).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(menu.getId())).thenReturn(Optional.of(menu));
 
     // When
     var response =
@@ -179,7 +179,7 @@ class QueryMenuControllerImplTest {
   @Test
   void listMenusWithDefaultPagination() {
     // Given
-    when(menuAdapter.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(createMenus(1)));
+    when(menuRepositoryAdapter.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(createMenus(1)));
 
     // When
     var response =

@@ -18,7 +18,7 @@ import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
@@ -49,11 +49,11 @@ class DeleteItemControllerImplTest {
 
   @Autowired private TestRestTemplate testRestTemplate;
 
-  @MockBean private MenuAdapter menuAdapter;
+  @MockBean private MenuRepositoryAdapter menuRepositoryAdapter;
 
   @AfterEach
   void tearDown() {
-    menuAdapter.deleteAll();
+    menuRepositoryAdapter.deleteAll();
   }
 
   @Test
@@ -64,7 +64,7 @@ class DeleteItemControllerImplTest {
     Item item = new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
     category.addOrUpdateItem(item);
     menu.addOrUpdateCategory(category);
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     // When
     String requestUrl =
@@ -78,9 +78,9 @@ class DeleteItemControllerImplTest {
             ResponseEntity.class);
 
     // Then
-    verify(menuAdapter, times(1)).save(menu);
+    verify(menuRepositoryAdapter, times(1)).save(menu);
     then(response.getStatusCode()).isEqualTo(OK);
-    Optional<Menu> optMenu = menuAdapter.findById(menu.getId());
+    Optional<Menu> optMenu = menuRepositoryAdapter.findById(menu.getId());
     Menu updated = optMenu.get();
     then(updated.getCategories()).hasSize(1);
     then(updated.getCategories().get(0).getItems()).isNotNull();
@@ -94,7 +94,7 @@ class DeleteItemControllerImplTest {
     Item item = new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
     category.addOrUpdateItem(item);
     menu.addOrUpdateCategory(category);
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     // When
     String requestUrl =
@@ -108,7 +108,7 @@ class DeleteItemControllerImplTest {
             ErrorResponse.class);
 
     // Then
-    verify(menuAdapter, times(0)).save(menu);
+    verify(menuRepositoryAdapter, times(0)).save(menu);
     then(response.getStatusCode()).isEqualTo(NOT_FOUND);
   }
 
@@ -120,7 +120,7 @@ class DeleteItemControllerImplTest {
     Item item = new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
     category.addOrUpdateItem(item);
     menu.addOrUpdateCategory(category);
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     // When
     String requestUrl =
@@ -135,7 +135,7 @@ class DeleteItemControllerImplTest {
             ErrorResponse.class);
 
     // Then
-    verify(menuAdapter, times(0)).save(menu);
+    verify(menuRepositoryAdapter, times(0)).save(menu);
     then(response.getStatusCode()).isEqualTo(NOT_FOUND);
   }
 }

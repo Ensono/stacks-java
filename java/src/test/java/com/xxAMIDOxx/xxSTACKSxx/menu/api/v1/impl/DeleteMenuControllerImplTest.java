@@ -15,7 +15,7 @@ import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Tag;
@@ -44,13 +44,13 @@ class DeleteMenuControllerImplTest {
 
   @Autowired private TestRestTemplate testRestTemplate;
 
-  @MockBean private MenuAdapter menuAdapter;
+  @MockBean private MenuRepositoryAdapter menuRepositoryAdapter;
 
   @Test
   void testDeleteMenuSuccess() {
     // Given
     Menu menu = createMenu(1);
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     var response =
         this.testRestTemplate.exchange(
@@ -59,7 +59,7 @@ class DeleteMenuControllerImplTest {
             new HttpEntity<>(getRequestHttpEntity()),
             ResponseEntity.class);
     // Then
-    verify(menuAdapter, times(1)).delete(menu);
+    verify(menuRepositoryAdapter, times(1)).delete(menu);
     then(response.getStatusCode()).isEqualTo(OK);
   }
 
@@ -67,7 +67,7 @@ class DeleteMenuControllerImplTest {
   void testDeleteMenuWithInvalidId() {
     // Given
     Menu menu = createMenu(1);
-    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     var response =
         this.testRestTemplate.exchange(
@@ -76,7 +76,7 @@ class DeleteMenuControllerImplTest {
             new HttpEntity<>(getRequestHttpEntity()),
             ErrorResponse.class);
     // Then
-    verify(menuAdapter, times(0)).delete(menu);
+    verify(menuRepositoryAdapter, times(0)).delete(menu);
     then(response.getStatusCode()).isEqualTo(NOT_FOUND);
   }
 }
