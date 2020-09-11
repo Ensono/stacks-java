@@ -10,13 +10,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AzureConfig {
 
-  @Bean("menuAdapter")
+  @Bean("menuRepositoryAdapter")
   @ConditionalOnProperty(name = "cloud.provider", havingValue = "azure")
   public MenuRepositoryAdapter azureMenuAdapter() {
     return new AzureMenuRepositoryAdapter();
   }
 
-  @Bean("menuAdapter")
+  @Bean("menuRepositoryAdapter")
   @ConditionalOnProperty(name = "cloud.provider", havingValue = "gcp")
   public MenuRepositoryAdapter gcpMenuAdapter() {
     return new GcpMenuRepositoryAdapter();

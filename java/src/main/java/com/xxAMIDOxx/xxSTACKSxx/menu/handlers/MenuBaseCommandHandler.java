@@ -21,7 +21,7 @@ public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements C
   private ApplicationEventPublisher applicationEventPublisher;
 
   public MenuBaseCommandHandler(
-      @Qualifier("menuAdapter") MenuRepositoryAdapter menuAdapter,
+      @Qualifier("menuRepositoryAdapter") MenuRepositoryAdapter menuAdapter,
       ApplicationEventPublisher applicationEventPublisher) {
     this.menuRepositoryAdapter = menuAdapter;
     this.applicationEventPublisher = applicationEventPublisher;

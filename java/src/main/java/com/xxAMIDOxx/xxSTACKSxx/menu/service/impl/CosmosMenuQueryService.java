@@ -24,7 +24,7 @@ public class CosmosMenuQueryService implements MenuQueryService {
 
   private MenuRepositoryAdapter menuRepositoryAdapter;
 
-  public CosmosMenuQueryService(@Qualifier("menuAdapter") MenuRepositoryAdapter menuRepositoryAdapter) {
+  public CosmosMenuQueryService(@Qualifier("menuRepositoryAdapter") MenuRepositoryAdapter menuRepositoryAdapter) {
     this.menuRepositoryAdapter = menuRepositoryAdapter;
   }
 
