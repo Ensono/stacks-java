@@ -12,6 +12,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements CommandHandler<T> {
 
@@ -20,7 +21,8 @@ public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements C
   private ApplicationEventPublisher applicationEventPublisher;
 
   public MenuBaseCommandHandler(
-      MenuAdapter menuAdapter, ApplicationEventPublisher applicationEventPublisher) {
+      @Qualifier("menuAdapter") MenuAdapter menuAdapter,
+      ApplicationEventPublisher applicationEventPublisher) {
     this.menuAdapter = menuAdapter;
     this.applicationEventPublisher = applicationEventPublisher;
   }

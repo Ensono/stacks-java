@@ -4,7 +4,9 @@ import com.microsoft.azure.spring.data.cosmosdb.repository.CosmosRepository;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface AzureMenuRepository extends CosmosRepository<Menu, String> {
 
   @Override

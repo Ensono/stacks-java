@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,7 @@ public class CosmosMenuQueryService implements MenuQueryService {
 
   private MenuAdapter menuAdapter;
 
-  public CosmosMenuQueryService(MenuAdapter menuAdapter) {
+  public CosmosMenuQueryService(@Qualifier("menuAdapter") MenuAdapter menuAdapter) {
     this.menuAdapter = menuAdapter;
   }
 
