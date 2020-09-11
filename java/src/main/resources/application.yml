@@ -48,3 +48,6 @@ azure:
     topicName: menu-updates
     subscriptionName: Subscription1
     enabled: false
+
+cloud:
+  provider: azure
