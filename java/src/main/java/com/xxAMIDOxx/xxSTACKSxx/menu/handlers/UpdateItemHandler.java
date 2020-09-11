@@ -12,7 +12,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryDoesNotExistException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ItemAlreadyExistsException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ItemDoesNotExistsException;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -23,8 +23,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class UpdateItemHandler extends MenuBaseCommandHandler<UpdateItemCommand> {
 
-  public UpdateItemHandler(MenuRepository repository, ApplicationEventPublisher publisher) {
-    super(repository, publisher);
+  public UpdateItemHandler(MenuAdapter menuAdapter, ApplicationEventPublisher publisher) {
+    super(menuAdapter, publisher);
   }
 
   @Override
@@ -32,7 +32,7 @@ public class UpdateItemHandler extends MenuBaseCommandHandler<UpdateItemCommand>
     Category category = getCategory(menu, command);
     Item updated = updateItem(command, category);
     menu.addOrUpdateCategory(category.addOrUpdateItem(updated));
-    menuRepository.save(menu);
+    menuAdapter.save(menu);
     return Optional.of(command.getItemId());
   }
 

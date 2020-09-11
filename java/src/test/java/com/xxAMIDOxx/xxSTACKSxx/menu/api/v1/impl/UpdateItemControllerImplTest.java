@@ -23,7 +23,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Tag;
@@ -54,7 +54,7 @@ class UpdateItemControllerImplTest {
 
   @Autowired private TestRestTemplate testRestTemplate;
 
-  @MockBean private MenuRepository menuRepository;
+  @MockBean private MenuAdapter menuAdapter;
 
   @Test
   void testUpdateItemSuccess() {
@@ -64,7 +64,7 @@ class UpdateItemControllerImplTest {
     Item item = createItem(0);
     category.addOrUpdateItem(item);
     menu.addOrUpdateCategory(category);
-    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateItemRequest request =
         new UpdateItemRequest("Some Name", "Some Description", 13.56d, true);
@@ -85,7 +85,7 @@ class UpdateItemControllerImplTest {
     then(response.getStatusCode()).isEqualTo(OK);
 
     ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
-    verify(menuRepository, times(1)).save(captor.capture());
+    verify(menuAdapter, times(1)).save(captor.capture());
     Menu updated = captor.getValue();
     then(updated.getCategories()).hasSize(1);
     Category updatedCategory = updated.getCategories().get(0);
@@ -106,7 +106,7 @@ class UpdateItemControllerImplTest {
     List<Item> items = createItems(2);
     category.setItems(items);
     menu.addOrUpdateCategory(category);
-    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateItemRequest request =
         new UpdateItemRequest(items.get(0).getName(), "Some Description2", 13.56d, true);
@@ -128,7 +128,7 @@ class UpdateItemControllerImplTest {
     then(response.getStatusCode()).isEqualTo(OK);
 
     ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
-    verify(menuRepository, times(1)).save(captor.capture());
+    verify(menuAdapter, times(1)).save(captor.capture());
     Category updatedCategory = captor.getValue().getCategories().get(0);
     then(updatedCategory.getItems()).hasSize(2);
 
@@ -153,7 +153,7 @@ class UpdateItemControllerImplTest {
     Item item = new Item(randomUUID().toString(), "New Item", "Item description", 12.2d, true);
     category.addOrUpdateItem(item);
     menu.addOrUpdateCategory(category);
-    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateItemRequest request =
         new UpdateItemRequest("Some Name", "Some Description", 13.56d, true);
@@ -174,7 +174,7 @@ class UpdateItemControllerImplTest {
     then(response.getStatusCode()).isEqualTo(NOT_FOUND);
 
     ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
-    verify(menuRepository, times(0)).save(captor.capture());
+    verify(menuAdapter, times(0)).save(captor.capture());
   }
 
   @Test
@@ -185,7 +185,7 @@ class UpdateItemControllerImplTest {
     Item item = new Item(randomUUID().toString(), "New Item", "Item description", 12.2d, true);
     category.addOrUpdateItem(item);
     menu.addOrUpdateCategory(category);
-    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateItemRequest request =
         new UpdateItemRequest("Some Name", "Some Description", 13.56d, true);
@@ -206,7 +206,7 @@ class UpdateItemControllerImplTest {
     then(response.getStatusCode()).isEqualTo(NOT_FOUND);
 
     ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
-    verify(menuRepository, times(0)).save(captor.capture());
+    verify(menuAdapter, times(0)).save(captor.capture());
   }
 
   @Test
@@ -217,7 +217,7 @@ class UpdateItemControllerImplTest {
     Item item = new Item(randomUUID().toString(), "New Item", "Item description", 12.2d, true);
     category.addOrUpdateItem(item);
     menu.addOrUpdateCategory(category);
-    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateItemRequest request = new UpdateItemRequest("", "Some Description", 13.56d, true);
 
@@ -246,7 +246,7 @@ class UpdateItemControllerImplTest {
     Item item = createItem(0);
     category.addOrUpdateItem(item);
     menu.addOrUpdateCategory(category);
-    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateItemRequest request = new UpdateItemRequest("Updated Name", "", 13.56d, true);
 
@@ -275,7 +275,7 @@ class UpdateItemControllerImplTest {
     Item item = createItem(0);
     category.addOrUpdateItem(item);
     menu.addOrUpdateCategory(category);
-    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateItemRequest request = new UpdateItemRequest("Updated Name", "la alal", 0d, true);
 

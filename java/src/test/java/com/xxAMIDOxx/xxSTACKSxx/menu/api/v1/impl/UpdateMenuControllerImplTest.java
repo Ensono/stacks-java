@@ -16,7 +16,7 @@ import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateMenuRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Tag;
@@ -46,13 +46,13 @@ class UpdateMenuControllerImplTest {
 
   @Autowired private TestRestTemplate testRestTemplate;
 
-  @MockBean private MenuRepository menuRepository;
+  @MockBean private MenuAdapter menuAdapter;
 
   @Test
   void testUpdateSuccess() {
     // Given
     Menu menu = createMenu(0);
-    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateMenuRequest request = new UpdateMenuRequest("new name", "new description", false);
 
@@ -66,7 +66,7 @@ class UpdateMenuControllerImplTest {
 
     // Then
     ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
-    verify(menuRepository, times(1)).save(captor.capture());
+    verify(menuAdapter, times(1)).save(captor.capture());
     Menu updated = captor.getValue();
 
     then(updated.getName()).isEqualTo(request.getName());
@@ -82,7 +82,7 @@ class UpdateMenuControllerImplTest {
   void testCannotUpdateIfMenuDoesntExist() {
     // Given
     UUID menuId = randomUUID();
-    when(menuRepository.findById(eq(menuId.toString()))).thenReturn(Optional.empty());
+    when(menuAdapter.findById(eq(menuId.toString()))).thenReturn(Optional.empty());
 
     UpdateMenuRequest request = new UpdateMenuRequest("name", "description", true);
 
@@ -103,7 +103,7 @@ class UpdateMenuControllerImplTest {
   void testUpdateMenuWithNoNameReturnsBadRequest() {
     // Given
     Menu menu = createMenu(0);
-    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateMenuRequest request = new UpdateMenuRequest("", "new description", false);
 
@@ -125,7 +125,7 @@ class UpdateMenuControllerImplTest {
   void testUpdateMenuWithNoDescriptionReturnsBadRequest() {
     // Given
     Menu menu = createMenu(0);
-    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateMenuRequest request = new UpdateMenuRequest("Updated Name", "", false);
 

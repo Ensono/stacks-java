@@ -21,7 +21,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.mappers.DomainToDtoMapper;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Tag;
@@ -42,22 +42,22 @@ import org.springframework.test.context.ActiveProfiles;
     exclude = {CosmosDbRepositoriesAutoConfiguration.class, CosmosAutoConfiguration.class})
 @Tag("Integration")
 @ActiveProfiles("test")
-public class QueryMenuControllerImplTest {
+class QueryMenuControllerImplTest {
 
   @LocalServerPort private int port;
 
   @Autowired private TestRestTemplate testRestTemplate;
 
-  @MockBean private MenuRepository menuRepository;
+  @MockBean private MenuAdapter menuAdapter;
 
   final int DEFAULT_PAGE_NUMBER = 1;
   final int DEFAULT_PAGE_SIZE = 20;
 
   @Test
-  public void listMenusAndPagination() {
+  void listMenusAndPagination() {
 
     // Given
-    when(menuRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(createMenus(1)));
+    when(menuAdapter.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(createMenus(1)));
 
     int pageNumber = 5;
     int pageSize = 6;
@@ -71,7 +71,7 @@ public class QueryMenuControllerImplTest {
     SearchMenuResult actual = response.getBody();
 
     // Then
-    verify(menuRepository, times(1)).findAll(any(Pageable.class));
+    verify(menuAdapter, times(1)).findAll(any(Pageable.class));
     then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(actual, is(notNullValue()));
     assertThat(actual.getPageNumber(), is(pageNumber));
@@ -79,7 +79,7 @@ public class QueryMenuControllerImplTest {
   }
 
   @Test
-  public void listMenusFilteredByRestaurantId() {
+  void listMenusFilteredByRestaurantId() {
 
     // Given
     final UUID restaurantId = randomUUID();
@@ -98,7 +98,7 @@ public class QueryMenuControllerImplTest {
     SearchMenuResult expectedResponse =
         new SearchMenuResult(DEFAULT_PAGE_SIZE, DEFAULT_PAGE_NUMBER, expectedMenuList);
 
-    when(menuRepository.findAllByRestaurantId(eq(restaurantId.toString()), any(Pageable.class)))
+    when(menuAdapter.findAllByRestaurantId(eq(restaurantId.toString()), any(Pageable.class)))
         .thenReturn(new PageImpl<>(matching));
 
     // When
@@ -107,18 +107,19 @@ public class QueryMenuControllerImplTest {
             String.format("%s/v1/menu?restaurantId=%s", getBaseURL(port), restaurantId),
             SearchMenuResult.class);
     // Then
-    then(result.getBody().getPageNumber()).isEqualTo(expectedResponse.getPageNumber());
+    then(Objects.requireNonNull(result.getBody()).getPageNumber())
+        .isEqualTo(expectedResponse.getPageNumber());
     then(result.getBody().getPageSize()).isEqualTo(expectedResponse.getPageSize());
     then(result.getBody().getResults()).containsAll(expectedResponse.getResults());
   }
 
   @Test
-  public void listMenusFilteredByRestaurantIdAndSearchTerm() {
+  void listMenusFilteredByRestaurantIdAndSearchTerm() {
     // Given
     final UUID restaurantId = randomUUID();
     final String searchTerm = "searchTermString";
 
-    when(menuRepository.findAllByRestaurantIdAndNameContaining(
+    when(menuAdapter.findAllByRestaurantIdAndNameContaining(
             eq(restaurantId.toString()), eq(searchTerm), any(Pageable.class)))
         .thenReturn(new PageImpl<>(Collections.emptyList()));
 
@@ -128,17 +129,17 @@ public class QueryMenuControllerImplTest {
             "%s/v1/menu?restaurantId=%s&searchTerm=%s", getBaseURL(port), restaurantId, searchTerm),
         SearchMenuResult.class);
     // Then
-    verify(menuRepository, times(1))
+    verify(menuAdapter, times(1))
         .findAllByRestaurantIdAndNameContaining(
             eq(restaurantId.toString()), eq(searchTerm), any(Pageable.class));
   }
 
   @Test
-  public void listMenusFilteredBySearchTerm() {
+  void listMenusFilteredBySearchTerm() {
     // Given
     final String searchTerm = "searchTermString";
 
-    when(menuRepository.findAllByNameContaining(eq(searchTerm), any(Pageable.class)))
+    when(menuAdapter.findAllByNameContaining(eq(searchTerm), any(Pageable.class)))
         .thenReturn(new PageImpl<>(createMenus(0)));
 
     // When
@@ -146,22 +147,25 @@ public class QueryMenuControllerImplTest {
         String.format("%s/v1/menu?searchTerm=%s", getBaseURL(port), searchTerm),
         SearchMenuResult.class);
     // Then
-    verify(menuRepository, times(1)).findAllByNameContaining(eq(searchTerm), any(Pageable.class));
+    verify(menuAdapter, times(1)).findAllByNameContaining(eq(searchTerm), any(Pageable.class));
   }
 
   @Test
-  public void getMenuById() {
+  void getMenuById() {
     // Given
     Menu menu = createMenu(0);
     Item item = new Item(randomUUID().toString(), "item name", "item description", 5.99d, true);
     Category category =
         new Category(
-            UUID.randomUUID().toString(), "cat name", "cat description", Arrays.asList(item));
+            UUID.randomUUID().toString(),
+            "cat name",
+            "cat description",
+            Collections.singletonList(item));
     menu.addOrUpdateCategory(category);
 
     MenuDTO expectedResponse = DomainToDtoMapper.toMenuDto(menu);
 
-    when(menuRepository.findById(menu.getId())).thenReturn(Optional.of(menu));
+    when(menuAdapter.findById(menu.getId())).thenReturn(Optional.of(menu));
 
     // When
     var response =
@@ -173,9 +177,9 @@ public class QueryMenuControllerImplTest {
   }
 
   @Test
-  public void listMenusWithDefaultPagination() {
+  void listMenusWithDefaultPagination() {
     // Given
-    when(menuRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(createMenus(1)));
+    when(menuAdapter.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(createMenus(1)));
 
     // When
     var response =

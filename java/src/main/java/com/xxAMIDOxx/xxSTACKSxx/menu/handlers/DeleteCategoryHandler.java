@@ -8,13 +8,8 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.events.CategoryDeletedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryDoesNotExistException;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +18,8 @@ import org.springframework.stereotype.Component;
 public class DeleteCategoryHandler extends MenuBaseCommandHandler<DeleteCategoryCommand> {
 
   public DeleteCategoryHandler(
-      MenuRepository menuRepository, ApplicationEventPublisher applicationEventPublisher) {
-    super(menuRepository, applicationEventPublisher);
+      MenuAdapter menuAdapter, ApplicationEventPublisher applicationEventPublisher) {
+    super(menuAdapter, applicationEventPublisher);
   }
 
   Optional<UUID> handleCommand(Menu menu, DeleteCategoryCommand command) {
@@ -34,7 +29,7 @@ public class DeleteCategoryHandler extends MenuBaseCommandHandler<DeleteCategory
             .filter(t -> !Objects.equals(t, category))
             .collect(Collectors.toList());
     menu.setCategories(!collect.isEmpty() ? collect : Collections.emptyList());
-    menuRepository.save(menu);
+    menuAdapter.save(menu);
     return Optional.empty();
   }
 

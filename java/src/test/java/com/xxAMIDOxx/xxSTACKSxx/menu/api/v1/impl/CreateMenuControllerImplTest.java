@@ -14,9 +14,9 @@ import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateMenuRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
-import java.util.Arrays;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.UUID;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ class CreateMenuControllerImplTest {
 
   @Autowired private TestRestTemplate testRestTemplate;
 
-  @MockBean private MenuRepository menuRepository;
+  @MockBean private MenuAdapter menuAdapter;
 
   @Test
   void testCreateNewMenu() {
@@ -54,10 +54,10 @@ class CreateMenuControllerImplTest {
         new CreateMenuRequest(
             m.getName(), m.getDescription(), UUID.fromString(m.getRestaurantId()), m.getEnabled());
 
-    when(menuRepository.findAllByRestaurantIdAndName(
+    when(menuAdapter.findAllByRestaurantIdAndName(
             eq(m.getRestaurantId()), eq(m.getName()), any(Pageable.class)))
         .thenReturn(new PageImpl<>(Collections.emptyList()));
-    when(menuRepository.save(any(Menu.class))).thenReturn(m);
+    when(menuAdapter.save(any(Menu.class))).thenReturn(m);
 
     // When
     var response =
@@ -76,9 +76,9 @@ class CreateMenuControllerImplTest {
         new CreateMenuRequest(
             m.getName(), m.getDescription(), UUID.fromString(m.getRestaurantId()), m.getEnabled());
 
-    when(menuRepository.findAllByRestaurantIdAndName(
+    when(menuAdapter.findAllByRestaurantIdAndName(
             eq(m.getRestaurantId()), eq(m.getName()), any(Pageable.class)))
-        .thenReturn(new PageImpl<>(Arrays.asList(m)));
+        .thenReturn(new PageImpl<>(Collections.singletonList(m)));
 
     // When
     var response =
@@ -96,7 +96,7 @@ class CreateMenuControllerImplTest {
     CreateMenuRequest request =
         new CreateMenuRequest(m.getName(), "", fromString(m.getRestaurantId()), m.getEnabled());
 
-    when(menuRepository.save(any(Menu.class))).thenReturn(m);
+    when(menuAdapter.save(any(Menu.class))).thenReturn(m);
     // When
     var response =
         this.testRestTemplate.postForEntity(
@@ -104,7 +104,7 @@ class CreateMenuControllerImplTest {
 
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-    then(response.getBody().getDescription())
+    then(Objects.requireNonNull(response.getBody()).getDescription())
         .isEqualTo("Invalid Request: {description=must not be blank}");
   }
 
@@ -116,7 +116,7 @@ class CreateMenuControllerImplTest {
         new CreateMenuRequest(
             "", m.getDescription(), fromString(m.getRestaurantId()), m.getEnabled());
 
-    when(menuRepository.save(any(Menu.class))).thenReturn(m);
+    when(menuAdapter.save(any(Menu.class))).thenReturn(m);
     // When
     var response =
         this.testRestTemplate.postForEntity(
@@ -124,7 +124,7 @@ class CreateMenuControllerImplTest {
 
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-    then(response.getBody().getDescription())
+    then(Objects.requireNonNull(response.getBody()).getDescription())
         .isEqualTo("Invalid Request: {name=must not be blank}");
   }
 }

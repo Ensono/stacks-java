@@ -23,7 +23,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
@@ -52,7 +52,7 @@ class CreateItemControllerImplTest {
 
   @Autowired private TestRestTemplate testRestTemplate;
 
-  @MockBean private MenuRepository menuRepository;
+  @MockBean private MenuAdapter menuAdapter;
 
   @Test
   void testAddItem() {
@@ -62,8 +62,8 @@ class CreateItemControllerImplTest {
         new Category(randomUUID().toString(), "cat name", "cat description", new ArrayList<>());
     menu.addOrUpdateCategory(category);
 
-    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
-    when(menuRepository.save(any(Menu.class))).thenReturn(menu);
+    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuAdapter.save(any(Menu.class))).thenReturn(menu);
 
     CreateItemRequest request =
         new CreateItemRequest("Some Name", "Some Description", 13.56d, true);
@@ -77,7 +77,7 @@ class CreateItemControllerImplTest {
 
     // Then
     ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
-    verify(menuRepository, times(1)).save(captor.capture());
+    verify(menuAdapter, times(1)).save(captor.capture());
     Menu created = captor.getValue();
 
     then(created.getName()).isEqualTo(menu.getName());
@@ -125,7 +125,7 @@ class CreateItemControllerImplTest {
 
     // Given
     Menu menu = createMenu(1);
-    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     CreateItemRequest request =
         new CreateItemRequest("Some Name", "Some Description", 13.56d, true);
@@ -138,7 +138,7 @@ class CreateItemControllerImplTest {
             ErrorResponse.class);
 
     // Then
-    verify(menuRepository, never()).save(any(Menu.class));
+    verify(menuAdapter, never()).save(any(Menu.class));
 
     // Then
     then(response).isNotNull();
@@ -155,7 +155,7 @@ class CreateItemControllerImplTest {
             UUID.randomUUID().toString(), "cat name", "cat description", Arrays.asList(item));
     menu.addOrUpdateCategory(category);
 
-    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     CreateItemRequest request =
         new CreateItemRequest(item.getName(), "Some Description", 13.56d, true);
@@ -168,7 +168,7 @@ class CreateItemControllerImplTest {
             ErrorResponse.class);
 
     // Then
-    verify(menuRepository, never()).save(any(Menu.class));
+    verify(menuAdapter, never()).save(any(Menu.class));
 
     // Then
     then(response).isNotNull();
@@ -182,8 +182,8 @@ class CreateItemControllerImplTest {
     Category category = createCategory(1);
     menu.addOrUpdateCategory(category);
 
-    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
-    when(menuRepository.save(any(Menu.class))).thenReturn(menu);
+    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuAdapter.save(any(Menu.class))).thenReturn(menu);
     CreateItemRequest request = new CreateItemRequest("", "Some Description", 13.56d, true);
 
     // When
@@ -207,8 +207,8 @@ class CreateItemControllerImplTest {
     Category category = createCategory(1);
     menu.addOrUpdateCategory(category);
 
-    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
-    when(menuRepository.save(any(Menu.class))).thenReturn(menu);
+    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuAdapter.save(any(Menu.class))).thenReturn(menu);
     CreateItemRequest request = new CreateItemRequest("Some name", "", 13.56d, true);
 
     // When
@@ -232,8 +232,8 @@ class CreateItemControllerImplTest {
     Category category = createCategory(1);
     menu.addOrUpdateCategory(category);
 
-    when(menuRepository.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
-    when(menuRepository.save(any(Menu.class))).thenReturn(menu);
+    when(menuAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
+    when(menuAdapter.save(any(Menu.class))).thenReturn(menu);
     CreateItemRequest request = new CreateItemRequest("Some name", "Item description", 0d, true);
 
     // When

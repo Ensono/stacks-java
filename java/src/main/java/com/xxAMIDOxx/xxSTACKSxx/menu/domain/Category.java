@@ -9,6 +9,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
+@Builder
 public class Category {
 
   private String id;

@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
 import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
 import java.util.List;
 import org.junit.jupiter.api.Tag;
@@ -23,8 +23,8 @@ public class CosmosMenuQueryServiceTest {
   @Test
   void findAll() {
 
-    MenuRepository repository = mock(MenuRepository.class);
-    MenuQueryService menuQueryServiceImpl = new CosmosMenuQueryService(repository);
+    MenuAdapter menuAdapter = mock(MenuAdapter.class);
+    MenuQueryService menuQueryServiceImpl = new CosmosMenuQueryService(menuAdapter);
 
     Pageable pageable = mock(Pageable.class);
 
@@ -33,8 +33,8 @@ public class CosmosMenuQueryServiceTest {
     Page<Menu> page2 = new PageImpl<>(results, pageable, 2);
 
     // Given
-    given(repository.findAll(any(Pageable.class))).willReturn(page1);
-    given(repository.findAll(eq(pageable))).willReturn(page2);
+    given(menuAdapter.findAll(any(Pageable.class))).willReturn(page1);
+    given(menuAdapter.findAll(eq(pageable))).willReturn(page2);
 
     // When
     List<Menu> actualResults = menuQueryServiceImpl.findAll(2, 5);

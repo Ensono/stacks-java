@@ -9,7 +9,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryAlreadyExistsException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryDoesNotExistException;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -20,14 +20,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class UpdateCategoryHandler extends MenuBaseCommandHandler<UpdateCategoryCommand> {
 
-  public UpdateCategoryHandler(MenuRepository repository, ApplicationEventPublisher publisher) {
-    super(repository, publisher);
+  public UpdateCategoryHandler(MenuAdapter menuAdapter, ApplicationEventPublisher publisher) {
+    super(menuAdapter, publisher);
   }
 
   @Override
   Optional<UUID> handleCommand(Menu menu, UpdateCategoryCommand command) {
     menu.addOrUpdateCategory(updateCategory(menu, command));
-    menuRepository.save(menu);
+    menuAdapter.save(menu);
     return Optional.of(command.getCategoryId());
   }
 

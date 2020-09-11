@@ -6,7 +6,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateMenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuCreatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.MenuAlreadyExistsException;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,13 +17,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class CreateMenuHandler implements CommandHandler<CreateMenuCommand> {
 
-  protected MenuRepository menuRepository;
+  protected MenuAdapter menuAdapter;
 
   private ApplicationEventPublisher applicationEventPublisher;
 
   public CreateMenuHandler(
-      MenuRepository menuRepository, ApplicationEventPublisher applicationEventPublisher) {
-    this.menuRepository = menuRepository;
+      MenuAdapter menuAdapter, ApplicationEventPublisher applicationEventPublisher) {
+    this.menuAdapter = menuAdapter;
     this.applicationEventPublisher = applicationEventPublisher;
   }
 
@@ -42,7 +42,7 @@ public class CreateMenuHandler implements CommandHandler<CreateMenuCommand> {
             new ArrayList<>(),
             command.getEnabled());
 
-    menuRepository.save(menu);
+    menuAdapter.save(menu);
 
     applicationEventPublisher.publish(new MenuCreatedEvent(command, id));
 
@@ -51,7 +51,7 @@ public class CreateMenuHandler implements CommandHandler<CreateMenuCommand> {
 
   protected void verifyMenuNotAlreadyExisting(CreateMenuCommand command) {
     Page<Menu> existing =
-        menuRepository.findAllByRestaurantIdAndName(
+        menuAdapter.findAllByRestaurantIdAndName(
             command.getRestaurantId().toString(), command.getName(), PageRequest.of(0, 1));
     if (!existing.getContent().isEmpty()
         && existing.get().anyMatch(m -> m.getName().equals(command.getName()))) {

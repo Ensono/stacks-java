@@ -8,20 +8,20 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.MenuNotFoundException;
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuAdapter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements CommandHandler<T> {
 
-  protected MenuRepository menuRepository;
+  protected MenuAdapter menuAdapter;
 
   private ApplicationEventPublisher applicationEventPublisher;
 
   public MenuBaseCommandHandler(
-      MenuRepository menuRepository, ApplicationEventPublisher applicationEventPublisher) {
-    this.menuRepository = menuRepository;
+      MenuAdapter menuAdapter, ApplicationEventPublisher applicationEventPublisher) {
+    this.menuAdapter = menuAdapter;
     this.applicationEventPublisher = applicationEventPublisher;
   }
 
@@ -29,7 +29,7 @@ public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements C
   public Optional<UUID> handle(T command) {
 
     Menu menu =
-        menuRepository
+        menuAdapter
             .findById(command.getMenuId().toString())
             .orElseThrow(() -> new MenuNotFoundException(command));
 
