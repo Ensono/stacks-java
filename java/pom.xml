@@ -21,7 +21,7 @@
         <org.projectlombok.version>1.18.0</org.projectlombok.version>
         <org.springdoc-openapi.version>1.4.6</org.springdoc-openapi.version>
         <applicationinsights.version>2.6.1</applicationinsights.version>
-        <cosmosdb.version>2.3.3</cosmosdb.version>
+        <cosmosdb.version>2.3.5</cosmosdb.version>
         <azure.springboot.version>2.3.4</azure.springboot.version>
         <azure.servicebus.version>3.4.0</azure.servicebus.version>
         <jackson.version>2.11.0</jackson.version>
