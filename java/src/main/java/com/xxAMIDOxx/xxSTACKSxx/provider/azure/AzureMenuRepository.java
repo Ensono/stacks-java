@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx.menu.repository;
+package com.xxAMIDOxx.xxSTACKSxx.provider.azure;
 
 import com.microsoft.azure.spring.data.cosmosdb.repository.CosmosRepository;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;

@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx;
 
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.GcpMenuRepositoryAdapter;
+import com.xxAMIDOxx.xxSTACKSxx.provider.gcp.GcpMenuRepositoryAdapter;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

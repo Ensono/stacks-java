@@ -1,6 +1,7 @@
-package com.xxAMIDOxx.xxSTACKSxx.menu.repository;
+package com.xxAMIDOxx.xxSTACKSxx.provider.gcp;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +10,7 @@ import java.util.Optional;
 
 public class GcpMenuRepositoryAdapter implements MenuRepositoryAdapter {
 
-  @Autowired protected AzureMenuRepository azureMenuRepository;
+  //@Autowired protected GCPMenuRepository gcpMenuRepository;
 
   public Page<Menu> findAllByRestaurantId(String restaurantId, Pageable pageable) {
     throw new UnsupportedOperationException("GCP operation not supported");
@@ -17,7 +18,7 @@ public class GcpMenuRepositoryAdapter implements MenuRepositoryAdapter {
 
   @Override
   public Menu save(Menu menu) {
-    return azureMenuRepository.save(menu);
+    throw new UnsupportedOperationException("GCP operation not supported");
   }
 
   @Override
