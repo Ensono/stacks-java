@@ -22,7 +22,7 @@
         <org.springdoc-openapi.version>1.4.6</org.springdoc-openapi.version>
         <applicationinsights.version>2.6.1</applicationinsights.version>
         <cosmosdb.version>2.3.5</cosmosdb.version>
-        <azure.springboot.version>2.3.4</azure.springboot.version>
+        <azure.springboot.version>2.3.5</azure.springboot.version>
         <azure.servicebus.version>3.4.0</azure.servicebus.version>
         <jackson.version>2.11.0</jackson.version>
         <mockito.version>3.5.11</mockito.version>
@@ -32,15 +32,15 @@
         <jacoco.version>0.8.6</jacoco.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <maven-surefire-phase>test</maven-surefire-phase>
-        <junit-jupiter.version>5.6.2</junit-jupiter.version>
-        <equals-verifier.version>3.4.2</equals-verifier.version>
+        <junit-jupiter.version>5.7.0</junit-jupiter.version>
+        <equals-verifier.version>3.4.3</equals-verifier.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <owasp-dependency-check-plugin.version>6.0.0</owasp-dependency-check-plugin.version>
+        <owasp-dependency-check-plugin.version>6.0.1</owasp-dependency-check-plugin.version>
         <auth0-spring-security-api.version>1.4.0</auth0-spring-security-api.version>
 
         <fmt-maven-plugin.version>2.10</fmt-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
-        <puppycrawl-tools-checkstyle.version>8.36</puppycrawl-tools-checkstyle.version>
+        <puppycrawl-tools-checkstyle.version>8.36.1</puppycrawl-tools-checkstyle.version>
         <spotbugs-maven-plugin.version>4.0.4</spotbugs-maven-plugin.version>
         <spotbugs.version>4.1.2</spotbugs.version>
         <pact.version>3.5.24</pact.version>
