@@ -49,8 +49,8 @@
         <pact.broker.url></pact.broker.url>
         <pact.broker.token></pact.broker.token>
         <pact.api.name>JavaMenuAPI</pact.api.name>
-        <pact.api.protocol>https</pact.api.protocol>
-        <pact.api.url>localhost</pact.api.url>
+        <pact.api.protocol>http</pact.api.protocol>
+        <pact.api.host>localhost</pact.api.host>
         <pact.api.port>9000</pact.api.port>
     </properties>
 
