@@ -32,6 +32,9 @@ Please provide the ```Pact_Broker_URL``` and ```Pact_Broker_Token``` to the prov
     <pactBrokerUrl>Pact_Broker_URL</pactBrokerUrl>
     <pactBrokerToken>Pact_Broker_Token</pactBrokerToken>
 ```    
+####Note: The pact broker URL and Token values can be provided directly in the command line as system properties:  
+``` -Dpact.broker.url=url_value -Dpact.broker.token=token_value```
+
 
 ## Steps:   
 1. Consumer: Creating the contract
@@ -44,4 +47,14 @@ Please provide the ```Pact_Broker_URL``` and ```Pact_Broker_Token``` to the prov
 4. - Execute  ```mvn pact:publish``` from 'java' directory to publish this pact to broker.
 5. - Execute  ```mvn pact:can-i-deploy -Dpacticipant=YOUR_CONSUMER_NAME -DpacticipantVersion=CONSUMER_VERSION -Dto=ENV_TO_DEPLOY``` from 'java' directory including this variables:
  to check if the versions of consumer and provider are compatible.    
-       
+ 
+ ####Note: At the moment the default values for name, protocol, host and port are:
+ 
+         pact.api.name = JavaMenuAPI
+         pact.api.protocol = http
+         pact.api.host = localhost
+         pact.api.port = 9000
+To execute the command with other values, please provide them as system properties as follows:
+  ```
+  mvn pact:verify -Dpact.api.name=JavaMenuAPI -Dpact.api.protocol=http -Dpact.api.host=localhost -Dpact.api.port=9000
+  ```
