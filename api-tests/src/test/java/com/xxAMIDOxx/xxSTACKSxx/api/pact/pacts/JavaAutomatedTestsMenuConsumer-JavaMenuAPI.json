@@ -7,6 +7,28 @@
     },
     "interactions": [
         {
+            "description": "GET REQUEST",
+            "request": {
+                "method": "GET",
+                "path": "/v1/menu"
+            },
+            "response": {
+                "status": 200,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "body": {
+                    "pageSize": 20,
+                    "pageNumber": 1
+                }
+            },
+            "providerStates": [
+                {
+                    "name": "Get all menus"
+                }
+            ]
+        },
+        {
             "description": "POST REQUEST",
             "request": {
                 "method": "POST",
@@ -120,28 +142,6 @@
             "providerStates": [
                 {
                     "name": "Create a new menu"
-                }
-            ]
-        },
-        {
-            "description": "GET REQUEST",
-            "request": {
-                "method": "GET",
-                "path": "/v1/menu"
-            },
-            "response": {
-                "status": 200,
-                "headers": {
-                    "Content-Type": "application/json"
-                },
-                "body": {
-                    "pageSize": 20,
-                    "pageNumber": 1
-                }
-            },
-            "providerStates": [
-                {
-                    "name": "Get all menus"
                 }
             ]
         },
