@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class GCPConfig {
+public class GcpConfig {
 
   @Bean("menuRepositoryAdapter")
   @ConditionalOnProperty(name = "cloud.provider", havingValue = "gcp")

@@ -6,9 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 /**
- * @author Arathy Krishna
- * @author Sursh Krishnan
- * @author Steve Clewer
+ *
  */
 public interface MenuRepositoryAdapter {
 

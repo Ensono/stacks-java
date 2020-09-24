@@ -30,7 +30,7 @@ public class CreateMenuHandler implements CommandHandler<CreateMenuCommand> {
   @Override
   public Optional<UUID> handle(CreateMenuCommand command) {
 
-    verifyMenuNotAlreadyExisting(command);
+    //verifyMenuNotAlreadyExisting(command);
 
     final UUID id = UUID.randomUUID();
     final Menu menu =

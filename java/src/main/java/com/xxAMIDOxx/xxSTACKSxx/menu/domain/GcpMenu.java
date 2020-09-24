@@ -1,23 +1,26 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.domain;
 
-import com.microsoft.azure.spring.data.cosmosdb.core.mapping.Document;
-import com.microsoft.azure.spring.data.cosmosdb.core.mapping.PartitionKey;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.cloud.gcp.data.firestore.Document;
+import com.google.cloud.firestore.annotation.DocumentId;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(collection = "Menu")
-public class Menu {
+@Document(collectionName = "Menu")
+public class GcpMenu {
 
   @Id
-  @PartitionKey
+  @DocumentId
   private String id;
 
   private String restaurantId;
@@ -30,7 +33,7 @@ public class Menu {
 
   private Boolean enabled;
 
-  public Menu addOrUpdateCategory(Category category) {
+  public GcpMenu addOrUpdateCategory(Category category) {
     if (this.categories == null) {
       this.categories = new ArrayList<>();
     }
