@@ -56,7 +56,7 @@ Must have minimum Java 11 installed.
 ##### Formatter
 
 ###### Installation
-Please install the [intellij-java-google-style.xml](../tools/formatter/intellij-java-google-style.xml) formatter configuration file in the IDE.
+Please install the [intellij-java-google-style.xml](https://github.com/amido/stacks-java/blob/master/tools/formatter/intellij-java-google-style.xml) formatter configuration file in the IDE.
 
 ###### Java google style Usage
 The Java source code will automatically be reformatted to comply with [Google Java Style](https://google.github.io/styleguide/javaguide.html). <br /><br />
@@ -90,8 +90,6 @@ You can override the settings in the codebase, for example:<br />
 ./mvnw spotbugs:check
 ```
 
-##### Test reports
-=======
 ##### Reports
 
 ###### Test reports
