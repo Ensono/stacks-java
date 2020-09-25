@@ -42,7 +42,7 @@
         <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
         <puppycrawl-tools-checkstyle.version>8.36.1</puppycrawl-tools-checkstyle.version>
         <spotbugs-maven-plugin.version>4.0.4</spotbugs-maven-plugin.version>
-        <spotbugs.version>4.1.2</spotbugs.version>
+        <spotbugs.version>4.1.3</spotbugs.version>
         <pact.version>3.5.24</pact.version>
 
         <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
