@@ -28,18 +28,19 @@ This application implemented [Application Insights](https://docs.microsoft.com/e
 
 ## Versioning
 
-This is the 1.0.0 of the stacks-java
+This is version `1.0.0` of the `stacks-java` project.
 
 ### Getting Started
 
-#### CONFIGURATION
+#### Configuration
 
-The following environment variables are required(Speak to dev ops team to provide the below keys):
-For local environments use Cosmos DB emulator(CosmosDB Emulator has a known fixed key
-For AppInsights change the app to not crash if it can't get to AI, and just log to terminal instead).
+The following environment variables are required (speak to DevOps team to obtain the below keys):
 
 - AZURE_COSMOSDB_KEY
 - AZURE_APPLICATION_INSIGHTS_INSTRUMENTATION_KEY
+
+For local environments use the Cosmos DB emulator (CosmosDB Emulator has a known fixed key).
+For ApplicationInsights, change the application to not crash if it can't access ApplicationInsights, and just log to terminal instead.
 
 #### Prerequisites
 
@@ -131,23 +132,21 @@ Generated report can be viewed under – target/pit-reports/YYYYMMDDHHMI
 docker build -t image-tag .
 ```
 
-###### Dependency-Checker
+##### Dependency Checker
 
-####### OWASP(Open Web Application Security Project) dependency checker 
-Detects publicly disclosed vulnerabilities contained within a Project's 
-dependencies.
+###### OWASP (Open Web Application Security Project) dependency checker 
+Detects publicly disclosed vulnerabilities contained within a project's dependencies.
 
-####### Generate a Dependency vulnerability checker for maven libraries
+###### Generate a Dependency vulnerability checker for maven libraries
 
 ```bash
 mvn clean install -Powasp-dependency-check
 ```
 
-Generated report can be viewed under – target/dependency-check.html
+Generated report can be viewed under – `target/dependency-check.html`
 
 ###### View generated Dependency Checker report
-Dependency checker creates a Html folder inside the target folder 
-the file name is dependency-check-report.html
+Dependency checker creates a HTML file inside the target folder. The file name is `dependency-check-report.html`
 
 If you have an `.m2` directory in the `java/` folder the Docker build will
 attempt to copy the files inside the container and use the cached versions.
@@ -161,7 +160,7 @@ Automatically generated. Go to: <http://localhost:9000/swagger/index.html>
 Available at: <http://localhost:9000/health>
 (This can also be configured to run on another port)
 
-#### Testing
+### Testing
 
 Set an env variable BASE_URL (e.g. local is <http://localhost:9000>) 
 (from project path: stacks-java/api-tests)
@@ -196,4 +195,4 @@ Suggests installing the below plugins for ideal experience (Intellij)
 ### Maven Wrapper
 
 There are two Maven wrappers in the repo, one in `java/` and one in `api-tests/`.
-Both these aid in running maven commands by using `./mvn` instead.
+Both these aid in running maven commands by using `./mvnw` instead.
