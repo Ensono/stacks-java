@@ -17,7 +17,11 @@ public class GcpMenuRepositoryAdapter implements MenuRepositoryAdapter {
   @Autowired protected GcpMenuRepository gcpMenuRepository;
 
   public Page<Menu> findAllByRestaurantId(String restaurantId, Pageable pageable) {
-    throw new UnsupportedOperationException("GCP operation not supported");
+    List<GcpMenu> gcpMenus = gcpMenuRepository.findAllByRestaurantId(restaurantId, pageable).collectList().block();
+
+    List<Menu> menus = gcpMenus.stream().map(this::gcpMenuToMenu).collect(Collectors.toList());
+
+    return new PageImpl<>(menus, pageable, menus.size());
   }
 
   @Override
@@ -74,7 +78,8 @@ public class GcpMenuRepositoryAdapter implements MenuRepositoryAdapter {
   }
 
   private GcpMenu menuToGcpMenu(Menu menu) {
-    GcpMenu gcpMenu = new GcpMenu(menu.getId(),
+    GcpMenu gcpMenu;
+    gcpMenu = new GcpMenu(menu.getId(),
             menu.getRestaurantId(),
             menu.getName(),
             menu.getDescription(),
@@ -85,7 +90,8 @@ public class GcpMenuRepositoryAdapter implements MenuRepositoryAdapter {
   }
 
   private Menu gcpMenuToMenu(GcpMenu gcpMenu) {
-    Menu menu = Menu.builder()
+    Menu menu;
+    menu = Menu.builder()
             .id(gcpMenu.getId())
             .restaurantId(gcpMenu.getRestaurantId())
             .name(gcpMenu.getName())
