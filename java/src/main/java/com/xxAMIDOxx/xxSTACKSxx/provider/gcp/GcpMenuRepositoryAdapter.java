@@ -5,10 +5,12 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.domain.GcpMenu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class GcpMenuRepositoryAdapter implements MenuRepositoryAdapter {
 
@@ -20,9 +22,9 @@ public class GcpMenuRepositoryAdapter implements MenuRepositoryAdapter {
 
   @Override
   public Menu save(Menu menu) {
-    Mono test = gcpMenuRepository.save(menuToGcpMenu(menu));
-    Object thing = test.block();
-    return menu;
+    GcpMenu gcpMenu = gcpMenuRepository.save(menuToGcpMenu(menu)).block();
+
+    return gcpMenuToMenu(gcpMenu);
   }
 
   @Override
@@ -47,23 +49,28 @@ public class GcpMenuRepositoryAdapter implements MenuRepositoryAdapter {
   @Override
   public Optional<Menu> findById(String menuId) {
     GcpMenu gcpMenu = gcpMenuRepository.findById(menuId).block();
-
-    return Optional.of(gcpMenuToMenu(gcpMenu));
+    if (gcpMenu != null) {
+      return Optional.of(gcpMenuToMenu(gcpMenu));
+    }
+    return Optional.empty();
   }
 
   @Override
   public void delete(Menu menu) {
-    throw new UnsupportedOperationException("GCP operation not supported");
+    gcpMenuRepository.delete(menuToGcpMenu(menu)).block();
   }
 
   @Override
   public Page<Menu> findAll(Pageable pageable) {
-    throw new UnsupportedOperationException("GCP operation not supported");
+    List<GcpMenu> gcpMenus = gcpMenuRepository.findAll().collectList().block();
+    List<Menu> menus = gcpMenus.stream().map(this::gcpMenuToMenu).collect(Collectors.toList());
+
+    return new PageImpl<>(menus, pageable, menus.size());
   }
 
   @Override
   public void deleteAll() {
-    throw new UnsupportedOperationException("GCP operation not supported");
+    gcpMenuRepository.deleteAll().block();
   }
 
   private GcpMenu menuToGcpMenu(Menu menu) {
@@ -86,13 +93,6 @@ public class GcpMenuRepositoryAdapter implements MenuRepositoryAdapter {
             .categories(gcpMenu.getCategories())
             .enabled(gcpMenu.getEnabled())
             .build();
-
-//    Menu menu = new Menu(gcpMenu.getId(),
-//            gcpMenu.getRestaurantId(),
-//            gcpMenu.getName(),
-//            gcpMenu.getDescription(),
-//            gcpMenu.getCategories(),
-//            gcpMenu.getEnabled());
 
     return menu;
   }

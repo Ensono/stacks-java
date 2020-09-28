@@ -37,6 +37,7 @@
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <owasp-dependency-check-plugin.version>6.0.0</owasp-dependency-check-plugin.version>
         <auth0-spring-security-api.version>1.4.0</auth0-spring-security-api.version>
+        <spring-cloud-gcp-firestore.version>1.2.5.RELEASE</spring-cloud-gcp-firestore.version>
 
         <fmt-maven-plugin.version>2.10</fmt-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
@@ -97,12 +98,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-gcp-starter-data-firestore</artifactId>
-            <version>1.2.5.RELEASE</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.microsoft.azure</groupId>
             <artifactId>applicationinsights-spring-boot-starter</artifactId>
             <version>${applicationinsights.version}</version>
@@ -120,6 +115,12 @@
             <artifactId>applicationinsights-logging-logback</artifactId>
             <version>${applicationinsights.version}</version>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-gcp-starter-data-firestore</artifactId>
+            <version>${spring-cloud-gcp-firestore.version}</version>
         </dependency>
 
         <dependency>

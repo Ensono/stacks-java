@@ -5,13 +5,9 @@ import org.springframework.cloud.gcp.data.firestore.FirestoreReactiveRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Mono;
 
 @Repository
 public interface GcpMenuRepository extends FirestoreReactiveRepository<GcpMenu> {
-
-  @Override
-  Mono save(GcpMenu menu);
 
   /**
    * Query is constructed OOTB- out of the box, executed and results are fetched based param
