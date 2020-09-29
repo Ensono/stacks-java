@@ -18,7 +18,6 @@ public class GcpMenuRepositoryAdapter implements MenuRepositoryAdapter {
 
   public Page<Menu> findAllByRestaurantId(String restaurantId, Pageable pageable) {
     List<GcpMenu> gcpMenus = gcpMenuRepository.findAllByRestaurantId(restaurantId, pageable).collectList().block();
-
     List<Menu> menus = gcpMenus.stream().map(this::gcpMenuToMenu).collect(Collectors.toList());
 
     return new PageImpl<>(menus, pageable, menus.size());
@@ -32,22 +31,27 @@ public class GcpMenuRepositoryAdapter implements MenuRepositoryAdapter {
   }
 
   @Override
-  public Page<Menu> findAllByRestaurantIdAndName(
-      String restaurantId, String name, Pageable pageable) {
-    // gcpMenuRepository.findAllByRestaurantIdAndName(restaurantId, name, pageable);
+  public Page<Menu> findAllByRestaurantIdAndName(String restaurantId, String name, Pageable pageable) {
+    List<GcpMenu> gcpMenus = gcpMenuRepository.findAllByRestaurantIdAndName(restaurantId, name, pageable).collectList().block();
+    List<Menu> menus = gcpMenus.stream().map(this::gcpMenuToMenu).collect(Collectors.toList());
 
-    return null;
+    return new PageImpl<>(menus, pageable, menus.size());
   }
 
   @Override
   public Page<Menu> findAllByNameContaining(String searchTerm, Pageable pageable) {
-    throw new UnsupportedOperationException("GCP operation not supported");
+    List<GcpMenu> gcpMenus = gcpMenuRepository.findAllByNameContaining(searchTerm, pageable).collectList().block();
+    List<Menu> menus = gcpMenus.stream().map(this::gcpMenuToMenu).collect(Collectors.toList());
+
+    return new PageImpl<>(menus, pageable, menus.size());
   }
 
   @Override
-  public Page<Menu> findAllByRestaurantIdAndNameContaining(
-      String restaurantId, String searchTerm, Pageable pageable) {
-    throw new UnsupportedOperationException("GCP operation not supported");
+  public Page<Menu> findAllByRestaurantIdAndNameContaining(String restaurantId, String searchTerm, Pageable pageable) {
+    List<GcpMenu> gcpMenus = gcpMenuRepository.findAllByRestaurantIdAndNameContaining(restaurantId, searchTerm, pageable).collectList().block();
+    List<Menu> menus = gcpMenus.stream().map(this::gcpMenuToMenu).collect(Collectors.toList());
+
+    return new PageImpl<>(menus, pageable, menus.size());
   }
 
   @Override
