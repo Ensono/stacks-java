@@ -14,7 +14,7 @@ import org.springframework.data.annotation.Id;
 @AllArgsConstructor
 @Builder
 @Document(collection = "Menu")
-public class Menu {
+public class AzureMenu {
 
   @Id
   @PartitionKey
@@ -30,7 +30,7 @@ public class Menu {
 
   private Boolean enabled;
 
-  public Menu addOrUpdateCategory(Category category) {
+  public AzureMenu addOrUpdateCategory(Category category) {
     if (this.categories == null) {
       this.categories = new ArrayList<>();
     }

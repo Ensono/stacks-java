@@ -22,7 +22,7 @@ import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateCategoryRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +59,7 @@ class UpdateCategoryControllerImplTest {
   @Test
   void testUpdateCategorySuccess() {
     // Given
-    Menu menu = createMenu(0);
+    AzureMenu menu = createMenu(0);
     Category category = createCategory(0);
     menu.addOrUpdateCategory(category);
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
@@ -85,9 +85,9 @@ class UpdateCategoryControllerImplTest {
     then(response).isNotNull();
     then(response.getStatusCode()).isEqualTo(OK);
 
-    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
+    ArgumentCaptor<AzureMenu> captor = ArgumentCaptor.forClass(AzureMenu.class);
     verify(menuRepositoryAdapter, times(1)).save(captor.capture());
-    Menu updated = captor.getValue();
+    AzureMenu updated = captor.getValue();
     then(updated.getCategories()).hasSize(1);
     Category updatedCategory = updated.getCategories().get(0);
     then(updatedCategory.getDescription()).isEqualTo(request.getDescription());
@@ -119,7 +119,7 @@ class UpdateCategoryControllerImplTest {
   @Test
   void testCannotUpdateCategoryIfNotAlreadyExists() {
     // Given
-    Menu menu = createMenu(0);
+    AzureMenu menu = createMenu(0);
     menu.setCategories(null);
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
@@ -145,7 +145,7 @@ class UpdateCategoryControllerImplTest {
   @Test
   void testCannotUpdateCategoryNameIfNameAlreadyExists() {
     // Given
-    Menu menu = createMenu(0);
+    AzureMenu menu = createMenu(0);
     List<Category> categoryList = createCategories(2);
     categoryList.get(0).setName("new Category");
 
@@ -176,7 +176,7 @@ class UpdateCategoryControllerImplTest {
   @Test
   void testUpdateCategoryWhenMultipleCategoriesExists() {
     // Given
-    Menu menu = createMenu(0);
+    AzureMenu menu = createMenu(0);
     List<Category> categories = createCategories(2);
     menu.setCategories(categories);
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
@@ -198,9 +198,9 @@ class UpdateCategoryControllerImplTest {
     then(response).isNotNull();
     then(response.getStatusCode()).isEqualTo(OK);
 
-    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
+    ArgumentCaptor<AzureMenu> captor = ArgumentCaptor.forClass(AzureMenu.class);
     verify(menuRepositoryAdapter, times(1)).save(captor.capture());
-    Menu updated = captor.getValue();
+    AzureMenu updated = captor.getValue();
     then(updated.getCategories()).hasSize(2);
     Optional<Category> updatedCategory =
         menu.getCategories().stream()
@@ -213,7 +213,7 @@ class UpdateCategoryControllerImplTest {
   @Test
   void testUpdateOnlyCategoryDescription() {
     // Given
-    Menu menu = createMenu(0);
+    AzureMenu menu = createMenu(0);
     List<Category> categoryList = createCategories(2);
     menu.setCategories(categoryList);
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
@@ -239,9 +239,9 @@ class UpdateCategoryControllerImplTest {
     then(response).isNotNull();
     then(response.getStatusCode()).isEqualTo(OK);
 
-    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
+    ArgumentCaptor<AzureMenu> captor = ArgumentCaptor.forClass(AzureMenu.class);
     verify(menuRepositoryAdapter, times(1)).save(captor.capture());
-    Menu updated = captor.getValue();
+    AzureMenu updated = captor.getValue();
     then(updated.getCategories()).hasSize(2);
 
     Category updatedCategory = updated.getCategories().get(1);
@@ -256,7 +256,7 @@ class UpdateCategoryControllerImplTest {
   @Test
   void testUpdateCategoryWithNoNameReturnsBadRequest() {
     // Given
-    Menu menu = createMenu(0);
+    AzureMenu menu = createMenu(0);
     Category category = createCategory(0);
     menu.addOrUpdateCategory(category);
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
@@ -283,7 +283,7 @@ class UpdateCategoryControllerImplTest {
   @Test
   void testUpdateCategoryWithNoDescriptionReturnsBadRequest() {
     // Given
-    Menu menu = createMenu(0);
+    AzureMenu menu = createMenu(0);
     Category category = createCategory(0);
     menu.addOrUpdateCategory(category);
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));

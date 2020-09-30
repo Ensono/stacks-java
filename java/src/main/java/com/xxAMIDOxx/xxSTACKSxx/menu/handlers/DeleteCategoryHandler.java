@@ -3,7 +3,7 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.handlers;
 import com.xxAMIDOxx.xxSTACKSxx.core.messaging.publish.ApplicationEventPublisher;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.DeleteCategoryCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.CategoryDeletedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
@@ -22,7 +22,7 @@ public class DeleteCategoryHandler extends MenuBaseCommandHandler<DeleteCategory
     super(menuRepositoryAdapter, applicationEventPublisher);
   }
 
-  Optional<UUID> handleCommand(Menu menu, DeleteCategoryCommand command) {
+  Optional<UUID> handleCommand(AzureMenu menu, DeleteCategoryCommand command) {
     Category category = getCategory(menu, command);
     List<Category> collect =
         menu.getCategories().stream()
@@ -33,12 +33,12 @@ public class DeleteCategoryHandler extends MenuBaseCommandHandler<DeleteCategory
     return Optional.empty();
   }
 
-  List<MenuEvent> raiseApplicationEvents(Menu menu, DeleteCategoryCommand command) {
+  List<MenuEvent> raiseApplicationEvents(AzureMenu menu, DeleteCategoryCommand command) {
     return Arrays.asList(
         new MenuUpdatedEvent(command), new CategoryDeletedEvent(command, command.getCategoryId()));
   }
 
-  Category getCategory(Menu menu, DeleteCategoryCommand command) {
+  Category getCategory(AzureMenu menu, DeleteCategoryCommand command) {
     return findCategory(menu, command.getCategoryId())
         .orElseThrow(() -> new CategoryDoesNotExistException(command, command.getCategoryId()));
   }

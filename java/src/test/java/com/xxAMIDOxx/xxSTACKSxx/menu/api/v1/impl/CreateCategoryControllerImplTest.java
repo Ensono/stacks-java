@@ -15,7 +15,7 @@ import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateCategoryRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -105,9 +105,9 @@ class CreateCategoryControllerImplTest {
   @Test
   void testAddCategory() {
     // Given
-    Menu menu = createMenu(1);
+    AzureMenu menu = createMenu(1);
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
-    when(menuRepositoryAdapter.save(any(Menu.class))).thenReturn(menu);
+    when(menuRepositoryAdapter.save(any(AzureMenu.class))).thenReturn(menu);
 
     CreateCategoryRequest request =
         new CreateCategoryRequest("test Category Name", "test Category Description");
@@ -120,9 +120,9 @@ class CreateCategoryControllerImplTest {
             ResourceCreatedResponse.class);
 
     // Then
-    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
+    ArgumentCaptor<AzureMenu> captor = ArgumentCaptor.forClass(AzureMenu.class);
     verify(menuRepositoryAdapter, times(1)).save(captor.capture());
-    Menu created = captor.getValue();
+    AzureMenu created = captor.getValue();
 
     then(created.getName()).isEqualTo(menu.getName());
     then(created.getDescription()).isEqualTo(menu.getDescription());
@@ -139,7 +139,7 @@ class CreateCategoryControllerImplTest {
   @Test
   void testCannotAddCategoryWhichAlreadyExists() {
     // Given
-    Menu menu = createMenu(1);
+    AzureMenu menu = createMenu(1);
     Category category =
         new Category(
             UUID.randomUUID().toString(), "cat name", "cat description", new ArrayList<>());

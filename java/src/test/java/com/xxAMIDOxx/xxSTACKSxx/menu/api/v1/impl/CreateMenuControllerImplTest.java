@@ -13,7 +13,7 @@ import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAut
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateMenuRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.Collections;
 import java.util.Objects;
@@ -49,7 +49,7 @@ class CreateMenuControllerImplTest {
   @Test
   void testCreateNewMenu() {
     // Given
-    Menu m = createMenu(1);
+    AzureMenu m = createMenu(1);
     CreateMenuRequest request =
         new CreateMenuRequest(
             m.getName(), m.getDescription(), UUID.fromString(m.getRestaurantId()), m.getEnabled());
@@ -57,7 +57,7 @@ class CreateMenuControllerImplTest {
     when(menuRepositoryAdapter.findAllByRestaurantIdAndName(
             eq(m.getRestaurantId()), eq(m.getName()), any(Pageable.class)))
         .thenReturn(new PageImpl<>(Collections.emptyList()));
-    when(menuRepositoryAdapter.save(any(Menu.class))).thenReturn(m);
+    when(menuRepositoryAdapter.save(any(AzureMenu.class))).thenReturn(m);
 
     // When
     var response =
@@ -71,7 +71,7 @@ class CreateMenuControllerImplTest {
   @Test
   void testThrowsErrorOnExists() {
     // Given
-    Menu m = createMenu(1);
+    AzureMenu m = createMenu(1);
     CreateMenuRequest request =
         new CreateMenuRequest(
             m.getName(), m.getDescription(), UUID.fromString(m.getRestaurantId()), m.getEnabled());
@@ -92,11 +92,11 @@ class CreateMenuControllerImplTest {
   @Test
   void testWhenDescriptionNotGivenReturnsBadRequest() {
     // Given
-    Menu m = createMenu(1);
+    AzureMenu m = createMenu(1);
     CreateMenuRequest request =
         new CreateMenuRequest(m.getName(), "", fromString(m.getRestaurantId()), m.getEnabled());
 
-    when(menuRepositoryAdapter.save(any(Menu.class))).thenReturn(m);
+    when(menuRepositoryAdapter.save(any(AzureMenu.class))).thenReturn(m);
     // When
     var response =
         this.testRestTemplate.postForEntity(
@@ -111,12 +111,12 @@ class CreateMenuControllerImplTest {
   @Test
   void testWhenNoNameReturnsBadRequest() {
     // Given
-    Menu m = createMenu(1);
+    AzureMenu m = createMenu(1);
     CreateMenuRequest request =
         new CreateMenuRequest(
             "", m.getDescription(), fromString(m.getRestaurantId()), m.getEnabled());
 
-    when(menuRepositoryAdapter.save(any(Menu.class))).thenReturn(m);
+    when(menuRepositoryAdapter.save(any(AzureMenu.class))).thenReturn(m);
     // When
     var response =
         this.testRestTemplate.postForEntity(

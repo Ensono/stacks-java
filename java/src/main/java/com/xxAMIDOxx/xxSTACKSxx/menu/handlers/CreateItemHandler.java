@@ -4,7 +4,7 @@ import com.xxAMIDOxx.xxSTACKSxx.core.messaging.publish.ApplicationEventPublisher
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateItemCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.CategoryUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuItemCreatedEvent;
@@ -14,7 +14,6 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ItemAlreadyExistsException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.*;
 
-import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,7 +27,7 @@ public class CreateItemHandler extends MenuBaseCommandHandler<CreateItemCommand>
   }
 
   @Override
-  Optional<UUID> handleCommand(Menu menu, CreateItemCommand command) {
+  Optional<UUID> handleCommand(AzureMenu menu, CreateItemCommand command) {
     itemId = UUID.randomUUID();
     Category category = addItem(getCategory(menu, command), command);
     menuRepositoryAdapter.save(menu.addOrUpdateCategory(category));
@@ -36,14 +35,14 @@ public class CreateItemHandler extends MenuBaseCommandHandler<CreateItemCommand>
   }
 
   @Override
-  List<MenuEvent> raiseApplicationEvents(Menu menu, CreateItemCommand command) {
+  List<MenuEvent> raiseApplicationEvents(AzureMenu menu, CreateItemCommand command) {
     return Arrays.asList(
         new MenuUpdatedEvent(command),
         new CategoryUpdatedEvent(command, command.getCategoryId()),
         new MenuItemCreatedEvent(command, command.getCategoryId(), itemId));
   }
 
-  Category getCategory(Menu menu, CreateItemCommand command) {
+  Category getCategory(AzureMenu menu, CreateItemCommand command) {
     Optional<Category> existing = Optional.empty();
 
     if (menu.getCategories() != null && !menu.getCategories().isEmpty()) {

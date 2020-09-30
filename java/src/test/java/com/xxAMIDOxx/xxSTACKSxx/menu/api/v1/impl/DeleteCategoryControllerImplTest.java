@@ -18,7 +18,7 @@ import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +53,7 @@ class DeleteCategoryControllerImplTest {
   @Test
   void testDeleteCategorySuccess() {
     // Given
-    Menu menu = createMenu(1);
+    AzureMenu menu = createMenu(1);
     Category category = createCategory(0);
     menu.setCategories(List.of(category));
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
@@ -71,15 +71,15 @@ class DeleteCategoryControllerImplTest {
     // Then
     verify(menuRepositoryAdapter, times(1)).save(menu);
     then(response.getStatusCode()).isEqualTo(OK);
-    Optional<Menu> optMenu = menuRepositoryAdapter.findById(menu.getId());
-    Menu updated = optMenu.get();
+    Optional<AzureMenu> optMenu = menuRepositoryAdapter.findById(menu.getId());
+    AzureMenu updated = optMenu.get();
     then(updated.getCategories()).isNotNull();
   }
 
   @Test
   void testDeleteCategoryWithAnItem() {
     // Given
-    Menu menu = createMenu(1);
+    AzureMenu menu = createMenu(1);
     Category category = createCategory(0);
     category.addOrUpdateItem(createItem(0));
     menu.addOrUpdateCategory(category);
@@ -98,16 +98,16 @@ class DeleteCategoryControllerImplTest {
 
     // Then
     then(response.getStatusCode()).isEqualTo(OK);
-    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
+    ArgumentCaptor<AzureMenu> captor = ArgumentCaptor.forClass(AzureMenu.class);
     verify(menuRepositoryAdapter, times(1)).save(captor.capture());
-    Menu updatedMenu = captor.getValue();
+    AzureMenu updatedMenu = captor.getValue();
     then(updatedMenu.getCategories()).isNotNull();
   }
 
   @Test
   void testDeleteCategoryWithInvalidCategoryId() {
     // Given
-    Menu menu = createMenu(1);
+    AzureMenu menu = createMenu(1);
     Category category = createCategory(0);
     menu.setCategories(List.of(category));
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
@@ -130,7 +130,7 @@ class DeleteCategoryControllerImplTest {
   @Test
   void testDeleteACategoryFromList() {
     // Given
-    Menu menu = createMenu(1);
+    AzureMenu menu = createMenu(1);
     List<Category> categories = createCategories(2);
     menu.setCategories(categories);
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
@@ -148,8 +148,8 @@ class DeleteCategoryControllerImplTest {
     // Then
     verify(menuRepositoryAdapter, times(1)).save(menu);
     then(response.getStatusCode()).isEqualTo(OK);
-    Optional<Menu> byId = menuRepositoryAdapter.findById(menu.getId());
-    Menu updatedMenu = byId.get();
+    Optional<AzureMenu> byId = menuRepositoryAdapter.findById(menu.getId());
+    AzureMenu updatedMenu = byId.get();
     then(updatedMenu.getCategories()).hasSize(1);
   }
 }

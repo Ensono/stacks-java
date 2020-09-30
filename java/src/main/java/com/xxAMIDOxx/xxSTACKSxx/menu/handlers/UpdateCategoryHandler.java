@@ -3,7 +3,7 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.handlers;
 import com.xxAMIDOxx.xxSTACKSxx.core.messaging.publish.ApplicationEventPublisher;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.UpdateCategoryCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.CategoryUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
@@ -25,7 +25,7 @@ public class UpdateCategoryHandler extends MenuBaseCommandHandler<UpdateCategory
   }
 
   @Override
-  Optional<UUID> handleCommand(Menu menu, UpdateCategoryCommand command) {
+  Optional<UUID> handleCommand(AzureMenu menu, UpdateCategoryCommand command) {
     menu.addOrUpdateCategory(updateCategory(menu, command));
     menuRepositoryAdapter.save(menu);
     return Optional.of(command.getCategoryId());
@@ -41,7 +41,7 @@ public class UpdateCategoryHandler extends MenuBaseCommandHandler<UpdateCategory
    * @param command update category request
    * @return category
    */
-  Category updateCategory(Menu menu, UpdateCategoryCommand command) {
+  Category updateCategory(AzureMenu menu, UpdateCategoryCommand command) {
     Category category = getCategory(menu, command);
     menu.getCategories()
         .forEach(
@@ -62,12 +62,12 @@ public class UpdateCategoryHandler extends MenuBaseCommandHandler<UpdateCategory
   }
 
   @Override
-  List<MenuEvent> raiseApplicationEvents(Menu menu, UpdateCategoryCommand command) {
+  List<MenuEvent> raiseApplicationEvents(AzureMenu menu, UpdateCategoryCommand command) {
     return Arrays.asList(
         new MenuUpdatedEvent(command), new CategoryUpdatedEvent(command, command.getCategoryId()));
   }
 
-  Category getCategory(Menu menu, UpdateCategoryCommand command) {
+  Category getCategory(AzureMenu menu, UpdateCategoryCommand command) {
     return findCategory(menu, command.getCategoryId())
         .orElseThrow(() -> new CategoryDoesNotExistException(command, command.getCategoryId()));
   }

@@ -8,7 +8,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.MenuDTO;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.MenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.MenuNotFoundException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.mappers.DomainToDtoMapper;
 import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
@@ -17,6 +17,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,7 +31,7 @@ public class QueryMenuControllerImpl implements QueryMenuController {
 
   private MenuQueryService menuQueryService;
 
-  public QueryMenuControllerImpl(DomainToDtoMapper mapper, MenuQueryService menuQueryService) {
+  public QueryMenuControllerImpl(DomainToDtoMapper mapper, @Qualifier("menuQueryService") MenuQueryService menuQueryService) {
     this.mapper = mapper;
     this.menuQueryService = menuQueryService;
   }
@@ -41,7 +42,7 @@ public class QueryMenuControllerImpl implements QueryMenuController {
       final UUID restaurantId,
       final Integer pageSize,
       final Integer pageNumber) {
-    List<Menu> menuList;
+    List<AzureMenu> menuList;
 
     if (isNotEmpty(searchTerm) && nonNull(restaurantId)) {
       menuList =
@@ -66,7 +67,7 @@ public class QueryMenuControllerImpl implements QueryMenuController {
 
   @Override
   public ResponseEntity<MenuDTO> getMenu(final UUID id, final String correlationId) {
-    Menu menu =
+    AzureMenu menu =
         this.menuQueryService
             .findById(id)
             .orElseThrow(

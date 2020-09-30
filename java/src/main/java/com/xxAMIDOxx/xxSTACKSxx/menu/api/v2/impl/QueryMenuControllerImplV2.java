@@ -4,7 +4,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.MenuDTO;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v2.QueryMenuControllerV2;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.MenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.MenuNotFoundException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.mappers.DomainToDtoMapper;
 import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
@@ -26,7 +26,7 @@ public class QueryMenuControllerImplV2 implements QueryMenuControllerV2 {
 
   @Override
   public ResponseEntity<MenuDTO> getMenu(UUID id, String correlationId) {
-    Menu menu =
+    AzureMenu menu =
         this.menuQueryService
             .findById(id)
             .orElseThrow(
