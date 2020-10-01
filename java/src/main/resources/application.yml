@@ -51,5 +51,4 @@ azure:
     subscriptionName: Subscription1
     enabled: false
 
-cloud:
-  provider: gcp
+cloud-provider: azure

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ConditionalOnProperty(name = "cloud.provider", havingValue = "gcp")
+@ConditionalOnProperty(name = "cloud-provider", havingValue = "gcp")
 @Service("menuQueryService")
 public class GcpMenuQueryService implements MenuQueryService {
 

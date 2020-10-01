@@ -16,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-@ConditionalOnProperty(name = "cloud.provider", havingValue = "azure")
+@ConditionalOnProperty(name = "cloud-provider", havingValue = "azure")
 @Service("menuQueryService")
 public class CosmosMenuQueryService implements MenuQueryService {
 
