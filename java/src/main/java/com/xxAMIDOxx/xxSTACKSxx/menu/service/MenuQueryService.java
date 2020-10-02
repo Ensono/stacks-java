@@ -1,6 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.service;
 
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,7 +15,7 @@ public interface MenuQueryService {
    * @param pageSize page Size
    * @return List of MenuDTO
    */
-  List<AzureMenu> findAll(int pageNumber, int pageSize);
+  List<Menu> findAll(int pageNumber, int pageSize);
 
   /**
    * Retrieve MenuDTO by MenuDTO Id
@@ -22,7 +23,7 @@ public interface MenuQueryService {
    * @param id menu Id
    * @return Optional MenuDTO
    */
-  Optional<AzureMenu> findById(UUID id);
+  Optional<Menu> findById(UUID id);
 
   /**
    * Retrieve MenuDTO by Restaurant Id Pagination and sorting is done by spring data JPA.
@@ -32,7 +33,7 @@ public interface MenuQueryService {
    * @param pageNumber page no
    * @return List of MenuDTO
    */
-  public List<AzureMenu> findAllByRestaurantId(UUID restaurantId, Integer pageSize, Integer pageNumber);
+  public List<Menu> findAllByRestaurantId(UUID restaurantId, Integer pageSize, Integer pageNumber);
 
   /**
    * Retrieve MenuDTO's by matching the name (Contains operation) Pagination and sorting is done by
@@ -43,7 +44,7 @@ public interface MenuQueryService {
    * @param pageNumber page no
    * @return List of MenuDTO
    */
-  public List<AzureMenu> findAllByNameContaining(
+  public List<Menu> findAllByNameContaining(
       String searchTerm, Integer pageSize, Integer pageNumber);
 
   /**
@@ -56,6 +57,6 @@ public interface MenuQueryService {
    * @param pageNumber page no
    * @return List of MenuDTO
    */
-  List<AzureMenu> findAllByRestaurantIdAndNameContaining(
+  List<Menu> findAllByRestaurantIdAndNameContaining(
       UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber);
 }

@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.provider.azure;
 
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
 import java.util.List;
@@ -31,13 +31,13 @@ public class CosmosMenuQueryService implements MenuQueryService {
     this.menuRepositoryAdapter = menuRepositoryAdapter;
   }
 
-  public Optional<AzureMenu> findById(UUID id) {
+  public Optional<Menu> findById(UUID id) {
     return menuRepositoryAdapter.findById(id.toString());
   }
 
-  public List<AzureMenu> findAll(int pageNumber, int pageSize) {
+  public List<Menu> findAll(int pageNumber, int pageSize) {
 
-    Page<AzureMenu> page =
+    Page<Menu> page =
         menuRepositoryAdapter.findAll(PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, NAME)));
 
     // This is specific and needed due to the way in which CosmosDB handles pagination
@@ -53,7 +53,7 @@ public class CosmosMenuQueryService implements MenuQueryService {
   }
 
   @Override
-  public List<AzureMenu> findAllByRestaurantId(UUID restaurantId, Integer pageSize, Integer pageNumber) {
+  public List<Menu> findAllByRestaurantId(UUID restaurantId, Integer pageSize, Integer pageNumber) {
     return menuRepositoryAdapter
         .findAllByRestaurantId(
             restaurantId.toString(), PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, NAME)))
@@ -61,7 +61,7 @@ public class CosmosMenuQueryService implements MenuQueryService {
   }
 
   @Override
-  public List<AzureMenu> findAllByNameContaining(String searchTerm, Integer pageSize, Integer pageNumber) {
+  public List<Menu> findAllByNameContaining(String searchTerm, Integer pageSize, Integer pageNumber) {
     return menuRepositoryAdapter
         .findAllByNameContaining(
             searchTerm, PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, NAME)))
@@ -69,7 +69,7 @@ public class CosmosMenuQueryService implements MenuQueryService {
   }
 
   @Override
-  public List<AzureMenu> findAllByRestaurantIdAndNameContaining(UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber) {
+  public List<Menu> findAllByRestaurantIdAndNameContaining(UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber) {
     return menuRepositoryAdapter
         .findAllByRestaurantIdAndNameContaining(
             restaurantId.toString(),

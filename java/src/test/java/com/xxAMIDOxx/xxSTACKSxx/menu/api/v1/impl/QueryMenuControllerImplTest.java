@@ -19,7 +19,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.mappers.DomainToDtoMapper;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.*;
@@ -84,11 +84,11 @@ class QueryMenuControllerImplTest {
     // Given
     final UUID restaurantId = randomUUID();
 
-    List<AzureMenu> menuList = createMenus(3);
-    AzureMenu match = menuList.get(0);
+    List<Menu> menuList = createMenus(3);
+    Menu match = menuList.get(0);
     match.setRestaurantId(restaurantId.toString());
     menuList.add(match);
-    List<AzureMenu> matching = Collections.singletonList(match);
+    List<Menu> matching = Collections.singletonList(match);
 
     List<SearchMenuResultItem> expectedMenuList =
         matching.stream()
@@ -153,7 +153,7 @@ class QueryMenuControllerImplTest {
   @Test
   void getMenuById() {
     // Given
-    AzureMenu menu = createMenu(0);
+    Menu menu = createMenu(0);
     Item item = new Item(randomUUID().toString(), "item name", "item description", 5.99d, true);
     Category category =
         new Category(

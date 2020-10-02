@@ -22,7 +22,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateItemRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +59,7 @@ class UpdateItemControllerImplTest {
   @Test
   void testUpdateItemSuccess() {
     // Given
-    AzureMenu menu = createMenu(0);
+    Menu menu = createMenu(0);
     Category category = createCategory(0);
     Item item = createItem(0);
     category.addOrUpdateItem(item);
@@ -84,9 +84,9 @@ class UpdateItemControllerImplTest {
     then(response).isNotNull();
     then(response.getStatusCode()).isEqualTo(OK);
 
-    ArgumentCaptor<AzureMenu> captor = ArgumentCaptor.forClass(AzureMenu.class);
+    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
     verify(menuRepositoryAdapter, times(1)).save(captor.capture());
-    AzureMenu updated = captor.getValue();
+    Menu updated = captor.getValue();
     then(updated.getCategories()).hasSize(1);
     Category updatedCategory = updated.getCategories().get(0);
     then(updatedCategory.getItems()).hasSize(1);
@@ -101,7 +101,7 @@ class UpdateItemControllerImplTest {
   @Test
   void testUpdateItemDescription() {
     // Given
-    AzureMenu menu = createMenu(0);
+    Menu menu = createMenu(0);
     Category category = createCategory(0);
     List<Item> items = createItems(2);
     category.setItems(items);
@@ -127,7 +127,7 @@ class UpdateItemControllerImplTest {
     then(response).isNotNull();
     then(response.getStatusCode()).isEqualTo(OK);
 
-    ArgumentCaptor<AzureMenu> captor = ArgumentCaptor.forClass(AzureMenu.class);
+    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
     verify(menuRepositoryAdapter, times(1)).save(captor.capture());
     Category updatedCategory = captor.getValue().getCategories().get(0);
     then(updatedCategory.getItems()).hasSize(2);
@@ -148,7 +148,7 @@ class UpdateItemControllerImplTest {
   @Test
   void testUpdateItemWithInvalidCategoryId() {
     // Given
-    AzureMenu menu = createMenu(0);
+    Menu menu = createMenu(0);
     Category category = createCategory(0);
     Item item = new Item(randomUUID().toString(), "New Item", "Item description", 12.2d, true);
     category.addOrUpdateItem(item);
@@ -173,14 +173,14 @@ class UpdateItemControllerImplTest {
     then(response).isNotNull();
     then(response.getStatusCode()).isEqualTo(NOT_FOUND);
 
-    ArgumentCaptor<AzureMenu> captor = ArgumentCaptor.forClass(AzureMenu.class);
+    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
     verify(menuRepositoryAdapter, times(0)).save(captor.capture());
   }
 
   @Test
   void testUpdateItemWithInvalidItemId() {
     // Given
-    AzureMenu menu = createMenu(0);
+    Menu menu = createMenu(0);
     Category category = createCategory(0);
     Item item = new Item(randomUUID().toString(), "New Item", "Item description", 12.2d, true);
     category.addOrUpdateItem(item);
@@ -205,14 +205,14 @@ class UpdateItemControllerImplTest {
     then(response).isNotNull();
     then(response.getStatusCode()).isEqualTo(NOT_FOUND);
 
-    ArgumentCaptor<AzureMenu> captor = ArgumentCaptor.forClass(AzureMenu.class);
+    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
     verify(menuRepositoryAdapter, times(0)).save(captor.capture());
   }
 
   @Test
   void testUpdateItemWithNoNameReturnsBadRequest() {
     // Given
-    AzureMenu menu = createMenu(0);
+    Menu menu = createMenu(0);
     Category category = createCategory(0);
     Item item = new Item(randomUUID().toString(), "New Item", "Item description", 12.2d, true);
     category.addOrUpdateItem(item);
@@ -241,7 +241,7 @@ class UpdateItemControllerImplTest {
   @Test
   void testUpdateItemWithNoDescriptionReturnsBadRequest() {
     // Given
-    AzureMenu menu = createMenu(0);
+    Menu menu = createMenu(0);
     Category category = createCategory(0);
     Item item = createItem(0);
     category.addOrUpdateItem(item);
@@ -270,7 +270,7 @@ class UpdateItemControllerImplTest {
   @Test
   void testUpdateItemWithInvalidPriceReturnsBadRequest() {
     // Given
-    AzureMenu menu = createMenu(0);
+    Menu menu = createMenu(0);
     Category category = createCategory(0);
     Item item = createItem(0);
     category.addOrUpdateItem(item);

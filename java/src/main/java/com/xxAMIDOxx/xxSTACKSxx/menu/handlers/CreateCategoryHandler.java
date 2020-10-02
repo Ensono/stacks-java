@@ -3,7 +3,7 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.handlers;
 import com.xxAMIDOxx.xxSTACKSxx.core.messaging.publish.ApplicationEventPublisher;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateCategoryCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.CategoryCreatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
@@ -23,19 +23,19 @@ public class CreateCategoryHandler extends MenuBaseCommandHandler<CreateCategory
   }
 
   @Override
-  Optional<UUID> handleCommand(AzureMenu menu, CreateCategoryCommand command) {
+  Optional<UUID> handleCommand(Menu menu, CreateCategoryCommand command) {
     menu.setCategories(addCategory(menu, command));
     menuRepositoryAdapter.save(menu);
     return Optional.of(categoryId);
   }
 
   @Override
-  List<MenuEvent> raiseApplicationEvents(AzureMenu menu, CreateCategoryCommand command) {
+  List<MenuEvent> raiseApplicationEvents(Menu menu, CreateCategoryCommand command) {
     return Arrays.asList(
         new MenuUpdatedEvent(command), new CategoryCreatedEvent(command, categoryId));
   }
 
-  List<Category> addCategory(AzureMenu menu, CreateCategoryCommand command) {
+  List<Category> addCategory(Menu menu, CreateCategoryCommand command) {
     categoryId = UUID.randomUUID();
     List<Category> categories =
         menu.getCategories() == null ? new ArrayList<>() : menu.getCategories();

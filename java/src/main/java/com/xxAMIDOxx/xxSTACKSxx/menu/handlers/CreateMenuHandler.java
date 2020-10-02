@@ -3,7 +3,7 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.handlers;
 import com.xxAMIDOxx.xxSTACKSxx.core.cqrs.handler.CommandHandler;
 import com.xxAMIDOxx.xxSTACKSxx.core.messaging.publish.ApplicationEventPublisher;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateMenuCommand;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuCreatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.MenuAlreadyExistsException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
@@ -33,8 +33,8 @@ public class CreateMenuHandler implements CommandHandler<CreateMenuCommand> {
     verifyMenuNotAlreadyExisting(command);
 
     final UUID id = UUID.randomUUID();
-    final AzureMenu menu =
-        new AzureMenu(
+    final Menu menu =
+        new Menu(
             id.toString(),
             command.getRestaurantId().toString(),
             command.getName(),
@@ -50,7 +50,7 @@ public class CreateMenuHandler implements CommandHandler<CreateMenuCommand> {
   }
 
   protected void verifyMenuNotAlreadyExisting(CreateMenuCommand command) {
-    Page<AzureMenu> existing =
+    Page<Menu> existing =
         menuAdapter.findAllByRestaurantIdAndName(
             command.getRestaurantId().toString(), command.getName(), PageRequest.of(0, 1));
     if (!existing.getContent().isEmpty()

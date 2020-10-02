@@ -6,6 +6,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.commands.MenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.MenuNotFoundException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
@@ -30,7 +31,7 @@ public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements C
   @Override
   public Optional<UUID> handle(T command) {
 
-    AzureMenu menu =
+    Menu menu =
         menuRepositoryAdapter
             .findById(command.getMenuId().toString())
             .orElseThrow(() -> new MenuNotFoundException(command));
@@ -46,9 +47,9 @@ public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements C
     menuEvents.forEach(applicationEventPublisher::publish);
   }
 
-  abstract Optional<UUID> handleCommand(AzureMenu menu, T command);
+  abstract Optional<UUID> handleCommand(Menu menu, T command);
 
-  abstract List<MenuEvent> raiseApplicationEvents(AzureMenu menu, T command);
+  abstract List<MenuEvent> raiseApplicationEvents(Menu menu, T command);
 
   /**
    * find a category for the id provided
@@ -57,7 +58,7 @@ public abstract class MenuBaseCommandHandler<T extends MenuCommand> implements C
    * @param categoryId category id
    * @return category if found else optional.empty
    */
-  public Optional<Category> findCategory(AzureMenu menu, UUID categoryId) {
+  public Optional<Category> findCategory(Menu menu, UUID categoryId) {
     Optional<Category> existing = Optional.empty();
     if (menu.getCategories() != null && !menu.getCategories().isEmpty()) {
       existing =

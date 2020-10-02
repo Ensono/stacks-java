@@ -15,7 +15,7 @@ import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAut
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateMenuRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.Optional;
 import java.util.UUID;
@@ -51,7 +51,7 @@ class UpdateMenuControllerImplTest {
   @Test
   void testUpdateSuccess() {
     // Given
-    AzureMenu menu = createMenu(0);
+    Menu menu = createMenu(0);
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateMenuRequest request = new UpdateMenuRequest("new name", "new description", false);
@@ -65,9 +65,9 @@ class UpdateMenuControllerImplTest {
             ResourceUpdatedResponse.class);
 
     // Then
-    ArgumentCaptor<AzureMenu> captor = ArgumentCaptor.forClass(AzureMenu.class);
+    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
     verify(menuRepositoryAdapter, times(1)).save(captor.capture());
-    AzureMenu updated = captor.getValue();
+    Menu updated = captor.getValue();
 
     then(updated.getName()).isEqualTo(request.getName());
     then(updated.getDescription()).isEqualTo(request.getDescription());
@@ -102,7 +102,7 @@ class UpdateMenuControllerImplTest {
   @Test
   void testUpdateMenuWithNoNameReturnsBadRequest() {
     // Given
-    AzureMenu menu = createMenu(0);
+    Menu menu = createMenu(0);
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateMenuRequest request = new UpdateMenuRequest("", "new description", false);
@@ -124,7 +124,7 @@ class UpdateMenuControllerImplTest {
   @Test
   void testUpdateMenuWithNoDescriptionReturnsBadRequest() {
     // Given
-    AzureMenu menu = createMenu(0);
+    Menu menu = createMenu(0);
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     UpdateMenuRequest request = new UpdateMenuRequest("Updated Name", "", false);

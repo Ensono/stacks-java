@@ -1,31 +1,32 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.repository;
 
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
-import java.util.Optional;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Optional;
 
 /**
  *
  */
 public interface MenuRepositoryAdapter {
 
-  Page<AzureMenu> findAllByRestaurantId(String restaurantId, Pageable pageable);
+  Page<Menu> findAllByRestaurantId(String restaurantId, Pageable pageable);
 
-  AzureMenu save(AzureMenu menu);
+  Menu save(Menu menu);
 
-  void delete(AzureMenu menu);
+  void delete(Menu menu);
 
-  Optional<AzureMenu> findById(String menuId);
+  Optional<Menu> findById(String menuId);
 
-  Page<AzureMenu> findAllByRestaurantIdAndName(String restaurantId, String name, Pageable pageable);
+  Page<Menu> findAllByRestaurantIdAndName(String restaurantId, String name, Pageable pageable);
 
-  Page<AzureMenu> findAllByNameContaining(String searchTerm, Pageable pageable);
+  Page<Menu> findAllByNameContaining(String searchTerm, Pageable pageable);
 
-  Page<AzureMenu> findAllByRestaurantIdAndNameContaining(
+  Page<Menu> findAllByRestaurantIdAndNameContaining(
       String restaurantId, String searchTerm, Pageable pageable);
 
-  Page<AzureMenu> findAll(Pageable pageable);
+  Page<Menu> findAll(Pageable pageable);
 
   void deleteAll();
 }

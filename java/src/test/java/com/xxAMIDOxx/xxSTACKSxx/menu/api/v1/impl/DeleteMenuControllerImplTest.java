@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.OK;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.Optional;
 import java.util.UUID;
@@ -49,7 +49,7 @@ class DeleteMenuControllerImplTest {
   @Test
   void testDeleteMenuSuccess() {
     // Given
-    AzureMenu menu = createMenu(1);
+    Menu menu = createMenu(1);
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     var response =
@@ -66,7 +66,7 @@ class DeleteMenuControllerImplTest {
   @Test
   void testDeleteMenuWithInvalidId() {
     // Given
-    AzureMenu menu = createMenu(1);
+    Menu menu = createMenu(1);
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     var response =

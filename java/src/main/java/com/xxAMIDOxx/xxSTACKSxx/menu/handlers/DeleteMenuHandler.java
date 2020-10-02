@@ -2,7 +2,7 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.handlers;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.messaging.publish.ApplicationEventPublisher;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.DeleteMenuCommand;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuDeletedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
@@ -26,13 +26,13 @@ public class DeleteMenuHandler extends MenuBaseCommandHandler<DeleteMenuCommand>
   }
 
   @Override
-  Optional<UUID> handleCommand(AzureMenu menu, DeleteMenuCommand command) {
+  Optional<UUID> handleCommand(Menu menu, DeleteMenuCommand command) {
     menuRepositoryAdapter.delete(menu);
     return Optional.empty();
   }
 
   @Override
-  List<MenuEvent> raiseApplicationEvents(AzureMenu menu, DeleteMenuCommand command) {
+  List<MenuEvent> raiseApplicationEvents(Menu menu, DeleteMenuCommand command) {
     return Collections.singletonList(new MenuDeletedEvent(command));
   }
 }

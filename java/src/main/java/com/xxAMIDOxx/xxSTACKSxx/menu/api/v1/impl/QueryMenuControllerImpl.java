@@ -8,7 +8,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.MenuDTO;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.SearchMenuResult;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.MenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.MenuNotFoundException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.mappers.DomainToDtoMapper;
 import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
@@ -42,7 +42,7 @@ public class QueryMenuControllerImpl implements QueryMenuController {
       final UUID restaurantId,
       final Integer pageSize,
       final Integer pageNumber) {
-    List<AzureMenu> menuList;
+    List<Menu> menuList;
 
     if (isNotEmpty(searchTerm) && nonNull(restaurantId)) {
       menuList =
@@ -67,7 +67,7 @@ public class QueryMenuControllerImpl implements QueryMenuController {
 
   @Override
   public ResponseEntity<MenuDTO> getMenu(final UUID id, final String correlationId) {
-    AzureMenu menu =
+    Menu menu =
         this.menuQueryService
             .findById(id)
             .orElseThrow(

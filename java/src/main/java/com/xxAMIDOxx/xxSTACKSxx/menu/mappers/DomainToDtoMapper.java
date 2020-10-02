@@ -6,15 +6,16 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.MenuDTO;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DomainToDtoMapper {
 
-  public static MenuDTO toMenuDto(AzureMenu menu) {
+  public static MenuDTO toMenuDto(Menu menu) {
     return new MenuDTO(
         UUID.fromString(menu.getId()),
         UUID.fromString(menu.getRestaurantId()),
@@ -45,7 +46,7 @@ public class DomainToDtoMapper {
         item.getId(), item.getName(), item.getDescription(), item.getPrice(), item.getAvailable());
   }
 
-  public static SearchMenuResultItem toSearchMenuResultItem(AzureMenu menu) {
+  public static SearchMenuResultItem toSearchMenuResultItem(Menu menu) {
     return new SearchMenuResultItem(
         UUID.fromString(menu.getId()),
         UUID.fromString(menu.getRestaurantId()),

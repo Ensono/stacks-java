@@ -22,7 +22,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateItemRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,13 +57,13 @@ class CreateItemControllerImplTest {
   @Test
   void testAddItem() {
     // Given
-    AzureMenu menu = createMenu(1);
+    Menu menu = createMenu(1);
     Category category =
         new Category(randomUUID().toString(), "cat name", "cat description", new ArrayList<>());
     menu.addOrUpdateCategory(category);
 
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
-    when(menuRepositoryAdapter.save(any(AzureMenu.class))).thenReturn(menu);
+    when(menuRepositoryAdapter.save(any(Menu.class))).thenReturn(menu);
 
     CreateItemRequest request =
         new CreateItemRequest("Some Name", "Some Description", 13.56d, true);
@@ -76,9 +76,9 @@ class CreateItemControllerImplTest {
             ResourceCreatedResponse.class);
 
     // Then
-    ArgumentCaptor<AzureMenu> captor = ArgumentCaptor.forClass(AzureMenu.class);
+    ArgumentCaptor<Menu> captor = ArgumentCaptor.forClass(Menu.class);
     verify(menuRepositoryAdapter, times(1)).save(captor.capture());
-    AzureMenu created = captor.getValue();
+    Menu created = captor.getValue();
 
     then(created.getName()).isEqualTo(menu.getName());
     then(created.getDescription()).isEqualTo(menu.getDescription());
@@ -124,7 +124,7 @@ class CreateItemControllerImplTest {
   void testAddItemWhenInvalidCategoryIdGiven() {
 
     // Given
-    AzureMenu menu = createMenu(1);
+    Menu menu = createMenu(1);
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 
     CreateItemRequest request =
@@ -138,7 +138,7 @@ class CreateItemControllerImplTest {
             ErrorResponse.class);
 
     // Then
-    verify(menuRepositoryAdapter, never()).save(any(AzureMenu.class));
+    verify(menuRepositoryAdapter, never()).save(any(Menu.class));
 
     // Then
     then(response).isNotNull();
@@ -148,7 +148,7 @@ class CreateItemControllerImplTest {
   @Test
   void testCannotAddItemWhichAlreadyExists() {
     // Given
-    AzureMenu menu = createMenu(1);
+    Menu menu = createMenu(1);
     Item item = new Item(randomUUID().toString(), "item name", "item description", 5.99d, true);
     Category category =
         new Category(
@@ -168,7 +168,7 @@ class CreateItemControllerImplTest {
             ErrorResponse.class);
 
     // Then
-    verify(menuRepositoryAdapter, never()).save(any(AzureMenu.class));
+    verify(menuRepositoryAdapter, never()).save(any(Menu.class));
 
     // Then
     then(response).isNotNull();
@@ -178,12 +178,12 @@ class CreateItemControllerImplTest {
   @Test
   void testNoItemNameReturnsBadRequest() {
     // Given
-    AzureMenu menu = createMenu(1);
+    Menu menu = createMenu(1);
     Category category = createCategory(1);
     menu.addOrUpdateCategory(category);
 
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
-    when(menuRepositoryAdapter.save(any(AzureMenu.class))).thenReturn(menu);
+    when(menuRepositoryAdapter.save(any(Menu.class))).thenReturn(menu);
     CreateItemRequest request = new CreateItemRequest("", "Some Description", 13.56d, true);
 
     // When
@@ -203,12 +203,12 @@ class CreateItemControllerImplTest {
   @Test
   void testNoItemDescriptionReturnsBadRequest() {
     // Given
-    AzureMenu menu = createMenu(1);
+    Menu menu = createMenu(1);
     Category category = createCategory(1);
     menu.addOrUpdateCategory(category);
 
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
-    when(menuRepositoryAdapter.save(any(AzureMenu.class))).thenReturn(menu);
+    when(menuRepositoryAdapter.save(any(Menu.class))).thenReturn(menu);
     CreateItemRequest request = new CreateItemRequest("Some name", "", 13.56d, true);
 
     // When
@@ -228,12 +228,12 @@ class CreateItemControllerImplTest {
   @Test
   void testInvalidPriceDescriptionReturnsBadRequest() {
     // Given
-    AzureMenu menu = createMenu(1);
+    Menu menu = createMenu(1);
     Category category = createCategory(1);
     menu.addOrUpdateCategory(category);
 
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
-    when(menuRepositoryAdapter.save(any(AzureMenu.class))).thenReturn(menu);
+    when(menuRepositoryAdapter.save(any(Menu.class))).thenReturn(menu);
     CreateItemRequest request = new CreateItemRequest("Some name", "Item description", 0d, true);
 
     // When

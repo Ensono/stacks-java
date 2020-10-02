@@ -10,7 +10,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosAutoConfiguration;
 import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAutoConfiguration;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.MenuDTO;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.mappers.DomainToDtoMapper;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.Optional;
@@ -43,7 +43,7 @@ class QueryMenuControllerImplV2Test {
   @Test
   void getMenuById() {
     // Given
-    AzureMenu menu = createMenu(0);
+    Menu menu = createMenu(0);
     MenuDTO expectedResponse = DomainToDtoMapper.toMenuDto(menu);
 
     when(menuRepositoryAdapter.findById(menu.getId())).thenReturn(Optional.of(menu));
@@ -60,7 +60,7 @@ class QueryMenuControllerImplV2Test {
   @Test
   void getMenuByInvalidId() {
     // Given
-    AzureMenu menu = createMenu(0);
+    Menu menu = createMenu(0);
 
     when(menuRepositoryAdapter.findById(eq(menu.getId()))).thenReturn(Optional.of(menu));
 

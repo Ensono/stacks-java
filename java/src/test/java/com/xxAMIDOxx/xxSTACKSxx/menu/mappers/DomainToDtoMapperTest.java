@@ -9,7 +9,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.MenuDTO;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.SearchMenuResultItem;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
@@ -29,8 +29,8 @@ class DomainToDtoMapperTest {
     String description = "xxxxxxxx";
     Boolean enabled = true;
 
-    AzureMenu menu =
-        new AzureMenu(
+    Menu menu =
+        new Menu(
             id.toString(),
             restaurantId.toString(),
             name,
@@ -60,7 +60,7 @@ class DomainToDtoMapperTest {
     String description = "xxxxxxxx";
     Boolean enabled = true;
 
-    AzureMenu menu = new AzureMenu(id.toString(), restaurantId.toString(), name, description, null, enabled);
+    Menu menu = new Menu(id.toString(), restaurantId.toString(), name, description, null, enabled);
 
     // When
     MenuDTO menuDTO = DomainToDtoMapper.toMenuDto(menu);
@@ -87,8 +87,8 @@ class DomainToDtoMapperTest {
     UUID categoryId = randomUUID();
     Category category = new Category(categoryId.toString(), "aaaaaa", "bbbbbb", null);
 
-    AzureMenu menu =
-        new AzureMenu(
+    Menu menu =
+        new Menu(
             id.toString(),
             restaurantId.toString(),
             name,
@@ -123,7 +123,7 @@ class DomainToDtoMapperTest {
     String description = "xxxxxxxx";
     Boolean enabled = true;
 
-    AzureMenu menu = new AzureMenu(id.toString(), restaurantId.toString(), name, description, null, enabled);
+    Menu menu = new Menu(id.toString(), restaurantId.toString(), name, description, null, enabled);
 
     // When
     SearchMenuResultItem resultItem = DomainToDtoMapper.toSearchMenuResultItem(menu);

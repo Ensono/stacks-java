@@ -4,7 +4,7 @@ import com.xxAMIDOxx.xxSTACKSxx.core.messaging.publish.ApplicationEventPublisher
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.UpdateItemCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.CategoryUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuItemUpdatedEvent;
@@ -28,7 +28,7 @@ public class UpdateItemHandler extends MenuBaseCommandHandler<UpdateItemCommand>
   }
 
   @Override
-  Optional<UUID> handleCommand(AzureMenu menu, UpdateItemCommand command) {
+  Optional<UUID> handleCommand(Menu menu, UpdateItemCommand command) {
     Category category = getCategory(menu, command);
     Item updated = updateItem(command, category);
     menu.addOrUpdateCategory(category.addOrUpdateItem(updated));
@@ -72,14 +72,14 @@ public class UpdateItemHandler extends MenuBaseCommandHandler<UpdateItemCommand>
   }
 
   @Override
-  List<MenuEvent> raiseApplicationEvents(AzureMenu menu, UpdateItemCommand command) {
+  List<MenuEvent> raiseApplicationEvents(Menu menu, UpdateItemCommand command) {
     return Arrays.asList(
         new MenuItemUpdatedEvent(command, command.getCategoryId(), command.getItemId()),
         new CategoryUpdatedEvent(command, command.getCategoryId()),
         new MenuUpdatedEvent(command));
   }
 
-  Category getCategory(AzureMenu menu, UpdateItemCommand command) {
+  Category getCategory(Menu menu, UpdateItemCommand command) {
     return findCategory(menu, command.getCategoryId())
         .orElseThrow(() -> new CategoryDoesNotExistException(command, command.getCategoryId()));
   }

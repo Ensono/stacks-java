@@ -1,6 +1,6 @@
 package com.xxAMIDOxx.xxSTACKSxx.provider.gcp;
 
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
 import org.slf4j.Logger;
@@ -31,20 +31,20 @@ public class GcpMenuQueryService implements MenuQueryService {
     this.menuRepositoryAdapter = menuRepositoryAdapter;
   }
 
-  public Optional<AzureMenu> findById(UUID id) {
+  public Optional<Menu> findById(UUID id) {
     return menuRepositoryAdapter.findById(id.toString());
   }
 
-  public List<AzureMenu> findAll(int pageNumber, int pageSize) {
+  public List<Menu> findAll(int pageNumber, int pageSize) {
     System.out.println("GOTCHA GcpMenuQueryService");
-    Page<AzureMenu> page =
+    Page<Menu> page =
         menuRepositoryAdapter.findAll(PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, NAME)));
 
     return page.getContent();
   }
 
   @Override
-  public List<AzureMenu> findAllByRestaurantId(UUID restaurantId, Integer pageSize, Integer pageNumber) {
+  public List<Menu> findAllByRestaurantId(UUID restaurantId, Integer pageSize, Integer pageNumber) {
 
     return menuRepositoryAdapter
         .findAllByRestaurantId(
@@ -53,7 +53,7 @@ public class GcpMenuQueryService implements MenuQueryService {
   }
 
   @Override
-  public List<AzureMenu> findAllByNameContaining(
+  public List<Menu> findAllByNameContaining(
       String searchTerm, Integer pageSize, Integer pageNumber) {
 
     return menuRepositoryAdapter
@@ -63,7 +63,7 @@ public class GcpMenuQueryService implements MenuQueryService {
   }
 
   @Override
-  public List<AzureMenu> findAllByRestaurantIdAndNameContaining(
+  public List<Menu> findAllByRestaurantIdAndNameContaining(
       UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber) {
 
     return menuRepositoryAdapter

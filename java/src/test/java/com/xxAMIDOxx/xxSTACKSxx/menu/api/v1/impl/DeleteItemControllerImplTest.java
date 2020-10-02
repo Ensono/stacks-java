@@ -17,7 +17,7 @@ import com.microsoft.azure.spring.autoconfigure.cosmosdb.CosmosDbRepositoriesAut
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import java.util.Optional;
 import java.util.UUID;
@@ -59,7 +59,7 @@ class DeleteItemControllerImplTest {
   @Test
   void testDeleteItemSuccess() {
     // Given
-    AzureMenu menu = createMenu(1);
+    Menu menu = createMenu(1);
     Category category = createCategory(0);
     Item item = new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
     category.addOrUpdateItem(item);
@@ -80,8 +80,8 @@ class DeleteItemControllerImplTest {
     // Then
     verify(menuRepositoryAdapter, times(1)).save(menu);
     then(response.getStatusCode()).isEqualTo(OK);
-    Optional<AzureMenu> optMenu = menuRepositoryAdapter.findById(menu.getId());
-    AzureMenu updated = optMenu.get();
+    Optional<Menu> optMenu = menuRepositoryAdapter.findById(menu.getId());
+    Menu updated = optMenu.get();
     then(updated.getCategories()).hasSize(1);
     then(updated.getCategories().get(0).getItems()).isNotNull();
   }
@@ -89,7 +89,7 @@ class DeleteItemControllerImplTest {
   @Test
   void testDeleteItemWithInvalidCategoryId() {
     // Given
-    AzureMenu menu = createMenu(1);
+    Menu menu = createMenu(1);
     Category category = createCategory(0);
     Item item = new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
     category.addOrUpdateItem(item);
@@ -115,7 +115,7 @@ class DeleteItemControllerImplTest {
   @Test
   void testDeleteItemWithInvalidItemId() {
     // Given
-    AzureMenu menu = createMenu(1);
+    Menu menu = createMenu(1);
     Category category = createCategory(0);
     Item item = new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
     category.addOrUpdateItem(item);

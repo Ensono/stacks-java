@@ -7,7 +7,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
 import java.util.List;
@@ -30,16 +30,16 @@ public class CosmosMenuQueryServiceTest {
 
     Pageable pageable = mock(Pageable.class);
 
-    List<AzureMenu> results = createMenus(2);
-    Page<AzureMenu> page1 = new PageImpl<>(results, pageable, 2);
-    Page<AzureMenu> page2 = new PageImpl<>(results, pageable, 2);
+    List<Menu> results = createMenus(2);
+    Page<Menu> page1 = new PageImpl<>(results, pageable, 2);
+    Page<Menu> page2 = new PageImpl<>(results, pageable, 2);
 
     // Given
     given(menuRepositoryAdapter.findAll(any(Pageable.class))).willReturn(page1);
     given(menuRepositoryAdapter.findAll(eq(pageable))).willReturn(page2);
 
     // When
-    List<AzureMenu> actualResults = menuQueryServiceImpl.findAll(2, 5);
+    List<Menu> actualResults = menuQueryServiceImpl.findAll(2, 5);
 
     // Then
     then(actualResults).isEqualTo(results);
