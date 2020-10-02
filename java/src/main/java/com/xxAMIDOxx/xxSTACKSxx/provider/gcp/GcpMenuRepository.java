@@ -1,6 +1,5 @@
 package com.xxAMIDOxx.xxSTACKSxx.provider.gcp;
 
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.GcpMenu;
 import org.springframework.cloud.gcp.data.firestore.FirestoreReactiveRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;

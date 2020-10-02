@@ -1,6 +1,5 @@
 package com.xxAMIDOxx.xxSTACKSxx.provider.gcp;
 
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.GcpMenu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import org.springframework.beans.factory.annotation.Autowired;

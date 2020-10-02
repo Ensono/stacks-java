@@ -1,10 +1,12 @@
-package com.xxAMIDOxx.xxSTACKSxx.menu.domain;
+package com.xxAMIDOxx.xxSTACKSxx.provider.azure;
 
 import com.microsoft.azure.spring.data.cosmosdb.core.mapping.Document;
 import com.microsoft.azure.spring.data.cosmosdb.core.mapping.PartitionKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

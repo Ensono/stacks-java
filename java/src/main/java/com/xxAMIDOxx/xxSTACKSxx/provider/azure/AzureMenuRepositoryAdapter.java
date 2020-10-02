@@ -1,7 +1,5 @@
 package com.xxAMIDOxx.xxSTACKSxx.provider.azure;
 
-import com.xxAMIDOxx.xxSTACKSxx.menu.domain.AzureMenu;
-
 import java.util.Optional;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
