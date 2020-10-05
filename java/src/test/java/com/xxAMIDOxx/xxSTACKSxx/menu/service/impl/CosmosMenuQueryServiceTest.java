@@ -12,7 +12,7 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
 import java.util.List;
 
-import com.xxAMIDOxx.xxSTACKSxx.provider.azure.CosmosMenuQueryService;
+import com.xxAMIDOxx.xxSTACKSxx.provider.azure.service.CosmosMenuQueryService;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;

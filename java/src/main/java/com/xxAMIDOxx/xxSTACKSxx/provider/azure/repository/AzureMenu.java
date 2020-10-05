@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx.provider.azure;
+package com.xxAMIDOxx.xxSTACKSxx.provider.azure.repository;
 
 import com.microsoft.azure.spring.data.cosmosdb.core.mapping.Document;
 import com.microsoft.azure.spring.data.cosmosdb.core.mapping.PartitionKey;

@@ -3,7 +3,7 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.service.impl;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
 import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
-import com.xxAMIDOxx.xxSTACKSxx.provider.gcp.GcpMenuQueryService;
+import com.xxAMIDOxx.xxSTACKSxx.provider.gcp.service.GcpMenuQueryService;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;

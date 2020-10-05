@@ -1,9 +1,11 @@
-package com.xxAMIDOxx.xxSTACKSxx.provider.azure;
+package com.xxAMIDOxx.xxSTACKSxx.provider.azure.repository;
 
 import java.util.Optional;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
+import com.xxAMIDOxx.xxSTACKSxx.provider.azure.repository.AzureMenu;
+import com.xxAMIDOxx.xxSTACKSxx.provider.azure.repository.AzureMenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

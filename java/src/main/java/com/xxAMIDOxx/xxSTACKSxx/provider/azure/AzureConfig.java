@@ -1,6 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.provider.azure;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;
+import com.xxAMIDOxx.xxSTACKSxx.provider.azure.repository.AzureMenuRepositoryAdapter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,15 +1,13 @@
-package com.xxAMIDOxx.xxSTACKSxx.provider.azure;
+package com.xxAMIDOxx.xxSTACKSxx.provider.gcp.repository;
 
-import com.microsoft.azure.spring.data.cosmosdb.repository.CosmosRepository;
-import org.springframework.data.domain.Page;
+import com.xxAMIDOxx.xxSTACKSxx.provider.gcp.repository.GcpMenu;
+import org.springframework.cloud.gcp.data.firestore.FirestoreReactiveRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 
 @Repository
-public interface AzureMenuRepository extends CosmosRepository<AzureMenu, String> {
-
-  @Override
-  AzureMenu save(AzureMenu menu);
+public interface GcpMenuRepository extends FirestoreReactiveRepository<GcpMenu> {
 
   /**
    * Query is constructed OOTB- out of the box, executed and results are fetched based param
@@ -18,7 +16,7 @@ public interface AzureMenuRepository extends CosmosRepository<AzureMenu, String>
    * @param restaurantId tenantID/RestaurantId
    * @return page of menu
    */
-  Page<AzureMenu> findAllByRestaurantId(String restaurantId, Pageable pageable);
+  Flux<GcpMenu> findAllByRestaurantId(String restaurantId, Pageable pageable);
 
   /**
    * Query is constructed OOTB - out of the box, executed and results are fetched based param
@@ -28,7 +26,7 @@ public interface AzureMenuRepository extends CosmosRepository<AzureMenu, String>
    * @param pageable pagination
    * @return page of menu
    */
-  Page<AzureMenu> findAllByNameContaining(String searchTerm, Pageable pageable);
+   Flux<GcpMenu> findAllByNameContaining(String searchTerm, Pageable pageable);
 
   /**
    * Query is constructed OOTB - out of the box, executed and results are fetched based param
@@ -39,8 +37,7 @@ public interface AzureMenuRepository extends CosmosRepository<AzureMenu, String>
    * @param pageable pagination
    * @return page of menu
    */
-  Page<AzureMenu> findAllByRestaurantIdAndNameContaining(
-      String restaurantId, String searchTerm, Pageable pageable);
+  Flux<GcpMenu> findAllByRestaurantIdAndNameContaining(String restaurantId, String searchTerm, Pageable pageable);
 
   /**
    * Query is constructed OOTB - out of the box, executed and results are fetched based param
@@ -51,5 +48,5 @@ public interface AzureMenuRepository extends CosmosRepository<AzureMenu, String>
    * @param pageable paging requirements
    * @return
    */
-  Page<AzureMenu> findAllByRestaurantIdAndName(String restaurantId, String name, Pageable pageable);
+  Flux<GcpMenu> findAllByRestaurantIdAndName(String restaurantId, String name, Pageable pageable);
 }

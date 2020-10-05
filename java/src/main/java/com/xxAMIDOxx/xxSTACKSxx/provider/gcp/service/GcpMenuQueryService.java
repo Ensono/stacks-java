@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx.provider.gcp;
+package com.xxAMIDOxx.xxSTACKSxx.provider.gcp.service;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;

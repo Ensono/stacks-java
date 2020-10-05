@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx.provider.azure;
+package com.xxAMIDOxx.xxSTACKSxx.provider.azure.service;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepositoryAdapter;

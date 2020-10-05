@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx.provider.gcp;
+package com.xxAMIDOxx.xxSTACKSxx.provider.gcp.repository;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import lombok.AllArgsConstructor;
