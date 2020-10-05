@@ -12,7 +12,7 @@
     <groupId>com.xxAMIDOxx</groupId>
     <artifactId>xxSTACKSxx-api</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-
+    <packaging>pom</packaging>
     <name>xxSTACKSxx-api</name>
     <description>Demo project for Java</description>
 
@@ -129,7 +129,6 @@
             <version>${lombok.version}</version>
             <scope>compile</scope>
         </dependency>
-
 
         <!--
         <dependency>
@@ -361,7 +360,6 @@
                     <systemPropertyVariables>
                         <pact.verifier.publishResults>true</pact.verifier.publishResults>
                     </systemPropertyVariables>
-
                     <serviceProviders>
                         <serviceProvider>
                             <name>${pact.api.name}</name>
@@ -455,7 +453,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                  <threads>15</threads>
+                    <threads>15</threads>
                     <historyInputFile>target/pitHistory.txt</historyInputFile>
                     <historyOutputFile>target/pitHistory.txt</historyOutputFile>
                     <timestampedReports>false</timestampedReports>
@@ -471,4 +469,9 @@
         </plugins>
     </build>
 
+    <modules>
+        <module>gcp</module>
+        <module>main</module>
+    </modules>
+  
 </project>
