@@ -6,6 +6,7 @@ parameters:
   # Maven
   maven_cache_directory: ""
   # maven_surefire_reports_dir: ""
+  untagged_test_check: true
   maven_allowed_post_deploy_test_tags: ""
   maven_ignored_post_deploy_test_tags: ""
   maven_post_deploy_html_report_directory: ""
@@ -26,6 +27,7 @@ steps:
       functional_test_artefact_path: "${{ parameters.functional_test_artefact_path }}"
       pipeline_scripts_directory: "${{ parameters.pipeline_scripts_directory }}"
       # Maven
+      untagged_test_check: "${{ parameters.untagged_test_check }}"
       maven_cache_directory: "${{ parameters.maven_cache_directory }}"
       maven_allowed_post_deploy_test_tags: "${{ parameters.maven_allowed_post_deploy_test_tags }}"
       maven_ignored_post_deploy_test_tags: "${{ parameters.maven_ignored_post_deploy_test_tags }}"
@@ -45,6 +47,7 @@ steps:
       functional_test_artefact_path: "${{ parameters.functional_test_artefact_path }}-karate"
       pipeline_scripts_directory: "${{ parameters.pipeline_scripts_directory }}"
       # Maven
+      untagged_test_check: false
       maven_cache_directory: "${{ parameters.maven_cache_directory }}"
       maven_allowed_post_deploy_test_tags: "${{ parameters.maven_allowed_post_deploy_test_tags }}"
       maven_ignored_post_deploy_test_tags: "${{ parameters.maven_ignored_post_deploy_test_tags }}"
