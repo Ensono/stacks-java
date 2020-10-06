@@ -6,6 +6,7 @@ parameters:
   # Maven
   maven_cache_directory: ""
   # maven_surefire_reports_dir: ""
+  untagged_test_check: true
   maven_allowed_post_deploy_test_tags: ""
   maven_ignored_post_deploy_test_tags: ""
   maven_post_deploy_html_report_directory: ""
@@ -91,16 +92,17 @@ steps:
       container: ${{ parameters.docker_build_container }}
     displayName: "Maven: Compile Application (${{ parameters.project_type }})"
 
-  - task: Bash@3
-    inputs:
-      filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-post-deploy-untagged-test-check.bash"
-      arguments: >
-        -a "${{ parameters.maven_allowed_post_deploy_test_tags }}"
-        -W "${{ parameters.maven_post_deploy_html_report_directory }}"
-        -X "${{ parameters.maven_post_deploy_failsafe_reports_directory }}"
-        -Y "${{ parameters.maven_ignored_post_deploy_test_tags }}"
-        -Z "${{ parameters.maven_cache_directory }}"
-      workingDirectory: "${{ parameters.functional_test_project_root_dir }}"
-    target:
-      container: ${{ parameters.docker_build_container }}
-    displayName: "Maven: Invalid Test Tag Check (${{ parameters.project_type }})"
+  - ${{ if eq(parameters.untagged_test_check, true) }}:
+    - task: Bash@3
+      inputs:
+        filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-post-deploy-untagged-test-check.bash"
+        arguments: >
+          -a "${{ parameters.maven_allowed_post_deploy_test_tags }}"
+          -W "${{ parameters.maven_post_deploy_html_report_directory }}"
+          -X "${{ parameters.maven_post_deploy_failsafe_reports_directory }}"
+          -Y "${{ parameters.maven_ignored_post_deploy_test_tags }}"
+          -Z "${{ parameters.maven_cache_directory }}"
+        workingDirectory: "${{ parameters.functional_test_project_root_dir }}"
+      target:
+        container: ${{ parameters.docker_build_container }}
+      displayName: "Maven: Invalid Test Tag Check (${{ parameters.project_type }})"
