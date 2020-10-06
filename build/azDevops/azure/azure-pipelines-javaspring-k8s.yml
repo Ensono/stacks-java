@@ -185,7 +185,7 @@ stages:
               project_type: "${{ variables.java_project_type }}"
 
           # Builds the Java API Tests
-          - template: templates/steps/build/build-api-tests.yml
+          - template: templates/steps/build/build-api-tests-combined.yml
             parameters:
               repo_root_dir: "${{ variables.self_repo_dir }}"
               functional_test_project_root_dir: "${{ variables.self_functional_testproject_dir }}"
