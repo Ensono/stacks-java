@@ -16,6 +16,12 @@
     <name>xxSTACKSxx-api</name>
     <description>Demo project for Java</description>
 
+    <modules>
+        <module>gcp</module>
+        <module>main</module>
+        <module>core</module>
+    </modules>
+
     <properties>
         <java.version>11</java.version>
         <org.projectlombok.version>1.18.0</org.projectlombok.version>
@@ -368,7 +374,6 @@
                             <port>${pact.api.port}</port>
                         </serviceProvider>
                     </serviceProviders>
-
                 </configuration>
                 <executions>
                     <execution>
@@ -469,9 +474,4 @@
         </plugins>
     </build>
 
-    <modules>
-        <module>gcp</module>
-        <module>main</module>
-    </modules>
-  
 </project>
