@@ -19,7 +19,7 @@ parameters:
 
 steps:
   # Builds the Java API Tests
-  - template: templates/steps/build/build-api-tests.yml
+  - template: ./build-api-tests.yml
     parameters:
       repo_root_dir: "${{ parameters.repo_root_dir }}"
       functional_test_project_root_dir: "${{ parameters.functional_test_project_root_dir }}"
