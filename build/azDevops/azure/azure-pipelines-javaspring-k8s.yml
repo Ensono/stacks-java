@@ -244,7 +244,7 @@ stages:
               azure_subscription_id: "$(AZURE_SUBSCRIPTION_ID)"
 
           # Post build tasks, such as Test and Coverage upload, and publishing artefacts
-          - template: templates/steps/build/post-build-tasks.yml
+          - template: templates/steps/build/post-build-tasks-combined.yml
             parameters:
               project_root_dir: "${{ variables.self_project_dir }}"
               functional_test_project_root_dir: "${{ variables.self_functional_testproject_dir }}"
