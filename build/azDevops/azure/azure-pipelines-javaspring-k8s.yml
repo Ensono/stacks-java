@@ -185,7 +185,7 @@ stages:
               project_type: "${{ variables.java_project_type }}"
 
           # Builds the Java API Tests
-          - template: templates/steps/build/build-api-tests-combined.yml
+          - template: templates/steps/build/build-api-tests.yml
             parameters:
               repo_root_dir: "${{ variables.self_repo_dir }}"
               functional_test_project_root_dir: "${{ variables.self_functional_testproject_dir }}"
@@ -244,7 +244,7 @@ stages:
               azure_subscription_id: "$(AZURE_SUBSCRIPTION_ID)"
 
           # Post build tasks, such as Test and Coverage upload, and publishing artefacts
-          - template: templates/steps/build/post-build-tasks-combined.yml
+          - template: templates/steps/build/post-build-tasks.yml
             parameters:
               project_root_dir: "${{ variables.self_project_dir }}"
               functional_test_project_root_dir: "${{ variables.self_functional_testproject_dir }}"
@@ -455,7 +455,7 @@ stages:
                       },
                     ]
 
-                - template: templates/steps/deploy/deploy-post-deploy-tests-combined.yml
+                - template: templates/steps/deploy/deploy-post-deploy-tests.yml
                   parameters:
                     environment: "$(Environment.Name)"
                     pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
