@@ -32,7 +32,7 @@ steps:
       # Note: Don't forget to update the `maven_allowed_post_deploy_test_tags` in the root pipeline file.
       - task: Bash@3
         inputs:
-          filePath: "./test-maven-post-deploy-karate-test-run.bash"
+          filePath: "${{ parameters.functional_test_artefact_download_location }}/test-maven-post-deploy-karate-test-run.bash"
           arguments: >
             -a "Functional"
             -b "${{ parameters.functional_test_base_url }}"
