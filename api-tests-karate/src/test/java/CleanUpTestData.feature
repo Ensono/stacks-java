@@ -3,6 +3,7 @@ Feature: Clean up the test data
 
   Scenario: Search and delete previous created test data
     Given url base_url.concat(menu)
+    And header Authorization = auth.bearer_token
     And param searchTerm = '(Automated Test Data)'
     When method GET
     Then status 200

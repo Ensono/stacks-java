@@ -1,29 +1,30 @@
 @Functional
 Feature: Create a menu
 
+  Background: Set after scenario clean up
+    * configure afterScenario = function(){karate.call(read('classpath:DeleteCreatedMenus.feature'), {menuId:karate.get('menu_id')})}
+
   @Smoke
   Scenario Outline: Create menu
-    * karate.call('classpath:CleanUpTestData.feature')
     * set menu_body
       | path        | value         |
       | tenantId    | <tenantId>    |
       | name        | <name>        |
       | description | <description> |
       | enabled     | <enabled>     |
-    Given url base_url.concat(menu)
-    And request menu_body
-    When method POST
-    Then status 201
-    * karate.set('menu_id',response.id)
-    * replace menu_by_id_path.menu_id = response.id
+    * def created_menu = karate.call(read('classpath:CreateGenericData.feature'), {body:menu_body, url:base_url.concat(menu)})
+    * karate.set('menu_id',created_menu.id)
+    * replace menu_by_id_path.menu_id = created_menu.id
 #    Check the created menu
     Given url base_url.concat(menu_by_id_path)
+    And header Authorization = auth.bearer_token
     When method GET
     Then status 200
     And response.name == "<name>"
     And response.description == "<description>"
     And response.tenantId == "<tenantId>"
     And response.enabled == <enabled>
+    * karate.call(read('classpath:DeleteCreatedMenus.feature'), {menuId:karate.get('menu_id')})
 
     Examples:
       | tenantId                               | name                                    | description                            | enabled |
@@ -38,9 +39,11 @@ Feature: Create a menu
       | description | <description> |
       | enabled     | <enabled>     |
     Given url base_url.concat(menu)
+    And header Authorization = auth.bearer_token
     And request menu_body
     When method POST
     Then status 400
+
     Examples:
       | scenario_name             | tenantId                               | name                                     | description         | enabled |
       | empty 'enabled' field     | '74b858a4-d00f-11ea-87d0-0242ac130003' | 'Cafe de Provence (Automated Test Data)' | 'French Restaurant' |         |
@@ -50,21 +53,18 @@ Feature: Create a menu
 
 
   Scenario Outline: Create a menu with the same data - 409
-    * karate.call('classpath:CleanUpTestData.feature')
     * set menu_body
       | path        | value         |
       | tenantId    | <tenantId>    |
       | name        | <name>        |
       | description | <description> |
       | enabled     | <enabled>     |
-    Given url base_url.concat(menu)
-    And request menu_body
-    When method POST
-    Then status 201
-    * karate.set('menu_id',response.id)
-    * replace menu_by_id_path.menu_id = response.id
-#    Check the created menu
+    * def created_menu = karate.call(read('classpath:CreateGenericData.feature'), {body:menu_body, url:base_url.concat(menu)})
+    * karate.set('menu_id',created_menu.id)
+    # Check the created menu
+    * replace menu_by_id_path.menu_id = karate.get('menu_id')
     Given url base_url.concat(menu_by_id_path)
+    And header Authorization = auth.bearer_token
     When method GET
     Then status 200
     And response.name == "<name>"
@@ -75,10 +75,12 @@ Feature: Create a menu
 
 #    Create the second menu with the same data
     Given url base_url.concat(menu)
+    And header Authorization = auth.bearer_token
     And request menu_body
     When method POST
     Then status 409
     * match response.description contains "A Menu with the name <name> already exists for the restaurant with id <tenantId>"
+    * karate.call(read('classpath:DeleteCreatedMenus.feature'), {menuId:karate.get('menu_id')})
 
     Examples:
       | tenantId                               | name                                         | description                | enabled |
