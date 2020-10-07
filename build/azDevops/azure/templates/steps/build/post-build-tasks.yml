@@ -40,6 +40,13 @@ steps:
           path: "${{ parameters.functional_test_project_root_dir }}/${{ parameters.vulnerability_scan_report }}"
           artifact: "owasp-vulnerability-report-functional-test"
         displayName: "Publish: Vulnerability Scan Report Artefact (${{ parameters.functional_test_project_type }})"
+      
+      - task: PublishPipelineArtifact@1
+        condition: always()
+        inputs:
+          path: "${{ parameters.functional_test_project_root_dir }}-karate/${{ parameters.vulnerability_scan_report }}"
+          artifact: "owasp-vulnerability-report-functional-test-karate"
+        displayName: "Publish: Vulnerability Scan Report Artefact (${{ parameters.functional_test_project_type }})"
 
   # Publish Artefacts if required
   - ${{ if eq(parameters.functional_test, true) }}:
@@ -47,6 +54,21 @@ steps:
         inputs:
           path: "${{ parameters.functional_test_artefact_path }}"
           artifact: "${{ parameters.functional_test_artefact_name }}"
+        displayName: "Publish: Functional Tests Artefact"
+
+      # TODO: Remove
+      - script: ls
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: "."
+          Contents: "**/test-maven-post-deploy-karate-test-run.bash"
+          TargetFolder: "${{ parameters.functional_test_artefact_path }}-karate"
+          flattenFolders: true
+      
+      - task: PublishPipelineArtifact@1
+        inputs:
+          path: "${{ parameters.functional_test_artefact_path }}-karate"
+          artifact: "${{ parameters.functional_test_artefact_name }}-karate"
         displayName: "Publish: Functional Tests Artefact"
 
   - ${{ if eq(parameters.build_file, true) }}:
