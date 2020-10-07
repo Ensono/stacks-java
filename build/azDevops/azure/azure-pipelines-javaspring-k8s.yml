@@ -460,12 +460,12 @@ stages:
                     environment: "$(Environment.Name)"
                     pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
                     functional_test: ${{ variables.functional_test }}
-                    functional_test_artefact_name: "${{ variables.functional_test_artefact_name }}"
-                    functional_test_artefact_download_location: "${{ variables.functional_test_artefact_download_location }}"
+                    functional_test_artefact_name: "${{ variables.functional_test_artefact_name }}-karate"
+                    functional_test_artefact_download_location: "${{ variables.functional_test_artefact_download_location }}-karate"
                     functional_test_base_url: "${{ variables.functional_test_base_url }}"
                     maven_cache_directory: "${{ variables.maven_cache_directory }}"
                     maven_ignored_post_deploy_test_tags: "${{ variables.maven_ignored_post_deploy_test_tags }}"
-                    maven_post_deploy_html_report_directory: "${{ variables.maven_post_deploy_html_report_directory }}"
+                    maven_post_deploy_html_report_directory: "target/surefire-reports"
                     docker_java_container: "${{ variables.docker_java_image }}"
 
   - stage: Prod
