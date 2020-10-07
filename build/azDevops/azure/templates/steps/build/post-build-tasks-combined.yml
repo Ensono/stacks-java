@@ -55,6 +55,13 @@ steps:
           path: "${{ parameters.functional_test_artefact_path }}"
           artifact: "${{ parameters.functional_test_artefact_name }}"
         displayName: "Publish: Functional Tests Artefact"
+
+      # TODO: Remove
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: "."
+          Contents: "test-maven-post-deploy-karate-test-run.bash"
+          TargetFolder: "${{ parameters.functional_test_artefact_path }}-karate"
       
       - task: PublishPipelineArtifact@1
         inputs:
