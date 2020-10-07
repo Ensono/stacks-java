@@ -6,7 +6,7 @@ parameters:
   # Maven
   maven_cache_directory: ""
   # maven_surefire_reports_dir: ""
-  untagged_test_check: true
+  maven_untagged_test_check: true
   maven_allowed_post_deploy_test_tags: ""
   maven_ignored_post_deploy_test_tags: ""
   maven_post_deploy_html_report_directory: ""
@@ -92,7 +92,7 @@ steps:
       container: ${{ parameters.docker_build_container }}
     displayName: "Maven: Compile Application (${{ parameters.project_type }})"
 
-  - ${{ if eq(parameters.untagged_test_check, true) }}:
+  - ${{ if eq(parameters.maven_untagged_test_check, true) }}:
     - task: Bash@3
       inputs:
         filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-post-deploy-untagged-test-check.bash"
