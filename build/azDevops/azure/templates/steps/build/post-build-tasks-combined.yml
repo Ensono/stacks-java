@@ -63,6 +63,7 @@ steps:
           SourceFolder: "."
           Contents: "**/test-maven-post-deploy-karate-test-run.bash"
           TargetFolder: "${{ parameters.functional_test_artefact_path }}-karate"
+          flattenFolders: true
       
       - task: PublishPipelineArtifact@1
         inputs:
