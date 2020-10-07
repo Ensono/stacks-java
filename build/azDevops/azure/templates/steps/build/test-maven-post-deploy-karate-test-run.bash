@@ -67,7 +67,7 @@ fi
 
 export BASE_URL
 
-./mvnw test
+./mvnw test \
 	-Dmaven.repo.local="${M2_LOCATION}" \
 	-Dtest="Run${GROUP}Tests" \
   -Dkarate.env=system
