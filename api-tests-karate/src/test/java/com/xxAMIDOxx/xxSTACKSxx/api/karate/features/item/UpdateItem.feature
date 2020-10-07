@@ -1,36 +1,25 @@
 @Functional
 Feature: Update Items
 
-  Background: Create menu and Category for future items
-    * karate.call('classpath:CleanUpTestData.feature')
+  Background: Create test data
+       # Create a menu
     * set menu_body
       | path        | value                                   |
       | tenantId    | '74b858a4-d00f-11ea-87d0-0242ac130003'  |
       | name        | 'Italian Cuisine (Automated Test Data)' |
       | description | 'The most delicious Italian dishes'     |
       | enabled     | true                                    |
-
-    Given url base_url.concat(menu)
-    And request menu_body
-    When method POST
-    Then status 201
-    * karate.set('menu_id',response.id)
-    * def menu_id = response.id
-    * replace menu_by_id_path.menu_id = response.id
+    * def created_menu = karate.call(read('classpath:CreateGenericData.feature'), {body:menu_body, url:base_url.concat(menu)})
+    * karate.set('menu_id',created_menu.id)
+       # Create category
     * replace category.menu_id = karate.get('menu_id')
-
-#    create category
     * set category_body
       | path        | value                                                       |
       | name        | 'Meat plates (Automated Test Data)'                         |
-      | description | 'This category contains all possible ways of meat cooking.' |
-    Given url base_url.concat(category)
-    And request category_body
-    When method POST
-    Then status 201
-    * karate.set('category_id',response.id)
-
-#    create an item
+      | description | 'This category contains all possible meat cooking methods.' |
+    * def created_category = karate.call(read('classpath:CreateGenericData.feature'), {body:category_body, url:base_url.concat(category)})
+    * karate.set('category_id',created_category.id)
+       # Create item
     * set item_body
       | path        | value                                               |
       | name        | 'Tender chicken breast with aubergine and tomatoes' |
@@ -41,11 +30,10 @@ Feature: Update Items
       | token         | value                     |
       | <menu_id>     | karate.get('menu_id')     |
       | <category_id> | karate.get('category_id') |
-    Given url base_url.concat(category_by_id_path).concat(items)
-    And request item_body
-    When method POST
-    Then status 201
-    * karate.set('item_id',response.id)
+    * def create_item_path = base_url.concat(category_by_id_path).concat(items)
+    * def created_item = karate.call(read('classpath:CreateGenericData.feature'), {body:item_body, url:create_item_path})
+    * karate.set('item_id',created_item.id)
+    * configure afterScenario = function(){karate.call(read('classpath:DeleteCreatedMenus.feature'), {menuId:karate.get('menu_id')})}
 
 
   Scenario Outline: Update Item
@@ -60,14 +48,16 @@ Feature: Update Items
       | <menu_id>     | karate.get('menu_id')     |
       | <category_id> | karate.get('category_id') |
       | <item_id>     | karate.get('item_id')     |
-#    Update item for category
+       # Update item for category
     Given url base_url.concat(item_by_id_path)
+    And header Authorization = auth.bearer_token
     And request item_body
     When method PUT
     Then status 200
-
-#    Check the updated item
+       # Check the updated item
+    * replace menu_by_id_path.menu_id = karate.get('menu_id')
     Given url base_url.concat(menu_by_id_path)
+    And header Authorization = auth.bearer_token
     When method GET
     Then status 200
     * def items_list = []
@@ -101,8 +91,9 @@ Feature: Update Items
       | <menu_id>     | karate.get('menu_id')     |
       | <category_id> | karate.get('category_id') |
       | <item_id>     | karate.get('item_id')     |
-#    Update item for category
+       # Update item for category
     Given url base_url.concat(item_by_id_path)
+    And header Authorization = auth.bearer_token
     And request item_body
     When method PUT
     Then status 400
@@ -127,8 +118,9 @@ Feature: Update Items
       | <menu_id>     | <menuId>                  |
       | <category_id> | karate.get('category_id') |
       | <item_id>     | karate.get('item_id')     |
-#    Update item for category
+       # Update item for category
     Given url base_url.concat(item_by_id_path)
+    And header Authorization = auth.bearer_token
     And request item_body
     When method PUT
     Then status 404
@@ -153,8 +145,9 @@ Feature: Update Items
       | <menu_id>     | karate.get('menu_id') |
       | <category_id> | <categoryId>          |
       | <item_id>     | karate.get('item_id') |
-#    Update item for category
+       # Update item for category
     Given url base_url.concat(item_by_id_path)
+    And header Authorization = auth.bearer_token
     And request item_body
     When method PUT
     Then status 404
@@ -180,8 +173,9 @@ Feature: Update Items
       | <menu_id>     | karate.get('menu_id')     |
       | <category_id> | karate.get('category_id') |
       | <item_id>     | <itemId>                  |
-#    Update item for category
+       # Update item for category
     Given url base_url.concat(item_by_id_path)
+    And header Authorization = auth.bearer_token
     And request item_body
     When method PUT
     Then status 404

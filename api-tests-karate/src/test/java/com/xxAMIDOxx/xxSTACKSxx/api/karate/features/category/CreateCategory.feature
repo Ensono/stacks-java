@@ -2,20 +2,18 @@
 Feature: Create a category
 
   Background: Create a menu
-    * karate.call('classpath:CleanUpTestData.feature')
     * set menu_body
       | path        | value                                   |
       | tenantId    | '74b858a4-d00f-11ea-87d0-0242ac130003'  |
       | name        | 'Italian Cuisine (Automated Test Data)' |
       | description | 'The most delicious Italian dishes'     |
       | enabled     | true                                    |
-    Given url base_url.concat(menu)
-    And request menu_body
-    When method POST
-    Then status 201
-    * karate.set('menu_id',response.id)
-    * replace menu_by_id_path.menu_id = response.id
+    * def created_menu = karate.call(read('classpath:CreateGenericData.feature'), {body:menu_body, url:base_url.concat(menu)})
+    * karate.set('menu_id',created_menu.id)
+
+    * replace menu_by_id_path.menu_id = created_menu.id
     * replace category.menu_id = karate.get('menu_id')
+    * configure afterScenario = function(){karate.call(read('classpath:DeleteCreatedMenus.feature'), {menuId:karate.get('menu_id')})}
 
 
   @Smoke
@@ -24,14 +22,12 @@ Feature: Create a category
       | path        | value         |
       | name        | <name>        |
       | description | <description> |
-    Given url base_url.concat(category)
-    And request category_body
-    When method POST
-    Then status 201
-    * karate.set('category_id',response.id)
+    * def created_category = karate.call(read('classpath:CreateGenericData.feature'), {body:category_body, url:base_url.concat(category)})
+    * karate.set('category_id',created_category.id)
 
 #   Check the created category
     Given url base_url.concat(menu_by_id_path)
+    And header Authorization = auth.bearer_token
     When method GET
     Then status 200
     * def category_list = []
@@ -42,7 +38,7 @@ Feature: Create a category
 
     Examples:
       | name                                | description                                                 |
-      | 'Meat plates (Automated Test Data)' | 'This category contains all possible ways of meat cooking.' |
+      | 'Meat plates (Automated Test Data)' | 'This category contains all possible meat cooking methods.' |
 
 
   Scenario Outline: Create a category that already exists
@@ -50,11 +46,11 @@ Feature: Create a category
       | path        | value         |
       | name        | <name>        |
       | description | <description> |
+    * def created_category = karate.call(read('classpath:CreateGenericData.feature'), {body:category_body, url:base_url.concat(category)})
+    * karate.set('category_id',created_category.id)
+    # Create a category with the same data
     Given url base_url.concat(category)
-    And request category_body
-    When method POST
-    Then status 201
-#  Create a category with the same data
+    And header Authorization = auth.bearer_token
     And request category_body
     When method POST
     Then status 409
@@ -62,7 +58,7 @@ Feature: Create a category
 
     Examples:
       | name                                | description                                                 |
-      | 'Meat plates (Automated Test Data)' | 'This category contains all possible ways of meat cooking.' |
+      | 'Meat plates (Automated Test Data)' | 'This category contains all possible meat cooking methods.' |
 
 
   Scenario Outline: Bad request for creating category - '<field_name>' field is empty
@@ -71,6 +67,7 @@ Feature: Create a category
       | name        | <name>        |
       | description | <description> |
     Given url base_url.concat(category)
+    And header Authorization = auth.bearer_token
     And request category_body
     When method POST
     Then status 400
@@ -79,7 +76,7 @@ Feature: Create a category
     Examples:
       | field_name  | name                                | description                                                 |
       | name        | 'Meat plates (Automated Test Data)' |                                                             |
-      | description |                                     | 'This category contains all possible ways of meat cooking.' |
+      | description |                                     | 'This category contains all possible meat cooking methods.' |
 
 
   Scenario Outline: Create a category for non-existing menu
@@ -88,6 +85,7 @@ Feature: Create a category
       | name        | <name>        |
       | description | <description> |
     Given url base_url.concat(menu).concat('/').concat(<id>).concat('/category')
+    And header Authorization = auth.bearer_token
     And request category_body
     When method POST
     Then status 404

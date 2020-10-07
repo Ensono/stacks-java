@@ -3,25 +3,24 @@ Feature: Delete menu
 
   @Smoke
   Scenario: Delete menu
-    * karate.call('classpath:CleanUpTestData.feature')
     * set menu_body
       | path        | value                                   |
       | tenantId    | '74b858a4-d00f-11ea-87d0-0242ac130003'  |
       | name        | 'Vegetarian Food (Automated Test Data)' |
       | description | 'The most delicious vegetarian dishes'  |
       | enabled     | true                                    |
-    Given url base_url.concat(menu)
-    And request menu_body
-    When method POST
-    Then status 201
-    * karate.set('menu_id',response.id)
-    * replace menu_by_id_path.menu_id = response.id
+    * def created_menu = karate.call(read('classpath:CreateGenericData.feature'), {body:menu_body, url:base_url.concat(menu)})
+    * karate.set('menu_id',created_menu.id)
+    * replace menu_by_id_path.menu_id = created_menu.id
+
     #   Delete the created menu
     Given url base_url.concat(menu_by_id_path)
+    And header Authorization = auth.bearer_token
     When method DELETE
     Then status 200
     #   Check the Deleted menu
     Given url base_url.concat(menu_by_id_path)
+    And header Authorization = auth.bearer_token
     When method GET
     Then status 404
     * replace menu_does_not_exists
@@ -33,6 +32,7 @@ Feature: Delete menu
   Scenario Outline: Delete the menu - Resource not found
     * replace menu_by_id_path.menu_id = <menuId>
     Given url base_url.concat(menu_by_id_path)
+    And header Authorization = auth.bearer_token
     When method DELETE
     Then status 404
     * replace menu_does_not_exists
@@ -47,6 +47,7 @@ Feature: Delete menu
   Scenario Outline: Bad request - invalid 'id' field
     * replace menu_by_id_path.menu_id = <menuId>
     Given url base_url.concat(menu_by_id_path)
+    And header Authorization = auth.bearer_token
     When method DELETE
     Then status <expected_status_code>
     Examples:
