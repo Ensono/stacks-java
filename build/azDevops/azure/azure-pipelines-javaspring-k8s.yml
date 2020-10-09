@@ -386,7 +386,7 @@ stages:
           - name: namespace
             value: "$(Environment.Name)-java-api"
           - name: k8s_app_path
-            value: "/api"
+            value: "/api/menu"
           - name: dns_pointer
             value: "${{ variables.dns_name }}.${{ variables.base_domain_nonprod }}"
           - name: functional_test_base_url
@@ -632,7 +632,7 @@ stages:
           - name: namespace
             value: "$(Environment.Name)-java-api"
           - name: k8s_app_path
-            value: "/api"
+            value: "/api/menu"
           - name: dns_pointer
             value: "${{ variables.dns_name }}.${{ variables.base_domain_prod }}"
           - name: functional_test_base_url
