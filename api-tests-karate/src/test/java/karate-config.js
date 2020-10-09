@@ -40,7 +40,7 @@ function fn() {
     if (env == 'local') {
         config.base_url = 'http://localhost:9000';
     } else if (env == 'prod') {
-        config.base_url = 'https://prod-java-api.prod.amidostacks.com/api';
+        config.base_url = 'https://prod-java-api.prod.amidostacks.com/api/menu';
     } else if (env == 'system') {
         config.base_url = java.lang.System.getenv('BASE_URL');
     }
