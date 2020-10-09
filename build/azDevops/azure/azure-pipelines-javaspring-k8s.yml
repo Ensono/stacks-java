@@ -421,7 +421,7 @@ stages:
                       environment: $(Environment.Name),
                     }
                     # Used for doing template substitutions and deployments
-                    templates: [
+                    template_input: [
                       {
                         base: "${{ variables.self_repo_dir }}/deploy/k8s/app/base_api-deploy.yml",
                         out: "${{ variables.self_repo_dir }}/deploy/k8s/app/api-deploy.yml",
@@ -667,7 +667,7 @@ stages:
                       environment: $(Environment.Name),
                     }
                     # Used for doing template substitutions and deployments
-                    templates: [
+                    template_input: [
                       {
                         base: "${{ variables.self_repo_dir }}/deploy/k8s/app/base_api-deploy.yml",
                         out: "${{ variables.self_repo_dir }}/deploy/k8s/app/api-deploy.yml",
