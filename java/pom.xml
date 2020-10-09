@@ -16,12 +16,12 @@
     <name>xxSTACKSxx-api</name>
     <description>Demo project for Java</description>
 
-    <modules>
-        <module>gcp</module>
-        <module>main</module>
-        <module>core</module>
-        <module>azure</module>
-    </modules>
+<!--    <modules>-->
+<!--        <module>gcp</module>-->
+<!--        <module>main</module>-->
+<!--        <module>core</module>-->
+<!--        <module>azure</module>-->
+<!--    </modules>-->
 
     <properties>
         <java.version>11</java.version>
@@ -269,6 +269,26 @@
                 </property>
             </activation>
         </profile>
+        <profile>
+            <id>azure</id>
+            <modules>
+                <module>main</module>
+                <module>core</module>
+                <module>azure</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>gcp</module>
+                <module>main</module>
+                <module>core</module>
+                <module>azure</module>
+            </modules>
+        </profile>
     </profiles>
 
     <build>
@@ -307,7 +327,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.xxAMIDOxx.xxSTACKSxx.Application</mainClass>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
             <plugin>
@@ -355,34 +375,34 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>au.com.dius.pact.provider</groupId>
-                <artifactId>maven</artifactId>
-                <version>4.1.7</version>
-                <configuration>
-                    <pactBrokerUrl>${pact.broker.url}</pactBrokerUrl>
-                    <pactBrokerToken>${pact.broker.token}</pactBrokerToken>
-                    <systemPropertyVariables>
-                        <pact.verifier.publishResults>true</pact.verifier.publishResults>
-                    </systemPropertyVariables>
-                    <serviceProviders>
-                        <serviceProvider>
-                            <name>${pact.api.name}</name>
-                            <protocol>${pact.api.protocol}</protocol>
-                            <host>${pact.api.host}</host>
-                            <port>${pact.api.port}</port>
-                        </serviceProvider>
-                    </serviceProviders>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>au.com.dius.pact.provider</groupId>-->
+<!--                <artifactId>maven</artifactId>-->
+<!--                <version>4.1.7</version>-->
+<!--                <configuration>-->
+<!--                    <pactBrokerUrl>${pact.broker.url}</pactBrokerUrl>-->
+<!--                    <pactBrokerToken>${pact.broker.token}</pactBrokerToken>-->
+<!--                    <systemPropertyVariables>-->
+<!--                        <pact.verifier.publishResults>true</pact.verifier.publishResults>-->
+<!--                    </systemPropertyVariables>-->
+<!--                    <serviceProviders>-->
+<!--                        <serviceProvider>-->
+<!--                            <name>${pact.api.name}</name>-->
+<!--                            <protocol>${pact.api.protocol}</protocol>-->
+<!--                            <host>${pact.api.host}</host>-->
+<!--                            <port>${pact.api.port}</port>-->
+<!--                        </serviceProvider>-->
+<!--                    </serviceProviders>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>integration-test</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>verify</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>com.coveo</groupId>
                 <artifactId>fmt-maven-plugin</artifactId>
@@ -436,40 +456,40 @@
                     </dependency>
                 </dependencies>
             </plugin>
-            <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <version>${pitest.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.pitest</groupId>
-                        <artifactId>pitest-junit5-plugin</artifactId>
-                        <version>0.12</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <id>pitest</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>mutationCoverage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <threads>15</threads>
-                    <historyInputFile>target/pitHistory.txt</historyInputFile>
-                    <historyOutputFile>target/pitHistory.txt</historyOutputFile>
-                    <timestampedReports>false</timestampedReports>
-                    <mutators>
-                        <value>STRONGER</value>
-                    </mutators>
-                    <outputFormats>
-                        <outputFormat>XML</outputFormat>
-                        <outputFormat>HTML</outputFormat>
-                    </outputFormats>
-                </configuration>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.pitest</groupId>-->
+<!--                <artifactId>pitest-maven</artifactId>-->
+<!--                <version>${pitest.version}</version>-->
+<!--                <dependencies>-->
+<!--                    <dependency>-->
+<!--                        <groupId>org.pitest</groupId>-->
+<!--                        <artifactId>pitest-junit5-plugin</artifactId>-->
+<!--                        <version>0.12</version>-->
+<!--                    </dependency>-->
+<!--                </dependencies>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>pitest</id>-->
+<!--                        <phase>verify</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>mutationCoverage</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--                <configuration>-->
+<!--                    <threads>15</threads>-->
+<!--                    <historyInputFile>target/pitHistory.txt</historyInputFile>-->
+<!--                    <historyOutputFile>target/pitHistory.txt</historyOutputFile>-->
+<!--                    <timestampedReports>false</timestampedReports>-->
+<!--                    <mutators>-->
+<!--                        <value>STRONGER</value>-->
+<!--                    </mutators>-->
+<!--                    <outputFormats>-->
+<!--                        <outputFormat>XML</outputFormat>-->
+<!--                        <outputFormat>HTML</outputFormat>-->
+<!--                    </outputFormats>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 
