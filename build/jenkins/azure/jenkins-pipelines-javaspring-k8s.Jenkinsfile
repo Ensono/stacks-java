@@ -599,7 +599,7 @@ pipeline {
         environment_name="dev"
         dns_name="${environment_name}-java-api-jenkins"
         core_resource_group="amido-stacks-nonprod-eun-core"
-        k8s_app_path="/api"
+        k8s_app_path="/api/menu"
         dns_pointer="${dns_name}.${base_domain_nonprod}"
         functional_test_base_url="https://${dns_pointer}${k8s_app_path}"
       }
