@@ -387,7 +387,7 @@ stages:
           - name: namespace
             value: "$(Environment.Name)-java-api"
           - name: k8s_app_path
-            value: "/api"
+            value: "/api/menu"
           - name: dns_pointer
             value: "${{ variables.dns_name }}.${{ variables.base_domain_nonprod }}"
           - name: functional_test_base_url
@@ -422,7 +422,7 @@ stages:
                       environment: $(Environment.Name),
                     }
                     # Used for doing template substitutions and deployments
-                    templates: [
+                    template_input: [
                       {
                         base: "${{ variables.self_repo_dir }}/deploy/k8s/app/base_api-deploy.yml",
                         out: "${{ variables.self_repo_dir }}/deploy/k8s/app/api-deploy.yml",
@@ -633,7 +633,7 @@ stages:
           - name: namespace
             value: "$(Environment.Name)-java-api"
           - name: k8s_app_path
-            value: "/api"
+            value: "/api/menu"
           - name: dns_pointer
             value: "${{ variables.dns_name }}.${{ variables.base_domain_prod }}"
           - name: functional_test_base_url
@@ -668,7 +668,7 @@ stages:
                       environment: $(Environment.Name),
                     }
                     # Used for doing template substitutions and deployments
-                    templates: [
+                    template_input: [
                       {
                         base: "${{ variables.self_repo_dir }}/deploy/k8s/app/base_api-deploy.yml",
                         out: "${{ variables.self_repo_dir }}/deploy/k8s/app/api-deploy.yml",
