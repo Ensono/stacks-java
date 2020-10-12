@@ -2,9 +2,7 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.mappers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateCategoryRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateItemRequest;
-import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateCategoryCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateItemCommand;
 import java.util.UUID;
 import org.junit.jupiter.api.Tag;
@@ -12,26 +10,6 @@ import org.junit.jupiter.api.Test;
 
 @Tag("Unit")
 class RequestToCommandMapperTest {
-
-  @Test
-  void createCategoryRequestToCommand() {
-
-    // Given
-    String correlationId = "ccc";
-    UUID menuId = UUID.randomUUID();
-    String name = "xxx";
-    String description = "yyy";
-    CreateCategoryRequest request = new CreateCategoryRequest(name, description);
-
-    // When
-    CreateCategoryCommand command = RequestToCommandMapper.map(correlationId, menuId, request);
-
-    // Then
-    assertEquals(correlationId, command.getCorrelationId());
-    assertEquals(menuId, command.getMenuId());
-    assertEquals(name, command.getName());
-    assertEquals(description, command.getDescription());
-  }
 
   @Test
   void createItemRequestToCommand() {
