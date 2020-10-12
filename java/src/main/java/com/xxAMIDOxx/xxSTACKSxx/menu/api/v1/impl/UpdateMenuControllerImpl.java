@@ -1,7 +1,5 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 
-import static com.xxAMIDOxx.xxSTACKSxx.menu.mappers.RequestToCommandMapper.map;
-
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.UpdateMenuController;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateMenuRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
@@ -19,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UpdateMenuControllerImpl implements UpdateMenuController {
 
+  private MenuQueryService menuQueryService;
+
   public UpdateMenuControllerImpl(MenuQueryService menuQueryService) {
     this.menuQueryService = menuQueryService;
   }
-
-  private MenuQueryService menuQueryService;
 
   @Override
   public ResponseEntity<ResourceUpdatedResponse> updateMenu(

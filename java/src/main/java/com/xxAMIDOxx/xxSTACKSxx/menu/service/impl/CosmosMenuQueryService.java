@@ -79,8 +79,22 @@ public class CosmosMenuQueryService implements MenuQueryService {
   }
 
   @Override
-  public void delete(Menu menu) {
-    menuRepository.delete(menu);
+  public List<Menu> findAllByRestaurantIdAndName(
+          UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber) {
+
+    return menuRepository
+            .findAllByRestaurantIdAndName(
+                    restaurantId.toString(),
+                    searchTerm,
+                    PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, NAME)))
+            .getContent();
+  }
+
+  @Override
+  public UUID create(Menu menu) {
+    menuRepository.save(menu);
+
+    return UUID.fromString(menu.getId());
   }
 
   @Override
@@ -88,6 +102,11 @@ public class CosmosMenuQueryService implements MenuQueryService {
     menuRepository.save(menu);
 
     return UUID.fromString(menu.getId());
+  }
+
+  @Override
+  public void delete(Menu menu) {
+    menuRepository.delete(menu);
   }
 
 }
