@@ -58,4 +58,11 @@ public interface MenuQueryService {
    */
   List<Menu> findAllByRestaurantIdAndNameContaining(
       UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber);
+
+  /**
+   * Delete menu.
+   *
+   * @param menu Menu to delete
+   */
+  void delete(Menu menu);
 }

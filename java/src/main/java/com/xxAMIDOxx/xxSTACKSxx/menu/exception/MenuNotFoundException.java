@@ -10,4 +10,10 @@ public class MenuNotFoundException extends MenuApiException {
         ExceptionCode.MENU_DOES_NOT_EXIST,
         command);
   }
+
+  public MenuNotFoundException(String menuId, int operationCode, String correlationId) {
+    super(
+            String.format("A menu with id '%s' does not exist.", menuId),
+            ExceptionCode.MENU_DOES_NOT_EXIST, operationCode, correlationId);
+  }
 }

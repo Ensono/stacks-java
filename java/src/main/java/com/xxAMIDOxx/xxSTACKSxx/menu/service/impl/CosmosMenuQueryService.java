@@ -77,4 +77,10 @@ public class CosmosMenuQueryService implements MenuQueryService {
             PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, NAME)))
         .getContent();
   }
+
+  @Override
+  public void delete(Menu menu) {
+    menuRepository.delete(menu);
+  }
+
 }
