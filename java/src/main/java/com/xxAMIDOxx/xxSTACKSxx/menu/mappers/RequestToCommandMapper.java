@@ -2,22 +2,15 @@ package com.xxAMIDOxx.xxSTACKSxx.menu.mappers;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateCategoryRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateItemRequest;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateMenuRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateCategoryRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateItemRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateCategoryCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateItemCommand;
-import com.xxAMIDOxx.xxSTACKSxx.menu.commands.CreateMenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.UpdateCategoryCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.UpdateItemCommand;
 import java.util.UUID;
 
 public class RequestToCommandMapper {
-
-  public static CreateMenuCommand map(String correlationId, CreateMenuRequest r) {
-    return new CreateMenuCommand(
-        correlationId, r.getName(), r.getDescription(), r.getTenantId(), r.getEnabled());
-  }
 
   public static CreateCategoryCommand map(
       String correlationId, UUID menuId, CreateCategoryRequest r) {
