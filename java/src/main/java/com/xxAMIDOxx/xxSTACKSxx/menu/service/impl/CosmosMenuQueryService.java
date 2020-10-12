@@ -83,4 +83,11 @@ public class CosmosMenuQueryService implements MenuQueryService {
     menuRepository.delete(menu);
   }
 
+  @Override
+  public UUID update(Menu menu) {
+    menuRepository.save(menu);
+
+    return UUID.fromString(menu.getId());
+  }
+
 }
