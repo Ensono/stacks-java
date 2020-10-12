@@ -13,4 +13,12 @@ public class MenuApiException extends ApiException {
         OperationCode.fromCode(menuCommand.getOperationCode()),
         menuCommand.getCorrelationId());
   }
+
+  public MenuApiException(String message, ExceptionCode exceptionCode, int operationCode, String correlationId) {
+    super(
+            message,
+            exceptionCode,
+            OperationCode.fromCode(operationCode),
+            correlationId);
+  }
 }
