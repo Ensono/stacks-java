@@ -13,9 +13,6 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * DeleteMenuController implementation.
- */
 @RestController
 public class DeleteMenuControllerImpl implements DeleteMenuController {
 

@@ -60,6 +60,13 @@ public interface MenuQueryService {
       UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber);
 
   /**
+   * Update menu.
+   *
+   * @param menu Menu to update
+   */
+  UUID update(Menu menu);
+
+  /**
    * Delete menu.
    *
    * @param menu Menu to delete
