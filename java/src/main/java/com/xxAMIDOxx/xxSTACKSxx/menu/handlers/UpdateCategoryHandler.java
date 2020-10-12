@@ -1,6 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.handlers;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.messaging.publish.ApplicationEventPublisher;
+import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.UpdateCategoryCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
@@ -50,7 +51,8 @@ public class UpdateCategoryHandler extends MenuBaseCommandHandler<UpdateCategory
                 if (t.getId().equalsIgnoreCase(command.getCategoryId().toString())) {
                   category.setDescription(command.getDescription());
                 } else {
-                  throw new CategoryAlreadyExistsException(command, command.getName());
+                  throw new CategoryAlreadyExistsException(
+                      command.getName(), menu.getId(), OperationCode.UPDATE_CATEGORY.getCode(), "42");
                 }
               } else {
                 category.setDescription(command.getDescription());
