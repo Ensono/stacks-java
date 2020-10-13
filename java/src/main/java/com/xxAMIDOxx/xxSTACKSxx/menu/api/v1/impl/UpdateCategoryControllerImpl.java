@@ -87,7 +87,7 @@ public class UpdateCategoryControllerImpl implements UpdateCategoryController {
   }
 
   /**
-   * find a category for the id provided
+   * Find a category for the id provided.
    *
    * @param menu menu object
    * @param categoryId category id
@@ -96,10 +96,9 @@ public class UpdateCategoryControllerImpl implements UpdateCategoryController {
   private Optional<Category> findCategory(Menu menu, UUID categoryId) {
     Optional<Category> existing = Optional.empty();
     if (menu.getCategories() != null && !menu.getCategories().isEmpty()) {
-      existing =
-              menu.getCategories().stream()
-                      .filter(c -> c.getId().equals(categoryId.toString()))
-                      .findFirst();
+      existing = menu.getCategories().stream()
+              .filter(c -> c.getId().equals(categoryId.toString()))
+              .findFirst();
     }
     return existing;
   }
