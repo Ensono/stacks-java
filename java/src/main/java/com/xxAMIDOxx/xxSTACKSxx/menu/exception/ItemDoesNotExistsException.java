@@ -1,6 +1,8 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.exception;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.MenuCommand;
+import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
+
 import java.util.UUID;
 
 /** @author ArathyKrishna */
@@ -13,5 +15,15 @@ public class ItemDoesNotExistsException extends MenuApiException {
             itemId, categoryId, command.getMenuId()),
         ExceptionCode.ITEM_DOES_NOT_EXIST,
         command);
+  }
+
+  public ItemDoesNotExistsException(UUID categoryId, UUID itemId, UUID menuId, int operationCode, String correlationId) {
+    super(
+            String.format(
+                    "An item with the id '%s' does not exists for category with the id '%s' and for menu with id '%s'.",
+                    itemId, categoryId, menuId),
+            ExceptionCode.ITEM_DOES_NOT_EXIST,
+            operationCode,
+            correlationId);
   }
 }
