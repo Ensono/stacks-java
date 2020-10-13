@@ -1,7 +1,5 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 
-import static com.xxAMIDOxx.xxSTACKSxx.menu.mappers.RequestToCommandMapper.map;
-
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.CreateItemController;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateItemRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
@@ -45,7 +43,7 @@ public class CreateItemControllerImpl implements CreateItemController {
                     correlationId));
 
     itemId = UUID.randomUUID();
-    Category category = addItem(getCategory(menu, categoryId, correlationId), body, menu.getId(), correlationId);
+    Category category = addItem(getCategory(menu, categoryId, correlationId), body, menuId, correlationId);
 
     menuQueryService.update(menu.addOrUpdateCategory(category));
 
@@ -67,7 +65,7 @@ public class CreateItemControllerImpl implements CreateItemController {
             () -> new CategoryDoesNotExistException(categoryId.toString(), menu.getId(), OperationCode.CREATE_MENU_ITEM.getCode(), correlationId));
   }
 
-  Category addItem(Category category, CreateItemRequest request, String menuId, String correlationId) {
+  Category addItem(Category category, CreateItemRequest request, UUID menuId, String correlationId) {
 
     itemId = UUID.randomUUID();
     List<Item> items = category.getItems() == null ? new ArrayList<>() : category.getItems();
@@ -76,12 +74,12 @@ public class CreateItemControllerImpl implements CreateItemController {
       throw new ItemAlreadyExistsException(request.getName(), category.getId(), menuId, OperationCode.CREATE_MENU_ITEM.getCode(), correlationId);
     } else {
       Item item =
-              new Item(
-                      itemId.toString(),
-                      request.getName(),
-                      request.getDescription(),
-                      request.getPrice(),
-                      request.getAvailable());
+          new Item(
+              itemId.toString(),
+              request.getName(),
+              request.getDescription(),
+              request.getPrice(),
+              request.getAvailable());
       category.getItems().add(item);
       return category;
     }

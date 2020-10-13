@@ -15,7 +15,7 @@ public class ItemAlreadyExistsException extends MenuApiException {
         command);
   }
 
-  public ItemAlreadyExistsException(String itemName, String categoryId, String menuId, int operationCode, String correlationId) {
+  public ItemAlreadyExistsException(String itemName, String categoryId, UUID menuId, int operationCode, String correlationId) {
     super(
         String.format(
             "An item with the name '%s' already exists for the category '%s' in menu with "
