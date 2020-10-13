@@ -6,7 +6,6 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.QueryMenuController;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.MenuDTO;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.SearchMenuResult;
-import com.xxAMIDOxx.xxSTACKSxx.menu.commands.MenuCommand;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.MenuNotFoundException;
@@ -71,8 +70,8 @@ public class QueryMenuControllerImpl implements QueryMenuController {
             .findById(id)
             .orElseThrow(
                 () ->
-                    new MenuNotFoundException(
-                        new MenuCommand(OperationCode.GET_MENU_BY_ID, correlationId, id)));
+                    new MenuNotFoundException(id.toString(), OperationCode.GET_MENU_BY_ID.getCode(), correlationId));
+
     return ResponseEntity.ok(mapper.toMenuDto(menu));
   }
 }

@@ -1,7 +1,5 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.exception;
 
-import com.xxAMIDOxx.xxSTACKSxx.menu.commands.MenuCommand;
-
 public class CategoryAlreadyExistsException extends MenuApiException {
 
   public CategoryAlreadyExistsException(String name, String menuId, int operationCode, String correlationId) {
