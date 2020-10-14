@@ -1,7 +1,7 @@
-package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1;
+package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.controller;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateItemRequest;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateMenuRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -9,25 +9,23 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import java.util.UUID;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@RequestMapping("/v1/menu/{id}/category/{categoryId}/items")
-public interface CreateItemController {
+@RequestMapping("/v1/menu")
+public interface CreateMenuController {
 
   @PostMapping(consumes = "application/json", produces = "application/json; charset=utf-8")
   @Operation(
-      tags = "Item",
-      summary = "Add an item to an existing category in a menu",
+      tags = "Menu",
+      summary = "Create a menu",
       security = @SecurityRequirement(name = "bearerAuth"),
-      description = "Adds a menu item",
-      operationId = "AddMenuItem",
+      description = "Adds a menu",
+      operationId = "CreateMenu",
       responses = {
         @ApiResponse(
             responseCode = "201",
@@ -65,10 +63,7 @@ public interface CreateItemController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = ErrorResponse.class)))
       })
-  ResponseEntity<ResourceCreatedResponse> addMenuItem(
-      @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
-      @Parameter(description = "Category id", required = true) @PathVariable("categoryId")
-          UUID categoryId,
-      @Valid @RequestBody CreateItemRequest body,
+  ResponseEntity<ResourceCreatedResponse> createMenu(
+      @Valid @RequestBody CreateMenuRequest body,
       @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId);
 }

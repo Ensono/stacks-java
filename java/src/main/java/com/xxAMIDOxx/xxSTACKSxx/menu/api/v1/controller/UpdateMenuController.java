@@ -1,39 +1,47 @@
-package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1;
+package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.controller;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateMenuRequest;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateMenuRequest;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import java.util.UUID;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@RequestMapping("/v1/menu")
-public interface CreateMenuController {
+@RequestMapping("/v1/menu/{id}")
+public interface UpdateMenuController {
 
-  @PostMapping(consumes = "application/json", produces = "application/json; charset=utf-8")
+  @PutMapping(consumes = "application/json", produces = "application/json; charset=utf-8")
   @Operation(
       tags = "Menu",
-      summary = "Create a menu",
+      summary = "Update a menu",
       security = @SecurityRequirement(name = "bearerAuth"),
-      description = "Adds a menu",
-      operationId = "CreateMenu",
+      description = "Update a menu with new information",
       responses = {
         @ApiResponse(
-            responseCode = "201",
-            description = "Resource created",
+            responseCode = "200",
+            description = "Success",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ResourceCreatedResponse.class))),
+                    schema = @Schema(implementation = ResourceUpdatedResponse.class))),
+        @ApiResponse(
+            responseCode = "204",
+            description = "No Content",
+            content =
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(
             responseCode = "400",
             description = "Bad Request",
@@ -63,7 +71,8 @@ public interface CreateMenuController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = ErrorResponse.class)))
       })
-  ResponseEntity<ResourceCreatedResponse> createMenu(
-      @Valid @RequestBody CreateMenuRequest body,
+  ResponseEntity<ResourceUpdatedResponse> updateMenu(
+      @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
+      @Valid @RequestBody UpdateMenuRequest body,
       @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId);
 }

@@ -1,8 +1,8 @@
-package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1;
+package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.controller;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateCategoryRequest;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateItemRequest;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,29 +13,36 @@ import java.util.UUID;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@RequestMapping("/v1/menu/{id}/category")
-public interface CreateCategoryController {
-
-  @PostMapping(consumes = "application/json", produces = "application/json; charset=utf-8")
+/** @author ArathyKrishna */
+@RequestMapping("/v1/menu/{id}/category/{categoryId}/items/{itemId}")
+public interface UpdateItemController {
+  @PutMapping(consumes = "application/json", produces = "application/json; charset=utf-8")
   @Operation(
-      tags = "Category",
-      summary = "Create a category in the menu",
+      tags = "Item",
+      summary = "Update an item in the menu",
       security = @SecurityRequirement(name = "bearerAuth"),
-      description = "Adds a category to menu",
-      operationId = "AddMenuCategory",
+      description = "Update an item in the menu",
+      operationId = "UpdateMenuItem",
       responses = {
         @ApiResponse(
-            responseCode = "201",
-            description = "Resource created",
+            responseCode = "200",
+            description = "Success",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ResourceCreatedResponse.class))),
+                    schema = @Schema(implementation = ResourceUpdatedResponse.class))),
+        @ApiResponse(
+            responseCode = "204",
+            description = "No Content",
+            content =
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(
             responseCode = "400",
             description = "Bad Request",
@@ -58,15 +65,18 @@ public interface CreateCategoryController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(
-            responseCode = "409",
-            description = "Conflict, an item already exists",
+            responseCode = "404",
+            description = "Resource not found",
             content =
                 @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = ErrorResponse.class)))
       })
-  ResponseEntity<ResourceCreatedResponse> addMenuCategory(
+  ResponseEntity<ResourceUpdatedResponse> updateItem(
       @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
-      @Valid @RequestBody CreateCategoryRequest body,
+      @Parameter(description = "Category id", required = true) @PathVariable("categoryId")
+          UUID categoryId,
+      @Parameter(description = "Item id", required = true) @PathVariable("itemId") UUID itemId,
+      @Valid @RequestBody UpdateItemRequest body,
       @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId);
 }

@@ -1,8 +1,6 @@
-package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1;
+package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.controller;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateItemRequest;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,39 +8,36 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.UUID;
-import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-/** @author ArathyKrishna */
-@RequestMapping("/v1/menu/{id}/category/{categoryId}/items/{itemId}")
-public interface UpdateItemController {
-  @PutMapping(consumes = "application/json", produces = "application/json; charset=utf-8")
+/**
+ * Controller for Deleting a menu
+ *
+ * @author ArathyKrishna
+ */
+@RequestMapping("/v1/menu/{id}")
+public interface DeleteMenuController {
+
+  @DeleteMapping(produces = "application/json; charset=utf-8")
   @Operation(
-      tags = "Item",
-      summary = "Update an item in the menu",
+      tags = "Menu",
+      summary = "Removes a Menu with all it's Categories and Items",
       security = @SecurityRequirement(name = "bearerAuth"),
-      description = "Update an item in the menu",
-      operationId = "UpdateMenuItem",
+      description = "Remove a menu from a restaurant",
+      operationId = "DeleteMenu",
       responses = {
         @ApiResponse(
             responseCode = "200",
             description = "Success",
-            content =
-                @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ResourceUpdatedResponse.class))),
+            content = @Content(mediaType = "application/json", schema = @Schema(hidden = true))),
         @ApiResponse(
             responseCode = "204",
             description = "No Content",
-            content =
-                @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ErrorResponse.class))),
+            content = @Content(schema = @Schema(hidden = true))),
         @ApiResponse(
             responseCode = "400",
             description = "Bad Request",
@@ -72,11 +67,7 @@ public interface UpdateItemController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = ErrorResponse.class)))
       })
-  ResponseEntity<ResourceUpdatedResponse> updateItem(
+  ResponseEntity<Void> deleteMenu(
       @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
-      @Parameter(description = "Category id", required = true) @PathVariable("categoryId")
-          UUID categoryId,
-      @Parameter(description = "Item id", required = true) @PathVariable("itemId") UUID itemId,
-      @Valid @RequestBody UpdateItemRequest body,
       @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId);
 }

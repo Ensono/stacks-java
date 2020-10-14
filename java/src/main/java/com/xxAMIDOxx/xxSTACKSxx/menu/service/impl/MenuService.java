@@ -1,6 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.service.impl;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.exception.MenuNotFoundException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
 import java.util.List;
@@ -15,14 +16,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CosmosMenuQueryService implements MenuQueryService {
+public class MenuService implements MenuQueryService {
 
   private static final String NAME = "name";
-  private static Logger logger = LoggerFactory.getLogger(CosmosMenuQueryService.class);
+  private static final Logger logger = LoggerFactory.getLogger(MenuService.class);
 
-  private MenuRepository menuRepository;
+  private final MenuRepository menuRepository;
 
-  public CosmosMenuQueryService(MenuRepository menuRepository) {
+  public MenuService(MenuRepository menuRepository) {
     this.menuRepository = menuRepository;
   }
 
@@ -80,14 +81,14 @@ public class CosmosMenuQueryService implements MenuQueryService {
 
   @Override
   public List<Menu> findAllByRestaurantIdAndName(
-          UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber) {
+      UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber) {
 
     return menuRepository
-            .findAllByRestaurantIdAndName(
-                    restaurantId.toString(),
-                    searchTerm,
-                    PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, NAME)))
-            .getContent();
+        .findAllByRestaurantIdAndName(
+            restaurantId.toString(),
+            searchTerm,
+            PageRequest.of(0, pageSize, Sort.by(Sort.Direction.ASC, NAME)))
+        .getContent();
   }
 
   @Override
@@ -109,4 +110,9 @@ public class CosmosMenuQueryService implements MenuQueryService {
     menuRepository.delete(menu);
   }
 
+  public Menu findMenuOrThrowException(UUID menuId, int code, String correlationId) {
+    return menuRepository
+        .findById(menuId.toString())
+        .orElseThrow(() -> new MenuNotFoundException(menuId.toString(), code, correlationId));
+  }
 }

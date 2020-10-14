@@ -6,13 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 
 @Data
 @AllArgsConstructor
-@Builder
 @Document(collection = "Menu")
 public class Menu {
 
@@ -24,7 +22,7 @@ public class Menu {
 
   private String description;
 
-  @Builder.Default private List<Category> categories = new ArrayList<>();
+  private List<Category> categories;
 
   private Boolean enabled;
 

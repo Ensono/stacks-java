@@ -9,7 +9,6 @@ import static org.mockito.Mockito.mock;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
-import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
 import java.util.List;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -18,13 +17,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 @Tag("Unit")
-public class CosmosMenuQueryServiceTest {
+public class MenuServiceTest {
 
   @Test
   void findAll() {
 
     MenuRepository repository = mock(MenuRepository.class);
-    MenuQueryService menuQueryServiceImpl = new CosmosMenuQueryService(repository);
+    MenuService menuQueryServiceImpl = new MenuService(repository);
 
     Pageable pageable = mock(Pageable.class);
 
