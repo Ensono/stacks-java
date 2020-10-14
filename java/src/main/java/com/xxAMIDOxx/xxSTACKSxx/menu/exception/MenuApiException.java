@@ -5,11 +5,8 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
 
 public class MenuApiException extends ApiException {
 
-  public MenuApiException(String message, ExceptionCode exceptionCode, int operationCode, String correlationId) {
-    super(
-            message,
-            exceptionCode,
-            OperationCode.fromCode(operationCode),
-            correlationId);
+  public MenuApiException(
+      String message, ExceptionCode exceptionCode, int operationCode, String correlationId) {
+    super(message, exceptionCode, OperationCode.fromCode(operationCode), correlationId);
   }
 }

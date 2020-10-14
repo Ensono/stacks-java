@@ -1,32 +1,27 @@
-package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1;
+package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.controller;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.api.dto.ErrorResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateMenuRequest;
-import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceUpdatedResponse;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.GenerateTokenRequest;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.GenerateTokenResponse;
+import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import java.util.UUID;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@RequestMapping("/v1/menu/{id}")
-public interface UpdateMenuController {
+@RequestMapping("/v1/token")
+public interface AuthController {
 
-  @PutMapping(consumes = "application/json", produces = "application/json; charset=utf-8")
+  @PostMapping(consumes = "application/json", produces = "application/json; charset=utf-8")
   @Operation(
-      tags = "Menu",
-      summary = "Update a menu",
-      security = @SecurityRequirement(name = "bearerAuth"),
-      description = "Update a menu with new information",
+      tags = "Auth",
+      summary = "Authorisation",
+      description = "Generate auth token",
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -34,14 +29,7 @@ public interface UpdateMenuController {
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ResourceUpdatedResponse.class))),
-        @ApiResponse(
-            responseCode = "204",
-            description = "No Content",
-            content =
-                @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ErrorResponse.class))),
+                    schema = @Schema(implementation = ResourceCreatedResponse.class))),
         @ApiResponse(
             responseCode = "400",
             description = "Bad Request",
@@ -71,8 +59,6 @@ public interface UpdateMenuController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = ErrorResponse.class)))
       })
-  ResponseEntity<ResourceUpdatedResponse> updateMenu(
-      @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
-      @Valid @RequestBody UpdateMenuRequest body,
-      @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId);
+  ResponseEntity<GenerateTokenResponse> generateToken(
+      @Valid @RequestBody GenerateTokenRequest generateTokenRequest);
 }

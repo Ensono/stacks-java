@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
 @Data
@@ -17,8 +16,14 @@ public class Category {
 
   private String description;
 
-  @Builder.Default private List<Item> items = new ArrayList<>();
+  private List<Item> items;
 
+  /**
+   * Add or update item in a category
+   *
+   * @param item item to be added to category
+   * @return category
+   */
   public Category addOrUpdateItem(Item item) {
     if (this.items == null) {
       this.items = new ArrayList<>();

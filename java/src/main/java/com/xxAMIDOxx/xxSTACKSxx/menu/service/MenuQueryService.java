@@ -8,7 +8,7 @@ import java.util.UUID;
 public interface MenuQueryService {
 
   /**
-   * Retrieve list of all available Menus
+   * Retrieve list of all available Menus.
    *
    * @param pageNumber pageNo
    * @param pageSize page Size
@@ -17,7 +17,7 @@ public interface MenuQueryService {
   List<Menu> findAll(int pageNumber, int pageSize);
 
   /**
-   * Retrieve MenuDTO by MenuDTO Id
+   * Retrieve MenuDTO by MenuDTO Id.
    *
    * @param id menu Id
    * @return Optional MenuDTO
@@ -32,7 +32,7 @@ public interface MenuQueryService {
    * @param pageNumber page no
    * @return List of MenuDTO
    */
-  public List<Menu> findAllByRestaurantId(UUID restaurantId, Integer pageSize, Integer pageNumber);
+  List<Menu> findAllByRestaurantId(UUID restaurantId, Integer pageSize, Integer pageNumber);
 
   /**
    * Retrieve MenuDTO's by matching the Restaurant Id and name. Pagination and sorting is done by
@@ -43,8 +43,8 @@ public interface MenuQueryService {
    * @param pageNumber page no
    * @return List of MenuDTO
    */
-  public List<Menu> findAllByRestaurantIdAndName(
-          UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber);
+  List<Menu> findAllByRestaurantIdAndName(
+      UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber);
 
   /**
    * Retrieve MenuDTO's by matching the name (Contains operation) Pagination and sorting is done by
@@ -55,8 +55,7 @@ public interface MenuQueryService {
    * @param pageNumber page no
    * @return List of MenuDTO
    */
-  public List<Menu> findAllByNameContaining(
-      String searchTerm, Integer pageSize, Integer pageNumber);
+  List<Menu> findAllByNameContaining(String searchTerm, Integer pageSize, Integer pageNumber);
 
   /**
    * Retrieve MenuDTO's by matching the name and the restaurantId (Contains operation) Pagination
@@ -70,7 +69,6 @@ public interface MenuQueryService {
    */
   List<Menu> findAllByRestaurantIdAndNameContaining(
       UUID restaurantId, String searchTerm, Integer pageSize, Integer pageNumber);
-
 
   /**
    * Create menu.
@@ -92,4 +90,14 @@ public interface MenuQueryService {
    * @param menu Menu to delete
    */
   void delete(Menu menu);
+
+  /**
+   * Find a menu using menuId.
+   *
+   * @param menuId id of menu
+   * @param operationCode operation code
+   * @param correlationId correlation id
+   * @return menu if found else throw exception
+   */
+  Menu findMenuOrThrowException(UUID menuId, int operationCode, String correlationId);
 }

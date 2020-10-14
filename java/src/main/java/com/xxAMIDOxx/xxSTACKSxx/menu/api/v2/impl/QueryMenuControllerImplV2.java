@@ -14,12 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class QueryMenuControllerImplV2 implements QueryMenuControllerV2 {
 
-  private DomainToDtoMapper mapper;
-
   private MenuQueryService menuQueryService;
 
-  public QueryMenuControllerImplV2(DomainToDtoMapper mapper, MenuQueryService menuQueryService) {
-    this.mapper = mapper;
+  public QueryMenuControllerImplV2(MenuQueryService menuQueryService) {
     this.menuQueryService = menuQueryService;
   }
 
@@ -29,8 +26,10 @@ public class QueryMenuControllerImplV2 implements QueryMenuControllerV2 {
         this.menuQueryService
             .findById(id)
             .orElseThrow(
-                () -> new MenuNotFoundException(id.toString(), OperationCode.GET_MENU_BY_ID.getCode(), correlationId));
+                () ->
+                    new MenuNotFoundException(
+                        id.toString(), OperationCode.GET_MENU_BY_ID.getCode(), correlationId));
 
-    return ResponseEntity.ok(mapper.toMenuDto(menu));
+    return ResponseEntity.ok(DomainToDtoMapper.toMenuDto(menu));
   }
 }
