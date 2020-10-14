@@ -22,8 +22,6 @@ public class CreateItemControllerImpl implements CreateItemController {
   private CategoryService categoryService;
   private ItemService itemService;
 
-  private UUID itemId;
-
   public CreateItemControllerImpl(
       MenuQueryService menuQueryService, CategoryService categoryService, ItemService itemService) {
     this.menuQueryService = menuQueryService;
@@ -39,7 +37,7 @@ public class CreateItemControllerImpl implements CreateItemController {
         menuQueryService.findMenuOrThrowException(
             menuId, OperationCode.CREATE_MENU_ITEM.getCode(), correlationId);
 
-    itemId = UUID.randomUUID();
+    UUID itemId = UUID.randomUUID();
     Category category =
         itemService.addItem(
             categoryService.getCategory(
