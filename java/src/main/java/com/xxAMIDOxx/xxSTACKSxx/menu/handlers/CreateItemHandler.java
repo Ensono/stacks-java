@@ -22,8 +22,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class CreateItemHandler extends MenuBaseCommandHandler<CreateItemCommand> {
 
-  private UUID itemId;
-
   public CreateItemHandler(
       MenuRepository menuRepository, ApplicationEventPublisher applicationEventPublisher) {
     super(menuRepository, applicationEventPublisher);
@@ -31,9 +29,10 @@ public class CreateItemHandler extends MenuBaseCommandHandler<CreateItemCommand>
 
   @Override
   Optional<UUID> handleCommand(Menu menu, CreateItemCommand command) {
-    itemId = UUID.randomUUID();
-    Category category = addItem(getCategory(menu, command), command);
+    UUID itemId = UUID.randomUUID();
+    Category category = addItem(getCategory(menu, command), command, itemId);
     menuRepository.save(menu.addOrUpdateCategory(category));
+    command.setItemId(itemId);
     return Optional.of(itemId);
   }
 
@@ -42,7 +41,7 @@ public class CreateItemHandler extends MenuBaseCommandHandler<CreateItemCommand>
     return Arrays.asList(
         new MenuUpdatedEvent(command),
         new CategoryUpdatedEvent(command, command.getCategoryId()),
-        new MenuItemCreatedEvent(command, command.getCategoryId(), itemId));
+        new MenuItemCreatedEvent(command, command.getCategoryId(), command.getItemId()));
   }
 
   Category getCategory(Menu menu, CreateItemCommand command) {
@@ -58,9 +57,7 @@ public class CreateItemHandler extends MenuBaseCommandHandler<CreateItemCommand>
         () -> new CategoryDoesNotExistException(command, command.getCategoryId()));
   }
 
-  Category addItem(Category category, CreateItemCommand command) {
-
-    itemId = UUID.randomUUID();
+  Category addItem(Category category, CreateItemCommand command, UUID itemId) {
     List<Item> items = category.getItems() == null ? new ArrayList<>() : category.getItems();
 
     if (items.stream().anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
