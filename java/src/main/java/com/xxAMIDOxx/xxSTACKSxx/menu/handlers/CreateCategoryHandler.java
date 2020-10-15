@@ -26,11 +26,10 @@ public class CreateCategoryHandler extends MenuBaseCommandHandler<CreateCategory
 
   @Override
   Optional<UUID> handleCommand(Menu menu, CreateCategoryCommand command) {
-    UUID categoryId = UUID.randomUUID();
-    menu.setCategories(addCategory(menu, command, categoryId));
+    command.setCategoryId(UUID.randomUUID());
+    menu.setCategories(addCategory(menu, command));
     menuRepository.save(menu);
-    command.setCategoryId(categoryId);
-    return Optional.of(categoryId);
+    return Optional.of(command.getCategoryId());
   }
 
   @Override
@@ -39,7 +38,7 @@ public class CreateCategoryHandler extends MenuBaseCommandHandler<CreateCategory
         new MenuUpdatedEvent(command), new CategoryCreatedEvent(command, command.getCategoryId()));
   }
 
-  List<Category> addCategory(Menu menu, CreateCategoryCommand command, UUID categoryId) {
+  List<Category> addCategory(Menu menu, CreateCategoryCommand command) {
     List<Category> categories =
         menu.getCategories() == null ? new ArrayList<>() : menu.getCategories();
 
@@ -48,7 +47,7 @@ public class CreateCategoryHandler extends MenuBaseCommandHandler<CreateCategory
     } else {
       categories.add(
           new Category(
-              categoryId.toString(),
+              command.getCategoryId().toString(),
               command.getName(),
               command.getDescription(),
               new ArrayList<>()));
