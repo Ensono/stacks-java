@@ -29,11 +29,10 @@ public class CreateItemHandler extends MenuBaseCommandHandler<CreateItemCommand>
 
   @Override
   Optional<UUID> handleCommand(Menu menu, CreateItemCommand command) {
-    UUID itemId = UUID.randomUUID();
-    Category category = addItem(getCategory(menu, command), command, itemId);
+    command.setItemId(UUID.randomUUID());
+    Category category = addItem(getCategory(menu, command), command);
     menuRepository.save(menu.addOrUpdateCategory(category));
-    command.setItemId(itemId);
-    return Optional.of(itemId);
+    return Optional.of(command.getItemId());
   }
 
   @Override
@@ -57,7 +56,7 @@ public class CreateItemHandler extends MenuBaseCommandHandler<CreateItemCommand>
         () -> new CategoryDoesNotExistException(command, command.getCategoryId()));
   }
 
-  Category addItem(Category category, CreateItemCommand command, UUID itemId) {
+  Category addItem(Category category, CreateItemCommand command) {
     List<Item> items = category.getItems() == null ? new ArrayList<>() : category.getItems();
 
     if (items.stream().anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
@@ -65,7 +64,7 @@ public class CreateItemHandler extends MenuBaseCommandHandler<CreateItemCommand>
     } else {
       Item item =
           new Item(
-              itemId.toString(),
+              command.getItemId().toString(),
               command.getName(),
               command.getDescription(),
               command.getPrice(),
