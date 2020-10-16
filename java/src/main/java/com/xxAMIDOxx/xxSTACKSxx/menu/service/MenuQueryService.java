@@ -1,6 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.service;
 
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -100,4 +101,41 @@ public interface MenuQueryService {
    * @return menu if found else throw exception
    */
   Menu findMenuOrThrowException(UUID menuId, int operationCode, String correlationId);
+
+  /**
+   * create Menu created event.
+   *
+   * @param operationCode operationCode
+   * @param correlationId correlationId
+   * @param menuId menu id
+   * @return list of Menu Event
+   */
+  List<MenuEvent> createMenuCreatedEvents(int operationCode, String correlationId, UUID menuId);
+
+  /**
+   * create Menu updated event.
+   *
+   * @param operationCode operationCode
+   * @param correlationId correlationId
+   * @param menuId menu id
+   * @return list of Menu Event
+   */
+  List<MenuEvent> createMenuUpdatedEvents(int operationCode, String correlationId, UUID menuId);
+
+  /**
+   * create Menu deleted event.
+   *
+   * @param operationCode operationCode
+   * @param correlationId correlationId
+   * @param menuId menu id
+   * @return list of Menu Event
+   */
+  List<MenuEvent> createMenuDeletedEvents(int operationCode, String correlationId, UUID menuId);
+
+  /**
+   * publish menu events.
+   *
+   * @param events menu events
+   */
+  void publishEvents(List<MenuEvent> events);
 }

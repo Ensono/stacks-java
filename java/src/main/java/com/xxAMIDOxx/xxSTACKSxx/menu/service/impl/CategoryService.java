@@ -5,9 +5,15 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateCategoryRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.CategoryCreatedEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.CategoryDeletedEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.CategoryUpdatedEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryAlreadyExistsException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.CategoryDoesNotExistException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,7 +41,7 @@ public class CategoryService {
   }
 
   /**
-   * find a category using category id and menu if not throw category not found exception
+   * find a category using category id and menu if not throw category not found exception.
    *
    * @param menu menu
    * @param categoryId category id
@@ -88,7 +94,7 @@ public class CategoryService {
   }
 
   /**
-   * Add a category
+   * Add a category.
    *
    * @param menu menu category to be added to
    * @param body create category request
@@ -111,5 +117,53 @@ public class CategoryService {
               categoryId.toString(), body.getName(), body.getDescription(), new ArrayList<>()));
       return categories;
     }
+  }
+
+  /**
+   * create Category created event.
+   *
+   * @param operationCode operationCode
+   * @param correlationId correlationId
+   * @param menuId menu id
+   * @param categoryId categoryId
+   * @return list of Menu Event
+   */
+  public List<MenuEvent> createCategoryCreatedEvents(
+      int operationCode, String correlationId, UUID menuId, UUID categoryId) {
+    return Arrays.asList(
+        new MenuUpdatedEvent(operationCode, correlationId, menuId),
+        new CategoryCreatedEvent(operationCode, correlationId, menuId, categoryId));
+  }
+
+  /**
+   * create category updated event.
+   *
+   * @param operationCode operationCode
+   * @param correlationId correlationId
+   * @param menuId menu id
+   * @param categoryId categoryId
+   * @return list of Menu Event
+   */
+  public List<MenuEvent> createCategoryUpdatedEvents(
+      int operationCode, String correlationId, UUID menuId, UUID categoryId) {
+    return Arrays.asList(
+        new MenuUpdatedEvent(operationCode, correlationId, menuId),
+        new CategoryUpdatedEvent(operationCode, correlationId, menuId, categoryId));
+  }
+
+  /**
+   * create category deleted event.
+   *
+   * @param operationCode operationCode
+   * @param correlationId correlationId
+   * @param menuId menu id
+   * @param categoryId categoryId
+   * @return list of Menu Event
+   */
+  public List<MenuEvent> createCategoryDeletedEvents(
+      int operationCode, String correlationId, UUID menuId, UUID categoryId) {
+    return Arrays.asList(
+        new MenuUpdatedEvent(operationCode, correlationId, menuId),
+        new CategoryDeletedEvent(operationCode, correlationId, menuId, categoryId));
   }
 }
