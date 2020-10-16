@@ -1,9 +1,15 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.service.impl;
 
+import com.xxAMIDOxx.xxSTACKSxx.core.messaging.publish.ApplicationEventPublisher;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuCreatedEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuDeletedEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.MenuNotFoundException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,9 +28,11 @@ public class MenuService implements MenuQueryService {
   private static final Logger logger = LoggerFactory.getLogger(MenuService.class);
 
   private final MenuRepository menuRepository;
+  private final ApplicationEventPublisher publisher;
 
-  public MenuService(MenuRepository menuRepository) {
+  public MenuService(MenuRepository menuRepository, ApplicationEventPublisher publisher) {
     this.menuRepository = menuRepository;
+    this.publisher = publisher;
   }
 
   public Optional<Menu> findById(UUID id) {
@@ -110,9 +118,40 @@ public class MenuService implements MenuQueryService {
     menuRepository.delete(menu);
   }
 
+  /**
+   * search for menu using id if not found throw exception.
+   *
+   * @param menuId id of menu
+   * @param code operation code
+   * @param correlationId correlation id
+   * @return menu
+   */
   public Menu findMenuOrThrowException(UUID menuId, int code, String correlationId) {
     return menuRepository
         .findById(menuId.toString())
         .orElseThrow(() -> new MenuNotFoundException(menuId.toString(), code, correlationId));
+  }
+
+  @Override
+  public List<MenuEvent> createMenuCreatedEvents(
+      int operationCode, String correlationId, UUID menuId) {
+    return Collections.singletonList(new MenuCreatedEvent(operationCode, correlationId, menuId));
+  }
+
+  @Override
+  public List<MenuEvent> createMenuUpdatedEvents(
+      int operationCode, String correlationId, UUID menuId) {
+    return Collections.singletonList(new MenuUpdatedEvent(operationCode, correlationId, menuId));
+  }
+
+  @Override
+  public List<MenuEvent> createMenuDeletedEvents(
+      int operationCode, String correlationId, UUID menuId) {
+    return Collections.singletonList(new MenuDeletedEvent(operationCode, correlationId, menuId));
+  }
+
+  @Override
+  public void publishEvents(List<MenuEvent> eventList) {
+    eventList.forEach(publisher::publish);
   }
 }

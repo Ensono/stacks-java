@@ -5,9 +5,16 @@ import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateItemRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Item;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.CategoryUpdatedEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuItemCreatedEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuItemDeletedEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuItemUpdatedEvent;
+import com.xxAMIDOxx.xxSTACKSxx.menu.events.MenuUpdatedEvent;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ItemAlreadyExistsException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ItemDoesNotExistsException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -133,5 +140,59 @@ public class ItemService {
       category.getItems().add(item);
       return category;
     }
+  }
+
+  /**
+   * create Item created event.
+   *
+   * @param operationCode operationCode
+   * @param correlationId correlationId
+   * @param menuId menu id
+   * @param categoryId categoryId
+   * @param itemId itemId
+   * @return list of Menu Event
+   */
+  public List<MenuEvent> createItemCreatedEvents(
+      int operationCode, String correlationId, UUID menuId, UUID categoryId, UUID itemId) {
+    return Arrays.asList(
+        new MenuUpdatedEvent(operationCode, correlationId, menuId),
+        new CategoryUpdatedEvent(operationCode, correlationId, menuId, categoryId),
+        new MenuItemCreatedEvent(operationCode, correlationId, menuId, categoryId, itemId));
+  }
+
+  /**
+   * create and publish Item updated event.
+   *
+   * @param operationCode operationCode
+   * @param correlationId correlationId
+   * @param menuId menu id
+   * @param categoryId categoryId
+   * @param itemId itemId
+   * @return list of Menu Event
+   */
+  public List<MenuEvent> createItemUpdatedEvents(
+      int operationCode, String correlationId, UUID menuId, UUID categoryId, UUID itemId) {
+    return Arrays.asList(
+        new MenuUpdatedEvent(operationCode, correlationId, menuId),
+        new CategoryUpdatedEvent(operationCode, correlationId, menuId, categoryId),
+        new MenuItemUpdatedEvent(operationCode, correlationId, menuId, categoryId, itemId));
+  }
+
+  /**
+   * create and publish item deleted event.
+   *
+   * @param operationCode operationCode
+   * @param correlationId correlationId
+   * @param menuId menu id
+   * @param categoryId categoryId
+   * @param itemId itemId
+   * @return list of Menu Event
+   */
+  public List<MenuEvent> createItemDeletedEvents(
+      int operationCode, String correlationId, UUID menuId, UUID categoryId, UUID itemId) {
+    return Arrays.asList(
+        new MenuUpdatedEvent(operationCode, correlationId, menuId),
+        new CategoryUpdatedEvent(operationCode, correlationId, menuId, categoryId),
+        new MenuItemDeletedEvent(operationCode, correlationId, menuId, categoryId, itemId));
   }
 }
