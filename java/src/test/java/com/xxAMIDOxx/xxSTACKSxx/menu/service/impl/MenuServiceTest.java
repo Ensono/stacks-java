@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
+import com.xxAMIDOxx.xxSTACKSxx.core.messaging.publish.ApplicationEventPublisher;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.repository.MenuRepository;
 import java.util.List;
@@ -17,13 +18,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 @Tag("Unit")
-public class MenuServiceTest {
+class MenuServiceTest {
 
   @Test
   void findAll() {
 
     MenuRepository repository = mock(MenuRepository.class);
-    MenuService menuQueryServiceImpl = new MenuService(repository);
+    ApplicationEventPublisher publisher = mock(ApplicationEventPublisher.class);
+    MenuService menuQueryServiceImpl = new MenuService(repository, publisher);
 
     Pageable pageable = mock(Pageable.class);
 
