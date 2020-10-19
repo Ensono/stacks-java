@@ -22,8 +22,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class CreateItemHandler extends MenuBaseCommandHandler<CreateItemCommand> {
 
-  private UUID itemId;
-
   public CreateItemHandler(
       MenuRepository menuRepository, ApplicationEventPublisher applicationEventPublisher) {
     super(menuRepository, applicationEventPublisher);
@@ -31,10 +29,10 @@ public class CreateItemHandler extends MenuBaseCommandHandler<CreateItemCommand>
 
   @Override
   Optional<UUID> handleCommand(Menu menu, CreateItemCommand command) {
-    itemId = UUID.randomUUID();
+    command.setItemId(UUID.randomUUID());
     Category category = addItem(getCategory(menu, command), command);
     menuRepository.save(menu.addOrUpdateCategory(category));
-    return Optional.of(itemId);
+    return Optional.of(command.getItemId());
   }
 
   @Override
@@ -42,7 +40,7 @@ public class CreateItemHandler extends MenuBaseCommandHandler<CreateItemCommand>
     return Arrays.asList(
         new MenuUpdatedEvent(command),
         new CategoryUpdatedEvent(command, command.getCategoryId()),
-        new MenuItemCreatedEvent(command, command.getCategoryId(), itemId));
+        new MenuItemCreatedEvent(command, command.getCategoryId(), command.getItemId()));
   }
 
   Category getCategory(Menu menu, CreateItemCommand command) {
@@ -59,8 +57,6 @@ public class CreateItemHandler extends MenuBaseCommandHandler<CreateItemCommand>
   }
 
   Category addItem(Category category, CreateItemCommand command) {
-
-    itemId = UUID.randomUUID();
     List<Item> items = category.getItems() == null ? new ArrayList<>() : category.getItems();
 
     if (items.stream().anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
@@ -68,7 +64,7 @@ public class CreateItemHandler extends MenuBaseCommandHandler<CreateItemCommand>
     } else {
       Item item =
           new Item(
-              itemId.toString(),
+              command.getItemId().toString(),
               command.getName(),
               command.getDescription(),
               command.getPrice(),

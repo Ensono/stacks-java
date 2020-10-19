@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class CreateCategoryHandler extends MenuBaseCommandHandler<CreateCategoryCommand> {
 
-  private UUID categoryId;
-
   public CreateCategoryHandler(
       MenuRepository menuRepository, ApplicationEventPublisher applicationEventPublisher) {
     super(menuRepository, applicationEventPublisher);
@@ -28,19 +26,19 @@ public class CreateCategoryHandler extends MenuBaseCommandHandler<CreateCategory
 
   @Override
   Optional<UUID> handleCommand(Menu menu, CreateCategoryCommand command) {
+    command.setCategoryId(UUID.randomUUID());
     menu.setCategories(addCategory(menu, command));
     menuRepository.save(menu);
-    return Optional.of(categoryId);
+    return Optional.of(command.getCategoryId());
   }
 
   @Override
   List<MenuEvent> raiseApplicationEvents(Menu menu, CreateCategoryCommand command) {
     return Arrays.asList(
-        new MenuUpdatedEvent(command), new CategoryCreatedEvent(command, categoryId));
+        new MenuUpdatedEvent(command), new CategoryCreatedEvent(command, command.getCategoryId()));
   }
 
   List<Category> addCategory(Menu menu, CreateCategoryCommand command) {
-    categoryId = UUID.randomUUID();
     List<Category> categories =
         menu.getCategories() == null ? new ArrayList<>() : menu.getCategories();
 
@@ -49,7 +47,7 @@ public class CreateCategoryHandler extends MenuBaseCommandHandler<CreateCategory
     } else {
       categories.add(
           new Category(
-              categoryId.toString(),
+              command.getCategoryId().toString(),
               command.getName(),
               command.getDescription(),
               new ArrayList<>()));
