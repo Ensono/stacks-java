@@ -52,7 +52,7 @@ function fn() {
         config.auth = {bearer_token: null}
     }
 
-    var result = karate.callSingle('classpath:CleanUpTestData.feature', config);
+    karate.callSingle('classpath:CleanUpTestData.feature', config);
 
     var oauth_body = {
         "client_id": "",
