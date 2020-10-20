@@ -30,7 +30,7 @@ public class DeleteMenuControllerImpl implements DeleteMenuController {
 
     // publish event
     menuQueryService.publishEvents(
-        menuQueryService.createMenuDeletedEvents(
+        menuQueryService.menuDeletedEvents(
             OperationCode.DELETE_MENU.getCode(), correlationId, UUID.fromString(menu.getId())));
 
     return new ResponseEntity<>(OK);

@@ -46,7 +46,7 @@ public class ItemService {
   }
 
   /**
-   * Find an item using category and item id.
+   * Find an item in category using item id.
    *
    * @param category category item is added to
    * @param itemId item id
@@ -152,7 +152,7 @@ public class ItemService {
    * @param itemId itemId
    * @return list of Menu Event
    */
-  public List<MenuEvent> createItemCreatedEvents(
+  public List<MenuEvent> itemCreatedEvents(
       int operationCode, String correlationId, UUID menuId, UUID categoryId, UUID itemId) {
     return Arrays.asList(
         new MenuUpdatedEvent(operationCode, correlationId, menuId),
@@ -170,7 +170,7 @@ public class ItemService {
    * @param itemId itemId
    * @return list of Menu Event
    */
-  public List<MenuEvent> createItemUpdatedEvents(
+  public List<MenuEvent> itemUpdatedEvents(
       int operationCode, String correlationId, UUID menuId, UUID categoryId, UUID itemId) {
     return Arrays.asList(
         new MenuUpdatedEvent(operationCode, correlationId, menuId),
@@ -188,7 +188,7 @@ public class ItemService {
    * @param itemId itemId
    * @return list of Menu Event
    */
-  public List<MenuEvent> createItemDeletedEvents(
+  public List<MenuEvent> itemDeletedEvents(
       int operationCode, String correlationId, UUID menuId, UUID categoryId, UUID itemId) {
     return Arrays.asList(
         new MenuUpdatedEvent(operationCode, correlationId, menuId),

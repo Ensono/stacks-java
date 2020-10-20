@@ -46,7 +46,7 @@ public class CreateMenuControllerImpl implements CreateMenuController {
 
     // publish event
     menuQueryService.publishEvents(
-        menuQueryService.createMenuCreatedEvents(
+        menuQueryService.menuCreatedEvents(
             OperationCode.CREATE_MENU.getCode(), correlationId, UUID.fromString(menu.getId())));
 
     return new ResponseEntity<>(

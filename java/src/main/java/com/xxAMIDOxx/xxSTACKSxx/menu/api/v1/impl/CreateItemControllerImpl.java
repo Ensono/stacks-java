@@ -49,8 +49,7 @@ public class CreateItemControllerImpl implements CreateItemController {
     menuQueryService.update(menu.addOrUpdateCategory(category));
 
     menuQueryService.publishEvents(
-        itemService.createItemCreatedEvents(
-            operationCode, correlationId, menuId, categoryId, itemId));
+        itemService.itemCreatedEvents(operationCode, correlationId, menuId, categoryId, itemId));
 
     return new ResponseEntity<>(new ResourceCreatedResponse(itemId), HttpStatus.CREATED);
   }
