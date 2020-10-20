@@ -128,7 +128,7 @@ public class CategoryService {
    * @param categoryId categoryId
    * @return list of Menu Event
    */
-  public List<MenuEvent> createCategoryCreatedEvents(
+  public List<MenuEvent> categoryCreatedEvents(
       int operationCode, String correlationId, UUID menuId, UUID categoryId) {
     return Arrays.asList(
         new MenuUpdatedEvent(operationCode, correlationId, menuId),
@@ -144,7 +144,7 @@ public class CategoryService {
    * @param categoryId categoryId
    * @return list of Menu Event
    */
-  public List<MenuEvent> createCategoryUpdatedEvents(
+  public List<MenuEvent> categoryUpdatedEvents(
       int operationCode, String correlationId, UUID menuId, UUID categoryId) {
     return Arrays.asList(
         new MenuUpdatedEvent(operationCode, correlationId, menuId),
@@ -160,7 +160,7 @@ public class CategoryService {
    * @param categoryId categoryId
    * @return list of Menu Event
    */
-  public List<MenuEvent> createCategoryDeletedEvents(
+  public List<MenuEvent> categoryDeletedEvents(
       int operationCode, String correlationId, UUID menuId, UUID categoryId) {
     return Arrays.asList(
         new MenuUpdatedEvent(operationCode, correlationId, menuId),

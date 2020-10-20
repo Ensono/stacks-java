@@ -52,8 +52,7 @@ public class UpdateItemControllerImpl implements UpdateItemController {
     menuQueryService.update(menu);
 
     menuQueryService.publishEvents(
-        itemService.createItemUpdatedEvents(
-            operationCode, correlationId, menuId, categoryId, itemId));
+        itemService.itemUpdatedEvents(operationCode, correlationId, menuId, categoryId, itemId));
 
     return new ResponseEntity<>(new ResourceUpdatedResponse(itemId), HttpStatus.OK);
   }

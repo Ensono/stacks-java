@@ -19,6 +19,6 @@ public class CategoryHelper {
         UUID.randomUUID().toString(),
         counter + " Category",
         counter + " Menu Description",
-        new ArrayList<Item>());
+        new ArrayList<>());
   }
 }

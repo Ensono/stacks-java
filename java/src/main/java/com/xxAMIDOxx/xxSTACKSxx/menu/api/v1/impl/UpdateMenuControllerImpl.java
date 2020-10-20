@@ -37,8 +37,7 @@ public class UpdateMenuControllerImpl implements UpdateMenuController {
 
     // publish event
     menuQueryService.publishEvents(
-        menuQueryService.createMenuUpdatedEvents(
-            OperationCode.UPDATE_MENU.getCode(), correlationId, id));
+        menuQueryService.menuUpdatedEvents(OperationCode.UPDATE_MENU.getCode(), correlationId, id));
 
     return new ResponseEntity<>(new ResourceUpdatedResponse(id), HttpStatus.OK);
   }
