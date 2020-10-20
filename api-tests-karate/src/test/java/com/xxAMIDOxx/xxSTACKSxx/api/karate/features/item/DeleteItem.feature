@@ -96,7 +96,6 @@ Feature: Delete item
       | <menu_id>     | karate.get('menu_id') |
       | <category_id> | <categoryId>          |
     * match response.description contains category_does_not_exists
-
     Examples:
       | categoryId                             |
       | 'f91d2f8c-35cc-45dd-92b0-86ca548e0119' |
@@ -117,7 +116,6 @@ Feature: Delete item
       | token     | value    |
       | <menu_id> | <menuId> |
     * match response.description contains menu_does_not_exists
-
     Examples:
       | menuId                                 |
       | 'f91d2f8c-35cc-45dd-92b0-86ca548e0119' |
