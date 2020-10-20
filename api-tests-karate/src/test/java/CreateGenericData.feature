@@ -8,3 +8,4 @@ Feature: Create reusable data
     When method POST
     Then status 201
     * def id = response.id
+    * print id.concat(' menu was created')
