@@ -1,9 +1,6 @@
 @Functional
 Feature: Create a menu
 
-  Background: Set after scenario clean up
-    * configure afterScenario = function(){karate.call(read('classpath:DeleteCreatedMenus.feature'), {menuId:karate.get('menu_id')})}
-
   @Smoke
   Scenario Outline: Create menu
     * set menu_body
