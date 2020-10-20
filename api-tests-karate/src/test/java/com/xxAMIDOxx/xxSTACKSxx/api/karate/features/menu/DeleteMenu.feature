@@ -27,6 +27,7 @@ Feature: Delete menu
       | token     | value                 |
       | <menu_id> | karate.get('menu_id') |
     * match response.description contains menu_does_not_exists
+    * configure afterScenario = function(){karate.call(read('classpath:DeleteCreatedMenus.feature'), {menuId:karate.get('menu_id')})}
 
 
   Scenario Outline: Delete the menu - Resource not found
