@@ -46,8 +46,7 @@ public class DeleteCategoryControllerImpl implements DeleteCategoryController {
     menuQueryService.update(menu);
 
     menuQueryService.publishEvents(
-        categoryService.createCategoryDeletedEvents(
-            operationCode, correlationId, menuId, categoryId));
+        categoryService.categoryDeletedEvents(operationCode, correlationId, menuId, categoryId));
 
     return new ResponseEntity<>(OK);
   }

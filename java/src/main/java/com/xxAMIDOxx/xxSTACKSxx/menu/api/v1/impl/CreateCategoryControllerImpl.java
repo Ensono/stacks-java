@@ -40,7 +40,7 @@ public class CreateCategoryControllerImpl implements CreateCategoryController {
     menuQueryService.update(menu);
 
     menuQueryService.publishEvents(
-        categoryService.createCategoryCreatedEvents(
+        categoryService.categoryCreatedEvents(
             OperationCode.CREATE_CATEGORY.getCode(), correlationId, menuId, categoryId));
 
     return new ResponseEntity<>(new ResourceCreatedResponse(categoryId), HttpStatus.CREATED);

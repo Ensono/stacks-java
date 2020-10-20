@@ -52,8 +52,7 @@ public class DeleteItemControllerImpl implements DeleteItemController {
     menuQueryService.update(menu.addOrUpdateCategory(category));
 
     menuQueryService.publishEvents(
-        itemService.createItemDeletedEvents(
-            operationCode, correlationId, menuId, categoryId, itemId));
+        itemService.itemDeletedEvents(operationCode, correlationId, menuId, categoryId, itemId));
 
     return new ResponseEntity<>(OK);
   }

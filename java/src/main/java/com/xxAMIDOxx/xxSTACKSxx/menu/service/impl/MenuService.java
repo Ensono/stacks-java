@@ -133,20 +133,17 @@ public class MenuService implements MenuQueryService {
   }
 
   @Override
-  public List<MenuEvent> createMenuCreatedEvents(
-      int operationCode, String correlationId, UUID menuId) {
+  public List<MenuEvent> menuCreatedEvents(int operationCode, String correlationId, UUID menuId) {
     return Collections.singletonList(new MenuCreatedEvent(operationCode, correlationId, menuId));
   }
 
   @Override
-  public List<MenuEvent> createMenuUpdatedEvents(
-      int operationCode, String correlationId, UUID menuId) {
+  public List<MenuEvent> menuUpdatedEvents(int operationCode, String correlationId, UUID menuId) {
     return Collections.singletonList(new MenuUpdatedEvent(operationCode, correlationId, menuId));
   }
 
   @Override
-  public List<MenuEvent> createMenuDeletedEvents(
-      int operationCode, String correlationId, UUID menuId) {
+  public List<MenuEvent> menuDeletedEvents(int operationCode, String correlationId, UUID menuId) {
     return Collections.singletonList(new MenuDeletedEvent(operationCode, correlationId, menuId));
   }
 

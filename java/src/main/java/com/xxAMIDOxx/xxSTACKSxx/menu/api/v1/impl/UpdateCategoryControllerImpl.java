@@ -40,8 +40,7 @@ public class UpdateCategoryControllerImpl implements UpdateCategoryController {
     menuQueryService.update(menu);
 
     menuQueryService.publishEvents(
-        categoryService.createCategoryUpdatedEvents(
-            operationCode, correlationId, menuId, categoryId));
+        categoryService.categoryUpdatedEvents(operationCode, correlationId, menuId, categoryId));
 
     return new ResponseEntity<>(new ResourceUpdatedResponse(categoryId), OK);
   }

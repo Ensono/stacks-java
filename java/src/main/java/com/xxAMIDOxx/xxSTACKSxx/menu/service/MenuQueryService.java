@@ -110,7 +110,7 @@ public interface MenuQueryService {
    * @param menuId menu id
    * @return list of Menu Event
    */
-  List<MenuEvent> createMenuCreatedEvents(int operationCode, String correlationId, UUID menuId);
+  List<MenuEvent> menuCreatedEvents(int operationCode, String correlationId, UUID menuId);
 
   /**
    * create Menu updated event.
@@ -120,7 +120,7 @@ public interface MenuQueryService {
    * @param menuId menu id
    * @return list of Menu Event
    */
-  List<MenuEvent> createMenuUpdatedEvents(int operationCode, String correlationId, UUID menuId);
+  List<MenuEvent> menuUpdatedEvents(int operationCode, String correlationId, UUID menuId);
 
   /**
    * create Menu deleted event.
@@ -130,7 +130,7 @@ public interface MenuQueryService {
    * @param menuId menu id
    * @return list of Menu Event
    */
-  List<MenuEvent> createMenuDeletedEvents(int operationCode, String correlationId, UUID menuId);
+  List<MenuEvent> menuDeletedEvents(int operationCode, String correlationId, UUID menuId);
 
   /**
    * publish menu events.
