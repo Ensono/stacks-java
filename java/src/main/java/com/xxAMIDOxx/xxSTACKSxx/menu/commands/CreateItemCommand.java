@@ -13,6 +13,7 @@ public class CreateItemCommand extends MenuCommand {
   private String description;
   private Double price = null;
   private Boolean available = null;
+  private UUID itemId;
 
   public CreateItemCommand(
       String correlationId,
