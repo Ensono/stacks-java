@@ -1,8 +1,8 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v2.impl;
 
+import com.xxAMIDOxx.xxSTACKSxx.core.operations.OperationCode;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.MenuDTO;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v2.QueryMenuControllerV2;
-import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.MenuNotFoundException;
 import com.xxAMIDOxx.xxSTACKSxx.menu.mappers.DomainToDtoMapper;

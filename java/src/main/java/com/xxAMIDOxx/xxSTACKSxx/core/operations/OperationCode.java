@@ -1,4 +1,4 @@
-package com.xxAMIDOxx.xxSTACKSxx.menu.commands;
+package com.xxAMIDOxx.xxSTACKSxx.core.operations;
 
 public enum OperationCode {
   // MenuDTO operations

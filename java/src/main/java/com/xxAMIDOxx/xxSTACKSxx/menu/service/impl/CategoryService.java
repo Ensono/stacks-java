@@ -1,8 +1,8 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.service.impl;
 
+import com.xxAMIDOxx.xxSTACKSxx.core.operations.OperationCode;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateCategoryRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.UpdateCategoryRequest;
-import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Category;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.events.CategoryCreatedEvent;

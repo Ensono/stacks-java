@@ -1,9 +1,9 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.impl;
 
+import com.xxAMIDOxx.xxSTACKSxx.core.operations.OperationCode;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.controller.CreateCategoryController;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.request.CreateCategoryRequest;
 import com.xxAMIDOxx.xxSTACKSxx.menu.api.v1.dto.response.ResourceCreatedResponse;
-import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
 import com.xxAMIDOxx.xxSTACKSxx.menu.domain.Menu;
 import com.xxAMIDOxx.xxSTACKSxx.menu.service.MenuQueryService;
 import com.xxAMIDOxx.xxSTACKSxx.menu.service.impl.CategoryService;
