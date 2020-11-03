@@ -10,6 +10,7 @@ parameters:
   maven_post_deploy_html_report_directory: ""
   maven_post_deploy_failsafe_reports_directory: ""
   docker_java_container: ""
+  auth0_credentials: {}
 steps:
   - script: ls
   - template: ./deploy-post-deploy-tests-serenity.yml
@@ -24,6 +25,7 @@ steps:
       maven_ignored_post_deploy_test_tags: "${{ parameters.maven_ignored_post_deploy_test_tags }}"
       maven_post_deploy_html_report_directory: "${{ parameters.maven_post_deploy_html_report_directory }}"
       docker_java_container: "${{ parameters.docker_java_container }}"
+      auth0_credentials: "${{ parameters.auth0_credentials }}"
   
   - template: ./deploy-post-deploy-tests-karate.yml
     parameters:
@@ -37,3 +39,4 @@ steps:
       maven_ignored_post_deploy_test_tags: "${{ parameters.maven_ignored_post_deploy_test_tags }}"
       maven_post_deploy_html_report_directory: "target/surefire-reports"
       docker_java_container: "${{ parameters.docker_java_container }}"
+      auth0_credentials: "${{ parameters.auth0_credentials }}"
