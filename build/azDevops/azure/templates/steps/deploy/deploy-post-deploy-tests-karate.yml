@@ -10,6 +10,7 @@ parameters:
   maven_post_deploy_html_report_directory: ""
   maven_post_deploy_failsafe_reports_directory: ""
   docker_java_container: ""
+  auth0_credentials: {}
 steps:
   - ${{ if eq(parameters.functional_test, true) }}:
       - download: current
@@ -41,6 +42,9 @@ steps:
         target:
           container: ${{ parameters.docker_java_container }}
         displayName: "Post-Deploy Test: Run Functional Tests"
+        env:
+          ${{ each var in parameters.auth0_credentials }}:
+            ${{ var.key }}: ${{ var.value }}
 
       - task: PublishPipelineArtifact@1
         condition: always()
