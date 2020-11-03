@@ -269,6 +269,7 @@ stages:
   - stage: Dev
     variables:
       - group: amido-stacks-infra-credentials-nonprod
+      - group: amido-stacks-java-api
       - name: dns_name
         value: "$(Environment.Name)-java-api"
       - name: core_resource_group
@@ -485,6 +486,7 @@ stages:
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
       - group: amido-stacks-infra-credentials-prod
+      - group: amido-stacks-java-api
       - name: dns_name
         value: "$(Environment.Name)-java-api"
       - name: core_resource_group
