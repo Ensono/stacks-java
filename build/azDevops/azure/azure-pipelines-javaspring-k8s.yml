@@ -471,6 +471,15 @@ stages:
                     maven_ignored_post_deploy_test_tags: "${{ variables.maven_ignored_post_deploy_test_tags }}"
                     maven_post_deploy_html_report_directory: "${{ variables.maven_post_deploy_html_report_directory }}"
                     docker_java_container: "${{ variables.docker_java_image }}"
+                    auth0_credentials:
+                      {
+                        CLIENT_ID: $(AUTH0_CLIENT_ID),
+                        CLIENT_SECRET: $(AUTH0_CLIENT_SECRET),
+                        AUDIENCE: $(AUTH0_AUDIENCE),
+                        GRANT_TYPE: client_credentials,
+                        OAUTH_TOKEN_URL: $(AUTH0_TOKEN_URL),
+                        BASE_URL: "${{ variables.dns_pointer }}",
+                      }
 
   - stage: Prod
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -718,3 +727,12 @@ stages:
                     maven_ignored_post_deploy_test_tags: "${{ variables.maven_ignored_post_deploy_test_tags }}"
                     maven_post_deploy_html_report_directory: "${{ variables.maven_post_deploy_html_report_directory }}"
                     docker_java_container: "${{ variables.docker_java_image }}"
+                    auth0_credentials:
+                      {
+                        CLIENT_ID: $(AUTH0_CLIENT_ID),
+                        CLIENT_SECRET: $(AUTH0_CLIENT_SECRET),
+                        AUDIENCE: $(AUTH0_AUDIENCE),
+                        GRANT_TYPE: client_credentials,
+                        OAUTH_TOKEN_URL: $(AUTH0_TOKEN_URL),
+                        BASE_URL: "${{ variables.dns_pointer }}",
+                      }
