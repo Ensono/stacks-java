@@ -2,4 +2,4 @@ The full documentation on Amido Stacks can be found [here](https://amido.github.
 
 Test documentation can be found [here](https://amido.github.io/stacks/docs/workloads/azure/backend/java/testing_java).
 
-Karate documentation is [here](https://amido.github.io/stacks/docs/workloads/azure/backend/java/execute_karate_api_tests).
+Serenity documentation is [here](https://amido.github.io/stacks/docs/workloads/azure/backend/java/execute_serenity_api_tests).
