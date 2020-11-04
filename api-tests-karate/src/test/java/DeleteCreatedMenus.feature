@@ -7,3 +7,4 @@ Feature: Delete menu hook
     And header Authorization = auth.bearer_token
     When method DELETE
     Then status 200
+    * print __arg.menuId.concat(' menu was deleted')
