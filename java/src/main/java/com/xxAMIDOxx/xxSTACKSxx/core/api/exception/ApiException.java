@@ -1,13 +1,13 @@
 package com.xxAMIDOxx.xxSTACKSxx.core.api.exception;
 
-import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
+import com.xxAMIDOxx.xxSTACKSxx.core.operations.OperationCode;
 import com.xxAMIDOxx.xxSTACKSxx.menu.exception.ExceptionCode;
 
 public class ApiException extends RuntimeException {
 
-  ExceptionCode exceptionCode;
-  OperationCode operationCode;
-  String correlationId;
+  final ExceptionCode exceptionCode;
+  final OperationCode operationCode;
+  final String correlationId;
 
   public ApiException(
       String message,

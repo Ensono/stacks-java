@@ -1,7 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.exception;
 
 import com.xxAMIDOxx.xxSTACKSxx.core.api.exception.ApiException;
-import com.xxAMIDOxx.xxSTACKSxx.menu.commands.OperationCode;
+import com.xxAMIDOxx.xxSTACKSxx.core.operations.OperationCode;
 
 public class MenuApiException extends ApiException {
 
