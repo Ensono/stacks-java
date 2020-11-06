@@ -8,10 +8,7 @@ class RunSmokeTests {
 
   @Test
   void runSmokeTests() {
-    Results results =
-        Runner.path("classpath:com/xxAMIDOxx/xxSTACKSxx/api/karate")
-            .tags("~@ignore", "@Smoke")
-            .parallel(1);
+    Results results = Runner.path("classpath:components").tags("~@ignore", "@Smoke").parallel(1);
     assertEquals(0, results.getFailCount(), results.getErrorMessages());
   }
 }
