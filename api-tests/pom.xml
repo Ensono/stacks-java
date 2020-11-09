@@ -22,10 +22,10 @@
         <!--       Set 'pact.broker.url' and 'pact.broker.token' -->
         <pact.broker.url></pact.broker.url>
         <pact.broker.token></pact.broker.token>
-        <owasp-dependency-check-plugin.version>6.0.2</owasp-dependency-check-plugin.version>
+        <owasp-dependency-check-plugin.version>6.0.3</owasp-dependency-check-plugin.version>
         <fmt-maven-plugin.version>2.10</fmt-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
-        <puppycrawl-tools-checkstyle.version>8.36.2</puppycrawl-tools-checkstyle.version>
+        <puppycrawl-tools-checkstyle.version>8.37</puppycrawl-tools-checkstyle.version>
         <spotbugs-maven-plugin.version>4.1.4</spotbugs-maven-plugin.version>
         <spotbugs.version>4.1.4</spotbugs.version>
     </properties>
