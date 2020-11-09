@@ -9,9 +9,7 @@ class RunFunctionalTests {
   @Test
   void runFunctionalTests() {
     Results results =
-        Runner.path("classpath:com/xxAMIDOxx/xxSTACKSxx/api/karate")
-            .tags("~@ignore", "@Functional")
-            .parallel(1);
+        Runner.path("classpath:components").tags("~@ignore", "@Functional").parallel(1);
     assertEquals(0, results.getFailCount(), results.getErrorMessages());
   }
 }
