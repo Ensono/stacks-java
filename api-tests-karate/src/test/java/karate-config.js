@@ -14,7 +14,7 @@ function fn() {
         menu_v2: '/v2/menu',
         items: '/items',
 
-        generate_auth0_token: true,
+        generate_auth0_token: false,
 
         base_url: java.lang.System.getenv('BASE_URL'),
         client_id_value: java.lang.System.getenv('CLIENT_ID'),
