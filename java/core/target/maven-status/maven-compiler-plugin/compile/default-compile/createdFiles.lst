@@ -1,7 +1,0 @@
-com\xxAMIDOxx\xxSTACKSxx\menu\domain\Menu$MenuBuilder.class
-com\xxAMIDOxx\xxSTACKSxx\menu\domain\Category$CategoryBuilder.class
-com\xxAMIDOxx\xxSTACKSxx\menu\domain\Item.class
-com\xxAMIDOxx\xxSTACKSxx\menu\domain\Category.class
-com\xxAMIDOxx\xxSTACKSxx\menu\repository\MenuRepositoryAdapter.class
-com\xxAMIDOxx\xxSTACKSxx\menu\service\MenuQueryService.class
-com\xxAMIDOxx\xxSTACKSxx\menu\domain\Menu.class
