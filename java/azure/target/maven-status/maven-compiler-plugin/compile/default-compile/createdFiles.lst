@@ -1,0 +1,6 @@
+com\xxAMIDOxx\xxSTACKSxx\provider\azure\AzureConfig.class
+com\xxAMIDOxx\xxSTACKSxx\provider\azure\repository\AzureMenuRepository.class
+com\xxAMIDOxx\xxSTACKSxx\provider\azure\repository\AzureMenu$AzureMenuBuilder.class
+com\xxAMIDOxx\xxSTACKSxx\provider\azure\repository\AzureMenu.class
+com\xxAMIDOxx\xxSTACKSxx\provider\azure\repository\AzureMenuRepositoryAdapter.class
+com\xxAMIDOxx\xxSTACKSxx\provider\azure\service\CosmosMenuQueryService.class
