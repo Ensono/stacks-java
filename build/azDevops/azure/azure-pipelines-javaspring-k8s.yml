@@ -381,7 +381,7 @@ stages:
         environment: dev
         variables:
           - name: cosmosdb_database_name
-            value: $[ dependencies.AppInfraDev.outputs['AppInfraDev.tfoutputs.cosmosdb_database_name']
+            value: $[ dependencies.AppInfraDev.outputs['AppInfraDev.tfoutputs.cosmosdb_database_name'] ]"
           - name: cosmosdb_endpoint
             value: "$[ dependencies.AppInfraDev.outputs['AppInfraDev.tfoutputs.cosmosdb_endpoint'] ]"
           - name: cosmosdb_primary_master_key
