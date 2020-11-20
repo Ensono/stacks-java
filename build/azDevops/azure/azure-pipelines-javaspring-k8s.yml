@@ -379,6 +379,8 @@ stages:
           vmImage: $(pool_vm_image)
         environment: dev
         variables:
+          - name: cosmosdb_database_name
+            value: $[ dependencies.AppInfraDev.outputs['AppInfraDev.tfoutputs.cosmosdb_database_name']
           - name: cosmosdb_endpoint
             value: "$[ dependencies.AppInfraDev.outputs['AppInfraDev.tfoutputs.cosmosdb_endpoint'] ]"
           - name: cosmosdb_primary_master_key
@@ -440,6 +442,7 @@ stages:
                           app_insights_key: "$(app_insights_instrumentation_key)",
                           cosmosdb_key: "$(cosmosdb_primary_master_key)",
                           cosmosdb_endpoint: "$(cosmosdb_endpoint)",
+                          cosmosdb_name: "$(cosmosdb_database_name)",
                         },
                         additional_args: "-no-empty",
                       },
