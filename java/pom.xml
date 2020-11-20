@@ -23,7 +23,7 @@
         <applicationinsights.version>2.6.2</applicationinsights.version>
         <cosmosdb.version>2.3.5</cosmosdb.version>
         <azure.springboot.version>2.3.5</azure.springboot.version>
-        <azure.servicebus.version>3.5.0</azure.servicebus.version>
+        <azure.servicebus.version>3.5.1</azure.servicebus.version>
         <jackson.version>2.11.0</jackson.version>
         <mockito.version>3.6.0</mockito.version>
         <lombok.version>1.18.16</lombok.version>
