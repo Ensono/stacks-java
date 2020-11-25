@@ -25,7 +25,7 @@
         <azure.springboot.version>2.3.5</azure.springboot.version>
         <azure.servicebus.version>3.5.1</azure.servicebus.version>
         <jackson.version>2.11.0</jackson.version>
-        <mockito.version>3.6.0</mockito.version>
+        <mockito.version>3.6.28</mockito.version>
         <lombok.version>1.18.16</lombok.version>
         <hamcrest.version>2.2</hamcrest.version>
         <pitest.version>1.5.2</pitest.version>
