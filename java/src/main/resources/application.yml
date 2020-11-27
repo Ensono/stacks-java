@@ -31,7 +31,7 @@ springdoc:
 
 azure:
   cosmosdb:
-    uri: https://amido-stacks-dev-eun-java-api.documents.azure.com:443/
+    uri: https://localhost:8081
     database: Stacks
     key: xxxxxx
   application-insights:
