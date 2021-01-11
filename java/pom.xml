@@ -347,7 +347,7 @@
             <plugin>
                 <groupId>au.com.dius.pact.provider</groupId>
                 <artifactId>maven</artifactId>
-                <version>4.1.11</version>
+                <version>4.1.14</version>
                 <configuration>
                     <pactBrokerUrl>${pact.broker.url}</pactBrokerUrl>
                     <pactBrokerToken>${pact.broker.token}</pactBrokerToken>
