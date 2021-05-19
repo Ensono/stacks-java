@@ -36,7 +36,7 @@
         <equals-verifier.version>3.5</equals-verifier.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <owasp-dependency-check-plugin.version>6.0.3</owasp-dependency-check-plugin.version>
-        <auth0-spring-security-api.version>1.4.0</auth0-spring-security-api.version>
+        <auth0-spring-security-api.version>1.4.1</auth0-spring-security-api.version>
 
         <fmt-maven-plugin.version>2.10</fmt-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
