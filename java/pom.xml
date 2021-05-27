@@ -19,7 +19,7 @@
     <properties>
         <java.version>11</java.version>
         <org.projectlombok.version>1.18.0</org.projectlombok.version>
-        <org.springdoc-openapi.version>1.5.0</org.springdoc-openapi.version>
+        <org.springdoc-openapi.version>1.5.9</org.springdoc-openapi.version>
         <applicationinsights.version>2.6.2</applicationinsights.version>
         <cosmosdb.version>2.3.5</cosmosdb.version>
         <azure.springboot.version>2.3.5</azure.springboot.version>
@@ -46,8 +46,8 @@
         <pact.version>3.5.24</pact.version>
 
         <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
-        <pact.broker.url></pact.broker.url>
-        <pact.broker.token></pact.broker.token>
+        <pact.broker.url/>
+        <pact.broker.token/>
         <pact.api.name>JavaMenuAPI</pact.api.name>
         <pact.api.protocol>http</pact.api.protocol>
         <pact.api.host>localhost</pact.api.host>
