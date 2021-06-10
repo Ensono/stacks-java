@@ -267,6 +267,7 @@ stages:
               functional_test_project_type: "${{ variables.functional_test_project_type }}"
 
   - stage: Dev
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
       - group: amido-stacks-infra-credentials-nonprod
       - group: amido-stacks-java-api
