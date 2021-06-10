@@ -5,11 +5,11 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~> 2.5"
     }
-    null    = {
+    null = {
       source  = "hashicorp/null"
       version = "~> 2.1"
     }
-    tls     = {
+    tls = {
       source  = "hashicorp/tls"
       version = "~> 2.1"
     }
