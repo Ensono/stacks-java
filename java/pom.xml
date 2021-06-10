@@ -37,6 +37,7 @@
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <owasp-dependency-check-plugin.version>6.0.3</owasp-dependency-check-plugin.version>
         <auth0-spring-security-api.version>1.4.1</auth0-spring-security-api.version>
+        <io-projectreactor-netty.version>1.0.7</io-projectreactor-netty.version>
 
         <fmt-maven-plugin.version>2.10</fmt-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
@@ -123,6 +124,12 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.projectreactor.netty</groupId>
+            <artifactId>reactor-netty</artifactId>
+            <version>${io-projectreactor-netty.version}</version>
+            <scope>runtime</scope>
+        </dependency>
 
         <!--
         <dependency>
