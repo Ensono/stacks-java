@@ -46,7 +46,7 @@ resources:
       image: amidostacks/ci-k8s:0.0.12
     # Container for Terraform deployments
     - container: terraform_custom
-      image: amidostacks/ci-tf:0.0.4
+      image: amidostacks/ci-tf:0.0.7
 
 variables:
   company: amido
