@@ -22,7 +22,7 @@
         <!--       Set 'pact.broker.url' and 'pact.broker.token' -->
         <pact.broker.url></pact.broker.url>
         <pact.broker.token></pact.broker.token>
-        <owasp-dependency-check-plugin.version>6.0.3</owasp-dependency-check-plugin.version>
+        <owasp-dependency-check-plugin.version>6.2.2</owasp-dependency-check-plugin.version>
         <fmt-maven-plugin.version>2.10</fmt-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
         <puppycrawl-tools-checkstyle.version>8.38</puppycrawl-tools-checkstyle.version>
@@ -183,7 +183,7 @@
         <dependency>
             <groupId>au.com.dius</groupId>
             <artifactId>pact-jvm-consumer-junit_2.11</artifactId>
-            <version>3.5.0</version>
+            <version>3.5.24</version>
             <scope>test</scope>
         </dependency>
         <dependency>
