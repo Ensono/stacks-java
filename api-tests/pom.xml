@@ -9,7 +9,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <serenity.version>2.3.8</serenity.version>
+        <serenity.version>2.4.34</serenity.version>
         <serenity.maven.version>2.3.8</serenity.maven.version>
         <serenity.cucumber.version>2.2.6</serenity.cucumber.version>
         <cucumber.version>5.5.0</cucumber.version>
@@ -183,7 +183,7 @@
         <dependency>
             <groupId>au.com.dius</groupId>
             <artifactId>pact-jvm-consumer-junit_2.11</artifactId>
-            <version>3.5.0</version>
+            <version>3.5.24</version>
             <scope>test</scope>
         </dependency>
         <dependency>
