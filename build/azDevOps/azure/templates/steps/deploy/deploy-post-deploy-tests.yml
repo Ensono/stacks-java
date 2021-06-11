@@ -11,7 +11,6 @@ parameters:
   maven_post_deploy_failsafe_reports_directory: ""
   docker_java_container: ""
 steps:
-  - script: ls
   - template: ./deploy-post-deploy-tests-serenity.yml
     parameters:
       environment: "${{ parameters.environment }}"
