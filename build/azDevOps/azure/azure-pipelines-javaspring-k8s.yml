@@ -267,6 +267,7 @@ stages:
               functional_test_project_type: "${{ variables.functional_test_project_type }}"
 
   - stage: Dev
+    dependsOn: Build
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
       - group: amido-stacks-infra-credentials-nonprod
@@ -280,7 +281,7 @@ stages:
         container: terraform_custom
         pool:
           vmImage: $(pool_vm_image)
-        environment: dev
+        environment: ${{ variables.domain }}-dev
         variables:
           - name: attributes
             value: "[]"
@@ -379,7 +380,7 @@ stages:
         container: k8s_deploy
         pool:
           vmImage: $(pool_vm_image)
-        environment: dev
+        environment: ${{ variables.domain }}-dev
         variables:
           - name: cosmosdb_database_name
             value: "$[ dependencies.AppInfraDev.outputs['AppInfraDev.tfoutputs.cosmosdb_database_name'] ]"
@@ -487,6 +488,7 @@ stages:
                       }
 
   - stage: Prod
+    dependsOn: Build
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
       - group: amido-stacks-infra-credentials-prod
@@ -500,7 +502,7 @@ stages:
         container: terraform_custom
         pool:
           vmImage: $(pool_vm_image)
-        environment: prod
+        environment: ${{ variables.domain }}-prod
         variables:
           - name: app_insights_name
             value: "amido-stacks-prod-eun-core"
@@ -599,7 +601,7 @@ stages:
         container: k8s_deploy
         pool:
           vmImage: $(pool_vm_image)
-        environment: prod
+        environment: ${{ variables.domain }}-prod
         variables:
           - group: amido-stacks-infra-credentials-nonprod
           - group: amido-stacks-infra-credentials-prod
@@ -636,7 +638,7 @@ stages:
         container: k8s_deploy
         pool:
           vmImage: $(pool_vm_image)
-        environment: prod
+        environment: ${{ variables.domain }}-prod
         variables:
           - name: cosmosdb_database_name
             value: "$[ dependencies.AppInfraProd.outputs['AppInfraProd.tfoutputs.cosmosdb_database_name'] ]"
