@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.4.RELEASE</version>
+        <version>2.3.11.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -19,13 +19,13 @@
     <properties>
         <java.version>11</java.version>
         <org.projectlombok.version>1.18.0</org.projectlombok.version>
-        <org.springdoc-openapi.version>1.4.8</org.springdoc-openapi.version>
+        <org.springdoc-openapi.version>1.5.9</org.springdoc-openapi.version>
         <applicationinsights.version>2.6.2</applicationinsights.version>
-        <cosmosdb.version>2.3.5</cosmosdb.version>
-        <azure.springboot.version>2.3.5</azure.springboot.version>
-        <azure.servicebus.version>3.4.0</azure.servicebus.version>
+        <cosmosdb.version>3.5.0</cosmosdb.version>
+        <azure.springboot.version>3.5.0</azure.springboot.version>
+        <azure.servicebus.version>3.6.4</azure.servicebus.version>
         <jackson.version>2.11.0</jackson.version>
-        <mockito.version>3.5.15</mockito.version>
+        <mockito.version>3.6.0</mockito.version>
         <lombok.version>1.18.16</lombok.version>
         <hamcrest.version>2.2</hamcrest.version>
         <pitest.version>1.5.2</pitest.version>
@@ -35,12 +35,13 @@
         <junit-jupiter.version>5.7.0</junit-jupiter.version>
         <equals-verifier.version>3.5</equals-verifier.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <owasp-dependency-check-plugin.version>6.0.2</owasp-dependency-check-plugin.version>
-        <auth0-spring-security-api.version>1.4.0</auth0-spring-security-api.version>
+        <owasp-dependency-check-plugin.version>6.0.3</owasp-dependency-check-plugin.version>
+        <auth0-spring-security-api.version>1.4.1</auth0-spring-security-api.version>
+        <io-projectreactor-netty.version>1.0.7</io-projectreactor-netty.version>
 
         <fmt-maven-plugin.version>2.10</fmt-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
-        <puppycrawl-tools-checkstyle.version>8.36.2</puppycrawl-tools-checkstyle.version>
+        <puppycrawl-tools-checkstyle.version>8.37</puppycrawl-tools-checkstyle.version>
         <spotbugs-maven-plugin.version>4.1.4</spotbugs-maven-plugin.version>
         <spotbugs.version>4.1.4</spotbugs.version>
         <pact.version>3.5.24</pact.version>
@@ -53,6 +54,17 @@
         <pact.api.host>localhost</pact.api.host>
         <pact.api.port>9000</pact.api.port>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.projectreactor</groupId>
+                <artifactId>reactor-bom</artifactId>
+                <version>2020.0.7</version>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
 
@@ -85,14 +97,14 @@
         </dependency>
 
         <dependency>
-            <groupId>com.microsoft.azure</groupId>
+            <groupId>com.azure.spring</groupId>
             <artifactId>azure-spring-boot</artifactId>
             <version>${azure.springboot.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.microsoft.azure</groupId>
-            <artifactId>azure-cosmosdb-spring-boot-starter</artifactId>
+            <groupId>com.azure.spring</groupId>
+            <artifactId>azure-spring-boot-starter-cosmos</artifactId>
             <version>${cosmosdb.version}</version>
         </dependency>
 
@@ -123,6 +135,11 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.projectreactor.netty</groupId>
+            <artifactId>reactor-netty-core</artifactId>
+            <version>${io-projectreactor-netty.version}</version>
+        </dependency>
 
         <!--
         <dependency>
@@ -205,7 +222,7 @@
         <dependency>
             <groupId>au.com.dius.pact</groupId>
             <artifactId>consumer</artifactId>
-            <version>4.1.9</version>
+            <version>4.1.11</version>
             <scope>test</scope>
         </dependency>
 
@@ -347,7 +364,7 @@
             <plugin>
                 <groupId>au.com.dius.pact.provider</groupId>
                 <artifactId>maven</artifactId>
-                <version>4.1.9</version>
+                <version>4.1.11</version>
                 <configuration>
                     <pactBrokerUrl>${pact.broker.url}</pactBrokerUrl>
                     <pactBrokerToken>${pact.broker.token}</pactBrokerToken>
@@ -448,7 +465,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                  <threads>15</threads>
+                    <threads>15</threads>
                     <historyInputFile>target/pitHistory.txt</historyInputFile>
                     <historyOutputFile>target/pitHistory.txt</historyOutputFile>
                     <timestampedReports>false</timestampedReports>

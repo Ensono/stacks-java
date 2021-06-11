@@ -1,7 +1,7 @@
 package com.xxAMIDOxx.xxSTACKSxx.menu.domain;
 
-import com.microsoft.azure.spring.data.cosmosdb.core.mapping.Document;
-import com.microsoft.azure.spring.data.cosmosdb.core.mapping.PartitionKey;
+import com.azure.spring.data.cosmos.core.mapping.Container;
+import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,7 +11,7 @@ import org.springframework.data.annotation.Id;
 
 @Data
 @AllArgsConstructor
-@Document(collection = "Menu")
+@Container(containerName = "Menu")
 public class Menu {
 
   @Id @PartitionKey private String id;
