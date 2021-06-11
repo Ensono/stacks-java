@@ -46,7 +46,7 @@ resources:
       image: amidostacks/ci-k8s:0.0.11
     # Container for Terraform deployments
     - container: terraform_custom
-      image: amidostacks/ci-tf:0.0.4
+      image: amidostacks/ci-tf:0.0.8`
 
 variables:
   company: amido
@@ -267,6 +267,7 @@ stages:
               functional_test_project_type: "${{ variables.functional_test_project_type }}"
 
   - stage: Dev
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
       - group: amido-stacks-infra-credentials-nonprod
       - name: dns_name
