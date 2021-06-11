@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.12"
+  required_version = ">= 0.13"
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -7,11 +7,7 @@ terraform {
     }
     null = {
       source  = "hashicorp/null"
-      version = "~> 2.1"
-    }
-    tls = {
-      source  = "hashicorp/tls"
-      version = "~> 2.1"
+      version = "~> 3.1"
     }
   }
 }
