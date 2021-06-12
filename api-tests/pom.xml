@@ -27,7 +27,7 @@
         <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
         <puppycrawl-tools-checkstyle.version>8.38</puppycrawl-tools-checkstyle.version>
         <spotbugs-maven-plugin.version>4.1.4</spotbugs-maven-plugin.version>
-        <spotbugs.version>4.2.0</spotbugs.version>
+        <spotbugs.version>4.2.3</spotbugs.version>
     </properties>
 
     <dependencies>
