@@ -24,7 +24,7 @@
         <pact.broker.token></pact.broker.token>
         <owasp-dependency-check-plugin.version>6.0.3</owasp-dependency-check-plugin.version>
         <fmt-maven-plugin.version>2.10</fmt-maven-plugin.version>
-        <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
+        <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
         <puppycrawl-tools-checkstyle.version>8.38</puppycrawl-tools-checkstyle.version>
         <spotbugs-maven-plugin.version>4.1.4</spotbugs-maven-plugin.version>
         <spotbugs.version>4.2.0</spotbugs.version>
