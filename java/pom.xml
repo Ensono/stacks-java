@@ -26,7 +26,7 @@
         <azure.servicebus.version>3.6.4</azure.servicebus.version>
         <jackson.version>2.11.0</jackson.version>
         <mockito.version>3.11.1</mockito.version>
-        <lombok.version>1.18.16</lombok.version>
+        <lombok.version>1.18.20</lombok.version>
         <hamcrest.version>2.2</hamcrest.version>
         <pitest.version>1.6.6</pitest.version>
         <jacoco.version>0.8.7</jacoco.version>
