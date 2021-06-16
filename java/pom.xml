@@ -287,7 +287,7 @@
         <dependency>
             <groupId>au.com.dius.pact</groupId>
             <artifactId>consumer</artifactId>
-            <version>4.1.11</version>
+            <version>4.2.6</version>
             <scope>test</scope>
         </dependency>
 
