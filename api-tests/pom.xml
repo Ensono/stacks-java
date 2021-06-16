@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.xxAMIDOxx</groupId>
     <artifactId>xxSTACKSxx-api-tests</artifactId>
@@ -9,8 +9,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <serenity.version>2.3.8</serenity.version>
-        <serenity.maven.version>2.3.8</serenity.maven.version>
+        <serenity.version>2.4.34</serenity.version>
+        <serenity.maven.version>2.4.34</serenity.maven.version>
         <serenity.cucumber.version>2.2.6</serenity.cucumber.version>
         <cucumber.version>5.5.0</cucumber.version>
         <logback.version>1.2.3</logback.version>
@@ -18,16 +18,16 @@
         <tags></tags>
         <parallel.tests>4</parallel.tests>
         <webdriver.base.url></webdriver.base.url>
-        <jackson.version>2.11.0</jackson.version>
-        <!--       Set 'pact.broker.url' and 'pact.broker.token' -->
+        <jackson.version>2.12.3</jackson.version>
+        <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
         <pact.broker.url></pact.broker.url>
         <pact.broker.token></pact.broker.token>
-        <owasp-dependency-check-plugin.version>6.0.3</owasp-dependency-check-plugin.version>
-        <fmt-maven-plugin.version>2.10</fmt-maven-plugin.version>
-        <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
-        <puppycrawl-tools-checkstyle.version>8.38</puppycrawl-tools-checkstyle.version>
-        <spotbugs-maven-plugin.version>4.1.4</spotbugs-maven-plugin.version>
-        <spotbugs.version>4.2.0</spotbugs.version>
+        <owasp-dependency-check-plugin.version>6.2.2</owasp-dependency-check-plugin.version>
+        <fmt-maven-plugin.version>2.11</fmt-maven-plugin.version>
+        <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
+        <puppycrawl-tools-checkstyle.version>8.43</puppycrawl-tools-checkstyle.version>
+        <spotbugs-maven-plugin.version>4.2.3</spotbugs-maven-plugin.version>
+        <spotbugs.version>4.2.3</spotbugs.version>
     </properties>
 
     <dependencies>
@@ -91,13 +91,13 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.1</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.18.1</version>
+            <version>3.20.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -109,7 +109,7 @@
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
-            <version>1.10.18</version>
+            <version>1.11.2</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -137,7 +137,7 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20201115</version>
+            <version>20210307</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -146,9 +146,44 @@
             <version>${jackson.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec-http</artifactId>
+            <version>4.1.65.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec-http2</artifactId>
+            <version>4.1.65.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-transport-native-epoll</artifactId>
+            <version>4.1.65.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>30.1.1-jre</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.12.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.15</version>
+        </dependency>
+        <dependency>
             <groupId>au.com.dius</groupId>
             <artifactId>pact-jvm-consumer-junit_2.11</artifactId>
-            <version>3.5.0</version>
+            <version>3.5.24</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -161,11 +196,41 @@
             <groupId>au.com.dius</groupId>
             <artifactId>pact-jvm-consumer</artifactId>
             <version>4.0.10</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-codec-http</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-transport-native-epoll</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-codec-http2</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>5.3.1</version>
+            <version>5.3.8</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -267,7 +332,7 @@
             <plugin>
                 <groupId>au.com.dius.pact.provider</groupId>
                 <artifactId>maven</artifactId>
-                <version>4.1.10</version>
+                <version>4.2.6</version>
                 <configuration>
                     <pactBrokerUrl>${pact.broker.url}</pactBrokerUrl>
                     <pactBrokerToken>${pact.broker.token}</pactBrokerToken>
