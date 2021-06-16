@@ -19,3 +19,4 @@ java/.settings/
 
 node_modules/
 /api-tests-karate/target/
+/.idea/
