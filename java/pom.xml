@@ -24,7 +24,7 @@
         <cosmosdb.version>3.5.0</cosmosdb.version>
         <azure.springboot.version>3.5.0</azure.springboot.version>
         <azure.servicebus.version>3.6.4</azure.servicebus.version>
-        <jackson.version>2.11.0</jackson.version>
+        <jackson.version>2.12.3</jackson.version>
         <mockito.version>3.11.1</mockito.version>
         <lombok.version>1.18.20</lombok.version>
         <hamcrest.version>2.2</hamcrest.version>
@@ -99,7 +99,25 @@
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson.version}</version>
         </dependency>
 

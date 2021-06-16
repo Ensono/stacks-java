@@ -3,6 +3,8 @@ package com.xxAMIDOxx.xxSTACKSxx.core.messaging.event;
 import static java.time.ZonedDateTime.now;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer;
 import com.xxAMIDOxx.xxSTACKSxx.core.operations.OperationContext;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
@@ -10,9 +12,11 @@ import java.util.UUID;
 
 public abstract class ApplicationEvent extends OperationContext implements Serializable {
 
-  private UUID id;
-  private int eventCode;
-  private ZonedDateTime creationDate;
+  private final UUID id;
+  private final int eventCode;
+
+  @JsonSerialize(using = ZonedDateTimeSerializer.class)
+  private final ZonedDateTime creationDate;
 
   public ApplicationEvent(int operationCode, String correlationId, int eventCode) {
     super(operationCode, correlationId);
