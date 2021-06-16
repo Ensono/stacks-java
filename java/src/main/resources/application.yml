@@ -16,6 +16,8 @@ management:
   endpoints:
     web:
       base-path: /
+      exposure:
+        include: health, info, beans
 
 springdoc:
   swagger-ui:
