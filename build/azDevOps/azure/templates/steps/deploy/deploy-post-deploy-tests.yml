@@ -12,7 +12,6 @@ parameters:
   docker_java_container: ""
   auth0_credentials: {}
 steps:
-  - script: ls
   - template: ./deploy-post-deploy-tests-serenity.yml
     parameters:
       environment: "${{ parameters.environment }}"
