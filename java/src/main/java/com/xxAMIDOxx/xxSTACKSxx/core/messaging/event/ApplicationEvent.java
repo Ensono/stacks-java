@@ -14,6 +14,7 @@ public abstract class ApplicationEvent extends OperationContext implements Seria
 
   private final UUID id;
   private final int eventCode;
+
   @JsonSerialize(using = ZonedDateTimeSerializer.class)
   private final ZonedDateTime creationDate;
 
