@@ -9,9 +9,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <serenity.version>2.3.8</serenity.version>
-        <serenity.maven.version>2.3.8</serenity.maven.version>
-        <serenity.cucumber.version>2.2.6</serenity.cucumber.version>
+        <serenity.version>2.4.34</serenity.version>
+        <serenity.maven.version>2.4.34</serenity.maven.version>
+        <serenity.cucumber.version>2.4.34</serenity.cucumber.version>
         <cucumber.version>6.10.4</cucumber.version>
         <logback.version>1.2.3</logback.version>
         <encoding>UTF-8</encoding>
@@ -84,9 +84,15 @@
         </dependency>
         <dependency>
             <groupId>net.serenity-bdd</groupId>
-            <artifactId>serenity-cucumber5</artifactId>
+            <artifactId>serenity-cucumber6</artifactId>
             <version>${serenity.cucumber.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>30.1.1-jre</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -203,7 +209,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
+                <version>3.0.0-M5</version>
                 <configuration>
                     <skip>true</skip>
                     <systemPropertyVariables>
@@ -214,7 +220,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.22.2</version>
+                <version>3.0.0-M5</version>
                 <configuration>
                     <includes>
                         <include>**/*Test.java</include>
