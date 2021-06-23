@@ -1,5 +1,5 @@
 @DeleteCreatedMenu
-@FunctionalHello
+@Functional
 Feature: Add menu item
 
   Background: Create menu and category before the scenarios
@@ -19,7 +19,7 @@ Feature: Add menu item
     Then the category was successfully created
     And the returned status code is 201
 
-  @Smoker
+  @Smoke
   Scenario: Create an item for the menu
     Given the following item data:
       | name    | description                                                 | price | available |
