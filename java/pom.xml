@@ -25,7 +25,7 @@
         <azure.springboot.version>3.5.0</azure.springboot.version>
         <azure.servicebus.version>3.6.4</azure.servicebus.version>
         <jackson.version>2.12.3</jackson.version>
-        <mockito.version>3.11.1</mockito.version>
+        <mockito.version>3.11.2</mockito.version>
         <lombok.version>1.18.20</lombok.version>
         <hamcrest.version>2.2</hamcrest.version>
         <pitest.version>1.6.7</pitest.version>
@@ -37,7 +37,7 @@
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <owasp-dependency-check-plugin.version>6.2.2</owasp-dependency-check-plugin.version>
         <auth0-spring-security-api.version>1.4.1</auth0-spring-security-api.version>
-        <io-projectreactor-netty.version>1.0.7</io-projectreactor-netty.version>
+        <io-projectreactor-netty.version>1.0.8</io-projectreactor-netty.version>
 
         <fmt-maven-plugin.version>2.11</fmt-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
@@ -61,7 +61,7 @@
             <dependency>
                 <groupId>io.projectreactor</groupId>
                 <artifactId>reactor-bom</artifactId>
-                <version>2020.0.7</version>
+                <version>2020.0.8</version>
                 <type>pom</type>
             </dependency>
         </dependencies>
