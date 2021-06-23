@@ -1,5 +1,5 @@
 @DeleteCreatedMenu
-@Functional
+@FunctionalHello
 Feature: Add menu item
 
   Background: Create menu and category before the scenarios
