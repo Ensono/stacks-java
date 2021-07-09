@@ -37,7 +37,7 @@ resources:
     # Container for inlining Jacoco assets as Azure DevOps strips them
     # https://github.com/microsoft/azure-pipelines-tasks/issues/3027
     - container: node
-      image: amidostacks/node:0.0.4
+      image: amidostacks/node-14:0.0.1
     # Container for Sonar Scanner
     - container: sonar_scanner
       image: amidostacks/ci-sonarscanner:0.0.2
