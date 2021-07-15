@@ -39,7 +39,7 @@ steps:
       vulnerability_scan: "${{ parameters.vulnerability_scan }}"
       vulnerability_scan_fail_build_on_detection: "${{ parameters.vulnerability_scan_fail_build_on_detection }}"
       project_type: "${{ parameters.project_type }}"
-  
+
   - template: ./build-api-tests-cli.yml
     parameters:
       repo_root_dir: "${{ parameters.repo_root_dir }}"
