@@ -25,7 +25,7 @@ resources:
     - repository: templates
       type: github
       name: amido/stacks-pipeline-templates
-      ref: refs/tags/v1.4.27
+      ref: refs/tags/v2.0.1
       # EXCHANGE THIS FOR YOUR OWN ENDPOINT CONNECTION TO GITHUB
       # REPOSITORY IS PUBLIC
       endpoint: amidostacks
@@ -225,7 +225,8 @@ stages:
               sonar_project_key: "$(SONAR_PROJECT_KEY)"
               sonar_token: "$(SONAR_TOKEN)"
               sonar_organisation: "$(SONAR_ORGANIZATION)"
-              sonar_pullrequest_provider: "GitHub" # Probably `GitHub` or `vsts`
+              # Probably `GitHub` or `vsts`
+              sonar_pullrequest_provider: "GitHub"
               sonar_remote_repo: "${{ variables.self_remote_repo }}"
               sonar_command: "sonar-scanner"
               # Docker
@@ -443,7 +444,8 @@ stages:
                           k8s_app_path: "${{ variables.k8s_app_path }}",
                           log_level: "Debug",
                           k8s_image: '${{ variables.k8s_docker_registry_nonprod }}/${{ variables.docker_image_name }}:${{ variables.docker_image_tag }}',
-                          aadpodidentitybinding: stacks-webapp-identity, # Unused currently
+                          # Unused currently
+                          aadpodidentitybinding: stacks-webapp-identity,
                           app_insights_key: "$(app_insights_instrumentation_key)",
                           cosmosdb_key: "$(cosmosdb_primary_master_key)",
                           cosmosdb_endpoint: "$(cosmosdb_endpoint)",
