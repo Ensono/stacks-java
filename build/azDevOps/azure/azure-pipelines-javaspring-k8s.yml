@@ -506,7 +506,7 @@ stages:
       - name: prod_azure_tenant_id
         value: $[variables.azure_tenant_id]
       - name: prod_azure_subscription_id
-        value: $[variables.azure_subscription_id]                       
+        value: $[variables.azure_subscription_id]                    
       - group: amido-stacks-java-api
       - name: dns_name
         value: "$(Environment.ShortName)-java-api"
@@ -630,7 +630,7 @@ stages:
           - name: prod_azure_tenant_id
             value: $[variables.azure_tenant_id]
           - name: prod_azure_subscription_id
-            value: $[variables.azure_subscription_id] 
+            value: $[variables.azure_subscription_id]
           - group: stacks-credentials-nonprod-kv
         strategy:
           runOnce:
