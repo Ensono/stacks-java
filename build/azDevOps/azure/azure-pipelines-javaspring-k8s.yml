@@ -103,9 +103,9 @@ variables:
   build_artifact_deploy_path: "${{ variables.self_repo_dir }}/deploy/k8s/app"
   build_artifact_deploy_name: "${{ variables.self_generic_name }}"
   # DEFAULT IMAGE RUNNER
-  pool_vm_image: ubuntu-18.04
+  pool_vm_image: ubuntu-20.04
   # Infra
-  region: "northeurope"
+  region: "westeurope"
   base_domain_nonprod: nonprod.amidostacks.com
   base_domain_internal_nonprod: nonprod.amidostacks.internal
   base_domain_prod: prod.amidostacks.com
@@ -140,6 +140,7 @@ stages:
     variables:
       # You can find notes in the READMEs around which values to use for each ENV variable group
       - group: amido-stacks-infra-credentials-nonprod
+      - group: stacks-credentials-nonprod-kv
       - group: amido-stacks-java-api
     jobs:
       - job: ApiBuild
@@ -272,6 +273,7 @@ stages:
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
       - group: amido-stacks-infra-credentials-nonprod
+      - group: stacks-credentials-nonprod-kv
       - group: amido-stacks-java-api
       - name: dns_name
         value: "$(Environment.ShortName)-java-api"
@@ -496,11 +498,20 @@ stages:
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
       - group: amido-stacks-infra-credentials-prod
+      - group: stacks-credentials-prod-kv
+      - name: prod_azure_client_id
+        value: $[variables.azure_client_id]
+      - name: prod_azure_client_secret
+        value: $[variables.azure_client_secret]
+      - name: prod_azure_tenant_id
+        value: $[variables.azure_tenant_id]
+      - name: prod_azure_subscription_id
+        value: $[variables.azure_subscription_id]                       
       - group: amido-stacks-java-api
       - name: dns_name
         value: "$(Environment.ShortName)-java-api"
       - name: core_resource_group
-        value: "amido-stacks-prod-eun-core"
+        value: "amido-stacks-prod-euw-core"
       - name: Environment.ShortName
         value: prod
     jobs:
@@ -511,9 +522,9 @@ stages:
         environment: ${{ variables.domain }}-prod
         variables:
           - name: app_insights_name
-            value: "amido-stacks-prod-eun-core"
+            value: "amido-stacks-prod-euw-core"
           - name: app_gateway_frontend_ip_name
-            value: "amido-stacks-prod-eun-core"
+            value: "amido-stacks-prod-euw-core"
           - name: attributes
             value: "[]"
           - name: tags
@@ -611,6 +622,16 @@ stages:
         variables:
           - group: amido-stacks-infra-credentials-nonprod
           - group: amido-stacks-infra-credentials-prod
+          - group: stacks-credentials-prod-kv
+          - name: prod_azure_client_id
+            value: $[variables.azure_client_id]
+          - name: prod_azure_client_secret
+            value: $[variables.azure_client_secret]
+          - name: prod_azure_tenant_id
+            value: $[variables.azure_tenant_id]
+          - name: prod_azure_subscription_id
+            value: $[variables.azure_subscription_id] 
+          - group: stacks-credentials-nonprod-kv
         strategy:
           runOnce:
             deploy:
@@ -667,7 +688,7 @@ stages:
           - name: aks_cluster_resourcegroup
             value: "${{ variables.core_resource_group }}"
           - name: aks_cluster_name
-            value: "amido-stacks-prod-eun-core"
+            value: "amido-stacks-prod-euw-core"
           - name: app_name
             value: "java-api"
         strategy:
