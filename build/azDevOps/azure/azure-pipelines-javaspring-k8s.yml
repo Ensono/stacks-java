@@ -500,7 +500,7 @@ stages:
       - group: amido-stacks-infra-credentials-prod
       - group: stacks-credentials-prod-kv
       - name: prod_azure_client_id
-        value: $[variables.azureclient-id]
+        value: $[variables.azure-client-id]
       - name: prod_azure_client_secret
         value: $[variables.azure-client-secret]
       - name: prod_azure_tenant_id
