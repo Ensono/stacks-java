@@ -82,6 +82,9 @@ variables:
   # avoid running anything past dev that is not on master
   # sample value: company-webapp
   tf_state_key: "stacks-api-java"
+  # Environment
+  # Name of the resource group for DNS
+  dns_zone_resource_group: "Stacks-Ancillary-Resources"
   # Versioning
   version_major: 0
   version_minor: 0
@@ -297,7 +300,7 @@ stages:
           - name: app_gateway_frontend_ip_name
             value: "amido-stacks-nonprod-euw-core"
           - name: dns_zone_resource_group
-            value: "Stacks-Ancillary-Resources"
+            value: "$(dns_zone_resource_group)"
           - name: create_cosmosdb
             value: true
           - name: create_cache
@@ -524,7 +527,7 @@ stages:
           - name: resource_group_location
             value: "$(region)"
           - name: dns_zone_resource_group
-            value: "Stacks-Ancillary-Resources"
+            value: "$(dns_zone_resource_group)"
           - name: create_cosmosdb
             value: true
           - name: create_cache
