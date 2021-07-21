@@ -499,14 +499,6 @@ stages:
     variables:
       - group: amido-stacks-infra-credentials-prod
       - group: stacks-credentials-prod-kv
-      - name: prod_azure_client_id
-        value: $[variables.azure-client-id]
-      - name: prod_azure_client_secret
-        value: $[variables.azure-client-secret]
-      - name: prod_azure_tenant_id
-        value: $[variables.azure-tenant-id]
-      - name: prod_azure_subscription_id
-        value: $[variables.azure-subscription-id]
       - group: amido-stacks-java-api
       - name: dns_name
         value: "$(Environment.ShortName)-java-api"
@@ -562,19 +554,19 @@ stages:
                     pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
                     docker_terraform_container: "terraform_custom"
                     # Azure Credenitals (For Deploying)
-                    azure_client_id: "$(prod_azure_client_id)"
-                    azure_client_secret: "$(prod_azure_client_secret)"
-                    azure_tenant_id: "$(prod_azure_tenant_id)"
-                    azure_subscription_id: "$(prod_azure_subscription_id)"
+                    azure_client_id: "$(prod-azure-client-id)"
+                    azure_client_secret: "$(prod-azure-client-secret)"
+                    azure_tenant_id: "$(prod-azure-tenant-id)"
+                    azure_subscription_id: "$(prod-azure-subscription-id)"
                     # Terraform
                     terraform_directory: '$(self_repo_tf_dir)'
                     # Backend Azure State Storage Credentials
                     # Change these if your state storage is in a different
                     # location to your deployment
-                    terraform_backend_azure_client_id: "$(prod_azure_client_id)"
-                    terraform_backend_azure_client_secret: "$(prod_azure_client_secret)"
-                    terraform_backend_azure_tenant_id: "$(prod_azure_tenant_id)"
-                    terraform_backend_azure_subscription_id: "$(prod_azure_subscription_id)"
+                    terraform_backend_azure_client_id: "$(prod-azure-client-id)"
+                    terraform_backend_azure_client_secret: "$(prod-azure-client-secret)"
+                    terraform_backend_azure_tenant_id: "$(prod-azure-tenant-id)"
+                    terraform_backend_azure_subscription_id: "$(prod-azure-subscription-id)"
                     terraform_state_rg: ${{ variables.tf_state_rg }}
                     terraform_state_storage: ${{ variables.tf_state_storage }}
                     terraform_state_container: ${{ variables.tf_state_container }}
@@ -623,14 +615,6 @@ stages:
           - group: amido-stacks-infra-credentials-nonprod
           - group: amido-stacks-infra-credentials-prod
           - group: stacks-credentials-prod-kv
-          - name: prod_azure_client_id
-            value: $[variables.azure-client-id]
-          - name: prod_azure_client_secret
-            value: $[variables.azure-client-secret]
-          - name: prod_azure_tenant_id
-            value: $[variables.azure-tenant-id]
-          - name: prod_azure_subscription_id
-            value: $[variables.azure-subscription-id]
           - group: stacks-credentials-nonprod-kv
         strategy:
           runOnce:
@@ -651,10 +635,10 @@ stages:
                       -e "$(azure-client-secret)"
                       -f "$(azure-tenant-id)"
                       -g "$(k8s_docker_registry_prod)"
-                      -h "$(prod_azure_subscription_id)"
-                      -i "$(prod_azure_client_id)"
-                      -j "$(prod_azure_client_secret)"
-                      -k "$(prod_azure_tenant_id)"
+                      -h "$(prod-azure-subscription-id)"
+                      -i "$(prod-azure-client-id)"
+                      -j "$(prod-azure-client-secret)"
+                      -k "$(prod-azure-tenant-id)"
                       -Z "false"
                   displayName: Promote Docker Image to Production ACR
 
@@ -735,10 +719,10 @@ stages:
                         additional_args: "-no-empty",
                       },
                     ]
-                    azure_client_id: "$(prod_azure_client_id)"
-                    azure_client_secret: "$(prod_azure_client_secret)"
-                    azure_tenant_id: "$(prod_azure_tenant_id)"
-                    azure_subscription_id: "$(prod_azure_subscription_id)"
+                    azure_client_id: "$(prod-azure-client-id)"
+                    azure_client_secret: "$(prod-azure-client-secret)"
+                    azure_tenant_id: "$(prod-azure-tenant-id)"
+                    azure_subscription_id: "$(prod-azure-subscription-id)"
                     aks_cluster_resourcegroup: "${{ variables.aks_cluster_resourcegroup }}"
                     aks_cluster_name: "${{ variables.aks_cluster_name }}"
                     # Used to do a `kubectl rollout status`
