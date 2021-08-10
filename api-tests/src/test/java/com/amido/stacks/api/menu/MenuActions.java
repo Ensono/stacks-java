@@ -1,5 +1,7 @@
 package com.amido.stacks.api.menu;
 
+import static net.serenitybdd.rest.SerenityRest.lastResponse;
+
 import com.amido.stacks.api.OAuthConfigurations;
 import com.amido.stacks.api.models.AuthorizationRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,8 +12,6 @@ import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.util.SystemEnvironmentVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static net.serenitybdd.rest.SerenityRest.lastResponse;
 
 public class MenuActions {
 
