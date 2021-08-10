@@ -4,9 +4,7 @@ public class ApiException extends RuntimeException {
 
   String correlationId;
 
-  public ApiException(
-      String message,
-      String correlationId) {
+  public ApiException(String message, String correlationId) {
     super(message);
     this.correlationId = correlationId;
   }
