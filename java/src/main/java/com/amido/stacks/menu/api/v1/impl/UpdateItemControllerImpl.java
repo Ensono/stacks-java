@@ -3,19 +3,17 @@ package com.amido.stacks.menu.api.v1.impl;
 import com.amido.stacks.menu.api.v1.UpdateItemController;
 import com.amido.stacks.menu.api.v1.dto.request.UpdateItemRequest;
 import com.amido.stacks.menu.api.v1.dto.response.ResourceUpdatedResponse;
+import java.util.UUID;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.UUID;
 
 /** @author ArathyKrishna */
 @RestController
 public class UpdateItemControllerImpl implements UpdateItemController {
 
-  public UpdateItemControllerImpl() {
-  }
+  public UpdateItemControllerImpl() {}
 
   @Override
   public ResponseEntity<ResourceUpdatedResponse> updateItem(

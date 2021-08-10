@@ -1,15 +1,14 @@
 package com.amido.stacks.menu.api.v1.impl;
 
+import static org.springframework.http.HttpStatus.OK;
+
 import com.amido.stacks.menu.api.v1.UpdateCategoryController;
 import com.amido.stacks.menu.api.v1.dto.request.UpdateCategoryRequest;
 import com.amido.stacks.menu.api.v1.dto.response.ResourceUpdatedResponse;
+import java.util.UUID;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.UUID;
-
-import static org.springframework.http.HttpStatus.OK;
 
 /**
  * Controller for updating category.
@@ -19,8 +18,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 public class UpdateCategoryControllerImpl implements UpdateCategoryController {
 
-  public UpdateCategoryControllerImpl() {
-  }
+  public UpdateCategoryControllerImpl() {}
 
   @Override
   public ResponseEntity<ResourceUpdatedResponse> updateMenuCategory(
