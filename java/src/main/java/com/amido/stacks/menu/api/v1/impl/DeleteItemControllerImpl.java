@@ -1,19 +1,17 @@
 package com.amido.stacks.menu.api.v1.impl;
 
+import static org.springframework.http.HttpStatus.OK;
+
 import com.amido.stacks.menu.api.v1.DeleteItemController;
+import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.UUID;
-
-import static org.springframework.http.HttpStatus.OK;
 
 /** @author ArathyKrishna */
 @RestController
 public class DeleteItemControllerImpl implements DeleteItemController {
 
-  public DeleteItemControllerImpl() {
-  }
+  public DeleteItemControllerImpl() {}
 
   @Override
   public ResponseEntity<Void> deleteItem(

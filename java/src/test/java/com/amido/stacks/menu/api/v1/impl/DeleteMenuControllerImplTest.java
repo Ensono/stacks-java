@@ -1,5 +1,11 @@
 package com.amido.stacks.menu.api.v1.impl;
 
+import static com.amido.stacks.menu.domain.MenuHelper.createMenu;
+import static com.amido.stacks.util.TestHelper.getBaseURL;
+import static com.amido.stacks.util.TestHelper.getRequestHttpEntity;
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.springframework.http.HttpStatus.OK;
+
 import com.amido.stacks.menu.domain.Menu;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -12,12 +18,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-
-import static com.amido.stacks.menu.domain.MenuHelper.createMenu;
-import static com.amido.stacks.util.TestHelper.getBaseURL;
-import static com.amido.stacks.util.TestHelper.getRequestHttpEntity;
-import static org.assertj.core.api.BDDAssertions.then;
-import static org.springframework.http.HttpStatus.OK;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration

@@ -1,5 +1,12 @@
 package com.amido.stacks.menu.api.v1.impl;
 
+import static com.amido.stacks.menu.domain.MenuHelper.createMenus;
+import static com.amido.stacks.util.TestHelper.getBaseURL;
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
+
 import com.amido.stacks.menu.api.v1.dto.response.MenuDTO;
 import com.amido.stacks.menu.api.v1.dto.response.SearchMenuResult;
 import com.amido.stacks.menu.api.v1.dto.response.SearchMenuResultItem;
@@ -7,6 +14,11 @@ import com.amido.stacks.menu.domain.Category;
 import com.amido.stacks.menu.domain.Item;
 import com.amido.stacks.menu.domain.Menu;
 import com.amido.stacks.menu.mappers.DomainToDtoMapper;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +28,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.amido.stacks.menu.domain.MenuHelper.createMenus;
-import static com.amido.stacks.util.TestHelper.getBaseURL;
-import static org.assertj.core.api.BDDAssertions.then;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNull.notNullValue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration
@@ -108,7 +107,8 @@ public class QueryMenuControllerImplTest {
 
     Menu menu = new Menu(menuId, restaurantId, "name", "description", new ArrayList<>(), true);
     Item item = new Item(itemId, "item name", "item description", 5.99d, true);
-    Category category = new Category(categoryId, "cat name", "cat description", Arrays.asList(item));
+    Category category =
+        new Category(categoryId, "cat name", "cat description", Arrays.asList(item));
     menu.addOrUpdateCategory(category);
 
     MenuDTO expectedResponse = DomainToDtoMapper.toMenuDto(menu);

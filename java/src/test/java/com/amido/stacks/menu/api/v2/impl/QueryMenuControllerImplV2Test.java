@@ -1,10 +1,12 @@
 package com.amido.stacks.menu.api.v2.impl;
 
+import static com.amido.stacks.menu.domain.MenuHelper.createMenu;
+import static com.amido.stacks.util.TestHelper.getBaseURL;
+import static org.assertj.core.api.BDDAssertions.then;
+
 import com.amido.stacks.menu.api.v1.dto.response.MenuDTO;
 import com.amido.stacks.menu.domain.Menu;
 import com.amido.stacks.menu.mappers.DomainToDtoMapper;
-import com.azure.spring.autoconfigure.cosmos.CosmosAutoConfiguration;
-import com.azure.spring.autoconfigure.cosmos.CosmosRepositoriesAutoConfiguration;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
-
-import static com.amido.stacks.menu.domain.MenuHelper.createMenu;
-import static com.amido.stacks.util.TestHelper.getBaseURL;
-import static org.assertj.core.api.BDDAssertions.then;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration

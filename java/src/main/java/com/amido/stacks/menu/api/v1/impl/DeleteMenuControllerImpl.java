@@ -1,12 +1,11 @@
 package com.amido.stacks.menu.api.v1.impl;
 
+import static org.springframework.http.HttpStatus.OK;
+
 import com.amido.stacks.menu.api.v1.DeleteMenuController;
+import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.UUID;
-
-import static org.springframework.http.HttpStatus.OK;
 
 /**
  * DeleteMenuController implementation.
@@ -16,8 +15,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 public class DeleteMenuControllerImpl implements DeleteMenuController {
 
-  public DeleteMenuControllerImpl() {
-  }
+  public DeleteMenuControllerImpl() {}
 
   @Override
   public ResponseEntity<Void> deleteMenu(UUID menuId, String correlationId) {
