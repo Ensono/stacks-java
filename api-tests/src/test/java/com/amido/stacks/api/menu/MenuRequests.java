@@ -7,7 +7,6 @@ import java.util.Map;
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.environment.EnvironmentSpecificConfiguration;
 import net.serenitybdd.rest.SerenityRest;
-import net.thucydides.core.annotations.Step;
 import net.thucydides.core.util.EnvironmentVariables;
 import net.thucydides.core.util.SystemEnvironmentVariables;
 
