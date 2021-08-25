@@ -52,8 +52,6 @@ function fn() {
         config.auth = {bearer_token: null}
     }
 
-    karate.callSingle('classpath:CleanUpTestData.feature', config);
-
     var oauth_body = {
         "client_id": "",
         "client_secret": "",

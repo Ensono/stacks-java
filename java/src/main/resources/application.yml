@@ -1,6 +1,6 @@
 spring:
   application:
-    name: xxSTACKSxx-api
+    name: stacks-api
   data:
     rest:
       detection-strategy: annotated
@@ -25,7 +25,7 @@ springdoc:
     display-operation-id: true
     # TODO: Swagger keeps redirecting, it'd be good to stop it if possible
     path: /swagger/index.html
-  packagesToScan: com.xxAMIDOxx.xxSTACKSxx.menu.api
+  packagesToScan: com.amido.stacks.menu.api
   api-docs:
     groups:
       enabled: true
@@ -33,10 +33,6 @@ springdoc:
     path: /swagger/oas-json
 
 azure:
-  cosmosdb:
-    uri: https://localhost:8081
-    database: Stacks
-    key: xxxxxx
   application-insights:
     instrumentation-key: xxxxxx
     enabled: true
@@ -46,8 +42,3 @@ azure:
     client-id: xxxxxx
     client-key: xxxxxx
     tenant-id: xxxxxx
-  servicebus:
-    connectionString: xxxxxx
-    topicName: menu-updates
-    subscriptionName: Subscription1
-    enabled: false
