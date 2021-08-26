@@ -21,7 +21,7 @@
         <org.projectlombok.version>1.18.0</org.projectlombok.version>
         <org.springdoc-openapi.version>1.5.9</org.springdoc-openapi.version>
         <applicationinsights.version>2.6.3</applicationinsights.version>
-        <azure.springboot.version>3.6.0</azure.springboot.version>
+        <azure.springboot.version>3.8.0</azure.springboot.version>
         <jackson.version>2.12.3</jackson.version>
         <mockito.version>3.11.2</mockito.version>
         <lombok.version>1.18.20</lombok.version>
