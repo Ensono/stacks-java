@@ -60,7 +60,7 @@ variables:
   # SelfConfig
   # If you haven't specified source_repo at cli runtime please ensure you replace it here
   # It is case sensitive for TFS based repos
-  
+
   - name: self_remote_repo
     value: "amido/$(self_repo)"
   - name: self_repo_src
