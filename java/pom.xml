@@ -35,7 +35,7 @@
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <owasp-dependency-check-plugin.version>6.2.2</owasp-dependency-check-plugin.version>
         <auth0-spring-security-api.version>1.4.1</auth0-spring-security-api.version>
-        <io-projectreactor-netty.version>1.0.8</io-projectreactor-netty.version>
+        <io-projectreactor-netty.version>1.0.11</io-projectreactor-netty.version>
 
         <fmt-maven-plugin.version>2.11</fmt-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
@@ -46,8 +46,8 @@
         <pact.version>3.5.24</pact.version>
 
         <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
-        <pact.broker.url></pact.broker.url>
-        <pact.broker.token></pact.broker.token>
+        <pact.broker.url/>
+        <pact.broker.token/>
         <pact.api.name>JavaMenuAPI</pact.api.name>
         <pact.api.protocol>http</pact.api.protocol>
         <pact.api.host>localhost</pact.api.host>
@@ -272,7 +272,7 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-codec-http</artifactId>
-            <version>4.1.65.Final</version>
+            <version>4.1.68.Final</version>
         </dependency>
 
         <dependency>
