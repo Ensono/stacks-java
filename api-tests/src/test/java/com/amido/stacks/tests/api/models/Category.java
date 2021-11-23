@@ -1,4 +1,4 @@
-package com.amido.stacks.api.models;
+package com.amido.stacks.tests.api.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;

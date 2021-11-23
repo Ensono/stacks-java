@@ -1,11 +1,11 @@
-package com.amido.stacks.api.stepdefinitions;
+package com.amido.stacks.tests.api.stepdefinitions;
 
 import static net.serenitybdd.rest.SerenityRest.restAssuredThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-import com.amido.stacks.api.status.AppStatus;
-import com.amido.stacks.api.status.ApplicationStatus;
+import com.amido.stacks.tests.api.status.AppStatus;
+import com.amido.stacks.tests.api.status.ApplicationStatus;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

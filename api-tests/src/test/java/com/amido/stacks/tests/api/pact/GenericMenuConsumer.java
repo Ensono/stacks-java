@@ -1,4 +1,4 @@
-package com.amido.stacks.api.pact;
+package com.amido.stacks.tests.api.pact;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

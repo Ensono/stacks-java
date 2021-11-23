@@ -1,6 +1,6 @@
-package com.amido.stacks.api.status;
+package com.amido.stacks.tests.api.status;
 
-import com.amido.stacks.api.WebServiceEndPoints;
+import com.amido.stacks.tests.api.WebServiceEndPoints;
 import io.restassured.RestAssured;
 import net.serenitybdd.rest.SerenityRest;
 import net.thucydides.core.annotations.Step;

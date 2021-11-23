@@ -1,4 +1,4 @@
-package com.amido.stacks.api;
+package com.amido.stacks.tests.api;
 
 public enum OAuthConfigurations {
   CLIENT_ID(System.getenv("CLIENT_ID")),

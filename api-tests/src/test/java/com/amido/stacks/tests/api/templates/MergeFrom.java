@@ -1,4 +1,4 @@
-package com.amido.stacks.api.templates;
+package com.amido.stacks.tests.api.templates;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
