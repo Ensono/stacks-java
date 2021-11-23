@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -9,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.amido</groupId>
+    <groupId>com.amido.stacks.workloads</groupId>
     <artifactId>stacks-api</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
@@ -17,6 +18,8 @@
     <description>Demo project for Java</description>
 
     <properties>
+        <stacks.core.api.version>0.0.18-main</stacks.core.api.version>
+
         <java.version>11</java.version>
         <org.projectlombok.version>1.18.0</org.projectlombok.version>
         <org.springdoc-openapi.version>1.5.9</org.springdoc-openapi.version>
@@ -54,6 +57,15 @@
         <pact.api.port>9000</pact.api.port>
     </properties>
 
+    <repositories>
+        <repository>
+            <snapshots />
+            <id>snapshots</id>
+            <name>default-maven-virtual</name>
+            <url>https://amidostacks.jfrog.io/artifactory/default-maven-virtual</url>
+        </repository>
+    </repositories>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -66,6 +78,13 @@
     </dependencyManagement>
 
     <dependencies>
+
+        <!-- STACKS dependencies -->
+        <dependency>
+            <groupId>com.amido.stacks.modules</groupId>
+            <artifactId>stacks-core-api</artifactId>
+            <version>${stacks.core.api.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -293,38 +312,6 @@
         </plugins>
     </reporting>
 
-    <profiles>
-        <profile>
-            <id>owasp-dependency-check</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.owasp</groupId>
-                        <artifactId>dependency-check-maven</artifactId>
-                        <version>${owasp-dependency-check-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>test</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-                <property>
-                    <name>spring.profiles.active</name>
-                    <value>test</value>
-                </property>
-            </activation>
-        </profile>
-    </profiles>
-
     <build>
         <plugins>
             <plugin>
@@ -526,4 +513,48 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>owasp-dependency-check</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>${owasp-dependency-check-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>test</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>spring.profiles.active</name>
+                    <value>test</value>
+                </property>
+            </activation>
+        </profile>
+        <profile>
+            <id>local</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources/local</directory>
+                    </resource>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+    </profiles>
 </project>
