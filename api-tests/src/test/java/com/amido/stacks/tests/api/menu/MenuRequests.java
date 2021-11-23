@@ -1,7 +1,7 @@
-package com.amido.stacks.api.menu;
+package com.amido.stacks.tests.api.menu;
 
-import com.amido.stacks.api.OAuthConfigurations;
-import com.amido.stacks.api.WebServiceEndPoints;
+import com.amido.stacks.tests.api.OAuthConfigurations;
+import com.amido.stacks.tests.api.WebServiceEndPoints;
 import java.util.HashMap;
 import java.util.Map;
 import net.serenitybdd.core.Serenity;

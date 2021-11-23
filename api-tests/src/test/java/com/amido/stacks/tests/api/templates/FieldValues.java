@@ -1,4 +1,4 @@
-package com.amido.stacks.api.templates;
+package com.amido.stacks.tests.api.templates;
 
 import static java.util.stream.Collectors.toMap;
 

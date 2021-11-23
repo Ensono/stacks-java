@@ -1,6 +1,6 @@
-package com.amido.stacks.api.stepdefinitions;
+package com.amido.stacks.tests.api.stepdefinitions;
 
-import com.amido.stacks.api.menu.MenuActions;
+import com.amido.stacks.tests.api.menu.MenuActions;
 import io.cucumber.java.Before;
 import net.serenitybdd.cucumber.suiteslicing.SerenityTags;
 import org.slf4j.Logger;

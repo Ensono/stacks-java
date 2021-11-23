@@ -1,9 +1,9 @@
-package com.amido.stacks.api.menu;
+package com.amido.stacks.tests.api.menu;
 
 import static net.serenitybdd.rest.SerenityRest.lastResponse;
 
-import com.amido.stacks.api.OAuthConfigurations;
-import com.amido.stacks.api.models.AuthorizationRequest;
+import com.amido.stacks.tests.api.OAuthConfigurations;
+import com.amido.stacks.tests.api.models.AuthorizationRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.serenitybdd.core.Serenity;

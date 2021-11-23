@@ -1,4 +1,4 @@
-package com.amido.stacks.api;
+package com.amido.stacks.tests.api;
 
 import io.cucumber.junit.CucumberOptions;
 import net.serenitybdd.cucumber.CucumberWithSerenity;
