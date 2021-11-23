@@ -15,7 +15,7 @@ RUN ls -la /root/.m2/repository
 
 RUN ./mvnw dependency:go-offline \
 	&& ./mvnw process-resources \
-	&& ./mvnw package -Dmaven.default-test.skip=true -Dmaven.test.skip=true -DskipTests --no-transfer-progress \
+	&& ./mvnw clean package -Dmaven.default-test.skip=true -Dmaven.test.skip=true -DskipTests --no-transfer-progress \
   && mkdir -p extracted && java -Djarmode=layertools -jar target/*.jar extract --destination extracted
 
 FROM azul/zulu-openjdk-alpine:11-jre
@@ -31,8 +31,6 @@ RUN true
 COPY --from=build ${DEPENDENCY}/snapshot-dependencies/ ./
 RUN true
 COPY --from=build ${DEPENDENCY}/application/ ./
-
-RUN if [ -e "/BOOT-INF/classes/emulatorcert.crt" ]; then cd $JAVA_HOME/lib/security && keytool -importcert -cacerts -storepass changeit -noprompt -alias documentdbemulator -file /BOOT-INF/classes/emulatorcert.crt; fi
 
 ENTRYPOINT ["java","org.springframework.boot.loader.JarLauncher"]
 
