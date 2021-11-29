@@ -25,7 +25,7 @@ resources:
     - repository: templates
       type: github
       name: amido/stacks-pipeline-templates
-      ref: refs/tags/v2.0.1
+      ref: feature/cycle4
       # EXCHANGE THIS FOR YOUR OWN ENDPOINT CONNECTION TO GITHUB
       # REPOSITORY IS PUBLIC
       endpoint: amidostacks
@@ -90,8 +90,6 @@ variables:
     value: 0
   - name: version_patch
     value: 0
-  - name: version_revision
-    value: "$[counter(join(variables['version_major'], join('-', variables['version_minor'])), 0)]"
 
   # PR / Branch vars
   - name: source_branch_ref
