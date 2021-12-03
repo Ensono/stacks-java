@@ -65,9 +65,9 @@ init:
               -DarchetypeGroupId=com.amido.stacks.workloads 
               -DarchetypeArtifactId=stacks-api-archetype 
               -DarchetypeVersion=1.0.0
-              -DgroupId=org.{{ .Input.Business.Company}}.{{ .Input.Business.Domain }} 
+              -DgroupId=com.{{ .Input.Business.Company}}.{{ .Input.Business.Domain }} 
               -DartifactId={{ .Project.Name }} 
-              -Dpackage=org.{{ .Input.Business.Company}}.{{ .Input.Business.Domain }}.{{.Input.Business.Component}} 
+              -Dpackage=com.{{ .Input.Business.Company}}.{{ .Input.Business.Domain }}.{{.Input.Business.Component}} 
               --quiet 
               -B
       desc: Generating the web-api project
@@ -112,9 +112,10 @@ init:
               -DarchetypeGroupId=com.amido.stacks.tests 
               -DarchetypeArtifactId=stacks-api-tests-archetype 
               -DarchetypeVersion=1.0.0 
-              -DgroupId=org.{{ .Input.Business.Company}}.{{ .Input.Business.Domain }} 
+              -DgroupId=com.{{ .Input.Business.Company}}.{{ .Input.Business.Domain }} 
               -DartifactId=api-tests 
-              -Dpackage=org.{{ .Input.Business.Company}}.{{ .Input.Business.Domain }}.{{.Input.Business.Component}}.tests 
+              -Dpackage=com.{{ .Input.Business.Company}}.{{ .Input.Business.Domain }}.{{.Input.Business.Component}}.tests 
+              -DpactLocation=com/{{ .Input.Business.Company}}/{{ .Input.Business.Domain }}/{{.Input.Business.Component}}/tests
               --quiet 
               -B
       desc: Generating the api-test project
