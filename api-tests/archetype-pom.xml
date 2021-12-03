@@ -6,7 +6,7 @@
 
     <groupId>com.amido.stacks.tests</groupId>
     <artifactId>stacks-api-tests</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -284,6 +284,32 @@
                                 <goals>
                                     <goal>check</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>build-from-archetype</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.coderplus.maven.plugins</groupId>
+                        <artifactId>copy-rename-maven-plugin</artifactId>
+                        <version>1.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>rename-file</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>rename</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceFile>${basedir}/archetype-pom.xml</sourceFile>
+                                    <destinationFile>${basedir}/pom.xml</destinationFile>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
