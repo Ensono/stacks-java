@@ -92,6 +92,14 @@ init:
     # Build archetype for the serenity tests
     - action: cmd
       cmd: mvn
+      args: process-resources
+              -f {{ .Project.Directory.WorkingDir }}/api-tests/pom.xml
+              -P archetype-resources
+              --quiet
+      desc: Duplicating the original pom.xml file to archetype-pom.xml
+
+    - action: cmd
+      cmd: mvn
       args: clean archetype:create-from-project
               -f ./api-tests/archetype-pom.xml
               -DpropertyFile=./api-tests/archetype.properties
