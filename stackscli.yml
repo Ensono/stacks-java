@@ -84,6 +84,14 @@ init:
 
     - action: cmd
       cmd: mvn
+      args: process-resources
+              -f {{ .Project.Directory.WorkingDir }}/java/pom.xml
+              -P update-permissions
+              --quiet
+      desc: Updating file permissions 
+
+    - action: cmd
+      cmd: mvn
       args: dependency:resolve
               -f {{ .Project.Directory.WorkingDir }}/java/pom.xml
               --quiet
@@ -93,7 +101,7 @@ init:
     - action: cmd
       cmd: mvn
       args: process-resources
-              -f {{ .Project.Directory.WorkingDir }}/api-tests/pom.xml
+              -f ./api-tests/pom.xml
               -P archetype-resources
               --quiet
       desc: Duplicating the original pom.xml file to archetype-pom.xml
@@ -101,7 +109,7 @@ init:
     - action: cmd
       cmd: mvn
       args: clean archetype:create-from-project
-              -f ./api-tests/archetype-pom.xml
+              -f ./api-tests/pom-temp.xml
               -DpropertyFile=./api-tests/archetype.properties
               --quiet
       desc: Creating the archetype resources using the api-test source code
@@ -131,10 +139,18 @@ init:
     - action: cmd
       cmd: mvn
       args: process-resources
-              -f {{ .Project.Directory.WorkingDir }}/api-tests/archetype-pom.xml
+              -f {{ .Project.Directory.WorkingDir }}/api-tests/pom-temp.xml
               -P build-from-archetype
               --quiet
       desc: Replacing the original pom.xml file with the new package references
+
+    - action: cmd
+      cmd: mvn
+      args: process-resources
+              -f {{ .Project.Directory.WorkingDir }}/api-tests/pom.xml
+              -P update-permissions
+              --quiet
+      desc: Updating file permissions 
 
     - action: cmd
       cmd: mvn
@@ -171,6 +187,14 @@ init:
               --quiet
               -B
       desc: Generating the api-test-karate project
+
+    - action: cmd
+      cmd: mvn
+      args: process-resources
+              -f {{ .Project.Directory.WorkingDir }}/api-tests-karate/pom.xml
+              -P update-permissions
+              --quiet
+      desc: Updating file permissions 
 
     - action: cmd
       cmd: mvn

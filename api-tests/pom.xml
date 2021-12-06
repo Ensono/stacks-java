@@ -57,6 +57,7 @@
         <pact.provider-plugin.version>4.2.7</pact.provider-plugin.version>
         <maven-pmd-plugin.version>3.14.0</maven-pmd-plugin.version>
         <findbugs-maven-plugin.version>3.0.5</findbugs-maven-plugin.version>
+        <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -333,6 +334,34 @@
                                 <configuration>
                                     <sourceFile>${basedir}/pom-temp.xml</sourceFile>
                                     <destinationFile>${basedir}/pom.xml</destinationFile>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>update-permissions</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>${exec-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>Add execution rigths on bash scripts</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>chmod</executable>
+                                    <arguments>
+                                        <argument>755</argument>
+                                        <argument>${project.basedir}/mvnw</argument>
+                                    </arguments>
                                 </configuration>
                             </execution>
                         </executions>
