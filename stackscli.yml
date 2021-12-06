@@ -140,7 +140,7 @@ init:
       cmd: mvn
       args: process-resources
               -f {{ .Project.Directory.WorkingDir }}/api-tests/pom-temp.xml
-              -P build-from-archetype
+              -P setup-workload-resources
               --quiet
       desc: Replacing the original pom.xml file with the new package references
 
