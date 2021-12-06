@@ -88,7 +88,7 @@ init:
               -f {{ .Project.Directory.WorkingDir }}/java/pom.xml
               -P update-permissions
               --quiet
-      desc: Updating file permissions 
+      desc: Updating file permissions
 
     - action: cmd
       cmd: mvn
@@ -150,7 +150,7 @@ init:
               -f {{ .Project.Directory.WorkingDir }}/api-tests/pom.xml
               -P update-permissions
               --quiet
-      desc: Updating file permissions 
+      desc: Updating file permissions
 
     - action: cmd
       cmd: mvn
@@ -194,7 +194,7 @@ init:
               -f {{ .Project.Directory.WorkingDir }}/api-tests-karate/pom.xml
               -P update-permissions
               --quiet
-      desc: Updating file permissions 
+      desc: Updating file permissions
 
     - action: cmd
       cmd: mvn
