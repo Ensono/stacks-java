@@ -170,7 +170,7 @@ variables:
   - name: java_project_type
     value: "Java App"
   - name: functional_test_project_type
-    value: "Functional API Tests2"
+    value: "Functional API Tests"
 
 stages:
   - stage: Build
