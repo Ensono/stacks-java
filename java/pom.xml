@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.5.2</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
+        <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.amido.stacks.workloads</groupId>
     <artifactId>stacks-api</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <name>stacks-api</name>
     <description>Demo project for Java</description>
@@ -34,7 +35,7 @@
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <maven-surefire-phase>test</maven-surefire-phase>
         <junit-jupiter.version>5.7.2</junit-jupiter.version>
-        <equals-verifier.version>3.6.1</equals-verifier.version>
+        <equals-verifier.version>3.8</equals-verifier.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <owasp-dependency-check-plugin.version>6.2.2</owasp-dependency-check-plugin.version>
         <auth0-spring-security-api.version>1.4.1</auth0-spring-security-api.version>
@@ -45,6 +46,7 @@
         <puppycrawl-tools-checkstyle.version>8.44</puppycrawl-tools-checkstyle.version>
         <spotbugs-maven-plugin.version>4.2.3</spotbugs-maven-plugin.version>
         <spotbugs.version>4.2.3</spotbugs.version>
+        <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
 
         <pact.version>3.5.24</pact.version>
 
@@ -554,6 +556,34 @@
                         <directory>src/main/resources</directory>
                     </resource>
                 </resources>
+            </build>
+        </profile>
+        <profile>
+            <id>update-permissions</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>${exec-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>Add execution rigths on bash scripts</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>chmod</executable>
+                                    <arguments>
+                                        <argument>755</argument>
+                                        <argument>${project.basedir}/mvnw</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
             </build>
         </profile>
     </profiles>
