@@ -96,6 +96,13 @@ init:
               -f {{ .Project.Directory.WorkingDir }}/java/pom.xml
               --quiet
       desc: Downloading maven dependencies for the web-api project
+    
+    - action: cmd
+      cmd: mvn
+      args: fmt:format
+              -f {{ .Project.Directory.WorkingDir }}/java/pom.xml
+              --quiet
+      desc: Formating the web-api code to meet the fmt standards
 
     # Build archetype for the serenity tests
     - action: cmd
@@ -151,6 +158,13 @@ init:
               -P update-permissions
               --quiet
       desc: Updating file permissions
+
+    - action: cmd
+      cmd: mvn
+      args: fmt:format
+              -f {{ .Project.Directory.WorkingDir }}/java/pom.xml
+              --quiet
+      desc: Formating the web-api serenity functional tests to meet the fmt standards
 
     - action: cmd
       cmd: mvn
