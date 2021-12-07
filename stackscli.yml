@@ -56,7 +56,9 @@ init:
               -f ./java/target/generated-sources/archetype/pom.xml
               --quiet
       desc: Installing the archetype
-              (groupId= com.amido.stacks.workloads, artifactId= stacks-api-archetype, version= 1.0.0) in the local maven repository
+              (groupId= com.amido.stacks.workloads,
+              artifactId= stacks-api-archetype,
+              version= 1.0.0) in the local maven repository
 
     - action: cmd
       cmd: mvn
@@ -97,6 +99,13 @@ init:
               --quiet
       desc: Downloading maven dependencies for the web-api project
 
+    - action: cmd
+      cmd: mvn
+      args: fmt:format
+              -f {{ .Project.Directory.WorkingDir }}/java/pom.xml
+              --quiet
+      desc: Formating the web-api code to meet the fmt standards
+
     # Build archetype for the serenity tests
     - action: cmd
       cmd: mvn
@@ -119,7 +128,9 @@ init:
       args: install
               -f ./api-tests/target/generated-sources/archetype/pom.xml
               --quiet
-      desc: Installing the archetype (groupId= com.amido.stacks.tests, artifactId= stacks-api-tests-archetype, version= 1.0.0) in the local maven repository
+      desc: Installing the archetype (groupId= com.amido.stacks.tests,
+            artifactId= stacks-api-tests-archetype, version= 1.0.0)
+            in the local maven repository
 
     - action: cmd
       cmd: mvn
@@ -151,6 +162,14 @@ init:
               -P update-permissions
               --quiet
       desc: Updating file permissions
+
+    - action: cmd
+      cmd: mvn
+      args: fmt:format
+              -f {{ .Project.Directory.WorkingDir }}/api-tests/pom.xml
+              --quiet
+      desc: Formating the web-api serenity functional tests
+            to meet the fmt standards
 
     - action: cmd
       cmd: mvn
