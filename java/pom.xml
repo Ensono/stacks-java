@@ -277,7 +277,7 @@
         <dependency>
             <groupId>au.com.dius</groupId>
             <artifactId>pact-jvm-provider-spring</artifactId>
-                <version>${au.com.dius.pact-jvm-provider-spring.version</version>
+                <version>${au.com.dius.pact-jvm-provider-spring.version}</version>
             <scope>test</scope>
         </dependency>
 
