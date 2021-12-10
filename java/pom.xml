@@ -40,6 +40,12 @@
         <owasp-dependency-check-plugin.version>6.2.2</owasp-dependency-check-plugin.version>
         <auth0-spring-security-api.version>1.4.1</auth0-spring-security-api.version>
         <ch.qos.logback.logback-core.version>1.2.7</ch.qos.logback.logback-core.version>
+        <net.minidev.json-smart-version>2.4.7</net.minidev.json-smart-version>
+        <com.beust.jcommander-version>1.81</com.beust.jcommander-version>
+        <au.com.dius.pact-jvm-provider-spring.version>4.0.10</au.com.dius.pact-jvm-provider-spring.version>
+        <au.com.dius.pact.consumer-version>4.2.7</au.com.dius.pact.consumer-version>
+        <com.nimbusds.oauth2-oidc-sdk-version>9.9</com.nimbusds.oauth2-oidc-sdk-version>
+        <au.com.dius.pact.provider.maven-version>4.2.7</au.com.dius.pact.provider.maven-version>
         
         <fmt-maven-plugin.version>2.11</fmt-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
@@ -181,13 +187,13 @@
         <dependency>
             <groupId>net.minidev</groupId>
             <artifactId>json-smart</artifactId>
-            <version>2.4.7</version>
+            <version>${net.minidev.json-smart-version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.beust</groupId>
             <artifactId>jcommander</artifactId>
-            <version>1.81</version>
+            <version>${com.beust.jcommander-version}</version>
         </dependency>
 
          <!-- Registering the Auth0 Dependency-->
@@ -271,14 +277,14 @@
         <dependency>
             <groupId>au.com.dius</groupId>
             <artifactId>pact-jvm-provider-spring</artifactId>
-            <version>4.0.10</version>
+                <version>${au.com.dius.pact-jvm-provider-spring.version</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>au.com.dius.pact</groupId>
             <artifactId>consumer</artifactId>
-            <version>4.2.7</version>
+            <version>${au.com.dius.pact.consumer-version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -292,7 +298,7 @@
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>oauth2-oidc-sdk</artifactId>
-            <version>9.9</version>
+            <version>${com.nimbusds.oauth2-oidc-sdk-version}</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -392,7 +398,7 @@
             <plugin>
                 <groupId>au.com.dius.pact.provider</groupId>
                 <artifactId>maven</artifactId>
-                <version>4.2.7</version>
+                <version>${au.com.dius.pact.provider.maven-version}</version>
                 <configuration>
                     <pactBrokerUrl>${pact.broker.url}</pactBrokerUrl>
                     <pactBrokerToken>${pact.broker.token}</pactBrokerToken>
