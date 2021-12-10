@@ -88,7 +88,6 @@ init:
       cmd: mvn
       args: process-resources
               -f {{ .Project.Directory.WorkingDir }}/java/pom.xml
-              -P update-permissions
               --quiet
       desc: Updating file permissions
 
@@ -159,7 +158,6 @@ init:
       cmd: mvn
       args: process-resources
               -f {{ .Project.Directory.WorkingDir }}/api-tests/pom.xml
-              -P update-permissions
               --quiet
       desc: Updating file permissions
 
@@ -211,7 +209,6 @@ init:
       cmd: mvn
       args: process-resources
               -f {{ .Project.Directory.WorkingDir }}/api-tests-karate/pom.xml
-              -P update-permissions
               --quiet
       desc: Updating file permissions
 
