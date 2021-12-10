@@ -66,14 +66,14 @@
         <pact.api.port>9000</pact.api.port>
     </properties>
 
-    <repositories>
+    <!-- <repositories>
         <repository>
             <snapshots />
             <id>snapshots</id>
             <name>default-maven-virtual</name>
             <url>https://amidostacks.jfrog.io/artifactory/default-maven-virtual</url>
         </repository>
-    </repositories>
+    </repositories> -->
 
     <dependencyManagement>
         <dependencies>
@@ -125,7 +125,7 @@
 
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j</artifactId>
+            <artifactId>log4j-core</artifactId>
             <version>${log4j-version}</version>
         </dependency>
 
