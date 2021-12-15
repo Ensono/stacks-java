@@ -13,20 +13,25 @@ COPY src src
 
 RUN ls -la /root/.m2/repository
 
-# RUN ./mvnw help:evaluate -Dexpression=settings.localRepository -q -DforceStdout
-
-RUN ./mvnw dependency:go-offline \
-	&& ./mvnw process-resources \
-	&& ./mvnw package -Dmaven.default-test.skip=true -Dmaven.test.skip=true -DskipTests --no-transfer-progress \
-	&& mkdir -p target/dependency && (cd target/dependency; ${JAVA_HOME}/bin/jar -xf ../*.jar)
+RUN ./mvnw dependency:go-offline --quiet\
+	&& ./mvnw process-resources --quiet \
+	&& ./mvnw clean package -Dmaven.default-test.skip=true -Dmaven.test.skip=true -DskipTests --no-transfer-progress --quiet\
+  && mkdir -p extracted && java -Djarmode=layertools -jar target/*.jar extract --destination extracted
 
 FROM azul/zulu-openjdk-alpine:11-jre
 
 VOLUME /tmp
-ARG DEPENDENCY=/workspace/app/target/dependency
-COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
-COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
-COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
-ENTRYPOINT ["java","-cp","app:app/lib/*","com.amido.stacks.Application"]
+
+ARG DEPENDENCY=/workspace/app/extracted
+
+COPY --from=build ${DEPENDENCY}/dependencies/ ./
+RUN true
+COPY --from=build ${DEPENDENCY}/spring-boot-loader/ ./
+RUN true
+COPY --from=build ${DEPENDENCY}/snapshot-dependencies/ ./
+RUN true
+COPY --from=build ${DEPENDENCY}/application/ ./
+
+ENTRYPOINT ["java","org.springframework.boot.loader.JarLauncher"]
 
 EXPOSE 9000
