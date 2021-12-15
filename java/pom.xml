@@ -27,8 +27,8 @@
         <applicationinsights.version>2.6.4</applicationinsights.version>
         <azure.springboot.version>3.6.0</azure.springboot.version>
         <jackson.version>2.13.0</jackson.version>
-        <mockito.version>3.11.2</mockito.version>
         <lombok.version>1.18.22</lombok.version>
+        <mockito.version>4.1.0</mockito.version>
         <hamcrest.version>2.2</hamcrest.version>
         <pitest.version>1.7.3</pitest.version>
         <jacoco.version>0.8.7</jacoco.version>
