@@ -44,7 +44,7 @@
         <net.minidev.json-smart-version>2.4.7</net.minidev.json-smart-version>
         <com.beust.jcommander-version>1.81</com.beust.jcommander-version>
         <au.com.dius.pact-jvm-provider-spring.version>4.0.10</au.com.dius.pact-jvm-provider-spring.version>
-        <au.com.dius.pact.consumer-version>4.2.7</au.com.dius.pact.consumer-version>
+        <au.com.dius.pact.consumer-version>4.3.2</au.com.dius.pact.consumer-version>
         <com.nimbusds.oauth2-oidc-sdk-version>9.9</com.nimbusds.oauth2-oidc-sdk-version>
         <au.com.dius.pact.provider.maven-version>4.2.7</au.com.dius.pact.provider.maven-version>
         <log4j-version>2.16.0</log4j-version>
