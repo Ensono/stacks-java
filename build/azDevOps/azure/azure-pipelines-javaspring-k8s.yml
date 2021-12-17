@@ -796,8 +796,8 @@ stages:
     # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['create_release'], 'true'))
     variables:
       - group: amido-stacks-infra-credentials-nonprod
-      - name: version_number
-        value: "$(version_major).$(version_minor).$(version_revision)"
+      #- name: version_number
+      #  value: "$(version_major).$(version_minor).$(version_revision)"
     jobs:
       - job: CreateGitHubRelease
         pool:
@@ -815,8 +815,8 @@ stages:
               script: |
                 git config user.name "BuildService"
                 git config user.email "builder@${COMPANY}.com"
-                git tag -a v${VERSION_NUMBER} -m "Release created by Azure DevOps"
-                git push origin v${VERSION_NUMBER}
+                git tag -a v${BUILD_BUILDNUMBER} -m "Release created by Azure DevOps"
+                git push origin v${BUILD_BUILDNUMBER}
             env:
               COMPANY: $(company)
 
