@@ -90,6 +90,8 @@ variables:
     value: 0
   - name: version_patch
     value: 0
+  - name: version_number
+    value: $(version_major).$(version_minor).$(version_patch)
 
   # PR / Branch vars
   - name: source_branch_ref
@@ -813,8 +815,8 @@ stages:
               script: |
                 git config user.name "BuildService"
                 git config user.email "builder@${COMPANY}.com"
-                git tag -a v${BUILD_BUILDNUMBER} -m "Release created by Azure DevOps"
-                git push origin v${BUILD_BUILDNUMBER}
+                git tag -a v${VERSION_NUMBER} -m "Release created by Azure DevOps"
+                git push origin v${VERSION_NUMBER}
             env:
               COMPANY: $(company)
 
@@ -824,4 +826,4 @@ stages:
             inputs:
               gitHubConnection: $(github_release_service_connection)
               repositoryName: $(github_org)/$(self_repo)
-              tag: $(Build.BuildNumber)
+              tag: $(version_number)
