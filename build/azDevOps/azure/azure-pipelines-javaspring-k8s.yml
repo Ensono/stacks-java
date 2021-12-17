@@ -807,12 +807,6 @@ stages:
           - checkout: self
             persistCredentials: true
 
-          # Download the artefacts from the build to create the release from
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              artifact: 'packages'
-              path: $(Build.ArtifactStagingDirectory)/packages
-
           # Create a tag in the code for this release
           - task: Bash@3
             displayName: Tag Code
