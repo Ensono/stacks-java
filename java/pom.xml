@@ -23,7 +23,7 @@
 
         <java.version>11</java.version>
         <org.projectlombok.version>1.18.0</org.projectlombok.version>
-        <org.springdoc-openapi.version>1.6.1</org.springdoc-openapi.version>
+        <org.springdoc-openapi.version>1.6.2</org.springdoc-openapi.version>
         <applicationinsights.version>2.6.4</applicationinsights.version>
         <azure.springboot.version>3.6.0</azure.springboot.version>
         <jackson.version>2.13.0</jackson.version>
