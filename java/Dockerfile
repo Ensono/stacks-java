@@ -23,6 +23,8 @@ FROM azul/zulu-openjdk-alpine:11-jre
 VOLUME /tmp
 
 ARG DEPENDENCY=/workspace/app/extracted
+# The version of OpenTelemetry used (https://opentelemetry.io), set by the build.
+ARG OPEN_TELEMETRY_VERSION
 
 COPY --from=build ${DEPENDENCY}/dependencies/ ./
 RUN true
@@ -32,6 +34,8 @@ COPY --from=build ${DEPENDENCY}/snapshot-dependencies/ ./
 RUN true
 COPY --from=build ${DEPENDENCY}/application/ ./
 
-ENTRYPOINT ["java","org.springframework.boot.loader.JarLauncher"]
+ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/${OPEN_TELEMETRY_VERSION}/opentelemetry-javaagent.jar ./
+
+ENTRYPOINT ["java", "-javaagent:opentelemetry-javaagent.jar", "org.springframework.boot.loader.JarLauncher"]
 
 EXPOSE 9000
