@@ -38,7 +38,7 @@
         <equals-verifier.version>3.8.1</equals-verifier.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <owasp-dependency-check-plugin.version>6.5.0</owasp-dependency-check-plugin.version>
-        <auth0-spring-security-api.version>1.4.1</auth0-spring-security-api.version>
+        <auth0-spring-security-api.version>1.5.1</auth0-spring-security-api.version>
         <io-projectreactor-netty.version>1.0.11</io-projectreactor-netty.version>
         <ch.qos.logback.logback-core.version>1.2.8</ch.qos.logback.logback-core.version>
         <net.minidev.json-smart-version>2.4.7</net.minidev.json-smart-version>
