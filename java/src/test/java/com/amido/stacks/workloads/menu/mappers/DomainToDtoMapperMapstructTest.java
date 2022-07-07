@@ -30,7 +30,7 @@ import org.springframework.boot.test.context.SpringBootTest;
       SearchMenuResultItemMapper.class,
       SearchMenuResultItemMapperImpl.class
     })
-class DomainToDtoMapperTest {
+class DomainToDtoMapperMapstructTest {
 
   @Autowired private MenuMapper menuMapper;
 
@@ -91,7 +91,7 @@ class DomainToDtoMapperTest {
     assertThat(menuDTO.getRestaurantId()).isEqualTo(restaurantId);
     assertThat(menuDTO.getName()).isEqualTo(name);
     assertThat(menuDTO.getDescription()).isEqualTo(description);
-    assertThat(menuDTO.getCategories()).isNull();
+    assertThat(menuDTO.getCategories()).isEmpty();
     assertThat(menuDTO.getEnabled()).isEqualTo(enabled);
   }
 
@@ -131,7 +131,7 @@ class DomainToDtoMapperTest {
     assertThat(menuDTO.getCategories().get(0).getDescription())
         .isEqualTo(category.getDescription());
     assertThat(menuDTO.getCategories().get(0).getId()).isEqualTo(category.getId());
-    assertThat(menuDTO.getCategories().get(0).getItems()).isNull();
+    assertThat(menuDTO.getCategories().get(0).getItems()).isEmpty();
   }
 
   @Test
