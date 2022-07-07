@@ -6,7 +6,8 @@ import com.amido.stacks.workloads.menu.api.v1.dto.response.SearchMenuResult;
 import com.amido.stacks.workloads.menu.domain.Category;
 import com.amido.stacks.workloads.menu.domain.Item;
 import com.amido.stacks.workloads.menu.domain.Menu;
-import com.amido.stacks.workloads.menu.mappers.DomainToDtoMapper;
+import com.amido.stacks.workloads.menu.mappers.MenuMapper;
+import com.amido.stacks.workloads.menu.mappers.SearchMenuResultItemMapper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,18 +25,13 @@ public class QueryMenuControllerImpl implements QueryMenuController {
 
   Logger logger = LoggerFactory.getLogger(QueryMenuControllerImpl.class);
 
-  private DomainToDtoMapper mapper;
+  @Autowired private MenuMapper menuMapper;
 
-  public QueryMenuControllerImpl(DomainToDtoMapper mapper) {
-    this.mapper = mapper;
-  }
+  @Autowired private SearchMenuResultItemMapper searchMenuResultItemMapper;
 
   @Override
   public ResponseEntity<SearchMenuResult> searchMenu(
-      final String searchTerm,
-      final UUID restaurantId,
-      final Integer pageSize,
-      final Integer pageNumber) {
+      String searchTerm, UUID restaurantId, Integer pageSize, Integer pageNumber) {
 
     List<Menu> menuList = new ArrayList<>();
 
@@ -62,12 +59,12 @@ public class QueryMenuControllerImpl implements QueryMenuController {
             pageSize,
             pageNumber,
             menuList.stream()
-                .map(m -> mapper.toSearchMenuResultItem(m))
+                .map(m -> searchMenuResultItemMapper.toDto(m))
                 .collect(Collectors.toList())));
   }
 
   @Override
-  public ResponseEntity<MenuDTO> getMenu(final UUID id, final String correlationId) {
+  public ResponseEntity<MenuDTO> getMenu(UUID id, String correlationId) {
     final String restaurantId = "58a1df85-6bdc-412a-a118-0f0e394c1342";
     final String categoryId = "2c43dbda-7d4d-46fb-b246-bec2bd348ca1";
     final String itemId = "7e46a698-080b-45e6-a529-2c196d00791c";
@@ -79,6 +76,6 @@ public class QueryMenuControllerImpl implements QueryMenuController {
         new Category(categoryId, "cat name", "cat description", Arrays.asList(item));
     menu.addOrUpdateCategory(category);
 
-    return ResponseEntity.ok(mapper.toMenuDto(menu));
+    return ResponseEntity.ok(menuMapper.toDto(menu));
   }
 }
