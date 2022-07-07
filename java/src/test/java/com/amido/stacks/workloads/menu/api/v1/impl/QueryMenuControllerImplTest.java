@@ -14,13 +14,9 @@ import com.amido.stacks.workloads.menu.domain.Category;
 import com.amido.stacks.workloads.menu.domain.Item;
 import com.amido.stacks.workloads.menu.domain.Menu;
 import com.amido.stacks.workloads.menu.mappers.CategoryMapper;
-import com.amido.stacks.workloads.menu.mappers.CategoryMapperImpl;
 import com.amido.stacks.workloads.menu.mappers.ItemMapper;
-import com.amido.stacks.workloads.menu.mappers.ItemMapperImpl;
 import com.amido.stacks.workloads.menu.mappers.MenuMapper;
-import com.amido.stacks.workloads.menu.mappers.MenuMapperImpl;
 import com.amido.stacks.workloads.menu.mappers.SearchMenuResultItemMapper;
-import com.amido.stacks.workloads.menu.mappers.SearchMenuResultItemMapperImpl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,18 +32,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    classes = {
-      MenuMapper.class,
-      MenuMapperImpl.class,
-      CategoryMapper.class,
-      CategoryMapperImpl.class,
-      ItemMapper.class,
-      ItemMapperImpl.class,
-      SearchMenuResultItemMapper.class,
-      SearchMenuResultItemMapperImpl.class
-    })
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration
 @Tag("Integration")
 @ActiveProfiles("test")
