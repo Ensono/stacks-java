@@ -13,7 +13,10 @@ import com.amido.stacks.workloads.menu.api.v1.dto.response.SearchMenuResultItem;
 import com.amido.stacks.workloads.menu.domain.Category;
 import com.amido.stacks.workloads.menu.domain.Item;
 import com.amido.stacks.workloads.menu.domain.Menu;
-import com.amido.stacks.workloads.menu.mappers.DomainToDtoMapper;
+import com.amido.stacks.workloads.menu.mappers.CategoryMapper;
+import com.amido.stacks.workloads.menu.mappers.ItemMapper;
+import com.amido.stacks.workloads.menu.mappers.MenuMapper;
+import com.amido.stacks.workloads.menu.mappers.SearchMenuResultItemMapper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -38,6 +41,14 @@ public class QueryMenuControllerImplTest {
   @LocalServerPort private int port;
 
   @Autowired private TestRestTemplate testRestTemplate;
+
+  @Autowired private MenuMapper menuMapper;
+
+  @Autowired private CategoryMapper categoryMapper;
+
+  @Autowired private ItemMapper itemMapper;
+
+  @Autowired private SearchMenuResultItemMapper searchMenuResultItemMapper;
 
   final int DEFAULT_PAGE_NUMBER = 1;
   final int DEFAULT_PAGE_SIZE = 20;
@@ -80,7 +91,7 @@ public class QueryMenuControllerImplTest {
 
     List<SearchMenuResultItem> expectedMenuList =
         matching.stream()
-            .map(DomainToDtoMapper::toSearchMenuResultItem)
+            .map(m -> searchMenuResultItemMapper.toDto(m))
             .collect(Collectors.toList());
 
     SearchMenuResult expectedResponse =
@@ -111,7 +122,7 @@ public class QueryMenuControllerImplTest {
         new Category(categoryId, "cat name", "cat description", Arrays.asList(item));
     menu.addOrUpdateCategory(category);
 
-    MenuDTO expectedResponse = DomainToDtoMapper.toMenuDto(menu);
+    MenuDTO expectedResponse = menuMapper.toDto(menu);
 
     // When
     var response =

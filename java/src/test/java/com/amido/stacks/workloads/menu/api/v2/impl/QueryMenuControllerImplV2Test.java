@@ -6,7 +6,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 
 import com.amido.stacks.workloads.menu.api.v1.dto.response.MenuDTO;
 import com.amido.stacks.workloads.menu.domain.Menu;
-import com.amido.stacks.workloads.menu.mappers.DomainToDtoMapper;
+import com.amido.stacks.workloads.menu.mappers.MenuMapper;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +28,15 @@ class QueryMenuControllerImplV2Test {
 
   @Autowired private TestRestTemplate testRestTemplate;
 
+  @Autowired private MenuMapper menuMapper;
+
   @Test
   void getMenuById() {
     // Given
     Menu menu = createMenu(0);
     String restaurantId = "3930ddff-82ce-4f7e-b910-b0709b276cf0";
     menu.setRestaurantId(restaurantId);
-    MenuDTO expectedResponse = DomainToDtoMapper.toMenuDto(menu);
+    MenuDTO expectedResponse = menuMapper.toDto(menu);
 
     // When
     var response =
