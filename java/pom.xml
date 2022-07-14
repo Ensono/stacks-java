@@ -20,7 +20,7 @@
   <description>Demo project for Java</description>
 
   <properties>
-    <stacks.core.api.version>1.0.0</stacks.core.api.version>
+    <stacks.core.api.version>1.0.2.2-RELEASE</stacks.core.api.version>
     <stacks.core.commons.version>1.0.3</stacks.core.commons.version>
 
     <java.version>11</java.version>
