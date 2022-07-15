@@ -1,4 +1,4 @@
-package com.amido.stacks.workloads.menu.api.v2.impl;
+package com.amido.stacks.workloads.menu.api.v2;
 
 import static com.amido.stacks.workloads.menu.domain.MenuHelper.createMenu;
 import static com.amido.stacks.workloads.util.TestHelper.getBaseURL;
@@ -20,7 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 @EnableAutoConfiguration
 @Tag("Integration")
 @ActiveProfiles("test")
-class QueryMenuControllerImplV2Test {
+public class MenuControllerV2Test {
 
   private final String GET_MENU_BY_ID = "%s/v2/menu/%s";
 
