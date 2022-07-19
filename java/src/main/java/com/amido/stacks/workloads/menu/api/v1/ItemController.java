@@ -38,7 +38,7 @@ public class ItemController {
       description = "Adds a menu item",
       operationId = "AddMenuItem")
   @CreateAPIResponses
-  ResponseEntity<ResourceCreatedResponse> addMenuItem(
+  ResponseEntity<ResourceCreatedResponse> createItem(
       @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
       @Parameter(description = "Category id", required = true) @PathVariable("categoryId")
           UUID categoryId,

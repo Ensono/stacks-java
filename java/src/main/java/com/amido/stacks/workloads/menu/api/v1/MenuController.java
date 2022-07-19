@@ -28,9 +28,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -49,11 +46,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MenuController {
 
-  Logger logger = LoggerFactory.getLogger(MenuController.class);
+  private final MenuMapper menuMapper;
 
-  @Autowired private MenuMapper menuMapper;
+  private final SearchMenuResultItemMapper searchMenuResultItemMapper;
 
-  @Autowired private SearchMenuResultItemMapper searchMenuResultItemMapper;
+  public MenuController(
+      MenuMapper menuMapper, SearchMenuResultItemMapper searchMenuResultItemMapper) {
+    this.menuMapper = menuMapper;
+    this.searchMenuResultItemMapper = searchMenuResultItemMapper;
+  }
 
   @PostMapping
   @Operation(
@@ -115,9 +116,7 @@ public class MenuController {
         new SearchMenuResult(
             pageSize,
             pageNumber,
-            menuList.stream()
-                .map(m -> searchMenuResultItemMapper.toDto(m))
-                .collect(Collectors.toList())));
+            menuList.stream().map(searchMenuResultItemMapper::toDto).collect(Collectors.toList())));
   }
 
   @GetMapping(value = "/{id}")
