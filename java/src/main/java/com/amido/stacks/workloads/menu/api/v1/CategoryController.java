@@ -9,10 +9,12 @@ import com.amido.stacks.core.api.dto.response.ResourceCreatedResponse;
 import com.amido.stacks.core.api.dto.response.ResourceUpdatedResponse;
 import com.amido.stacks.workloads.menu.api.v1.dto.request.CreateCategoryRequest;
 import com.amido.stacks.workloads.menu.api.v1.dto.request.UpdateCategoryRequest;
+import com.amido.stacks.workloads.menu.service.v1.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import java.util.UUID;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +31,10 @@ import org.springframework.web.bind.annotation.RestController;
     path = "/v1/menu/{id}/category",
     produces = MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8")
 @RestController
+@RequiredArgsConstructor
 public class CategoryController {
+
+  private final CategoryService categoryService;
 
   @PostMapping
   @Operation(
@@ -43,7 +48,7 @@ public class CategoryController {
       @Valid @RequestBody CreateCategoryRequest body,
       @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
-    return new ResponseEntity<>(new ResourceCreatedResponse(UUID.randomUUID()), HttpStatus.CREATED);
+    return new ResponseEntity<>(categoryService.create(body, correlationId), HttpStatus.CREATED);
   }
 
   @PutMapping("/{categoryId}")
@@ -60,7 +65,8 @@ public class CategoryController {
       @Valid @RequestBody UpdateCategoryRequest body,
       @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
-    return new ResponseEntity<>(new ResourceUpdatedResponse(UUID.randomUUID()), OK);
+    return new ResponseEntity<>(
+        categoryService.update(menuId, categoryId, body, correlationId), OK);
   }
 
   @DeleteMapping("/{categoryId}")
