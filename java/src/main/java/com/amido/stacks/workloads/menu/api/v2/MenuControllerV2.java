@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.ArrayList;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MenuControllerV2 {
 
-  @Autowired private MenuMapper menuMapper;
+  private final MenuMapper menuMapper;
+
+  public MenuControllerV2(MenuMapper menuMapper) {
+    this.menuMapper = menuMapper;
+  }
 
   @GetMapping(value = "/{id}")
   @Operation(
