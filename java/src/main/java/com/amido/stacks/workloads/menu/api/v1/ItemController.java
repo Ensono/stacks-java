@@ -9,10 +9,12 @@ import com.amido.stacks.core.api.dto.response.ResourceCreatedResponse;
 import com.amido.stacks.core.api.dto.response.ResourceUpdatedResponse;
 import com.amido.stacks.workloads.menu.api.v1.dto.request.CreateItemRequest;
 import com.amido.stacks.workloads.menu.api.v1.dto.request.UpdateItemRequest;
+import com.amido.stacks.workloads.menu.service.v1.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import java.util.UUID;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +31,10 @@ import org.springframework.web.bind.annotation.RestController;
     path = "/v1/menu/{id}/category/{categoryId}/items",
     produces = MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8")
 @RestController
+@RequiredArgsConstructor
 public class ItemController {
+
+  private final ItemService itemService;
 
   @PostMapping
   @Operation(
@@ -45,7 +50,8 @@ public class ItemController {
       @Valid @RequestBody CreateItemRequest body,
       @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
-    return new ResponseEntity<>(new ResourceCreatedResponse(UUID.randomUUID()), HttpStatus.CREATED);
+    return new ResponseEntity<>(
+        itemService.create(menuId, categoryId, body, correlationId), HttpStatus.CREATED);
   }
 
   @PutMapping("/{itemId}")
@@ -63,7 +69,8 @@ public class ItemController {
       @Valid @RequestBody UpdateItemRequest body,
       @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
-    return new ResponseEntity<>(new ResourceUpdatedResponse(UUID.randomUUID()), HttpStatus.OK);
+    return new ResponseEntity<>(
+        itemService.update(menuId, categoryId, body, correlationId), HttpStatus.OK);
   }
 
   @DeleteMapping("/{itemId}")
