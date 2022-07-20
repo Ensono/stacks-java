@@ -1,14 +1,10 @@
 package com.amido.stacks.workloads.menu.api.v1;
 
-import static org.springframework.http.HttpStatus.OK;
-
 import com.amido.stacks.core.api.annotations.CreateAPIResponses;
 import com.amido.stacks.core.api.annotations.DeleteAPIResponses;
 import com.amido.stacks.core.api.annotations.ReadAPIResponses;
 import com.amido.stacks.core.api.annotations.SearchAPIResponses;
 import com.amido.stacks.core.api.annotations.UpdateAPIResponses;
-import com.amido.stacks.core.api.dto.response.ResourceCreatedResponse;
-import com.amido.stacks.core.api.dto.response.ResourceUpdatedResponse;
 import com.amido.stacks.workloads.menu.api.v1.dto.request.CreateMenuRequest;
 import com.amido.stacks.workloads.menu.api.v1.dto.request.UpdateMenuRequest;
 import com.amido.stacks.workloads.menu.api.v1.dto.response.MenuDTO;
@@ -30,7 +26,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,11 +45,9 @@ public class MenuController {
       description = "Adds a menu",
       operationId = "CreateMenu")
   @CreateAPIResponses
-  ResponseEntity<ResourceCreatedResponse> createMenu(
-      @Valid @RequestBody CreateMenuRequest body,
-      @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
+  ResponseEntity<MenuDTO> createMenu(@Valid @RequestBody CreateMenuRequest dto) {
 
-    return new ResponseEntity<>(menuService.create(body, correlationId), HttpStatus.CREATED);
+    return new ResponseEntity<>(menuService.create(dto), HttpStatus.CREATED);
   }
 
   @GetMapping
@@ -95,11 +88,9 @@ public class MenuController {
               mediaType = MediaType.APPLICATION_JSON_VALUE,
               schema = @Schema(implementation = MenuDTO.class)))
   @ReadAPIResponses
-  ResponseEntity<MenuDTO> getMenu(
-      @PathVariable(name = "id") UUID id,
-      @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
+  ResponseEntity<MenuDTO> getMenu(@PathVariable(name = "id") UUID id) {
 
-    return ResponseEntity.ok(menuService.get(id, correlationId));
+    return ResponseEntity.ok(menuService.get(id));
   }
 
   @PutMapping(value = "/{id}")
@@ -108,12 +99,11 @@ public class MenuController {
       summary = "Update a menu",
       description = "Update a menu with new information")
   @UpdateAPIResponses
-  ResponseEntity<ResourceUpdatedResponse> updateMenu(
+  ResponseEntity<MenuDTO> updateMenu(
       @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
-      @Valid @RequestBody UpdateMenuRequest body,
-      @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
+      @Valid @RequestBody UpdateMenuRequest body) {
 
-    return new ResponseEntity<>(menuService.update(body, correlationId), HttpStatus.OK);
+    return new ResponseEntity<>(menuService.update(menuId, body), HttpStatus.OK);
   }
 
   @DeleteMapping(value = "/{id}")
@@ -124,9 +114,9 @@ public class MenuController {
       operationId = "DeleteMenu")
   @DeleteAPIResponses
   ResponseEntity<Void> deleteMenu(
-      @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
-      @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
+      @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId) {
 
-    return new ResponseEntity<>(OK);
+    menuService.delete(menuId);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }

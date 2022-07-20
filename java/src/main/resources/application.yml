@@ -33,6 +33,10 @@ springdoc:
     path: /swagger/oas-json
 
 azure:
+  cosmos:
+    uri: https://localhost:8081
+    database: Stacks
+    key: ${COSMOSDB_KEY}
   application-insights:
     instrumentation-key: xxxxxx
     enabled: true
