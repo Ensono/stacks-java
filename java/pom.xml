@@ -236,15 +236,6 @@
       <scope>provided</scope>
     </dependency>
 
-    <!--
-    <dependency>
-        <groupId>com.microsoft.azure</groupId>
-        <artifactId>azure-keyvault-secrets-spring-boot-starter</artifactId>
-        <version>${azure.springboot.version}</version>
-        <scope>runtime</scope>
-    </dependency>
-    -->
-
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
