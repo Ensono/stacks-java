@@ -3,6 +3,11 @@ package com.amido.stacks.workloads.actuator;
 import static com.amido.stacks.workloads.util.TestHelper.getBaseURL;
 import static org.assertj.core.api.BDDAssertions.then;
 
+import com.amido.stacks.workloads.Application;
+import com.amido.stacks.workloads.menu.repository.MenuRepository;
+import com.azure.spring.autoconfigure.cosmos.CosmosAutoConfiguration;
+import com.azure.spring.autoconfigure.cosmos.CosmosHealthConfiguration;
+import com.azure.spring.autoconfigure.cosmos.CosmosRepositoriesAutoConfiguration;
 import java.util.Map;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -10,13 +15,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    classes = Application.class)
 @TestPropertySource(properties = {"management.port=0"})
-@EnableAutoConfiguration
+@EnableAutoConfiguration(
+    exclude = {
+      CosmosRepositoriesAutoConfiguration.class,
+      CosmosAutoConfiguration.class,
+      CosmosHealthConfiguration.class
+    })
 @Tag("Component")
 class ActuatorTest {
 
@@ -24,6 +37,8 @@ class ActuatorTest {
   private int mgt;
 
   @Autowired private TestRestTemplate testRestTemplate;
+
+  @MockBean private MenuRepository menuRepository;
 
   @Test
   void shouldReturn200WhenSendingRequestToHealthEndpoint() {
