@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * @author ArathyKrishna
- */
 public class MenuHelper {
 
   public static List<Menu> createMenus(int count) {

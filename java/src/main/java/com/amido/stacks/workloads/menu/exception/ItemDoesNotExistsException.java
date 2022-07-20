@@ -2,9 +2,6 @@ package com.amido.stacks.workloads.menu.exception;
 
 import java.util.UUID;
 
-/**
- * @author ArathyKrishna
- */
 public class ItemDoesNotExistsException extends MenuApiException {
 
   private static final int EXCEPTION_CODE = 12404;
