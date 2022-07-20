@@ -2,7 +2,7 @@ package com.amido.stacks.workloads.menu.exception;
 
 import java.util.UUID;
 
-public class ItemAlreadyExistsException extends MenuApiException {
+public class ItemAlreadyExistsException extends RuntimeException {
 
   private static final int EXCEPTION_CODE = 12409;
 
@@ -14,7 +14,6 @@ public class ItemAlreadyExistsException extends MenuApiException {
             name, categoryId, menuId));
   }
 
-  @Override
   public int getExceptionCode() {
     return EXCEPTION_CODE;
   }

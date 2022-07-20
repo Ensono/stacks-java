@@ -2,7 +2,7 @@ package com.amido.stacks.workloads.menu.exception;
 
 import java.util.UUID;
 
-public class CategoryDoesNotExistException extends MenuApiException {
+public class CategoryDoesNotExistException extends RuntimeException {
 
   private static final int EXCEPTION_CODE = 11404;
 
@@ -13,7 +13,6 @@ public class CategoryDoesNotExistException extends MenuApiException {
             categoryId, menuId));
   }
 
-  @Override
   public int getExceptionCode() {
     return EXCEPTION_CODE;
   }
