@@ -1,13 +1,12 @@
-package com.amido.stacks.workloads.menu.api.v1.impl;
+package com.amido.stacks.workloads.menu.api.v2;
 
 import static com.amido.stacks.workloads.menu.domain.MenuHelper.createMenu;
 import static com.amido.stacks.workloads.util.TestHelper.getBaseURL;
-import static com.amido.stacks.workloads.util.TestHelper.getRequestHttpEntity;
 import static org.assertj.core.api.BDDAssertions.then;
 
-import com.amido.stacks.workloads.menu.api.v1.dto.request.UpdateMenuRequest;
-import com.amido.stacks.workloads.menu.api.v1.dto.response.ResourceUpdatedResponse;
+import com.amido.stacks.workloads.menu.api.v1.dto.response.MenuDTO;
 import com.amido.stacks.workloads.menu.domain.Menu;
+import com.amido.stacks.workloads.menu.mappers.MenuMapper;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,40 +14,36 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration
 @Tag("Integration")
 @ActiveProfiles("test")
-class UpdateMenuControllerImplTest {
+public class MenuControllerV2Test {
 
-  public static final String UPDATE_MENU = "%s/v1/menu/%s";
+  private final String GET_MENU_BY_ID = "%s/v2/menu/%s";
 
   @LocalServerPort private int port;
 
   @Autowired private TestRestTemplate testRestTemplate;
 
+  @Autowired private MenuMapper menuMapper;
+
   @Test
-  void testUpdateSuccess() {
+  void getMenuById() {
     // Given
     Menu menu = createMenu(0);
-
-    UpdateMenuRequest request = new UpdateMenuRequest("new name", "new description", false);
+    String restaurantId = "3930ddff-82ce-4f7e-b910-b0709b276cf0";
+    menu.setRestaurantId(restaurantId);
+    MenuDTO expectedResponse = menuMapper.toDto(menu);
 
     // When
     var response =
-        this.testRestTemplate.exchange(
-            String.format(UPDATE_MENU, getBaseURL(port), menu.getId()),
-            HttpMethod.PUT,
-            new HttpEntity<>(request, getRequestHttpEntity()),
-            ResourceUpdatedResponse.class);
+        this.testRestTemplate.getForEntity(
+            String.format(GET_MENU_BY_ID, getBaseURL(port), menu.getId()), MenuDTO.class);
 
     // Then
-    then(response).isNotNull();
-    then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    then(response.getBody()).isEqualTo(expectedResponse);
   }
 }
