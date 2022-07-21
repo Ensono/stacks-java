@@ -61,6 +61,31 @@ public class CosmosMenuQueryServiceTest {
   }
 
   @Test
+  void findAllNextPage() {
+
+    MenuRepository repository = mock(MenuRepository.class);
+    MenuQueryService menuQueryService = new CosmosMenuQueryService(repository);
+
+    Pageable pageable = mock(Pageable.class);
+
+    List<Menu> results = MenuHelper.createMenus(2);
+    Page<Menu> page1 = new PageImpl<>(results, pageable, 2);
+    Page<Menu> page2 = new PageImpl<>(results, pageable, 2);
+
+    Page<Menu> mockPage1 = (Page<Menu>) mock(Page.class);
+
+    // Given
+    given(repository.findAll(any(Pageable.class))).willReturn(page1);
+    given(repository.findAll(eq(pageable))).willReturn(page2);
+
+    // When
+    List<Menu> actualResults = menuQueryService.findAll(2, 5);
+
+    // Then
+    then(actualResults).isEqualTo(results);
+  }
+
+  @Test
   void findAllByRestaurantId() {
 
     MenuRepository repository = mock(MenuRepository.class);
