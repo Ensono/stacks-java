@@ -35,7 +35,8 @@ public class CategoryService {
 
   private final UpdateCategoryMapper updateCategoryMapper;
 
-  public ResourceCreatedResponse create(UUID menuId, @Valid CreateCategoryRequest body) {
+  public ResourceCreatedResponse create(
+      UUID menuId, @Valid CreateCategoryRequest body, String correlationId) {
 
     Menu menu = getMenu(menuId);
 
@@ -53,7 +54,7 @@ public class CategoryService {
   }
 
   public ResourceUpdatedResponse update(
-      UUID menuId, UUID categoryId, @Valid UpdateCategoryRequest body) {
+      UUID menuId, UUID categoryId, @Valid UpdateCategoryRequest body, String correlationId) {
 
     Menu menu = getMenu(menuId);
 
@@ -73,7 +74,7 @@ public class CategoryService {
     return new ResourceUpdatedResponse(categoryId);
   }
 
-  public void delete(UUID menuId, UUID categoryId) {
+  public void delete(UUID menuId, UUID categoryId, String correlationId) {
 
     Menu menu = getMenu(menuId);
 

@@ -35,7 +35,7 @@ public class ItemService {
   private final ItemMapper itemMapper;
 
   public ResourceCreatedResponse create(
-      UUID menuId, UUID categoryId, @Valid CreateItemRequest body) {
+      UUID menuId, UUID categoryId, @Valid CreateItemRequest body, String correlationId) {
 
     Menu menu = getMenu(menuId);
 
@@ -55,7 +55,11 @@ public class ItemService {
   }
 
   public ResourceUpdatedResponse update(
-      UUID menuId, UUID categoryId, UUID itemId, @Valid UpdateItemRequest body) {
+      UUID menuId,
+      UUID categoryId,
+      UUID itemId,
+      @Valid UpdateItemRequest body,
+      String correlationId) {
 
     Menu menu = getMenu(menuId);
 
@@ -74,7 +78,7 @@ public class ItemService {
     return new ResourceUpdatedResponse(itemId);
   }
 
-  public void delete(UUID menuId, UUID categoryId, UUID itemId) {
+  public void delete(UUID menuId, UUID categoryId, UUID itemId, String correlationId) {
 
     Menu menu = getMenu(menuId);
 

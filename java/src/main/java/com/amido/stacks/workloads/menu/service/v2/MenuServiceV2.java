@@ -31,8 +31,8 @@ public class MenuServiceV2 extends MenuService {
   }
 
   @Override
-  public MenuDTO get(UUID id) {
+  public MenuDTO get(UUID id, String correlationId) {
 
-    return super.get(id);
+    return super.get(id, correlationId);
   }
 }
