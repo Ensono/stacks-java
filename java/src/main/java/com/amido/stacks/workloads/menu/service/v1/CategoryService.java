@@ -13,6 +13,7 @@ import com.amido.stacks.workloads.menu.exception.MenuNotFoundException;
 import com.amido.stacks.workloads.menu.mappers.CategoryMapper;
 import com.amido.stacks.workloads.menu.mappers.wrappers.CreateCategoryMapper;
 import com.amido.stacks.workloads.menu.mappers.wrappers.UpdateCategoryMapper;
+import com.amido.stacks.workloads.menu.repository.MenuRepository;
 import com.amido.stacks.workloads.menu.service.data.MenuQueryService;
 import com.amido.stacks.workloads.menu.service.v1.utility.MenuHelperService;
 import java.util.Optional;
@@ -24,6 +25,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
+
+  private final MenuRepository menuRepository;
 
   private final MenuQueryService menuQueryService;
 
@@ -48,7 +51,7 @@ public class CategoryService {
     categoryDTO.setId(categoryId.toString());
 
     menuHelperService.addOrUpdateCategory(menu, categoryMapper.fromDto(categoryDTO));
-    menuHelperService.save(menu);
+    menuRepository.save(menu);
 
     return new ResourceCreatedResponse(categoryId);
   }
@@ -69,7 +72,7 @@ public class CategoryService {
     updatedCategory.setItems(category.getItems());
 
     menuHelperService.addOrUpdateCategory(menu, updatedCategory);
-    menuHelperService.save(menu);
+    menuRepository.save(menu);
 
     return new ResourceUpdatedResponse(categoryId);
   }
@@ -81,7 +84,7 @@ public class CategoryService {
     menuHelperService.checkCategoryExistsById(menu, categoryId);
 
     menuHelperService.removeCategory(menu, categoryId);
-    menuHelperService.save(menu);
+    menuRepository.save(menu);
   }
 
   private Menu getMenu(UUID menuId) {

@@ -103,8 +103,4 @@ public class MenuHelperService {
   public void removeCategory(Menu menu, UUID categoryId) {
     menu.getCategories().removeIf(c -> c.getId().equals(categoryId.toString()));
   }
-
-  public Menu save(Menu menu) {
-    return menuRepository.save(menu);
-  }
 }
