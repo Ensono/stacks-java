@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,9 +45,11 @@ public class CategoryController {
   @CreateAPIResponses
   ResponseEntity<ResourceCreatedResponse> createCategory(
       @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
-      @Valid @RequestBody CreateCategoryRequest body) {
+      @Valid @RequestBody CreateCategoryRequest body,
+      @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
-    return new ResponseEntity<>(categoryService.create(menuId, body), HttpStatus.CREATED);
+    return new ResponseEntity<>(
+        categoryService.create(menuId, body, correlationId), HttpStatus.CREATED);
   }
 
   @PutMapping("/{categoryId}")
@@ -60,9 +63,11 @@ public class CategoryController {
       @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
       @Parameter(description = "Category id", required = true) @PathVariable("categoryId")
           UUID categoryId,
-      @Valid @RequestBody UpdateCategoryRequest body) {
+      @Valid @RequestBody UpdateCategoryRequest body,
+      @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
-    return new ResponseEntity<>(categoryService.update(menuId, categoryId, body), OK);
+    return new ResponseEntity<>(
+        categoryService.update(menuId, categoryId, body, correlationId), OK);
   }
 
   @DeleteMapping("/{categoryId}")
@@ -75,9 +80,10 @@ public class CategoryController {
   ResponseEntity<Void> deleteCategory(
       @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
       @Parameter(description = "Category id", required = true) @PathVariable("categoryId")
-          UUID categoryId) {
+          UUID categoryId,
+      @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
-    categoryService.delete(menuId, categoryId);
+    categoryService.delete(menuId, categoryId, correlationId);
     return new ResponseEntity<>(OK);
   }
 }

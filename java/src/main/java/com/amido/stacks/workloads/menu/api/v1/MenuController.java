@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,9 +46,11 @@ public class MenuController {
       description = "Adds a menu",
       operationId = "CreateMenu")
   @CreateAPIResponses
-  ResponseEntity<MenuDTO> createMenu(@Valid @RequestBody CreateMenuRequest dto) {
+  ResponseEntity<MenuDTO> createMenu(
+      @Valid @RequestBody CreateMenuRequest dto,
+      @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
-    return new ResponseEntity<>(menuService.create(dto), HttpStatus.CREATED);
+    return new ResponseEntity<>(menuService.create(dto, correlationId), HttpStatus.CREATED);
   }
 
   @GetMapping
@@ -68,10 +71,11 @@ public class MenuController {
       @RequestParam(value = "searchTerm", required = false) String searchTerm,
       @RequestParam(value = "restaurantId", required = false) UUID restaurantId,
       @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
-      @RequestParam(value = "pageNumber", required = false, defaultValue = "1")
-          Integer pageNumber) {
+      @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
+      @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
-    return ResponseEntity.ok(menuService.search(searchTerm, restaurantId, pageSize, pageNumber));
+    return ResponseEntity.ok(
+        menuService.search(searchTerm, restaurantId, pageSize, pageNumber, correlationId));
   }
 
   @GetMapping(value = "/{id}")
@@ -88,9 +92,11 @@ public class MenuController {
               mediaType = MediaType.APPLICATION_JSON_VALUE,
               schema = @Schema(implementation = MenuDTO.class)))
   @ReadAPIResponses
-  ResponseEntity<MenuDTO> getMenu(@PathVariable(name = "id") UUID id) {
+  ResponseEntity<MenuDTO> getMenu(
+      @PathVariable(name = "id") UUID id,
+      @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
-    return ResponseEntity.ok(menuService.get(id));
+    return ResponseEntity.ok(menuService.get(id, correlationId));
   }
 
   @PutMapping(value = "/{id}")
@@ -101,9 +107,10 @@ public class MenuController {
   @UpdateAPIResponses
   ResponseEntity<MenuDTO> updateMenu(
       @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
-      @Valid @RequestBody UpdateMenuRequest body) {
+      @Valid @RequestBody UpdateMenuRequest body,
+      @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
-    return new ResponseEntity<>(menuService.update(menuId, body), HttpStatus.OK);
+    return new ResponseEntity<>(menuService.update(menuId, body, correlationId), HttpStatus.OK);
   }
 
   @DeleteMapping(value = "/{id}")
@@ -114,9 +121,10 @@ public class MenuController {
       operationId = "DeleteMenu")
   @DeleteAPIResponses
   ResponseEntity<Void> deleteMenu(
-      @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId) {
+      @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
+      @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
-    menuService.delete(menuId);
+    menuService.delete(menuId, correlationId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }

@@ -44,7 +44,7 @@ public class MenuService {
 
   private final SearchMenuResultItemMapper searchMenuResultItemMapper;
 
-  public MenuDTO create(@Valid CreateMenuRequest dto) {
+  public MenuDTO create(@Valid CreateMenuRequest dto, String correlationId) {
 
     verifyMenuNotAlreadyExisting(dto.getTenantId(), dto.getName());
 
@@ -55,7 +55,11 @@ public class MenuService {
   }
 
   public SearchMenuResult search(
-      String searchTerm, UUID restaurantId, Integer pageSize, Integer pageNumber) {
+      String searchTerm,
+      UUID restaurantId,
+      Integer pageSize,
+      Integer pageNumber,
+      String correlationId) {
 
     List<Menu> menuList;
 
@@ -77,7 +81,7 @@ public class MenuService {
         menuList.stream().map(searchMenuResultItemMapper::toDto).collect(Collectors.toList()));
   }
 
-  public MenuDTO get(UUID menuId) {
+  public MenuDTO get(UUID menuId, String correlationId) {
 
     Optional<Menu> optMenu = menuQueryService.findById(menuId);
 
@@ -88,7 +92,7 @@ public class MenuService {
     throw new MenuNotFoundException(menuId);
   }
 
-  public MenuDTO update(UUID menuId, @Valid UpdateMenuRequest dto) {
+  public MenuDTO update(UUID menuId, @Valid UpdateMenuRequest dto, String correlationId) {
 
     Optional<Menu> optMenu = menuQueryService.findById(menuId);
 
@@ -100,7 +104,7 @@ public class MenuService {
 
       menuRepository.save(menuMapper.fromDto(menuDTO));
 
-      return get(menuId);
+      return get(menuId, correlationId);
     }
 
     throw new MenuNotFoundException(menuId);
@@ -117,7 +121,7 @@ public class MenuService {
     }
   }
 
-  public void delete(UUID menuId) {
+  public void delete(UUID menuId, String correlationId) {
 
     Optional<Menu> optMenu = menuQueryService.findById(menuId);
 
