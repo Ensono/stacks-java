@@ -22,11 +22,13 @@
   <properties>
     <stacks.core.api.version>1.0.2.2-RELEASE</stacks.core.api.version>
     <stacks.core.commons.version>1.0.3</stacks.core.commons.version>
+    <stacks.azure.cosmos.version>1.0.0</stacks.azure.cosmos.version>
 
     <java.version>11</java.version>
     <org.projectlombok.version>1.18.0</org.projectlombok.version>
-    <org.springdoc-openapi.version>1.6.1</org.springdoc-openapi.version>
+    <org.springdoc-openapi.version>1.6.9</org.springdoc-openapi.version>
     <applicationinsights.version>2.6.4</applicationinsights.version>
+    <cosmosdb.version>3.6.0</cosmosdb.version>
     <azure.springboot.version>3.6.0</azure.springboot.version>
     <jackson.version>2.13.0</jackson.version>
     <mockito.version>4.1.0</mockito.version>
@@ -104,6 +106,12 @@
       <groupId>com.amido.stacks.modules</groupId>
       <artifactId>stacks-core-commons</artifactId>
       <version>${stacks.core.commons.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.amido.stacks.modules</groupId>
+      <artifactId>stacks-azure-cosmos</artifactId>
+      <version>${stacks.azure.cosmos.version}</version>
     </dependency>
 
     <dependency>
@@ -227,15 +235,6 @@
       <version>${lombok.version}</version>
       <scope>provided</scope>
     </dependency>
-
-    <!--
-    <dependency>
-        <groupId>com.microsoft.azure</groupId>
-        <artifactId>azure-keyvault-secrets-spring-boot-starter</artifactId>
-        <version>${azure.springboot.version}</version>
-        <scope>runtime</scope>
-    </dependency>
-    -->
 
     <dependency>
       <groupId>org.springframework.boot</groupId>

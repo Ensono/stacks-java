@@ -70,7 +70,7 @@ public class ItemController {
       @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
     return new ResponseEntity<>(
-        itemService.update(menuId, categoryId, body, correlationId), HttpStatus.OK);
+        itemService.update(menuId, categoryId, itemId, body, correlationId), HttpStatus.OK);
   }
 
   @DeleteMapping("/{itemId}")
@@ -87,6 +87,7 @@ public class ItemController {
       @Parameter(description = "Item id", required = true) @PathVariable("itemId") UUID itemId,
       @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
+    itemService.delete(menuId, categoryId, itemId, correlationId);
     return new ResponseEntity<>(OK);
   }
 }

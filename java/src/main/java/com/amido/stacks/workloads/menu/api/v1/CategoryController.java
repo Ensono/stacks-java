@@ -48,7 +48,8 @@ public class CategoryController {
       @Valid @RequestBody CreateCategoryRequest body,
       @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
-    return new ResponseEntity<>(categoryService.create(body, correlationId), HttpStatus.CREATED);
+    return new ResponseEntity<>(
+        categoryService.create(menuId, body, correlationId), HttpStatus.CREATED);
   }
 
   @PutMapping("/{categoryId}")
@@ -82,6 +83,7 @@ public class CategoryController {
           UUID categoryId,
       @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
+    categoryService.delete(menuId, categoryId, correlationId);
     return new ResponseEntity<>(OK);
   }
 }

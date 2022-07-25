@@ -1,14 +1,10 @@
 package com.amido.stacks.workloads.menu.api.v1;
 
-import static org.springframework.http.HttpStatus.OK;
-
 import com.amido.stacks.core.api.annotations.CreateAPIResponses;
 import com.amido.stacks.core.api.annotations.DeleteAPIResponses;
 import com.amido.stacks.core.api.annotations.ReadAPIResponses;
 import com.amido.stacks.core.api.annotations.SearchAPIResponses;
 import com.amido.stacks.core.api.annotations.UpdateAPIResponses;
-import com.amido.stacks.core.api.dto.response.ResourceCreatedResponse;
-import com.amido.stacks.core.api.dto.response.ResourceUpdatedResponse;
 import com.amido.stacks.workloads.menu.api.v1.dto.request.CreateMenuRequest;
 import com.amido.stacks.workloads.menu.api.v1.dto.request.UpdateMenuRequest;
 import com.amido.stacks.workloads.menu.api.v1.dto.response.MenuDTO;
@@ -50,11 +46,11 @@ public class MenuController {
       description = "Adds a menu",
       operationId = "CreateMenu")
   @CreateAPIResponses
-  ResponseEntity<ResourceCreatedResponse> createMenu(
-      @Valid @RequestBody CreateMenuRequest body,
+  ResponseEntity<MenuDTO> createMenu(
+      @Valid @RequestBody CreateMenuRequest dto,
       @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
-    return new ResponseEntity<>(menuService.create(body, correlationId), HttpStatus.CREATED);
+    return new ResponseEntity<>(menuService.create(dto, correlationId), HttpStatus.CREATED);
   }
 
   @GetMapping
@@ -75,10 +71,11 @@ public class MenuController {
       @RequestParam(value = "searchTerm", required = false) String searchTerm,
       @RequestParam(value = "restaurantId", required = false) UUID restaurantId,
       @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
-      @RequestParam(value = "pageNumber", required = false, defaultValue = "1")
-          Integer pageNumber) {
+      @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
+      @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
-    return ResponseEntity.ok(menuService.search(searchTerm, restaurantId, pageSize, pageNumber));
+    return ResponseEntity.ok(
+        menuService.search(searchTerm, restaurantId, pageSize, pageNumber, correlationId));
   }
 
   @GetMapping(value = "/{id}")
@@ -108,12 +105,12 @@ public class MenuController {
       summary = "Update a menu",
       description = "Update a menu with new information")
   @UpdateAPIResponses
-  ResponseEntity<ResourceUpdatedResponse> updateMenu(
+  ResponseEntity<MenuDTO> updateMenu(
       @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
       @Valid @RequestBody UpdateMenuRequest body,
       @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
-    return new ResponseEntity<>(menuService.update(body, correlationId), HttpStatus.OK);
+    return new ResponseEntity<>(menuService.update(menuId, body, correlationId), HttpStatus.OK);
   }
 
   @DeleteMapping(value = "/{id}")
@@ -127,6 +124,7 @@ public class MenuController {
       @Parameter(description = "Menu id", required = true) @PathVariable("id") UUID menuId,
       @Parameter(hidden = true) @RequestAttribute("CorrelationId") String correlationId) {
 
-    return new ResponseEntity<>(OK);
+    menuService.delete(menuId, correlationId);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }
