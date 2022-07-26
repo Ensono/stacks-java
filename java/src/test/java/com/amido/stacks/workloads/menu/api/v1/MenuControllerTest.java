@@ -24,6 +24,7 @@ import com.amido.stacks.workloads.menu.mappers.CategoryMapper;
 import com.amido.stacks.workloads.menu.mappers.ItemMapper;
 import com.amido.stacks.workloads.menu.mappers.MenuMapper;
 import com.amido.stacks.workloads.menu.mappers.SearchMenuResultItemMapper;
+import com.amido.stacks.workloads.menu.service.utility.MenuHelperService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -69,6 +70,8 @@ public class MenuControllerTest {
   @Autowired private ItemMapper itemMapper;
 
   @Autowired private SearchMenuResultItemMapper searchMenuResultItemMapper;
+
+  @Autowired private MenuHelperService menuHelperService;
 
   @Test
   void testCreateNewMenu() {
@@ -154,7 +157,7 @@ public class MenuControllerTest {
     Item item = new Item(itemId, "item name", "item description", 5.99d, true);
     Category category =
         new Category(categoryId, "cat name", "cat description", Arrays.asList(item));
-    menu.addOrUpdateCategory(category);
+    menuHelperService.addOrUpdateCategory(menu, category);
 
     MenuDTO expectedResponse = menuMapper.toDto(menu);
 
