@@ -18,6 +18,7 @@ import com.amido.stacks.workloads.menu.api.v1.dto.request.CreateCategoryRequest;
 import com.amido.stacks.workloads.menu.api.v1.dto.request.UpdateCategoryRequest;
 import com.amido.stacks.workloads.menu.domain.Category;
 import com.amido.stacks.workloads.menu.domain.Menu;
+import com.amido.stacks.workloads.menu.service.utility.MenuHelperService;
 import java.util.List;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,8 @@ public class CategoryControllerTest {
   @LocalServerPort private int port;
 
   @Autowired private TestRestTemplate testRestTemplate;
+
+  @Autowired private MenuHelperService menuHelperService;
 
   @Test
   void testInvalidMenuIdWilThrowBadRequest() {
@@ -90,7 +93,8 @@ public class CategoryControllerTest {
     // Given
     Menu menu = createMenu(0);
     Category category = createCategory(0);
-    menu.addOrUpdateCategory(category);
+
+    menuHelperService.addOrUpdateCategory(menu, category);
 
     UpdateCategoryRequest request = new UpdateCategoryRequest("new Category", "new Description");
 
@@ -194,8 +198,8 @@ public class CategoryControllerTest {
     // Given
     Menu menu = createMenu(1);
     Category category = createCategory(0);
-    category.addOrUpdateItem(createItem(0));
-    menu.addOrUpdateCategory(category);
+    menuHelperService.addOrUpdateItem(category, createItem(0));
+    menuHelperService.addOrUpdateCategory(menu, category);
 
     // When
     String requestUrl =
