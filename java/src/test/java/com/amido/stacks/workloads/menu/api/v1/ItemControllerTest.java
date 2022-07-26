@@ -19,6 +19,7 @@ import com.amido.stacks.workloads.menu.api.v1.dto.request.UpdateItemRequest;
 import com.amido.stacks.workloads.menu.domain.Category;
 import com.amido.stacks.workloads.menu.domain.Item;
 import com.amido.stacks.workloads.menu.domain.Menu;
+import com.amido.stacks.workloads.menu.service.utility.MenuHelperService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,13 +52,15 @@ public class ItemControllerTest {
 
   @Autowired private TestRestTemplate testRestTemplate;
 
+  @Autowired private MenuHelperService menuHelperService;
+
   @Test
   void testAddItem() {
     // Given
     Menu menu = createMenu(1);
     Category category =
         new Category(randomUUID().toString(), "cat name", "cat description", new ArrayList<>());
-    menu.addOrUpdateCategory(category);
+    menuHelperService.addOrUpdateCategory(menu, category);
 
     CreateItemRequest request =
         new CreateItemRequest("Some Name", "Some Description", 13.56d, true);
@@ -101,8 +104,8 @@ public class ItemControllerTest {
     Menu menu = createMenu(0);
     Category category = createCategory(0);
     Item item = createItem(0);
-    category.addOrUpdateItem(item);
-    menu.addOrUpdateCategory(category);
+    menuHelperService.addOrUpdateItem(category, item);
+    menuHelperService.addOrUpdateCategory(menu, category);
 
     UpdateItemRequest request =
         new UpdateItemRequest("Some Name", "Some Description", 13.56d, true);
@@ -130,7 +133,7 @@ public class ItemControllerTest {
     Category category = createCategory(0);
     List<Item> items = createItems(2);
     category.setItems(items);
-    menu.addOrUpdateCategory(category);
+    menuHelperService.addOrUpdateCategory(menu, category);
 
     UpdateItemRequest request =
         new UpdateItemRequest(items.get(0).getName(), "Some Description2", 13.56d, true);
@@ -158,8 +161,8 @@ public class ItemControllerTest {
     Menu menu = createMenu(1);
     Category category = createCategory(0);
     Item item = new Item(UUID.randomUUID().toString(), "New Item", "Item description", 12.2d, true);
-    category.addOrUpdateItem(item);
-    menu.addOrUpdateCategory(category);
+    menuHelperService.addOrUpdateItem(category, item);
+    menuHelperService.addOrUpdateCategory(menu, category);
 
     // When
     String requestUrl =

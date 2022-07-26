@@ -11,6 +11,7 @@ import com.amido.stacks.workloads.menu.domain.Item;
 import com.amido.stacks.workloads.menu.domain.Menu;
 import com.amido.stacks.workloads.menu.mappers.MenuMapper;
 import com.amido.stacks.workloads.menu.mappers.SearchMenuResultItemMapper;
+import com.amido.stacks.workloads.menu.service.utility.MenuHelperService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +28,8 @@ public class MenuService {
   @Getter private final MenuMapper menuMapper;
 
   private final SearchMenuResultItemMapper searchMenuResultItemMapper;
+
+  private final MenuHelperService menuHelperService;
 
   public ResourceCreatedResponse create(@Valid CreateMenuRequest body, String correlationId) {
 
@@ -73,7 +76,8 @@ public class MenuService {
         new Menu(id.toString(), restaurantId, "name", "description", new ArrayList<>(), true);
     Item item = new Item(itemId, "item name", "item description", 5.99d, true);
     Category category = new Category(categoryId, "cat name", "cat description", List.of(item));
-    menu.addOrUpdateCategory(category);
+
+    menuHelperService.addOrUpdateCategory(menu, category);
 
     return menuMapper.toDto(menu);
   }

@@ -4,6 +4,7 @@ import com.amido.stacks.workloads.menu.api.v1.dto.response.MenuDTO;
 import com.amido.stacks.workloads.menu.domain.Menu;
 import com.amido.stacks.workloads.menu.mappers.MenuMapper;
 import com.amido.stacks.workloads.menu.mappers.SearchMenuResultItemMapper;
+import com.amido.stacks.workloads.menu.service.utility.MenuHelperService;
 import com.amido.stacks.workloads.menu.service.v1.MenuService;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -13,8 +14,10 @@ import org.springframework.stereotype.Service;
 public class MenuServiceV2 extends MenuService {
 
   public MenuServiceV2(
-      MenuMapper menuMapper, SearchMenuResultItemMapper searchMenuResultItemMapper) {
-    super(menuMapper, searchMenuResultItemMapper);
+      MenuMapper menuMapper,
+      SearchMenuResultItemMapper searchMenuResultItemMapper,
+      MenuHelperService menuHelperService) {
+    super(menuMapper, searchMenuResultItemMapper, menuHelperService);
   }
 
   @Override
