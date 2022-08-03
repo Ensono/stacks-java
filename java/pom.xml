@@ -20,8 +20,12 @@
   <description>Demo project for Java</description>
 
   <properties>
-    <stacks.core.api.version>1.0.2.2-RELEASE</stacks.core.api.version>
+    <stacks.core.api.version>1.0.3.2-RELEASE</stacks.core.api.version>
     <stacks.core.commons.version>1.0.3</stacks.core.commons.version>
+
+    <!-- Stacks features -->
+    <aws.profile.name>no-aws</aws.profile.name>
+    <azure.profile.name>no-azure</azure.profile.name>
 
     <java.version>11</java.version>
     <org.projectlombok.version>1.18.0</org.projectlombok.version>
@@ -227,15 +231,6 @@
       <version>${lombok.version}</version>
       <scope>provided</scope>
     </dependency>
-
-    <!--
-    <dependency>
-        <groupId>com.microsoft.azure</groupId>
-        <artifactId>azure-keyvault-secrets-spring-boot-starter</artifactId>
-        <version>${azure.springboot.version}</version>
-        <scope>runtime</scope>
-    </dependency>
-    -->
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -546,6 +541,37 @@
   </build>
 
   <profiles>
+
+    <!-- START FEATURE PROFILES -->
+
+    <profile>
+      <id>aws</id>
+      <activation>
+        <file>
+          <exists>.</exists>
+        </file>
+      </activation>
+      <properties>
+        <aws.profile.name>aws</aws.profile.name>
+      </properties>
+      <dependencies>
+      </dependencies>
+    </profile>
+
+    <profile>
+      <id>azure</id>
+      <activation>
+        <file>
+          <exists>.</exists>
+        </file>
+      </activation>
+      <properties>
+        <azure.profile.name>azure</azure.profile.name>
+      </properties>
+      <dependencies>
+      </dependencies>
+    </profile>
+
     <profile>
       <id>owasp-dependency-check</id>
       <build>
@@ -565,6 +591,7 @@
         </plugins>
       </build>
     </profile>
+
     <profile>
       <id>test</id>
       <activation>
@@ -575,6 +602,7 @@
         </property>
       </activation>
     </profile>
+
     <profile>
       <id>local</id>
       <build>
@@ -588,6 +616,7 @@
         </resources>
       </build>
     </profile>
+
     <profile>
       <id>update-permissions</id>
       <activation>
@@ -621,5 +650,6 @@
         </plugins>
       </build>
     </profile>
+
   </profiles>
 </project>
