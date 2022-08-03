@@ -20,8 +20,12 @@
   <description>Demo project for Java</description>
 
   <properties>
-    <stacks.core.api.version>1.0.2.2-RELEASE</stacks.core.api.version>
+    <stacks.core.api.version>1.0.3.2-RELEASE</stacks.core.api.version>
     <stacks.core.commons.version>1.0.3</stacks.core.commons.version>
+
+    <!-- Stacks features -->
+    <aws.profile.name>no-aws</aws.profile.name>
+    <azure.profile.name>no-azure</azure.profile.name>
 
     <java.version>11</java.version>
     <org.projectlombok.version>1.18.0</org.projectlombok.version>
@@ -52,6 +56,8 @@
     <au.com.dius.pact.provider.maven-version>4.2.7</au.com.dius.pact.provider.maven-version>
     <log4j-version>2.17.0</log4j-version>
     <org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
+    <aws-java-sdk-s3.version>1.12.273</aws-java-sdk-s3.version>
+    <aspectjweaver.version>1.9.9.1</aspectjweaver.version>
 
     <fmt-maven-plugin.version>2.13</fmt-maven-plugin.version>
     <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
@@ -71,15 +77,6 @@
     <pact.api.port>9000</pact.api.port>
   </properties>
 
-  <repositories>
-    <repository>
-      <snapshots/>
-      <id>snapshots</id>
-      <name>default-maven-virtual</name>
-      <url>https://amidostacks.jfrog.io/artifactory/default-maven-virtual</url>
-    </repository>
-  </repositories>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -98,6 +95,12 @@
       <groupId>com.amido.stacks.modules</groupId>
       <artifactId>stacks-core-api</artifactId>
       <version>${stacks.core.api.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.aspectj</groupId>
+          <artifactId>aspectjweaver</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -228,15 +231,6 @@
       <scope>provided</scope>
     </dependency>
 
-    <!--
-    <dependency>
-        <groupId>com.microsoft.azure</groupId>
-        <artifactId>azure-keyvault-secrets-spring-boot-starter</artifactId>
-        <version>${azure.springboot.version}</version>
-        <scope>runtime</scope>
-    </dependency>
-    -->
-
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -320,6 +314,12 @@
       <scope>runtime</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk-s3</artifactId>
+      <version>${aws-java-sdk-s3.version}</version>
+    </dependency>
+    
   </dependencies>
 
   <reporting>
@@ -546,6 +546,37 @@
   </build>
 
   <profiles>
+
+    <!-- START FEATURE PROFILES -->
+
+    <profile>
+      <id>aws</id>
+      <activation>
+        <file>
+          <exists>.</exists>
+        </file>
+      </activation>
+      <properties>
+        <aws.profile.name>aws</aws.profile.name>
+      </properties>
+      <dependencies>
+      </dependencies>
+    </profile>
+
+    <profile>
+      <id>azure</id>
+      <activation>
+        <file>
+          <exists>.</exists>
+        </file>
+      </activation>
+      <properties>
+        <azure.profile.name>azure</azure.profile.name>
+      </properties>
+      <dependencies>
+      </dependencies>
+    </profile>
+
     <profile>
       <id>owasp-dependency-check</id>
       <build>
@@ -565,6 +596,7 @@
         </plugins>
       </build>
     </profile>
+
     <profile>
       <id>test</id>
       <activation>
@@ -575,6 +607,7 @@
         </property>
       </activation>
     </profile>
+
     <profile>
       <id>local</id>
       <build>
@@ -588,6 +621,7 @@
         </resources>
       </build>
     </profile>
+
     <profile>
       <id>update-permissions</id>
       <activation>
@@ -621,5 +655,6 @@
         </plugins>
       </build>
     </profile>
+
   </profiles>
 </project>
