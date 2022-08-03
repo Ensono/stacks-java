@@ -56,6 +56,7 @@
     <au.com.dius.pact.provider.maven-version>4.2.7</au.com.dius.pact.provider.maven-version>
     <log4j-version>2.17.0</log4j-version>
     <org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
+    <aws-java-sdk-s3.version>1.12.273</aws-java-sdk-s3.version>
 
     <fmt-maven-plugin.version>2.13</fmt-maven-plugin.version>
     <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
@@ -74,15 +75,6 @@
     <pact.api.host>localhost</pact.api.host>
     <pact.api.port>9000</pact.api.port>
   </properties>
-
-  <repositories>
-    <repository>
-      <snapshots/>
-      <id>snapshots</id>
-      <name>default-maven-virtual</name>
-      <url>https://amidostacks.jfrog.io/artifactory/default-maven-virtual</url>
-    </repository>
-  </repositories>
 
   <dependencyManagement>
     <dependencies>
@@ -313,6 +305,12 @@
       <artifactId>oauth2-oidc-sdk</artifactId>
       <version>${com.nimbusds.oauth2-oidc-sdk-version}</version>
       <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk-s3</artifactId>
+      <version>${aws-java-sdk-s3.version}</version>
     </dependency>
 
   </dependencies>
