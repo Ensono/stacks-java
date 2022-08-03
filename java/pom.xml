@@ -95,6 +95,12 @@
       <groupId>com.amido.stacks.modules</groupId>
       <artifactId>stacks-core-api</artifactId>
       <version>${stacks.core.api.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.aspectj</groupId>
+          <artifactId>aspectjweaver</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -313,15 +319,7 @@
       <artifactId>aws-java-sdk-s3</artifactId>
       <version>${aws-java-sdk-s3.version}</version>
     </dependency>
-
-    <dependency>
-      <groupId>org.aspectj</groupId>
-      <artifactId>aspectjweaver</artifactId>
-      <version>${aspectjweaver.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-
-
+    
   </dependencies>
 
   <reporting>
