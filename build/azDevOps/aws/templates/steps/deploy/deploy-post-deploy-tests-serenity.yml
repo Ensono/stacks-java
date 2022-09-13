@@ -33,10 +33,11 @@ steps:
       # Note: Don't forget to update the `maven_allowed_post_deploy_test_tags` in the root pipeline file.
       - task: Bash@3
         inputs:
-          filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-post-deploy-karate-test-run.bash"
+          filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-post-deploy-tagged-test-run.bash"
           arguments: >
-            -a "Functional"
+            -a "@Functional"
             -b "${{ parameters.functional_test_base_url }}"
+            -Y "${{ parameters.maven_ignored_post_deploy_test_tags }}"
             -Z "${{ parameters.maven_cache_directory }}"
           workingDirectory: "${{ parameters.functional_test_artefact_download_location }}"
         target:
@@ -45,6 +46,41 @@ steps:
         env:
           ${{ each var in parameters.auth0_credentials }}:
             ${{ var.key }}: ${{ var.value }}
+
+      # Run after all Post-Deploy tests to aggregate Serenity reports.
+      - task: Bash@3
+        inputs:
+          filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-serenity-aggregate.bash"
+          arguments: >
+            -Z "${{ parameters.maven_cache_directory }}"
+          workingDirectory: "${{ parameters.functional_test_artefact_download_location }}"
+        target:
+          container: ${{ parameters.docker_java_container }}
+        displayName: "Post-Deploy Test: Serenity Report Aggregate"
+
+      # Mutate the Test report files so Azure DevOps shows them as separate Test Runs.
+      - task: Bash@3
+        inputs:
+          targetType: "inline"
+          script: |
+            for i in target/failsafe-reports/TEST-*; do
+              sed -i '2s/ name="/ name="${{ parameters.environment }} - /' "$i"
+            done
+          workingDirectory: "${{ parameters.functional_test_artefact_download_location }}"
+        target:
+          container: ${{ parameters.docker_java_container }}
+        displayName: "Post-Deploy Test: Splice Env into Test Report Names"
+
+      # Run after all Post-Deploy tests to check if they ran successfully or not.
+      - task: Bash@3
+        inputs:
+          filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-post-deploy-test-verify.bash"
+          arguments: >
+            -Z "${{ parameters.maven_cache_directory }}"
+          workingDirectory: "${{ parameters.functional_test_artefact_download_location }}"
+        target:
+          container: ${{ parameters.docker_java_container }}
+        displayName: "Post-Deploy Test: Verify Test Run"
 
       - task: PublishPipelineArtifact@1
         condition: always()
