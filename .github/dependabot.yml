@@ -3,7 +3,8 @@ updates:
   - package-ecosystem: maven
     directory: "/java"
     schedule:
-      interval: daily
+      interval: weekly
+      day: monday
       timezone: Europe/London
     open-pull-requests-limit: 10
     assignees:
@@ -13,7 +14,9 @@ updates:
   - package-ecosystem: npm
     directory: "/build/azDevOps/azure/coverage"
     schedule:
-      interval: daily
+      schedule:
+      interval: weekly
+      day: monday
       timezone: Europe/London
     open-pull-requests-limit: 10
     assignees:
@@ -23,7 +26,8 @@ updates:
   - package-ecosystem: maven
     directory: "/api-tests"
     schedule:
-      interval: daily
+      interval: weekly
+      day: monday
       timezone: Europe/London
     open-pull-requests-limit: 10
     assignees:
@@ -33,7 +37,8 @@ updates:
   - package-ecosystem: maven
     directory: "/api-tests-karate"
     schedule:
-      interval: daily
+      interval: weekly
+      day: monday
       timezone: Europe/London
     open-pull-requests-limit: 10
     assignees:
@@ -43,7 +48,8 @@ updates:
   - package-ecosystem: terraform
     directory: "/deploy/azure/app/kube"
     schedule:
-      interval: daily
+      interval: weekly
+      day: monday
       timezone: Europe/London
     open-pull-requests-limit: 10
     assignees:
