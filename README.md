@@ -1,4 +1,4 @@
-The full documentation on Amido Stacks can be found [here](https://amido.github.io/stacks/).
+jThe full documentation on Amido Stacks can be found [here](https://amido.github.io/stacks/).
 
 ## Using the repository to build the Java Spring Boot Rest API application
 
