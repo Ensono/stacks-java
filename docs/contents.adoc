@@ -1,0 +1,5 @@
+.Architecture
+[%collapsible%open]
+====
+Architecture docs
+====
