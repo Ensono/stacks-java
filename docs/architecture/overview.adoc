@@ -1,3 +1,11 @@
 = Amido Stacks - Architecture Overview
 
 video::658523841[vimeo]
+
+.Too much detail? Click here.
+[%collapsible%open]
+====
+This content is revealed by default.
+
+If it's taking up too much space, the reader can hide it.
+====
