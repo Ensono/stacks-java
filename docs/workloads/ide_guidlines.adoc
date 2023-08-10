@@ -1,0 +1,146 @@
+== IDE guidelines for the Java Rest API
+
+== IDE guidelineslink:#ide-guidelines[​]
+
+The IDE we have used is Intellij.
+
+We recommend that you install the following plugins:
+
+* Lombok - To reduce the amount of boiler-plate code that needs to be
+written
+* SonarLint - Fix and detect code quality issues
+(https://www.sonarlint.org/)
+* Spring Assistant - An IntelliJ plugin for aiding Spring development
+projects (https://plugins.jetbrains.com/plugin/10229-spring-assistant)
+* Spring Tools - Adds Spring support for IDEs (https://spring.io/tools)
+* CheckStyle - Flags up issues with coding style
+(https://checkstyle.sourceforge.io/)
+* google-java-format Formatter - Formats code according to configuration
+(https://github.com/amido/stacks-java/blob/master/tools/formatter/intellij-java-google-style.xml)
+
+=== Plugins used in POMlink:#plugins-used-in-pom[​]
+
+* Lombok - Avoids need to write e.g. Getter, Setter,
+RequiredArgsConstructor, ToString, EqualsAndHashCode) in Java classes.
+* JaCoCo - A free Java code test coverage library.
+* Surefire - Used for reporting purposes (creates reports based on tests
+in the Java test package).
+* fmt-maven-plugin - Formats the java code based on rules in
+java-google-style.xml.
+* Spotbugs - Performs a static analysis of the Java code to check for
+bugs.
+
+=== Set up the projectlink:#set-up-the-project[​]
+
+==== How to import the whole projectlink:#how-to-import-the-whole-project[​]
+
+In the IDE(We used Intellij) go to File -> New -> Project. Set project
+SDK to Java 11. Click Next -> Next
+image:/assets/images/new_java_project-e8e9490f10c6649dbb58791306565548.png[New
+Project]
+
+Choose the java project folder
+image:/assets/images/new_java_project_1-7a59f9d8d8bc4f4cc5c0f56c0a56a748.png[New
+Java Project] click finish.
+
+==== What setup required to get it up and runninglink:#what-setup-required-to-get-it-up-and-running[​]
+
+Open up the "java" folder and right click on pom.xml and choose "Add as
+Maven Project". Click on Run -> Edit Configurations
+image:/assets/images/run_configuration-8e78ac0c89d26029063ad8ed1978e076.png[Run
+Configurations] Click on Add new Configuration and choose
+Application/Spring boot
+image:/assets/images/run_configuration_1-77d3b8880dec264fc3ef5534a982cec2.png[Run
+Configurations_1] Choose the main class as "Application.java" and set
+any relevant variables, such as to set environment variable for
+*AZURE_COSMOSDB_KEY* and set JRE to Java 11. Click OK
+image:/assets/images/run_configuration_2-c59de32a330a307b01632b81da844e19.png[Run
+Configurations_2]
+
+Open Application.java file and right click and choose run
+Application.image:/assets/images/run_java_application-5850fef9cbf5f332cbf52792d4b1c7e6.png[Run
+Java Application]
+
+=== Code Qualitylink:#code-quality[​]
+
+==== Formatterlink:#formatter[​]
+
+Install the `+intellij-java-google-style.xml+` formatter configuration
+file into the IDE from
+https://github.com/amido/stacks-java/blob/master/tools/formatter/intellij-java-google-style.xml[here].
+
+The Java source code will automatically be reformatted to comply with
+the https://google.github.io/styleguide/javaguide.html[Google Java
+Style].
+
+You can override the settings locally in the codebase by adding, for
+example:
+
+[source,prism-code,language-text,codeBlock_rtdJ,thin-scrollbar]
+----
+//@formatter:off
+manually formatted code
+///@formatter:on
+----
+
+Copy
+
+===== Validating and applying formattinglink:#validating-and-applying-formatting[​]
+
+From the `+<PROJECT-NAME>/java+` folder run
+
+* Unix
+* Windows
+
+[source,prism-code,language-bash,codeBlock_rtdJ,thin-scrollbar]
+----
+./mvnw com.coveo:fmt-maven-plugin:check
+----
+
+Copy
+
+[source,prism-code,language-bash,codeBlock_rtdJ,thin-scrollbar]
+----
+mvnw.cmd com.coveo:fmt-maven-plugin:check
+----
+
+Copy
+
+To validate the current formatting. You can then run the below code to
+apply formatting to the source code.
+
+* Unix
+* Windows
+
+[source,prism-code,language-bash,codeBlock_rtdJ,thin-scrollbar]
+----
+./mvnw com.coveo:fmt-maven-plugin:format
+----
+
+Copy
+
+[source,prism-code,language-bash,codeBlock_rtdJ,thin-scrollbar]
+----
+mvnw.cmd com.coveo:fmt-maven-plugin:format
+----
+
+Copy
+
+==== Verifying common programming flawslink:#verifying-common-programming-flaws[​]
+
+* Unix
+* Windows
+
+[source,prism-code,language-bash,codeBlock_rtdJ,thin-scrollbar]
+----
+./mvnw spotbugs:check
+----
+
+Copy
+
+[source,prism-code,language-bash,codeBlock_rtdJ,thin-scrollbar]
+----
+mvnw.cmd spotbugs:check
+----
+
+Copy
