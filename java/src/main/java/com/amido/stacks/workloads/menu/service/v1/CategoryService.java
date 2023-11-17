@@ -4,8 +4,8 @@ import com.amido.stacks.core.api.dto.response.ResourceCreatedResponse;
 import com.amido.stacks.core.api.dto.response.ResourceUpdatedResponse;
 import com.amido.stacks.workloads.menu.api.v1.dto.request.CreateCategoryRequest;
 import com.amido.stacks.workloads.menu.api.v1.dto.request.UpdateCategoryRequest;
-import java.util.UUID;
 import jakarta.validation.Valid;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
