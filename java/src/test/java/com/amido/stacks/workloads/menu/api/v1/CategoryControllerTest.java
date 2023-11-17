@@ -44,8 +44,7 @@ public class CategoryControllerTest {
 
   public static final String DELETE_CATEGORY = "%s/v1/menu/%s/category/%s";
 
-  @LocalServerPort
-  private int port;
+  @LocalServerPort private int port;
 
   @Autowired private TestRestTemplate testRestTemplate;
 

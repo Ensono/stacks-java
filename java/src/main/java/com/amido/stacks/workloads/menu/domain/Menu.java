@@ -1,11 +1,11 @@
 package com.amido.stacks.workloads.menu.domain;
 
+import jakarta.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import jakarta.persistence.Id;
 
 @Data
 @AllArgsConstructor

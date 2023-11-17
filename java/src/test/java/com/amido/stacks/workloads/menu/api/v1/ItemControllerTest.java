@@ -48,14 +48,11 @@ public class ItemControllerTest {
 
   public static final String DELETE_ITEM = "%s/v1/menu/%s/category/%s/items/%s";
 
-  @LocalServerPort
-  private int port;
+  @LocalServerPort private int port;
 
-  @Autowired
-  private TestRestTemplate testRestTemplate;
+  @Autowired private TestRestTemplate testRestTemplate;
 
-  @Autowired
-  private MenuHelperService menuHelperService;
+  @Autowired private MenuHelperService menuHelperService;
 
   @Test
   void testAddItem() {
