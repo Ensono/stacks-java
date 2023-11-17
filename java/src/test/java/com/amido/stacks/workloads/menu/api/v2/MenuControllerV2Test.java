@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -24,7 +24,8 @@ public class MenuControllerV2Test {
 
   private final String GET_MENU_BY_ID = "%s/v2/menu/%s";
 
-  @LocalServerPort private int port;
+  @LocalServerPort
+  private int port;
 
   @Autowired private TestRestTemplate testRestTemplate;
 
