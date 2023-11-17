@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
@@ -18,16 +18,16 @@ import org.springframework.test.context.TestPropertySource;
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     classes = Application.class,
     properties = {
-      "stacks-secret-1=SEC1",
-      "stacks-secret-2=SEC2",
-      "stacks-secret-3=SEC3",
-      "stacks-secret-4=SEC4"
+        "stacks-secret-1=SEC1",
+        "stacks-secret-2=SEC2",
+        "stacks-secret-3=SEC3",
+        "stacks-secret-4=SEC4"
     })
 @TestPropertySource(
     properties = {
-      "management.port=0",
-      "aws.xray.enabled=false",
-      "aws.secretsmanager.enabled=false"
+        "management.port=0",
+        "aws.xray.enabled=false",
+        "aws.secretsmanager.enabled=false"
     })
 @Tag("Integration")
 @ActiveProfiles("test")
@@ -35,9 +35,11 @@ class SecretsControllerTest {
 
   public static final String GET_SECRETS = "/v1/secrets";
 
-  @LocalServerPort private int port;
+  @LocalServerPort
+  private int port;
 
-  @Autowired private TestRestTemplate testRestTemplate;
+  @Autowired
+  private TestRestTemplate testRestTemplate;
 
   @Test
   void shouldReturnValidSecrets() {

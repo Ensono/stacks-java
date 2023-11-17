@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -44,7 +44,8 @@ public class CategoryControllerTest {
 
   public static final String DELETE_CATEGORY = "%s/v1/menu/%s/category/%s";
 
-  @LocalServerPort private int port;
+  @LocalServerPort
+  private int port;
 
   @Autowired private TestRestTemplate testRestTemplate;
 
