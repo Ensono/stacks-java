@@ -24,8 +24,7 @@ public class MenuControllerV2Test {
 
   private final String GET_MENU_BY_ID = "%s/v2/menu/%s";
 
-  @LocalServerPort
-  private int port;
+  @LocalServerPort private int port;
 
   @Autowired private TestRestTemplate testRestTemplate;
 

@@ -24,7 +24,6 @@ public class ApplicationNoSecurity {
    * e.g. The example below restricts the URLs that start with /admin/ to users that have ADMIN
    * role, and declares that any other URLs need to be successfully authenticated.
    */
-
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
     return web -> web.ignoring().requestMatchers("/**");

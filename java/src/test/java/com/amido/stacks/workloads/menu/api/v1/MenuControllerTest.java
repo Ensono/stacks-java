@@ -59,26 +59,19 @@ public class MenuControllerTest {
   final int DEFAULT_PAGE_NUMBER = 1;
   final int DEFAULT_PAGE_SIZE = 20;
 
-  @LocalServerPort
-  private int port;
+  @LocalServerPort private int port;
 
-  @Autowired
-  private TestRestTemplate testRestTemplate;
+  @Autowired private TestRestTemplate testRestTemplate;
 
-  @Autowired
-  private MenuMapper menuMapper;
+  @Autowired private MenuMapper menuMapper;
 
-  @Autowired
-  private CategoryMapper categoryMapper;
+  @Autowired private CategoryMapper categoryMapper;
 
-  @Autowired
-  private ItemMapper itemMapper;
+  @Autowired private ItemMapper itemMapper;
 
-  @Autowired
-  private SearchMenuResultItemMapper searchMenuResultItemMapper;
+  @Autowired private SearchMenuResultItemMapper searchMenuResultItemMapper;
 
-  @Autowired
-  private MenuHelperService menuHelperService;
+  @Autowired private MenuHelperService menuHelperService;
 
   @Test
   void testCreateNewMenu() {
