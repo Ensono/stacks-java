@@ -248,7 +248,6 @@
         <version>${spring.boot.version}</version>
         <configuration>
           <mainClass>com.amido.stacks.workloads.Application</mainClass>
-          <layout>JAR</layout>
         </configuration>
         <executions>
           <execution>
