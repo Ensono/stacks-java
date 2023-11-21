@@ -13,10 +13,11 @@ COPY src src
 
 RUN ls -la /root/.m2/repository
 
-RUN ./mvnw dependency:go-offline --quiet\
-	&& ./mvnw process-resources --quiet \
-	&& ./mvnw clean package -Dmaven.default-test.skip=true -Dmaven.test.skip=true -DskipTests --no-transfer-progress --quiet\
-  && mkdir -p extracted && java -Djarmode=layertools -jar target/stacks-api-[^-]*.jar extract --destination extracted
+RUN ./mvnw dependency:go-offline --quiet \
+    && ./mvnw process-resources --quiet \
+    && ./mvnw clean package -Dmaven.default-test.skip=true -Dmaven.test.skip=true -DskipTests --no-transfer-progress --quiet \
+    && mkdir -p extracted && find target -maxdepth 1 -type f -name '*.jar' ! -name '*-javadoc.jar' ! -name '*-sources.jar' -exec java -Djarmode=layertools -jar {} extract --destination extracted \;
+
 
 FROM azul/zulu-openjdk-alpine:17-jre
 
