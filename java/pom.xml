@@ -44,6 +44,8 @@
     <pact.api.protocol>http</pact.api.protocol>
     <pact.api.host>localhost</pact.api.host>
     <pact.api.port>9000</pact.api.port>
+
+    <maven-owasp-dependency-check-plugin.version>9.0.0</maven-owasp-dependency-check-plugin.version>
   </properties>
 
   <dependencyManagement>
@@ -258,6 +260,18 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <version>${maven-owasp-dependency-check-plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>${jacoco.version}</version>
@@ -312,7 +326,6 @@
           <systemPropertyVariables>
             <pact.verifier.publishResults>true</pact.verifier.publishResults>
           </systemPropertyVariables>
-
           <serviceProviders>
             <serviceProvider>
               <name>${pact.api.name}</name>
@@ -321,16 +334,7 @@
               <port>${pact.api.port}</port>
             </serviceProvider>
           </serviceProviders>
-
         </configuration>
-<!--        <executions>-->
-<!--          <execution>-->
-<!--            <phase>integration-test</phase>-->
-<!--            <goals>-->
-<!--              <goal>verify</goal>-->
-<!--            </goals>-->
-<!--          </execution>-->
-<!--        </executions>-->
       </plugin>
       <plugin>
         <groupId>com.coveo</groupId>
