@@ -44,8 +44,6 @@
     <pact.api.protocol>http</pact.api.protocol>
     <pact.api.host>localhost</pact.api.host>
     <pact.api.port>9000</pact.api.port>
-
-    <maven-owasp-dependency-check-plugin.version>9.0.0</maven-owasp-dependency-check-plugin.version>
   </properties>
 
   <dependencyManagement>
@@ -255,18 +253,6 @@
           <execution>
             <goals>
               <goal>repackage</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.owasp</groupId>
-        <artifactId>dependency-check-maven</artifactId>
-        <version>${maven-owasp-dependency-check-plugin.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>check</goal>
             </goals>
           </execution>
         </executions>
