@@ -39,7 +39,7 @@ pipeline {
     maven_post_deploy_failsafe_reports_directory="target/failsafe-reports"
     // TF STATE CONFIG
     terraform_state_rg="amido-stacks-rg-uks"
-    terraform_state_storage="amidostackstfstategbl"
+    terraform_state_storage="ensonostackstfstategbl"
     terraform_state_container="tfstate"
     // Stacks operates Terraform states based on workspaces **IT IS VERY IMPORTANT** that you ensure a unique name for each application definition
     // Furthermore **IT IS VERY IMPORTANT** that you change the name of a workspace for each deployment stage
@@ -92,10 +92,10 @@ pipeline {
     // PROD_AZURE_TENANT_ID - Please define this as a Jenkins credential.
     // PROD_AZURE_SUBSCRIPTION_ID - Please define this as a Jenkins credential.
     // Infra
-    base_domain_nonprod="nonprod.amidostacks.com"
-    base_domain_internal_nonprod="nonprod.amidostacks.internal"
-    base_domain_prod="prod.amidostacks.com"
-    base_domain_internal_prod="prod.amidostacks.internal"
+    base_domain_nonprod="nonprod.ensonostacks.com"
+    base_domain_internal_nonprod="nonprod.ensonostacks.internal"
+    base_domain_prod="prod.ensonostacks.com"
+    base_domain_internal_prod="prod.ensonostacks.internal"
     // Functional Tests
     functional_test="true"
     // functional_test_path: "${self_functional_testproject_dir }}"
