@@ -178,9 +178,9 @@ stages:
   - stage: Build
     variables:
       # You can find notes in the READMEs around which values to use for each ENV variable group
-      - group: amido-stacks-infra-credentials-nonprod
+      - group: ensono-stacks-infra-credentials-nonprod
       - group: stacks-credentials-nonprod-kv
-      - group: amido-stacks-java-api
+      - group: ensono-stacks-java-api
     jobs:
       - job: ApiBuild
         pool:
@@ -311,9 +311,9 @@ stages:
     dependsOn: Build
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
-      - group: amido-stacks-infra-credentials-nonprod
+      - group: ensono-stacks-infra-credentials-nonprod
       - group: stacks-credentials-nonprod-kv
-      - group: amido-stacks-java-api
+      - group: ensono-stacks-java-api
       - name: dns_name
         value: "$(Environment.ShortName)-java-api"
       - name: core_resource_group
@@ -534,9 +534,9 @@ stages:
     dependsOn: Build
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
-      - group: amido-stacks-infra-credentials-prod
+      - group: ensono-stacks-infra-credentials-prod
       - group: stacks-credentials-prod-kv
-      - group: amido-stacks-java-api
+      - group: ensono-stacks-java-api
       - name: dns_name
         value: "$(Environment.ShortName)-java-api"
       - name: core_resource_group
@@ -647,8 +647,8 @@ stages:
           vmImage: $(pool_vm_image)
         environment: ${{ variables.domain }}-prod
         variables:
-          - group: amido-stacks-infra-credentials-nonprod
-          - group: amido-stacks-infra-credentials-prod
+          - group: ensono-stacks-infra-credentials-nonprod
+          - group: ensono-stacks-infra-credentials-prod
           - group: stacks-credentials-prod-kv
           - group: stacks-credentials-nonprod-kv
         strategy:
@@ -797,7 +797,7 @@ stages:
       - Prod
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['create_release'], 'true'))
     variables:
-      - group: amido-stacks-infra-credentials-nonprod
+      - group: ensono-stacks-infra-credentials-nonprod
     jobs:
       - job: CreateGitHubRelease
         pool:

@@ -17,15 +17,15 @@ pipeline:
     replacements:
       - pattern: ^.*stacks-credentials-nonprod-kv$
         value: ""
-      - pattern: ^.*amido-stacks-infra-credentials-nonprod$
+      - pattern: ^.*ensono-stacks-infra-credentials-nonprod$
         value: ""
-      - pattern: ^.*amido-stacks-infra-credentials-prod$
+      - pattern: ^.*ensono-stacks-infra-credentials-prod$
         value: ""
       - pattern: ^.*stacks-credentials-prod-kv$
         value: ""
       - pattern: ^.*stacks-credentials-nonprod-kv$
         value: ""
-      - pattern: ^.*amido-stacks-java-api$
+      - pattern: ^.*ensono-stacks-java-api$
         value: ""
 
 # The init stage are things that are required to run before the template is run
