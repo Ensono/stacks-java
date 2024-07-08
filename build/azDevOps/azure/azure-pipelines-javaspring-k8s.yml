@@ -147,6 +147,8 @@ variables:
     value: true
   - name: vulnerability_scan_report
     value: "target/dependency-check-report.html"
+  - name: vulnerability_scan_api_key
+    value: "${{ variables.nvd-api-key }}"
   - name: vulnerability_scan_fail_build_on_detection
     value: false
 
@@ -224,7 +226,7 @@ stages:
               docker_build_container: "${{ variables.docker_java_image }}"
               # Vulnerability Scanning
               vulnerability_scan: "${{ variables.vulnerability_scan }}"
-              vulnerability_scan_api_key: "${{ variables.nvd-api-key }}"
+              vulnerability_scan_api_key: "${{ variables.vulnerability_scan_api_key }}"
               vulnerability_scan_fail_build_on_detection: "${{ variables.vulnerability_scan_fail_build_on_detection }}"
               project_type: "${{ variables.java_project_type }}"
 
@@ -246,7 +248,7 @@ stages:
               docker_build_container: "${{ variables.docker_java_image }}"
               # Vulnerability Scan
               vulnerability_scan: "${{ variables.vulnerability_scan }}"
-              vulnerability_scan_api_key: "${{ variables.nvd-api-key }}"
+              vulnerability_scan_api_key: "${{ variables.vulnerability_scan_api_key }}"
               vulnerability_scan_fail_build_on_detection: "${{ variables.vulnerability_scan_fail_build_on_detection }}"
               project_type: "${{ variables.functional_test_project_type }}"
 
