@@ -15,7 +15,7 @@ parameters:
   docker_build_container: ""
   # Vulnerability Scanning
   vulnerability_scan: true
-  vulnerability_scan_api_key: ""
+  vulnerability_scan_api_key: "$(VULNERABILITY_SCAN_API_KEY)"
   vulnerability_scan_fail_build_on_detection: true
   project_type: ""
 
