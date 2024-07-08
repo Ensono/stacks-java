@@ -224,7 +224,7 @@ stages:
               docker_build_container: "${{ variables.docker_java_image }}"
               # Vulnerability Scanning
               vulnerability_scan: "${{ variables.vulnerability_scan }}"
-              vulnerability_scan_api_key: "$(VULNERABILITY_SCAN_API_KEY)"
+              vulnerability_scan_api_key: "${{ variables.nvd-api-key }}"
               vulnerability_scan_fail_build_on_detection: "${{ variables.vulnerability_scan_fail_build_on_detection }}"
               project_type: "${{ variables.java_project_type }}"
 
@@ -246,7 +246,7 @@ stages:
               docker_build_container: "${{ variables.docker_java_image }}"
               # Vulnerability Scan
               vulnerability_scan: "${{ variables.vulnerability_scan }}"
-              vulnerability_scan_api_key: "$(VULNERABILITY_SCAN_API_KEY)"
+              vulnerability_scan_api_key: "${{ variables.nvd-api-key }}"
               vulnerability_scan_fail_build_on_detection: "${{ variables.vulnerability_scan_fail_build_on_detection }}"
               project_type: "${{ variables.functional_test_project_type }}"
 
