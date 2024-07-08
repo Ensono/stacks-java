@@ -148,7 +148,7 @@ variables:
   - name: vulnerability_scan_report
     value: "target/dependency-check-report.html"
   - name: vulnerability_scan_api_key
-    value: "${{ variables.nvd-api-key }}"
+    value: "$(VULNERABILITY_SCAN_API_KEY)"
   - name: vulnerability_scan_fail_build_on_detection
     value: false
 
