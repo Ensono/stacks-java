@@ -79,10 +79,10 @@ variables:
   - name: dns_zone_resource_group
     value: "Stacks-Ancillary-Resources"
 
-  # GitHub infomration
+  # GitHub information
   - name: create_release
     value: true
   - name: github_release_service_connection
-    value: GitHubReleases
+    value: ensonostacks
   - name: github_org
     value: $(company)
