@@ -317,6 +317,8 @@ stages:
     dependsOn: Build
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
+      - group: azure-sp-creds
+      - group: stacks-acr-creds
       - group: stacks-infra-credentials-nonprod
       - group: stacks-credentials-nonprod-kv
       - group: stacks-java-api
@@ -371,7 +373,7 @@ stages:
                   parameters:
                     pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
                     docker_terraform_container: "terraform_custom"
-                    # Azure Credenitals (For Deploying)
+                    # Azure Credentials (For Deploying)
                     azure_client_id: "$(ARM_CLIENT_ID)"
                     azure_client_secret: "$(ARM_CLIENT_SECRET)"
                     azure_tenant_id: "$(ARM_TENANT_ID)"
@@ -540,6 +542,8 @@ stages:
     dependsOn: Build
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
+      - group: azure-sp-creds
+      - group: stacks-acr-creds
       - group: stacks-infra-credentials-prod
       - group: stacks-credentials-prod-kv
       - group: stacks-java-api
