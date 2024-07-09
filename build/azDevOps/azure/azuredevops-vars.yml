@@ -26,7 +26,7 @@ variables:
   - name: tf_state_rg
     value: Stacks-Ancillary-Resources
   - name: tf_state_storage
-    value: amidostackstfstate
+    value: ensonostackstfstate
   - name: tf_state_container
     value: tfstate
   - name: tf_state_key
@@ -35,11 +35,11 @@ variables:
   # TF Variables
   # --nonprod
   - name: tf_app_insights_name_nonprod
-    value: amido-stacks-nonprod-euw-core
+    value: ensono-stacks-nonprod-euw-core
   - name: tf_app_gateway_frontend_ip_name_nonprod
-    value: amido-stacks-nonprod-euw-core
+    value: ensono-stacks-nonprod-euw-core
   - name: tf_core_resource_group_nonprod
-    value: amido-stacks-nonprod-euw-core
+    value: ensono-stacks-nonprod-euw-core
 
   # --prod
   - name: tf_app_insights_name_prod
@@ -52,7 +52,7 @@ variables:
   # Kubernetes configuration
   # --nonprod
   - name: kubernetes_clustername_nonprod
-    value: amido-stacks-nonprod-euw-core
+    value: ensono-stacks-nonprod-euw-core
 
   # --prod
   - name: kubernetes_clustername_prod
@@ -60,7 +60,7 @@ variables:
 
   # Container registry configuration
   - name: docker_container_registry_name_nonprod
-    value: amidostacksnonprodeuwcore
+    value: ensonostacksnonprodeuwcore
   - name: docker_container_registry_name_prod
     value: amidostacksprodeuwcore
 
