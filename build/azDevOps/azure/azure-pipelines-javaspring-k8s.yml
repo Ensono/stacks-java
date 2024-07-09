@@ -112,9 +112,9 @@ variables:
     value: "azul_java"
 
   - name: k8s_docker_registry_nonprod
-    value: "$(DOCKER_CONTAINER_REGISTRY_NAME).azurecr.io"
+    value: "$(DOCKER_CONTAINER_REGISTRY_NAME)"
   - name: k8s_docker_registry_prod
-    value: "$(DOCKER_CONTAINER_REGISTRY_NAME).azurecr.io"
+    value: "$(DOCKER_CONTAINER_REGISTRY_NAME)"
 
   # BUILD ARTIFACTS across stages
   - name: build_artifact_deploy_path
