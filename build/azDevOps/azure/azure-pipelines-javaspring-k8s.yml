@@ -112,9 +112,9 @@ variables:
     value: "azul_java"
 
   - name: k8s_docker_registry_nonprod
-    value: "${{ variables.docker_container_registry_name_nonprod }}.azurecr.io"
+    value: "$(DOCKER_CONTAINER_REGISTRY_NAME).azurecr.io"
   - name: k8s_docker_registry_prod
-    value: "${{ variables.docker_container_registry_name_prod }}.azurecr.io"
+    value: "$(DOCKER_CONTAINER_REGISTRY_NAME).azurecr.io"
 
   # BUILD ARTIFACTS across stages
   - name: build_artifact_deploy_path
@@ -180,6 +180,7 @@ stages:
   - stage: Build
     variables:
       # You can find notes in the READMEs around which values to use for each ENV variable group
+      - group: azure-acr-creds
       - group: azure-sp-creds
       - group: stacks-infra-credentials-nonprod
       - group: stacks-credentials-nonprod-kv
@@ -286,7 +287,7 @@ stages:
               docker_build_additional_args: "."
               docker_image_name: "${{ variables.docker_image_name }}"
               docker_image_tag: "${{ variables.docker_image_tag }}"
-              docker_container_registry_name: "${{ variables.docker_container_registry_name_nonprod }}"
+              docker_container_registry_name: "$(DOCKER_CONTAINER_REGISTRY_NAME)"
               # Azure
               azure_client_id: "$(ARM_CLIENT_ID)"
               azure_client_secret: "$(ARM_CLIENT_SECRET)"
