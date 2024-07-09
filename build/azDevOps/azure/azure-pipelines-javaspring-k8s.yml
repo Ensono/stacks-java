@@ -180,6 +180,7 @@ stages:
   - stage: Build
     variables:
       # You can find notes in the READMEs around which values to use for each ENV variable group
+      - group: azure-sp-creds
       - group: stacks-infra-credentials-nonprod
       - group: stacks-credentials-nonprod-kv
       - group: stacks-java-api
@@ -287,10 +288,10 @@ stages:
               docker_image_tag: "${{ variables.docker_image_tag }}"
               docker_container_registry_name: "${{ variables.docker_container_registry_name_nonprod }}"
               # Azure
-              azure_client_id: "$(azure-client-id)"
-              azure_client_secret: "$(azure-client-secret)"
-              azure_tenant_id: "$(azure-tenant-id)"
-              azure_subscription_id: "$(azure-subscription-id)"
+              azure_client_id: "$(ARM_CLIENT_ID)"
+              azure_client_secret: "$(ARM_CLIENT_SECRET)"
+              azure_tenant_id: "$(ARM_TENANT_ID)"
+              azure_subscription_id: "$(ARM_SUBSCRIPTION_ID)"
 
           # Post build tasks, such as Test and Coverage upload, and publishing artefacts
           - template: templates/steps/build/post-build-tasks.yml
@@ -370,19 +371,19 @@ stages:
                     pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
                     docker_terraform_container: "terraform_custom"
                     # Azure Credenitals (For Deploying)
-                    azure_client_id: "$(azure-client-id)"
-                    azure_client_secret: "$(azure-client-secret)"
-                    azure_tenant_id: "$(azure-tenant-id)"
-                    azure_subscription_id: "$(azure-subscription-id)"
+                    azure_client_id: "$(ARM_CLIENT_ID)"
+                    azure_client_secret: "$(ARM_CLIENT_SECRET)"
+                    azure_tenant_id: "$(ARM_TENANT_ID)"
+                    azure_subscription_id: "$(ARM_SUBSCRIPTION_ID)"
                     # Terraform
                     terraform_directory: '$(self_repo_tf_dir)'
                     # Backend Azure State Storage Credentials
                     # Change these if your state storage is in a different
                     # location to your deployment
-                    terraform_backend_azure_client_id: "$(azure-client-id)"
-                    terraform_backend_azure_client_secret: "$(azure-client-secret)"
-                    terraform_backend_azure_tenant_id: "$(azure-tenant-id)"
-                    terraform_backend_azure_subscription_id: "$(azure-subscription-id)"
+                    terraform_backend_azure_client_id: "$(ARM_CLIENT_ID)"
+                    terraform_backend_azure_client_secret: "$(ARM_CLIENT_SECRET)"
+                    terraform_backend_azure_tenant_id: "$(ARM_TENANT_ID)"
+                    terraform_backend_azure_subscription_id: "$(ARM_SUBSCRIPTION_ID)"
                     terraform_state_rg: ${{ variables.tf_state_rg }}
                     terraform_state_storage: ${{ variables.tf_state_storage }}
                     terraform_state_container: ${{ variables.tf_state_container }}
@@ -497,10 +498,10 @@ stages:
                         additional_args: "-no-empty",
                       },
                     ]
-                    azure_client_id: "$(azure-client-id)"
-                    azure_client_secret: "$(azure-client-secret)"
-                    azure_tenant_id: "$(azure-tenant-id)"
-                    azure_subscription_id: "$(azure-subscription-id)"
+                    azure_client_id: "$(ARM_CLIENT_ID)"
+                    azure_client_secret: "$(ARM_CLIENT_SECRET)"
+                    azure_tenant_id: "$(ARM_TENANT_ID)"
+                    azure_subscription_id: "$(ARM_SUBSCRIPTION_ID)"
                     aks_cluster_resourcegroup: "${{ variables.aks_cluster_resourcegroup }}"
                     aks_cluster_name: "${{ variables.aks_cluster_name }}"
                     # Used to do a `kubectl rollout status`
@@ -669,10 +670,10 @@ stages:
                     arguments: >
                       -a "$(docker_image_name):$(docker_image_tag)"
                       -b "$(k8s_docker_registry_nonprod)"
-                      -c "$(azure-subscription-id)"
-                      -d "$(azure-client-id)"
-                      -e "$(azure-client-secret)"
-                      -f "$(azure-tenant-id)"
+                      -c "$(ARM_SUBSCRIPTION_ID)"
+                      -d "$(ARM_CLIENT_ID)"
+                      -e "$(ARM_CLIENT_SECRET)"
+                      -f "$(ARM_TENANT_ID)"
                       -g "$(k8s_docker_registry_prod)"
                       -h "$(prod-azure-subscription-id)"
                       -i "$(prod-azure-client-id)"
