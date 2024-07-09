@@ -26,7 +26,7 @@ variables:
   - name: tf_state_rg
     value: Stacks-Ancillary-Resources
   - name: tf_state_storage
-    value: amidostackstfstate
+    value: stacksstatehjfis
   - name: tf_state_container
     value: tfstate
   - name: tf_state_key
