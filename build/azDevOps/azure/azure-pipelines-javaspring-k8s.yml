@@ -287,7 +287,7 @@ stages:
               docker_build_additional_args: "."
               docker_image_name: "${{ variables.docker_image_name }}"
               docker_image_tag: "${{ variables.docker_image_tag }}"
-              docker_container_registry_name: "$(DOCKER_CONTAINER_REGISTRY_NAME)"
+              docker_container_registry_name: "$(DOCKER_USERNAME)"
               # Azure
               azure_client_id: "$(ARM_CLIENT_ID)"
               azure_client_secret: "$(ARM_CLIENT_SECRET)"
