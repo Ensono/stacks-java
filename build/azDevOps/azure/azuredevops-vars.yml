@@ -60,7 +60,7 @@ variables:
 
   # Container registry configuration
   - name: docker_container_registry_name_nonprod
-    value: ensonostacksnonprodeuwcore
+    value: ensonostackseuweirdfmu
   - name: docker_container_registry_name_prod
     value: amidostacksprodeuwcore
 
