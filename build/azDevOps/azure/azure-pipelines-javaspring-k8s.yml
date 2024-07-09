@@ -180,8 +180,8 @@ stages:
   - stage: Build
     variables:
       # You can find notes in the READMEs around which values to use for each ENV variable group
-      - group: azure-acr-creds
       - group: azure-sp-creds
+      - group: stacks-acr-creds
       - group: stacks-infra-credentials-nonprod
       - group: stacks-credentials-nonprod-kv
       - group: stacks-java-api
