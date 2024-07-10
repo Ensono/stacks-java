@@ -66,13 +66,13 @@ variables:
 
   # Domain names
   - name: base_domain_nonprod
-    value: nonprod.amidostacks.com
+    value: nonprod.ensonostacks.com
   - name: base_domain_internal_nonprod
-    value: nonprod.amidostacks.internal
+    value: nonprod.ensonostacks.internal
   - name: base_domain_prod
-    value: prod.amidostacks.com
+    value: prod.ensonostacks.com
   - name: base_domain_internal_prod
-    value: prod.amidostacks.internal
+    value: prod.ensonostacks.internal
 
   # Environment
   # Set the name of the resource group that has the DNS zones to be updated
