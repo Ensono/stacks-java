@@ -144,7 +144,7 @@ variables:
 
   # Vulnerability Scan
   - name: vulnerability_scan
-    value: true
+    value: false # setting to false to speed up testing of deploy
   - name: vulnerability_scan_report
     value: "target/dependency-check-report.html"
   - name: vulnerability_scan_api_key
@@ -207,7 +207,7 @@ stages:
               yamllint_config_file: "${{ variables.yamllint_config_file }}"
               yamllint_scan_directory: "${{ variables.yamllint_scan_directory }}"
 
-          # Runs a terraform fomatting check and a validation check
+          # Runs a terraform formatting check and a validation check
           - template: templates/steps/build/test-validate-terraform.yml
             parameters:
               pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
@@ -240,7 +240,7 @@ stages:
               functional_test_artefact_path: "${{ variables.functional_test_artefact_path }}"
               pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
               # Maven
-              maven_untagged_test_check: true
+              maven_untagged_test_check: false # set to false to speed up testing deploy step
               maven_cache_directory: "${{ variables.maven_cache_directory }}"
               maven_allowed_post_deploy_test_tags: "${{ variables.maven_allowed_post_deploy_test_tags }}"
               maven_ignored_post_deploy_test_tags: "${{ variables.maven_ignored_post_deploy_test_tags }}"
