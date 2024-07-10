@@ -256,7 +256,7 @@ stages:
               vulnerability_scan_fail_build_on_detection: "${{ variables.vulnerability_scan_fail_build_on_detection }}"
               project_type: "${{ variables.functional_test_project_type }}"
 
-          # Performs stati code analysis, such as Sonar Cloud
+          # Performs static code analysis, such as Sonar Cloud
           - template: templates/steps/build/test-static-code-analysis.yml
             parameters:
               project_root_dir: "${{ variables.self_project_dir }}"
