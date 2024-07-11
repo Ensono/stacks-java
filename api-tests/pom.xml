@@ -19,7 +19,7 @@
         <encoding>UTF-8</encoding>
         <parallel.tests>4</parallel.tests>
         <webdriver.base.url/>
-        <jackson.version>2.12.3</jackson.version>
+        <jackson.version>2.17.2</jackson.version>
 
         <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
         <pact.broker.url/>
@@ -36,7 +36,7 @@
         <byte.buddy.version>1.12.4</byte.buddy.version>
         <springfox.swagger2.version>3.0.0</springfox.swagger2.version>
         <springfox.swagger-ui.version>3.0.0</springfox.swagger-ui.version>
-        <guava.version>31.0.1-jre</guava.version>
+        <guava.version>33.2.1-jre</guava.version>
         <json.version>20211205</json.version>
         <netty.codec.http.version>4.1.77.Final</netty.codec.http.version>
         <netty.codec.http2.version>4.1.77.Final</netty.codec.http2.version>
