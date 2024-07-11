@@ -4,7 +4,7 @@ framework:
   name: java
   commands:
     - name: java
-      version: ">= 11"
+      version: ">= 21"
 
 # Pipeline files
 pipeline:
@@ -169,7 +169,7 @@ init:
       args: fmt:format
               -f {{ .Project.Directory.WorkingDir }}/api-tests/pom.xml
               --quiet
-      desc: Formating the web-api serenity functional tests
+      desc: Formatting the web-api serenity functional tests
             to meet the fmt standards
 
     - action: cmd

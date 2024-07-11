@@ -33,7 +33,7 @@ resources:
   containers:
     # Container for Java Build and Testing
     - container: azul_java
-      image: azul/zulu-openjdk-debian:11
+      image: azul/zulu-openjdk-debian:21
     # Container for inlining Jacoco assets as Azure DevOps strips them
     # https://github.com/microsoft/azure-pipelines-tasks/issues/3027
     - container: node
@@ -59,7 +59,7 @@ variables:
   #
   # SelfConfig
   # If you haven't specified source_repo at cli runtime please ensure you replace it here
-  # It is case sensitive for TFS based repos
+  # It is case-sensitive for TFS based repos
 
   - name: self_remote_repo
     value: "$(company)/$(self_repo)"
@@ -248,7 +248,7 @@ stages:
               vulnerability_scan_fail_build_on_detection: "${{ variables.vulnerability_scan_fail_build_on_detection }}"
               project_type: "${{ variables.functional_test_project_type }}"
 
-          # Performs stati code analysis, such as Sonar Cloud
+          # Performs static code analysis, such as Sonar Cloud
           - template: templates/steps/build/test-static-code-analysis.yml
             parameters:
               project_root_dir: "${{ variables.self_project_dir }}"
@@ -365,7 +365,7 @@ stages:
                   parameters:
                     pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
                     docker_terraform_container: "terraform_custom"
-                    # Azure Credenitals (For Deploying)
+                    # Azure Credentials (For Deploying)
                     azure_client_id: "$(azure-client-id)"
                     azure_client_secret: "$(azure-client-secret)"
                     azure_tenant_id: "$(azure-tenant-id)"
@@ -588,7 +588,7 @@ stages:
                   parameters:
                     pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
                     docker_terraform_container: "terraform_custom"
-                    # Azure Credenitals (For Deploying)
+                    # Azure Credentials (For Deploying)
                     azure_client_id: "$(prod-azure-client-id)"
                     azure_client_secret: "$(prod-azure-client-secret)"
                     azure_tenant_id: "$(prod-azure-tenant-id)"

@@ -1,10 +1,10 @@
-The full documentation on Amido Stacks can be found [here](https://amido.github.io/stacks/).
+The full documentation on Ensono Stacks can be found [here](https://stacks.ensono.com/).
 
 ## Using the repository to build the Java Spring Boot Rest API application
 
 ### Customised solution
 
-To customise the namespaces and create an application for your company please visit the full [documentation](https://stacks.amido.com/docs/)
+To customise the namespaces and create an application for your company please visit the full [documentation](https://stacks.enosno.com/docs/)
 
 ### Running the application locally
 
@@ -17,7 +17,7 @@ To customise the namespaces and create an application for your company please vi
 2. Build and run the application
    ---
 
-   Note that at a minimum [Java 11](https://adoptopenjdk.net/) should be installed.
+   Note that at a minimum [Java 21](https://adoptopenjdk.net/) should be installed.
 
    Move to the `<PROJECT-NAME>/java` folder, then
 
@@ -61,8 +61,8 @@ If using Auth0 for authorization, Auth0 itself will need to be configured with b
 There are corresponding configuration values required for the Stacks application, within the `auth.properties` file, e.g.
 
 ```text
-auth0.issuer=https://amidostacks.eu.auth0.com/
-auth0.apiAudience=https://amidostacks.eu.auth0.com/api/v2/
+auth0.issuer=https://ensonostacks.eu.auth0.com/
+auth0.apiAudience=https://ensonostacks.eu.auth0.com/api/v2/
 ```
 
 These parameters are used to verify that the JWT supplied in the Authorization header of a request is valid.
