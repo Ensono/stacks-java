@@ -12,7 +12,8 @@ import org.springframework.data.annotation.Id;
 @Builder
 public class Menu {
 
-  @Id private String id;
+  @Id
+  private String id;
 
   private String restaurantId;
 

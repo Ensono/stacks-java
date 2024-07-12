@@ -58,6 +58,8 @@
     <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
     <aws-java-sdk-s3.version>1.12.759</aws-java-sdk-s3.version>
     <aspectjweaver.version>1.9.9.1</aspectjweaver.version>
+    <javax-validation-api-version>2.0.1.Final</javax-validation-api-version>
+    <assertj.core.version>3.26.3</assertj.core.version>
 
     <fmt-maven-plugin.version>2.13</fmt-maven-plugin.version>
     <maven-checkstyle-plugin.version>3.4.0</maven-checkstyle-plugin.version>
@@ -65,7 +67,6 @@
     <spotbugs-maven-plugin.version>4.8.6.2</spotbugs-maven-plugin.version>
     <spotbugs.version>4.8.6</spotbugs.version>
     <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
-
     <pact.version>3.5.24</pact.version>
 
     <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
@@ -107,6 +108,13 @@
       <groupId>com.amido.stacks.modules</groupId>
       <artifactId>stacks-core-commons</artifactId>
       <version>${stacks.core.commons.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj.core.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -254,7 +262,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit-jupiter.version}</version> <!--done -->
+      <version>${junit-jupiter.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -268,7 +276,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
-      <version>${mockito.version}</version> <!--done -->
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -282,7 +290,7 @@
     <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier</artifactId>
-      <version>${equals-verifier.version}</version><!-- done -->
+      <version>${equals-verifier.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -298,6 +306,12 @@
       <artifactId>consumer</artifactId>
       <version>${au.com.dius.pact.consumer-version}</version>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.owasp</groupId>
+      <artifactId>dependency-check-maven</artifactId>
+      <version>${owasp-dependency-check-plugin.version}</version>
     </dependency>
 
     <dependency>
@@ -319,7 +333,25 @@
       <artifactId>aws-java-sdk-s3</artifactId>
       <version>${aws-java-sdk-s3.version}</version>
     </dependency>
-    
+
+    <dependency>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-surefire-report-plugin</artifactId>
+      <version>${maven-surefire-plugin.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>${javax-validation-api-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-config</artifactId>
+      <version>5.6.0</version>
+    </dependency>
+
+
   </dependencies>
 
   <reporting>
@@ -483,7 +515,6 @@
         </dependencies>
         <configuration>
           <configLocation>google_checks.xml</configLocation>
-          <encoding>UTF-8</encoding>
           <consoleOutput>true</consoleOutput>
           <failsOnError>true</failsOnError>
           <linkXRef>false</linkXRef>

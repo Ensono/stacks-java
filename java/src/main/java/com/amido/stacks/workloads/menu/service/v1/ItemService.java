@@ -4,9 +4,10 @@ import com.amido.stacks.core.api.dto.response.ResourceCreatedResponse;
 import com.amido.stacks.core.api.dto.response.ResourceUpdatedResponse;
 import com.amido.stacks.workloads.menu.api.v1.dto.request.CreateItemRequest;
 import com.amido.stacks.workloads.menu.api.v1.dto.request.UpdateItemRequest;
+import org.springframework.stereotype.Service;
+
 import java.util.UUID;
 import javax.validation.Valid;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ItemService {

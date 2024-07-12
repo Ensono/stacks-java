@@ -12,20 +12,22 @@ import com.amido.stacks.workloads.menu.domain.Menu;
 import com.amido.stacks.workloads.menu.mappers.MenuMapper;
 import com.amido.stacks.workloads.menu.mappers.SearchMenuResultItemMapper;
 import com.amido.stacks.workloads.menu.service.utility.MenuHelperService;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class MenuService {
 
-  @Getter private final MenuMapper menuMapper;
+  @Getter
+  private final MenuMapper menuMapper;
 
   private final SearchMenuResultItemMapper searchMenuResultItemMapper;
 

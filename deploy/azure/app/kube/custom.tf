@@ -6,12 +6,12 @@ data "azurerm_application_insights" "example" {
 }
 
 output "app_insights_instrumentation_key" {
-  description = "App Insights key for downstream deploymnent use"
+  description = "App Insights key for downstream deployment use"
   value       = data.azurerm_application_insights.example.instrumentation_key
   sensitive   = true
 }
 
 variable "app_insights_name" {
   type        = string
-  description = "app insights name for key retriaval in memory"
+  description = "app insights name for key retrieval in memory"
 }
