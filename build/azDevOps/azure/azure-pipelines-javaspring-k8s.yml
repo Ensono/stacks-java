@@ -144,8 +144,7 @@ variables:
 
   # Vulnerability Scan
   - name: vulnerability_scan
-    value: false
-    # setting to false to speed up testing of deploy
+    value: true
   - name: vulnerability_scan_report
     value: "target/dependency-check-report.html"
   - name: vulnerability_scan_api_key
@@ -241,8 +240,7 @@ stages:
               functional_test_artefact_path: "${{ variables.functional_test_artefact_path }}"
               pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
               # Maven
-              maven_untagged_test_check: false
-              # set to false to speed up testing deploy step
+              maven_untagged_test_check: true
               maven_cache_directory: "${{ variables.maven_cache_directory }}"
               maven_allowed_post_deploy_test_tags: "${{ variables.maven_allowed_post_deploy_test_tags }}"
               maven_ignored_post_deploy_test_tags: "${{ variables.maven_ignored_post_deploy_test_tags }}"
