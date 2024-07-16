@@ -264,7 +264,7 @@ stages:
               target_branch_ref: "$(target_branch_ref)"
               pullrequest_number: "$(pullrequest_number)"
               # Sonar
-              sonar_enable: false
+              sonar_enable: true
               # Set to false to speed up validation of deploy stage, revert once done
               sonar_container: "sonar_scanner"
               sonar_host_url: "https://sonarcloud.io"
