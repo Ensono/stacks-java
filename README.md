@@ -17,7 +17,7 @@ To customise the namespaces and create an application for your company please vi
 2. Build and run the application
    ---
 
-   Note that at a minimum [Java 11](https://adoptopenjdk.net/) should be installed.
+   Note that at a minimum [Java 17](https://adoptopenjdk.net/) should be installed.
 
    Move to the `<PROJECT-NAME>/java` folder, then
 

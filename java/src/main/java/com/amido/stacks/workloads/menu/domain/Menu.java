@@ -1,18 +1,19 @@
 package com.amido.stacks.workloads.menu.domain;
 
-import jakarta.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 
 @Data
 @AllArgsConstructor
 @Builder
 public class Menu {
 
-  @Id private String id;
+  @Id
+  private String id;
 
   private String restaurantId;
 
