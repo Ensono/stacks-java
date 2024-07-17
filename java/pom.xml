@@ -36,6 +36,7 @@
     <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
     <spring.cloud.dependencies.version>2022.0.4</spring.cloud.dependencies.version>
     <pact.version>3.5.24</pact.version>
+    <spring.data.commons>3.3.1</spring.data.commons>
 
     <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
     <pact.broker.url/>
@@ -240,7 +241,7 @@
       <dependency>
           <groupId>org.springframework.data</groupId>
           <artifactId>spring-data-commons</artifactId>
-          <version>3.3.1</version>
+          <version>${spring.data.commons}</version>
       </dependency>
 
   </dependencies>
