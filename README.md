@@ -10,14 +10,14 @@ To customise the namespaces and create an application for your company please vi
 
 1. Clone one of the Java projects to your local machine from one of the following repos:
    ---
-    1. Simple web API: [stacks-java repository](https://github.com/amido/stacks-java)
-    2. Web API with CQRS: [stacks-java-cqrs repository](https://github.com/amido/stacks-java-cqrs)
-    3. Web API with CQRS and events: [stacks-java-cqrs-events repository](https://github.com/amido/stacks-java-cqrs-events)
+    1. Simple web API: [stacks-java repository](https://github.com/Ensono/stacks-java)
+    2. Web API with CQRS: [stacks-java-cqrs repository](https://github.com/Ensono/stacks-java-cqrs)
+    3. Web API with CQRS and events: [stacks-java-cqrs-events repository](https://github.com/Ensono/stacks-java-cqrs-events)
 
 2. Build and run the application
    ---
 
-   Note that at a minimum [Java 11](https://adoptopenjdk.net/) should be installed.
+   Note that at a minimum [Java 17](https://adoptopenjdk.net/) should be installed.
 
    Move to the `<PROJECT-NAME>/java` folder, then
 
