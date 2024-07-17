@@ -194,6 +194,14 @@ stages:
 
           - checkout: templates
 
+          - bash: |
+              echo "$(source_branch_ref)"
+              echo "$(target_branch_ref)"
+              echo "$(pullrequest_number)"
+
+              exit 1
+            displayName: Debug Vars Test
+
           # Updates the build number in Azure DevOps (requires refresh in the UI to see)
           - bash: |
               echo '##vso[Build.UpdateBuildNumber]${{ variables.docker_image_tag }}'
