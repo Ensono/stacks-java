@@ -63,7 +63,7 @@ public class MenuService {
     return new SearchMenuResult(
         pageSize,
         pageNumber,
-        menuList.stream().map(searchMenuResultItemMapper::toDto).collect(Collectors.toList()));
+        menuList.stream().map(searchMenuResultItemMapper::toDto).toList());
   }
 
   public MenuDTO get(UUID id, String correlationId) {
