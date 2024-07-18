@@ -38,7 +38,7 @@ public class ApplicationNoSecurity {
    * @param http
    * @throws Exception
    */
-  @Bean(name = "test_SecurityFilterChain")
+  @Bean(name = "testSecurityFilterChain")
   public SecurityFilterChain configure(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(auth -> auth.requestMatchers("**/*").anonymous())
         .httpBasic(withDefaults());

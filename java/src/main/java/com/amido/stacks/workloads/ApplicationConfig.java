@@ -16,7 +16,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /** ApplicationConfig - Configuration class for Auth0 application security. */
-@Configuration("MySecurityConfig")
+@Configuration("mySecurityConfig")
 @EnableWebSecurity
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ApplicationConfig {
