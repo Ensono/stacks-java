@@ -1,6 +1,7 @@
 package com.amido.stacks.workloads;
 
 import java.util.Arrays;
+import java.util.List;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ApplicationConfig {
 
+  private static final String ALLOWED_ORIGINS = "enosono.com";
   private static final String V1_MENU_ENDPOINT = "/v1/menu";
   private static final String V1_MENU = "/v1/menu/**";
   private static final String V2_MENU_ENDPOINT = "/v2/menu";
@@ -43,7 +45,7 @@ public class ApplicationConfig {
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList("*"));
+    configuration.setAllowedOrigins(List.of(ALLOWED_ORIGINS));
     configuration.setAllowedMethods(Arrays.asList("DELETE", "GET", "POST", "PATCH", "PUT"));
     configuration.setAllowCredentials(true);
     configuration.addAllowedHeader("Authorization");
