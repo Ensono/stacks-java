@@ -60,9 +60,7 @@ public class MenuService {
     menuList.add(mockMenu);
 
     return new SearchMenuResult(
-        pageSize,
-        pageNumber,
-        menuList.stream().map(searchMenuResultItemMapper::toDto).toList());
+        pageSize, pageNumber, menuList.stream().map(searchMenuResultItemMapper::toDto).toList());
   }
 
   public MenuDTO get(UUID id, String correlationId) {
