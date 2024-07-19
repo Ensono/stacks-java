@@ -13,8 +13,9 @@ parameters:
   auth0_credentials: {}
 steps:
   - ${{ if eq(parameters.functional_test, true) }}:
+      # $(BUILD_ATTEMPT_NUMBER) comes from the Stage Variables and is an output from the ApiBuild job
       - download: current
-        artifact: "${{ parameters.functional_test_artefact_name }}"
+        artifact: "${{ parameters.functional_test_artefact_name }}-$(BUILD_ATTEMPT_NUMBER)"
         displayName: "Download: Post-Deploy Test Artefacts"
 
       # Files downloaded from artefacts seem to lose their permissions...

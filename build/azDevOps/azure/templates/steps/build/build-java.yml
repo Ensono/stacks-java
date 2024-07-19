@@ -150,7 +150,7 @@ steps:
   - bash: |
       set -euxo pipefail
       cp "${{ parameters.repo_root_dir }}/build/azDevOps/azure/coverage/"* .
-      npm i
+      npm ci
       ./node_modules/.bin/gulp inline-css-images
       ./node_modules/.bin/gulp inline-sources
     workingDirectory: "${{ parameters.project_root_dir }}/target/site/"

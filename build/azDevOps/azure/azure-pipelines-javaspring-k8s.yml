@@ -319,6 +319,11 @@ stages:
               java_project_type: "${{ variables.java_project_type }}"
               functional_test_project_type: "${{ variables.functional_test_project_type }}"
 
+          - bash: |
+              echo "##vso[task.setvariable variable=BUILD_ATTEMPT_NUMBER;isOutput=true]$(System.JobAttempt)"
+            name: build_attempt_number
+            displayName: "Output: Set Job Attempt Output Variable"
+
   - stage: Dev
     dependsOn: Build
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -334,6 +339,8 @@ stages:
         value: $(tf_core_resource_group_nonprod)
       - name: Environment.ShortName
         value: dev
+      - name: BUILD_ATTEMPT_NUMBER
+        value: "$[ dependencies.Build.ApiBuild.outputs['build_attempt_number.BUILT_ATTEMPT_NUMBER'] ]"
     jobs:
       - deployment: AppInfraDev
         container: terraform_custom
@@ -559,6 +566,8 @@ stages:
         value: $(tf_core_resource_group_prod)
       - name: Environment.ShortName
         value: prod
+      - name: BUILD_ATTEMPT_NUMBER
+        value: "$[ dependencies.Build.ApiBuild.outputs['build_attempt_number.BUILT_ATTEMPT_NUMBER'] ]"
     jobs:
       - deployment: AppInfraProd
         container: terraform_custom
