@@ -319,9 +319,12 @@ stages:
               java_project_type: "${{ variables.java_project_type }}"
               functional_test_project_type: "${{ variables.functional_test_project_type }}"
 
-          - bash: |
-              echo "Setting variable 'BUILD_ATTEMPT_NUMBER' with value '$(System.JobAttempt)'"
-              echo "##vso[task.setvariable variable=BUILD_ATTEMPT_NUMBER;isOutput=true]$(System.JobAttempt)"
+          - task: Bash@3
+            inputs:
+              targetType: "inline"
+              script: |
+                echo "Setting variable 'BUILD_ATTEMPT_NUMBER' with value '$(System.JobAttempt)'"
+                echo "##vso[task.setvariable variable=BUILD_ATTEMPT_NUMBER;isOutput=true]$(System.JobAttempt)"
             name: build_attempt_number
             displayName: "Output: Set Job Attempt Output Variable"
 
