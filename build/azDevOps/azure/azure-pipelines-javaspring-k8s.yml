@@ -340,7 +340,7 @@ stages:
       - name: Environment.ShortName
         value: dev
       - name: BUILD_ATTEMPT_NUMBER
-        value: "$[ dependencies.Build.ApiBuild.outputs['build_attempt_number.BUILT_ATTEMPT_NUMBER'] ]"
+        value: "$[ dependencies.Build.ApiBuild.outputs['build_attempt_number.BUILD_ATTEMPT_NUMBER'] ]"
     jobs:
       - deployment: AppInfraDev
         container: terraform_custom
