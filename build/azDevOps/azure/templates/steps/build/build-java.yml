@@ -25,6 +25,31 @@ steps:
       path: "${{ parameters.project_root_dir }}/${{ parameters.maven_cache_directory }}"
     displayName: Cache Maven packages (${{ parameters.project_type }})
 
+  - ${{ if eq(parameters.vulnerability_scan, true) }}:
+      - task: Bash@3
+        script: |
+          DATE="$(date "+%F")"
+          HOUR="$(date "+%H")"
+
+          # NVD Cache lasts 4 hours (240 mins) and so cache based on the hour's time
+          # in 24 hours. E.g. 0-3 are 0, 1-4 are 1, 20-23 are 5 etc..
+          HOUR_BY_FOUR="$(( ${HOUR} / 4 ))"
+
+          NVD_CACHE_FILE="${DATE}-${HOUR_BY_FOUR}"
+
+          echo "echoing to a file '${{ parameters.repo_root_dir }}/.nvd-cache' with value ''"
+          echo "${NVD_CACHE_FILE}" >> ${{ parameters.repo_root_dir }}/.nvd-cache
+        displayName: Set NVD Cache Variable
+
+      - task: Cache@2
+        inputs:
+          key: 'nvd | "$(Agent.OS)" | ${{ parameters.repo_root_dir }}/.nvd-cache'
+          restoreKeys: |
+            nvd | "$(Agent.OS)"
+            nvd
+          path: "${{ parameters.repo_root_dir }}"
+        displayName: Cache NVD Datatbase
+
   - task: Bash@3
     inputs:
       filePath: "${{ parameters.pipeline_scripts_directory }}/build-maven-install.bash"

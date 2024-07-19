@@ -320,7 +320,7 @@ stages:
               functional_test_project_type: "${{ variables.functional_test_project_type }}"
 
           - bash: |
-              echo "Setting variable 'BUILD_ATTEMPT_NUMBER' with value '$(System.JobAttempt)"
+              echo "Setting variable 'BUILD_ATTEMPT_NUMBER' with value '$(System.JobAttempt)'"
               echo "##vso[task.setvariable variable=BUILD_ATTEMPT_NUMBER;isOutput=true]$(System.JobAttempt)"
             name: build_attempt_number
             displayName: "Output: Set Job Attempt Output Variable"
@@ -341,7 +341,7 @@ stages:
       - name: Environment.ShortName
         value: dev
       - name: BUILD_ATTEMPT_NUMBER
-        value: "$[ dependencies.Build.ApiBuild.outputs['build_attempt_number.BUILD_ATTEMPT_NUMBER'] ]"
+        value: "$[ stageDependencies.Build.ApiBuild.outputs['build_attempt_number.BUILD_ATTEMPT_NUMBER'] ]"
     jobs:
       - deployment: AppInfraDev
         container: terraform_custom
@@ -568,7 +568,7 @@ stages:
       - name: Environment.ShortName
         value: prod
       - name: BUILD_ATTEMPT_NUMBER
-        value: "$[ dependencies.Build.ApiBuild.outputs['build_attempt_number.BUILT_ATTEMPT_NUMBER'] ]"
+        value: "$[ stageDependencies.Build.ApiBuild.outputs['build_attempt_number.BUILD_ATTEMPT_NUMBER'] ]"
     jobs:
       - deployment: AppInfraProd
         container: terraform_custom
