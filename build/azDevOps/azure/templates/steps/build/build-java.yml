@@ -39,8 +39,8 @@ steps:
 
             NVD_CACHE_FILE="${DATE}-${HOUR_BY_FOUR}"
 
-            echo "echoing to a file '${{ parameters.repo_root_dir }}/.nvd-cache' with value ''"
-            echo "${NVD_CACHE_FILE}" >> ${{ parameters.repo_root_dir }}/.nvd-cache
+            echo "echoing to a file '${{ parameters.repo_root_dir }}/.nvd-cache' with value '${NVD_CACHE_FILE}'"
+            echo "${NVD_CACHE_FILE}" > ${{ parameters.repo_root_dir }}/.nvd-cache
         displayName: Set NVD Cache Variable
 
       - task: Cache@2
