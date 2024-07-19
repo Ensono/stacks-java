@@ -49,7 +49,7 @@ steps:
           restoreKeys: |
             nvd | "$(Agent.OS)"
             nvd
-          path: "${{ parameters.repo_root_dir }}/${{ parameters.vulnerability_scan_database_directory }}"
+          path: "${{ parameters.vulnerability_scan_database_directory }}"
         displayName: Cache NVD Datatbase
 
   - task: Bash@3
