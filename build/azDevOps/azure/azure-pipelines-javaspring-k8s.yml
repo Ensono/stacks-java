@@ -151,6 +151,8 @@ variables:
     value: "$(VULNERABILITY_SCAN_API_KEY)"
   - name: vulnerability_scan_fail_build_on_detection
     value: false
+  - name: vulnerability_scan_database_directory
+    value: ${{ variables.self_repo_dir }}/.vulnerability-database
 
   # Yamllint
   - name: yamllint_config_file
@@ -191,6 +193,7 @@ stages:
           vmImage: $(pool_vm_image)
         steps:
           - checkout: self
+            fetchDepth: 0
 
           - checkout: templates
 
@@ -230,6 +233,7 @@ stages:
               vulnerability_scan: "${{ variables.vulnerability_scan }}"
               vulnerability_scan_api_key: "${{ variables.vulnerability_scan_api_key }}"
               vulnerability_scan_fail_build_on_detection: "${{ variables.vulnerability_scan_fail_build_on_detection }}"
+              vulnerability_scan_database_directory: "${{ variables.vulnerability_scan_database_directory }}"
               project_type: "${{ variables.java_project_type }}"
 
           # Builds the Java API Tests
@@ -252,6 +256,7 @@ stages:
               vulnerability_scan: "${{ variables.vulnerability_scan }}"
               vulnerability_scan_api_key: "${{ variables.vulnerability_scan_api_key }}"
               vulnerability_scan_fail_build_on_detection: "${{ variables.vulnerability_scan_fail_build_on_detection }}"
+              vulnerability_scan_database_directory: "${{ variables.vulnerability_scan_database_directory }}"
               project_type: "${{ variables.functional_test_project_type }}"
 
           # Performs static code analysis, such as Sonar Cloud
