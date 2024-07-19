@@ -27,8 +27,7 @@
 
     <applicationinsights.version>2.6.4</applicationinsights.version>
     <azure.springboot.version>4.0.0</azure.springboot.version>
-    <au.com.dius.pact-jvm-provider-spring.version>4.0.10
-    </au.com.dius.pact-jvm-provider-spring.version>
+    <au.com.dius.pact-jvm-provider-spring.version>4.0.10</au.com.dius.pact-jvm-provider-spring.version>
     <au.com.dius.pact.consumer-version>4.3.2</au.com.dius.pact.consumer-version>
     <au.com.dius.pact.provider.maven-version>4.2.7</au.com.dius.pact.provider.maven-version>
     <aws-java-sdk-s3.version>1.12.470</aws-java-sdk-s3.version>
@@ -37,6 +36,7 @@
     <spring.cloud.dependencies.version>2022.0.4</spring.cloud.dependencies.version>
     <pact.version>3.5.24</pact.version>
     <spring.data.commons>3.3.1</spring.data.commons>
+    <owasp-dependency-check-plugin.version>10.0.3</owasp-dependency-check-plugin.version>
 
     <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
     <pact.broker.url/>
@@ -457,6 +457,7 @@
           <plugin>
             <groupId>org.owasp</groupId>
             <artifactId>dependency-check-maven</artifactId>
+            <version>${owasp-dependency-check-plugin.version}</version>
             <executions>
               <execution>
                 <goals>
