@@ -16,7 +16,6 @@ import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,9 +60,7 @@ public class MenuService {
     menuList.add(mockMenu);
 
     return new SearchMenuResult(
-        pageSize,
-        pageNumber,
-        menuList.stream().map(searchMenuResultItemMapper::toDto).toList());
+        pageSize, pageNumber, menuList.stream().map(searchMenuResultItemMapper::toDto).toList());
   }
 
   public MenuDTO get(UUID id, String correlationId) {
