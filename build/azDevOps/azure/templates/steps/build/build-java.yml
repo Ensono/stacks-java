@@ -53,7 +53,7 @@ steps:
         inputs:
           key: '${{ parameters.repo_root_dir }}/.nvd-cache-day | ${{ parameters.repo_root_dir }}/.nvd-cache-full'
           restoreKeys: |
-            ${{ parameters.repo_root_dir }}/.nvd-cache
+            ${{ parameters.repo_root_dir }}/.nvd-cache-day
           path: "${{ parameters.vulnerability_scan_database_directory }}"
         displayName: Cache NVD Datatbase
 
