@@ -34,7 +34,8 @@ steps:
             HOUR="$(date "+%H")"
 
             # NVD Cache lasts 4 hours (240 mins) and so cache based on the hour's time
-            # in 24 hours. E.g. 0-3 are 0, 1-4 are 1, 20-23 are 5 etc..
+            # in 24 hours. E.g. 0-3 are 0, 1-4 are 1, 20-23 are 5 etc.. This gives a
+            # cache that lasts roughly 4 hours at a time.
             HOUR_BY_FOUR="$(( ${HOUR} / 4 ))"
 
             NVD_CACHE_FILE="${DATE}-${HOUR_BY_FOUR}"
