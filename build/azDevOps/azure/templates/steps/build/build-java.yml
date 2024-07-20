@@ -40,16 +40,20 @@ steps:
 
             NVD_CACHE_FILE="${DATE}-${HOUR_BY_FOUR}"
 
-            echo "echoing to a file '${{ parameters.repo_root_dir }}/.nvd-cache' with value '${NVD_CACHE_FILE}'"
-            echo "${NVD_CACHE_FILE}" > ${{ parameters.repo_root_dir }}/.nvd-cache
+            echo "echoing to a file '${{ parameters.repo_root_dir }}/.nvd-cache-day' with value '${DATE}'"
+            echo "echoing to a file '${{ parameters.repo_root_dir }}/.nvd-cache-full' with value '${NVD_CACHE_FILE}'"
+
+            # Partial (slow) download lasts 24 hours
+            echo "${DATE}" > ${{ parameters.repo_root_dir }}/.nvd-cache-day
+            # Full Cache is 4 hours, so use the by four computed variable
+            echo "${NVD_CACHE_FILE}" > ${{ parameters.repo_root_dir }}/.nvd-cache-full
         displayName: Set NVD Cache Variable
 
       - task: Cache@2
         inputs:
-          key: 'nvd | "$(Agent.OS)" | ${{ parameters.repo_root_dir }}/.nvd-cache'
+          key: '${{ parameters.repo_root_dir }}/.nvd-cache-day | ${{ parameters.repo_root_dir }}/.nvd-cache-full'
           restoreKeys: |
-            nvd | "$(Agent.OS)"
-            nvd
+            ${{ parameters.repo_root_dir }}/.nvd-cache
           path: "${{ parameters.vulnerability_scan_database_directory }}"
         displayName: Cache NVD Datatbase
 
