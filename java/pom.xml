@@ -5,11 +5,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.6.1</version>
-    <relativePath/>
-    <!-- lookup parent from repository -->
+    <groupId>com.amido.stacks.modules</groupId>
+    <artifactId>stacks-modules-parent</artifactId>
+    <version>2.0.7-RELEASE</version>
   </parent>
 
   <groupId>com.amido.stacks.workloads</groupId>
@@ -20,53 +18,25 @@
   <description>Demo project for Java</description>
 
   <properties>
-    <stacks.core.api.version>1.0.3.2-RELEASE</stacks.core.api.version>
-    <stacks.core.commons.version>1.0.3</stacks.core.commons.version>
+    <stacks.core.api.version>1.0.5.11-RELEASE</stacks.core.api.version>
+    <stacks.core.commons.version>2.0.7</stacks.core.commons.version>
 
     <!-- Stacks features -->
     <aws.profile.name>no-aws</aws.profile.name>
     <azure.profile.name>no-azure</azure.profile.name>
 
-    <java.version>11</java.version>
-    <org.projectlombok.version>1.18.0</org.projectlombok.version>
-    <org.springdoc-openapi.version>1.6.1</org.springdoc-openapi.version>
     <applicationinsights.version>2.6.4</applicationinsights.version>
-    <azure.springboot.version>3.6.0</azure.springboot.version>
-    <jackson.version>2.13.0</jackson.version>
-    <mockito.version>4.1.0</mockito.version>
-    <lombok.version>1.18.22</lombok.version>
-    <hamcrest.version>2.2</hamcrest.version>
-    <pitest.version>1.7.3</pitest.version>
-    <jacoco.version>0.8.7</jacoco.version>
-    <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
-    <maven-surefire-phase>test</maven-surefire-phase>
-    <junit-jupiter.version>5.8.2</junit-jupiter.version>
-    <equals-verifier.version>3.8.1</equals-verifier.version>
-    <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-    <owasp-dependency-check-plugin.version>6.5.0</owasp-dependency-check-plugin.version>
-    <auth0-spring-security-api.version>1.4.1</auth0-spring-security-api.version>
-    <io-projectreactor-netty.version>1.0.11</io-projectreactor-netty.version>
-    <ch.qos.logback.logback-core.version>1.2.8</ch.qos.logback.logback-core.version>
-    <net.minidev.json-smart-version>2.4.7</net.minidev.json-smart-version>
-    <com.beust.jcommander-version>1.81</com.beust.jcommander-version>
-    <au.com.dius.pact-jvm-provider-spring.version>4.0.10
-    </au.com.dius.pact-jvm-provider-spring.version>
+    <azure.springboot.version>4.0.0</azure.springboot.version>
+    <au.com.dius.pact-jvm-provider-spring.version>4.0.10</au.com.dius.pact-jvm-provider-spring.version>
     <au.com.dius.pact.consumer-version>4.3.2</au.com.dius.pact.consumer-version>
-    <com.nimbusds.oauth2-oidc-sdk-version>9.9</com.nimbusds.oauth2-oidc-sdk-version>
     <au.com.dius.pact.provider.maven-version>4.2.7</au.com.dius.pact.provider.maven-version>
-    <log4j-version>2.17.0</log4j-version>
-    <org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
-    <aws-java-sdk-s3.version>1.12.273</aws-java-sdk-s3.version>
+    <aws-java-sdk-s3.version>1.12.470</aws-java-sdk-s3.version>
     <aspectjweaver.version>1.9.9.1</aspectjweaver.version>
-
-    <fmt-maven-plugin.version>2.13</fmt-maven-plugin.version>
-    <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
-    <puppycrawl-tools-checkstyle.version>9.2</puppycrawl-tools-checkstyle.version>
-    <spotbugs-maven-plugin.version>4.2.3</spotbugs-maven-plugin.version>
-    <spotbugs.version>4.5.2</spotbugs.version>
     <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
-
+    <spring.cloud.dependencies.version>2022.0.4</spring.cloud.dependencies.version>
     <pact.version>3.5.24</pact.version>
+    <spring.data.commons>3.3.1</spring.data.commons>
+    <owasp-dependency-check-plugin.version>10.0.3</owasp-dependency-check-plugin.version>
 
     <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
     <pact.broker.url/>
@@ -79,11 +49,13 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies -->
       <dependency>
-        <groupId>io.projectreactor</groupId>
-        <artifactId>reactor-bom</artifactId>
-        <version>2020.0.14</version>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring.cloud.dependencies.version}</version>
         <type>pom</type>
+        <scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -111,7 +83,29 @@
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-properties-migrator</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-bootstrap</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-config</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.yaml</groupId>
+          <artifactId>snakeyaml</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -120,45 +114,18 @@
     </dependency>
 
     <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-ui</artifactId>
-      <version>${org.springdoc-openapi.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-data-rest</artifactId>
-      <version>${org.springdoc-openapi.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>net.minidev</groupId>
-          <artifactId>json-smart</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-api</artifactId>
-      <version>${log4j-version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
-      <version>${jackson.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
-      <version>${jackson.version}</version>
     </dependency>
 
     <dependency>
@@ -200,35 +167,19 @@
     </dependency>
 
     <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-core</artifactId>
-      <version>${ch.qos.logback.logback-core.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>net.minidev</groupId>
       <artifactId>json-smart</artifactId>
-      <version>${net.minidev.json-smart-version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.beust</groupId>
       <artifactId>jcommander</artifactId>
-      <version>${com.beust.jcommander-version}</version>
     </dependency>
 
     <!-- Registering the Auth0 Dependency-->
     <dependency>
       <groupId>com.auth0</groupId>
       <artifactId>auth0-spring-security-api</artifactId>
-      <version>${auth0-spring-security-api.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>${lombok.version}</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -252,41 +203,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit-jupiter.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit-jupiter.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-junit-jupiter</artifactId>
-      <version>${mockito.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest</artifactId>
-      <version>${hamcrest.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>nl.jqno.equalsverifier</groupId>
-      <artifactId>equalsverifier</artifactId>
-      <version>${equals-verifier.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>au.com.dius</groupId>
       <artifactId>pact-jvm-provider-spring</artifactId>
       <version>${au.com.dius.pact-jvm-provider-spring.version}</version>
@@ -303,14 +219,12 @@
     <dependency>
       <groupId>org.pitest</groupId>
       <artifactId>pitest-parent</artifactId>
-      <version>${pitest.version}</version>
       <type>pom</type>
     </dependency>
 
     <dependency>
       <groupId>com.nimbusds</groupId>
       <artifactId>oauth2-oidc-sdk</artifactId>
-      <version>${com.nimbusds.oauth2-oidc-sdk-version}</version>
       <scope>runtime</scope>
     </dependency>
 
@@ -319,66 +233,35 @@
       <artifactId>aws-java-sdk-s3</artifactId>
       <version>${aws-java-sdk-s3.version}</version>
     </dependency>
-    
-  </dependencies>
 
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-report-plugin</artifactId>
-        <version>${maven-surefire-plugin.version}</version>
-      </plugin>
-    </plugins>
-  </reporting>
+    <dependency>
+      <groupId>jakarta.persistence</groupId>
+      <artifactId>jakarta.persistence-api</artifactId>
+    </dependency>
+      <dependency>
+          <groupId>org.springframework.data</groupId>
+          <artifactId>spring-data-commons</artifactId>
+          <version>${spring.data.commons}</version>
+      </dependency>
+
+  </dependencies>
 
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven-compiler-plugin.version}</version>
-        <configuration>
-          <source>11</source>
-          <target>11</target>
-          <annotationProcessorPaths>
-            <path>
-              <groupId>org.projectlombok</groupId>
-              <artifactId>lombok</artifactId>
-              <version>${lombok.version}</version>
-            </path>
-            <!-- This is needed when using Lombok 1.18.16 and above -->
-            <path>
-              <groupId>org.projectlombok</groupId>
-              <artifactId>lombok-mapstruct-binding</artifactId>
-              <version>0.2.0</version>
-            </path>
-            <!-- Mapstruct should follow the lombok path(s) -->
-            <path>
-              <groupId>org.mapstruct</groupId>
-              <artifactId>mapstruct-processor</artifactId>
-              <version>${org.mapstruct.version}</version>
-            </path>
-          </annotationProcessorPaths>
-          <forceJavacCompilerUse>true</forceJavacCompilerUse>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${maven-surefire-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>default-test</id>
-            <!-- Only run tests in the `test` phase, avoid running
-            in the `package` phase. -->
-            <phase>${maven-surefire-phase}</phase>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${spring.boot.version}</version>
+        <configuration>
+          <mainClass>com.amido.stacks.workloads.Application</mainClass>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
@@ -435,7 +318,6 @@
           <systemPropertyVariables>
             <pact.verifier.publishResults>true</pact.verifier.publishResults>
           </systemPropertyVariables>
-
           <serviceProviders>
             <serviceProvider>
               <name>${pact.api.name}</name>
@@ -444,16 +326,7 @@
               <port>${pact.api.port}</port>
             </serviceProvider>
           </serviceProviders>
-
         </configuration>
-        <executions>
-          <execution>
-            <phase>integration-test</phase>
-            <goals>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>com.coveo</groupId>

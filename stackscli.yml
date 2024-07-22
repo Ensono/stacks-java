@@ -4,7 +4,7 @@ framework:
   name: java
   commands:
     - name: java
-      version: ">= 11"
+      version: ">= 17"
 
 # Pipeline files
 pipeline:
@@ -17,15 +17,15 @@ pipeline:
     replacements:
       - pattern: ^.*stacks-credentials-nonprod-kv$
         value: ""
-      - pattern: ^.*amido-stacks-infra-credentials-nonprod$
+      - pattern: ^.*stacks-infra-credentials-nonprod$
         value: ""
-      - pattern: ^.*amido-stacks-infra-credentials-prod$
+      - pattern: ^.*stacks-infra-credentials-prod$
         value: ""
       - pattern: ^.*stacks-credentials-prod-kv$
         value: ""
       - pattern: ^.*stacks-credentials-nonprod-kv$
         value: ""
-      - pattern: ^.*amido-stacks-java-api$
+      - pattern: ^.*stacks-java-api$
         value: ""
 
 # The init stage are things that are required to run before the template is run
