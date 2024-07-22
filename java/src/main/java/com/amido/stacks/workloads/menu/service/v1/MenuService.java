@@ -12,11 +12,10 @@ import com.amido.stacks.workloads.menu.domain.Menu;
 import com.amido.stacks.workloads.menu.mappers.MenuMapper;
 import com.amido.stacks.workloads.menu.mappers.SearchMenuResultItemMapper;
 import com.amido.stacks.workloads.menu.service.utility.MenuHelperService;
+import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import javax.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,9 +60,7 @@ public class MenuService {
     menuList.add(mockMenu);
 
     return new SearchMenuResult(
-        pageSize,
-        pageNumber,
-        menuList.stream().map(searchMenuResultItemMapper::toDto).collect(Collectors.toList()));
+        pageSize, pageNumber, menuList.stream().map(searchMenuResultItemMapper::toDto).toList());
   }
 
   public MenuDTO get(UUID id, String correlationId) {
