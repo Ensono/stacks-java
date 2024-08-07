@@ -33,7 +33,7 @@ To customise the namespaces and create an application for your company please vi
     mvnw.cmd spring-boot:run
     ```
 
-   For instructions on how to customise the project for your company please look in the [Scaffolding](docs/workloads/azure/backend/java/scaffolding_java.md) section
+   For instructions on how to customise the project for your company please look in the [Scaffolding](https://stacks.ensono.com/docs/workloads/common/backend/java/scaffolding_java) section
 3. Verify that the application has started
    ---
    Browse to [http://localhost:9000/v1/menu](http://localhost:9000/v1/menu). This should return a valid JSON response.

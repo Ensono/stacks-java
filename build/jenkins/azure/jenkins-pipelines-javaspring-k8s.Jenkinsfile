@@ -13,7 +13,7 @@ pipeline {
   }
 
   environment {
-    company="amido"
+    company="ensono"
     project="stacks"
     domain="java-jenkins"
     component="api"
@@ -78,9 +78,9 @@ pipeline {
     sonar_project_name="stacks-java-jenkins"
     sonar_project_key="stacks-java-jenkins"
     // SONAR_TOKEN - Please define this as a Jenkins credential.
-    sonar_organisation="amido"
+    sonar_organisation="ensono"
     sonar_command="sonar-scanner"
-    sonar_remote_repo="amido/stacks-java"
+    sonar_remote_repo="ensono/stacks-java"
     sonar_pullrequest_provider="github"
     // AKS/AZURE
     // NONPROD_AZURE_CLIENT_ID - Please define this as a Jenkins credential.
