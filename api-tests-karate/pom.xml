@@ -54,7 +54,7 @@
                         <version>${exec-maven-plugin.version}</version>
                         <executions>
                             <execution>
-                                <id>Add execution rigths on bash scripts</id>
+                                <id>Add execution rights on bash scripts</id>
                                 <phase>process-resources</phase>
                                 <goals>
                                     <goal>exec</goal>
