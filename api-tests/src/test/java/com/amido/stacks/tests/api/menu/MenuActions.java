@@ -8,8 +8,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.model.environment.EnvironmentSpecificConfiguration;
-import net.thucydides.core.util.EnvironmentVariables;
-import net.thucydides.core.util.SystemEnvironmentVariables;
+import net.thucydides.model.environment.SystemEnvironmentVariables;
+import net.thucydides.model.util.EnvironmentVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,8 +26,7 @@ public class MenuActions {
   private static final EnvironmentVariables environmentVariables =
       SystemEnvironmentVariables.createEnvironmentVariables();
   private static final String generateAuthorisation =
-      EnvironmentSpecificConfiguration.from(
-              (net.thucydides.model.util.EnvironmentVariables) environmentVariables)
+      EnvironmentSpecificConfiguration.from(environmentVariables)
           .getProperty("generate.auth0.token");
   private static String authBody;
 
