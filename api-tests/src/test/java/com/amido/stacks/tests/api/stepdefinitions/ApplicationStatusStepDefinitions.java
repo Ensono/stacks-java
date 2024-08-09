@@ -2,7 +2,7 @@ package com.amido.stacks.tests.api.stepdefinitions;
 
 import static net.serenitybdd.rest.SerenityRest.restAssuredThat;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 import com.amido.stacks.tests.api.status.AppStatus;
 import com.amido.stacks.tests.api.status.ApplicationStatus;
