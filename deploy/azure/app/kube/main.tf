@@ -33,8 +33,8 @@ module "app" {
   dns_record                           = var.dns_record
   dns_zone_name                        = var.dns_zone_name
   infra_resource_group                 = var.infra_resource_group
-  dns_zone_resource_group              = var.dns_zone_resource_group != "" ? var.dns_zone_resource_group : var.core_resource_group
+  dns_zone_resource_group              = var.dns_zone_resource_group != "" ? var.dns_zone_resource_group : var.infra_resource_group
   dns_ip_address_name                  = var.app_gateway_frontend_ip_name
-  dns_ip_address_resource_group        = var.core_resource_group
+  dns_ip_address_resource_group        = var.infra_resource_group
   subscription_id                      = data.azurerm_client_config.current.subscription_id
 }
