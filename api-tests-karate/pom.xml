@@ -12,7 +12,7 @@
         <java.version>17</java.version>
         <!-- Maven plugins -->
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <karate.version>1.4.1</karate.version>
         <cucumber.reporting.version>5.5.3</cucumber.reporting.version>
         <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
