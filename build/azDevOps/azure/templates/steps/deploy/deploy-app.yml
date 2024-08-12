@@ -11,6 +11,15 @@ parameters:
   aks_cluster_name: ""
   deployments: []
 steps:
+  # TODO: Add `envsubst` to the `eir-infrastructure` image?
+  - task: Bash@3
+    inputs:
+      targetType: inline
+      script: |
+        curl --fail-with-body -L https://github.com/a8m/envsubst/releases/download/v1.4.2/envsubst-Linux-x86_64 -o /usr/local/bin/envsubst
+        chmod u+x /usr/local/bin/envsubst
+    displayName: "K8s: Install 'a8m/envsubst'"
+
   # Template Substitutions
   - ${{ each template in parameters.template_input }}:
       - task: Bash@3
