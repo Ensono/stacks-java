@@ -37,7 +37,7 @@ resources:
     # Container for inlining Jacoco assets as Azure DevOps strips them
     # https://github.com/microsoft/azure-pipelines-tasks/issues/3027
     - container: node
-      image: node:20.16.0-alpine3.20
+      image: node:20.16.0-bullseye-slim
     # Container for Sonar Scanner
     - container: sonar_scanner
       image: amidostacks/runner-pwsh-dotnet:0.4.51-stable
