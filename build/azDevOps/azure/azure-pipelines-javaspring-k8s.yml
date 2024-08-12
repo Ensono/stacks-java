@@ -43,10 +43,10 @@ resources:
       image: amidostacks/runner-pwsh-dotnet:0.4.51-stable
     # Container for Kubernetes Deployment
     - container: k8s_deploy
-      image: amidostacks/ci-k8s:0.0.12
+      image: ensonostackseuweirdfmu.azurecr.io/ensono/eir-infrastructure:1.1.165
     # Container for Terraform deployments
     - container: terraform_custom
-      image: amidostacks/ci-tf:0.0.8
+      image: ensonostackseuweirdfmu.azurecr.io/ensono/eir-infrastructure:1.1.165
 
 variables:
   - template: azuredevops-vars.yml
