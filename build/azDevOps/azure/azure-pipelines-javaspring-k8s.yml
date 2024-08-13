@@ -741,7 +741,7 @@ stages:
           - name: functional_test_base_url
             value: "https://${{ variables.dns_pointer }}/${{ variables.k8s_app_path }}"
           - name: aks_cluster_resourcegroup
-            value: "${{ variables.infrs_resource_group }}"
+            value: "${{ variables.infra_resource_group }}"
           - name: aks_cluster_name
             value: $(kubernetes_clustername_prod)
           - name: app_name
