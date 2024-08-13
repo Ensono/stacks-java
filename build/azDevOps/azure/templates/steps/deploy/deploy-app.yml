@@ -17,7 +17,7 @@ steps:
       targetType: inline
       script: |
         mkdir /tmp/envsubst
-        curl --fail-with-body -L https://github.com/a8m/envsubst/releases/download/v1.4.2/envsubst-Linux-x86_64 -o /tmp/envsubst/ebvsubst
+        curl --fail-with-body -L https://github.com/a8m/envsubst/releases/download/v1.4.2/envsubst-Linux-x86_64 -o /tmp/envsubst/envsubst
         chmod u+x /tmp/envsubst/envsubst
         echo "##vso[task.prependpath]/tmp/envsubst"
     displayName: "K8s: Install 'a8m/envsubst'"
