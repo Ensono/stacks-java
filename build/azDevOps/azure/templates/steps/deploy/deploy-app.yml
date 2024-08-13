@@ -16,8 +16,10 @@ steps:
     inputs:
       targetType: inline
       script: |
-        curl --fail-with-body -L https://github.com/a8m/envsubst/releases/download/v1.4.2/envsubst-Linux-x86_64 -o /usr/local/bin/envsubst
-        chmod u+x /usr/local/bin/envsubst
+        mkdir /tmp/envsubst
+        curl --fail-with-body -L https://github.com/a8m/envsubst/releases/download/v1.4.2/envsubst-Linux-x86_64 -o /tmp/envsubst/ebvsubst
+        chmod u+x /tmp/envsubst/envsubst
+        echo "##vso[task.prependpath]/tmp/envsubst"
     displayName: "K8s: Install 'a8m/envsubst'"
 
   # Template Substitutions
