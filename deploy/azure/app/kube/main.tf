@@ -18,8 +18,7 @@ module "default_label" {
 }
 
 module "app" {
-  # TODO: Pin this to a proper version after https://github.com/Ensono/stacks-terraform/pull/135 goes in.
-  source                               = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-server-side-app?ref=fix/cdn-ss-module"
+  source                               = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-server-side-app?ref=v6.0.6"
   create_cdn_endpoint                  = var.create_cdn_endpoint
   create_cosmosdb                      = var.create_cosmosdb
   resource_namer                       = module.default_label.id
