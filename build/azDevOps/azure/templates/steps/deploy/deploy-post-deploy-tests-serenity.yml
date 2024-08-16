@@ -33,13 +33,13 @@ steps:
           container: ${{ parameters.docker_java_container }}
         displayName: "Chmod +x Maven Wrapper"
 
-      # Copy this for each tag you have, for example @Functional and @Smoke etc.
+      # Copy this for each tag you have, for example Functional and Smoke etc.
       # Note: Don't forget to update the `maven_allowed_post_deploy_test_tags` in the root pipeline file.
       - task: Bash@3
         inputs:
           filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-post-deploy-tagged-test-run.bash"
           arguments: >
-            -a "@Functional"
+            -a "Functional"
             -b "${{ parameters.functional_test_base_url }}"
             -Y "${{ parameters.maven_ignored_post_deploy_test_tags }}"
             -Z "${{ parameters.maven_cache_directory }}"
