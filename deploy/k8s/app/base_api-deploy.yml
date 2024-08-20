@@ -92,19 +92,7 @@ metadata:
   namespace: ${namespace}
 type: Opaque
 stringData:
-  cosmos_key: ${cosmosdb_key}
   app_insights: ${app_insights_key}
-
-# ---
-
-# apiVersion: v1
-# kind: ConfigMap
-# metadata:
-#   name: appsettings
-#   namespace: ${namespace}
-# data:
-#   appsettings.json: |
-#     {
 
 ---
 
@@ -121,7 +109,6 @@ metadata:
     projectID: ${project}
     version: ${version}
   labels:
-    aadpodidbinding: ${aadpodidentitybinding}
     app.kubernetes.io/component: ${component}
     app.kubernetes.io/name: ${resource_def_name}
     app.kubernetes.io/part-of: ${project}
@@ -155,7 +142,6 @@ spec:
         role: api
         version: ${version}
       labels:
-        aadpodidbinding: ${aadpodidentitybinding}
         app.kubernetes.io/component: ${component}
         app.kubernetes.io/name: ${resource_def_name}
         app.kubernetes.io/part-of: ${project}
@@ -196,21 +182,11 @@ spec:
               value: ${k8s_app_path}
             - name: LOG_LEVEL
               value: ${log_level}
-            - name: AZURE_COSMOS_DATABASE
-              value: ${cosmosdb_name}
-            - name: AZURE_COSMOS_URI
-              value: ${cosmosdb_endpoint}
-            - name: AZURE_COSMOS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: appsecrets
-                  key: cosmos_key
             - name: AZURE_APPLICATION_INSIGHTS_INSTRUMENTATION_KEY
               valueFrom:
                 secretKeyRef:
                   name: appsecrets
                   key: app_insights
-
           ports:
             - name: http
               containerPort: 9000
