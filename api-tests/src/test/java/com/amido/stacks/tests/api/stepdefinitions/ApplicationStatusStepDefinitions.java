@@ -1,15 +1,15 @@
 package com.amido.stacks.tests.api.stepdefinitions;
 
 import static net.serenitybdd.rest.SerenityRest.restAssuredThat;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import com.amido.stacks.tests.api.status.AppStatus;
 import com.amido.stacks.tests.api.status.ApplicationStatus;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import net.thucydides.core.annotations.Steps;
+import net.serenitybdd.annotations.Steps;
 import org.hamcrest.Matchers;
 
 public class ApplicationStatusStepDefinitions {
@@ -18,7 +18,7 @@ public class ApplicationStatusStepDefinitions {
 
   @Given("the application is running")
   public void the_application_is_running() {
-    assertThat(theApplication.currentStatus()).isEqualTo(AppStatus.RUNNING);
+    assertThat(theApplication.currentStatus(), equalTo(AppStatus.RUNNING));
   }
 
   @When("I check the application status")

@@ -11,15 +11,14 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <serenity.version>3.1.10</serenity.version>
-        <serenity.maven.version>3.1.10</serenity.maven.version>
-        <serenity.cucumber.version>2.6.0</serenity.cucumber.version>
-        <cucumber.version>6.11.0</cucumber.version>
-        <logback.version>1.2.8</logback.version>
+        <serenity.version>4.1.20</serenity.version>
+        <serenity.maven.version>4.1.20</serenity.maven.version>
+        <cucumber.version>7.18.1</cucumber.version>
+        <logback.version>1.5.6</logback.version>
         <encoding>UTF-8</encoding>
         <parallel.tests>4</parallel.tests>
         <webdriver.base.url/>
-        <jackson.version>2.12.3</jackson.version>
+        <jackson.version>2.17.2</jackson.version>
         <java.version>17</java.version>
 
         <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
@@ -29,44 +28,55 @@
         <pact.jvm.consumer.junit.version>4.0.10</pact.jvm.consumer.junit.version>
         <pact.jvm.consumer.version>4.0.10</pact.jvm.consumer.version>
         <pact.jvm.provider.junit.version>4.0.10</pact.jvm.provider.junit.version>
-        <spotbugs.version>4.5.2</spotbugs.version>
-        <puppycrawl-tools-checkstyle.version>9.2</puppycrawl-tools-checkstyle.version>
-        <junit.version>4.13.2</junit.version>
-        <assertj.core.version>3.21.0</assertj.core.version>
-        <hamcrest.all.version>1.3</hamcrest.all.version>
-        <byte.buddy.version>1.12.4</byte.buddy.version>
+        <spotbugs.version>4.8.6</spotbugs.version>
+        <puppycrawl-tools-checkstyle.version>10.17.0</puppycrawl-tools-checkstyle.version>
+        <junit-jupiter.version>5.10.3</junit-jupiter.version>
+        <junit-platform.version>1.11.0</junit-platform.version>
+        <assertj.core.version>3.26.3</assertj.core.version>
+        <hamcrest.version>3.0</hamcrest.version>
+        <byte.buddy.version>1.14.18</byte.buddy.version>
         <springfox.swagger2.version>3.0.0</springfox.swagger2.version>
         <springfox.swagger-ui.version>3.0.0</springfox.swagger-ui.version>
-        <guava.version>31.0.1-jre</guava.version>
-        <json.version>20211205</json.version>
-        <netty.codec.http.version>4.1.77.Final</netty.codec.http.version>
-        <netty.codec.http2.version>4.1.77.Final</netty.codec.http2.version>
-        <netty.transport.native.epoll.version>4.1.77.Final</netty.transport.native.epoll.version>
-        <httpclient.version>4.5.13</httpclient.version>
-        <xerces.version>2.12.1</xerces.version>
-        <commons.codec.version>1.15</commons.codec.version>
-        <spring.web.version>6.0.19</spring.web.version>
+        <guava.version>33.2.1-jre</guava.version>
+        <json.version>20240303</json.version>
+        <netty.codec.http.version>4.1.112.Final</netty.codec.http.version>
+        <netty.codec.http2.version>4.1.112.Final</netty.codec.http2.version>
+        <netty.transport.native.epoll.version>4.1.112.Final</netty.transport.native.epoll.version>
+        <httpclient5.version>5.3.1</httpclient5.version>
+        <xerces.version>2.12.2</xerces.version>
+        <commons.codec.version>1.17.1</commons.codec.version>
+        <spring.web.version>6.1.11</spring.web.version>
+        <freemarker.version>2.3.33</freemarker.version>
+        <gson.version>2.11.0</gson.version>
+        <rest-assured.version>5.5.0</rest-assured.version>
+        <net.thucydides.core.version>0.9.275</net.thucydides.core.version>
+        <org.projectlombok.version>1.18.34</org.projectlombok.version>
 
         <!-- Maven plugins -->
-        <spotbugs-maven-plugin.version>4.2.3</spotbugs-maven-plugin.version>
+        <spotbugs-maven-plugin.version>4.8.6.2</spotbugs-maven-plugin.version>
         <owasp-dependency-check-plugin.version>10.0.3</owasp-dependency-check-plugin.version>
         <fmt-maven-plugin.version>2.13</fmt-maven-plugin.version>
-        <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
-        <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <pact.provider-plugin.version>4.3.2</pact.provider-plugin.version>
-        <maven-pmd-plugin.version>3.15.0</maven-pmd-plugin.version>
+        <maven-checkstyle-plugin.version>3.4.0</maven-checkstyle-plugin.version>
+        <maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.3.1</maven-failsafe-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <pact.provider-plugin.version>4.6.12</pact.provider-plugin.version>
+        <maven-pmd-plugin.version>3.24.0</maven-pmd-plugin.version>
         <findbugs-maven-plugin.version>3.0.5</findbugs-maven-plugin.version>
         <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>${freemarker.version}</version>
+        </dependency>
         <!-- https://security.snyk.io/vuln/SNYK-JAVA-COMGOOGLECODEGSON-1730327 -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.8.9</version>
+            <version>${gson.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -83,6 +93,10 @@
                     <groupId>io.cucumber</groupId>
                     <artifactId>cucumber-core</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -92,8 +106,9 @@
         </dependency>
         <dependency>
             <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-junit</artifactId>
+            <artifactId>cucumber-junit-platform-engine</artifactId>
             <version>${cucumber.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.serenity-bdd</groupId>
@@ -104,6 +119,12 @@
         <dependency>
             <groupId>net.serenity-bdd</groupId>
             <artifactId>serenity-rest-assured</artifactId>
+            <version>${serenity.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.serenity-bdd</groupId>
+            <artifactId>serenity-junit5</artifactId>
             <version>${serenity.version}</version>
             <scope>test</scope>
         </dependency>
@@ -121,14 +142,44 @@
         </dependency>
         <dependency>
             <groupId>net.serenity-bdd</groupId>
-            <artifactId>serenity-cucumber6</artifactId>
-            <version>${serenity.cucumber.version}</version>
+            <artifactId>serenity-cucumber</artifactId>
+            <version>${serenity.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${rest-assured.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-api</artifactId>
+            <version>${junit-platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-engine</artifactId>
+            <version>${junit-platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -139,8 +190,8 @@
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <version>${hamcrest.all.version}</version>
+            <artifactId>hamcrest</artifactId>
+            <version>${hamcrest.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -148,6 +199,17 @@
             <artifactId>byte-buddy</artifactId>
             <version>${byte.buddy.version}</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.thucydides</groupId>
+            <artifactId>thucydides-core</artifactId>
+            <version>${net.thucydides.core.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
@@ -179,7 +241,17 @@
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
             <version>${jackson.version}</version>
         </dependency>
         <dependency>
@@ -203,9 +275,15 @@
             <version>${guava.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${httpclient.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${org.projectlombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>${httpclient5.version}</version>
         </dependency>
         <dependency>
             <groupId>xerces</groupId>
@@ -222,6 +300,12 @@
             <artifactId>pact-jvm-consumer-junit_2.11</artifactId>
             <version>${pact.jvm.consumer.junit-2-11-version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>au.com.dius</groupId>
@@ -261,6 +345,10 @@
                 <exclusion>
                     <groupId>commons-codec</groupId>
                     <artifactId>commons-codec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -363,7 +451,7 @@
                         <version>${exec-maven-plugin.version}</version>
                         <executions>
                             <execution>
-                                <id>Add execution rigths on bash scripts</id>
+                                <id>Add execution rights on bash scripts</id>
                                 <phase>process-resources</phase>
                                 <goals>
                                     <goal>exec</goal>
@@ -428,6 +516,10 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
+                    <compilerArgs>
+                        <arg>-Xlint:deprecation</arg>
+                        <arg>-Xlint:unchecked</arg>
+                    </compilerArgs>
                     <encoding>UTF-8</encoding>
                     <release>${java.version}</release>
                 </configuration>
@@ -508,7 +600,6 @@
                 </dependencies>
                 <configuration>
                     <configLocation>google_checks.xml</configLocation>
-                    <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
                     <linkXRef>false</linkXRef>
