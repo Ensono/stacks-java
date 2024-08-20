@@ -1,8 +1,4 @@
 ############################################
-# AUTHENTICATION
-############################################
-# RELYING PURELY ON ENVIRONMENT VARIABLES as the user can control these from their own environment
-############################################
 # NAMING
 ############################################
 
@@ -87,7 +83,6 @@ variable "internal_dns_zone_name" {
   type = string
 }
 
-
 ###########################
 # CONDITIONAL SETTINGS
 ##########################
@@ -108,6 +103,7 @@ variable "create_dns_record" {
 variable "create_cdn_endpoint" {
   type = bool
 }
+
 ###########################
 # CosmosDB SETTINGS
 ##########################
