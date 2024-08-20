@@ -360,7 +360,7 @@ stages:
           - name: app_gateway_frontend_ip_name
             value: $(tf_app_gateway_frontend_ip_name_nonprod)
           - name: create_cosmosdb
-            value: true
+            value: false
           - name: create_cache
             value: false
           - name: create_dns_record
@@ -593,7 +593,7 @@ stages:
           - name: resource_group_location
             value: "$(region)"
           - name: create_cosmosdb
-            value: true
+            value: false
           - name: create_cache
             value: false
           - name: create_dns_record
