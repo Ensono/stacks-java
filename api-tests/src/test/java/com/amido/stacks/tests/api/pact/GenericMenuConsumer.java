@@ -10,6 +10,7 @@ import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
 import au.com.dius.pact.model.RequestResponsePact;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.http.*;
@@ -109,7 +110,10 @@ public class GenericMenuConsumer {
         new RestTemplate().getForEntity(mockProvider.getUrl() + "/v1/menu", String.class);
 
     assertThat(response.getStatusCode().value()).isEqualTo(200);
-    assertThat(response.getHeaders().get("Content-Type").contains("application/json")).isTrue();
+    assertThat(
+            Objects.requireNonNull(response.getHeaders().get("Content-Type"))
+                .contains("application/json"))
+        .isTrue();
     assertThat(response.getBody()).contains("pageSize", "20", "pageNumber", "1");
 
     // post
@@ -136,6 +140,7 @@ public class GenericMenuConsumer {
 
     assertThat(getByTermResponse.getStatusCode().value()).isEqualTo(200);
     assertThat(getByTermResponse.getBody()).contains("pageSize", "pageNumber");
-    assertThat(getByTermResponse.getBody().contains("Dessert Menu (Automated Test Data)"));
+    assertThat(Objects.requireNonNull(getByTermResponse.getBody()))
+        .contains("Dessert Menu (Automated Test Data)");
   }
 }
