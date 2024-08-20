@@ -360,21 +360,13 @@ stages:
           - name: app_gateway_frontend_ip_name
             value: $(tf_app_gateway_frontend_ip_name_nonprod)
           - name: create_cosmosdb
-            value: true
+            value: false
           - name: create_cache
             value: false
           - name: create_dns_record
             value: true
           - name: create_cdn_endpoint
             value: false
-          - name: cosmosdb_sql_container
-            value: "Menu"
-          - name: cosmosdb_sql_container_partition_key
-            value: "/id"
-          - name: cosmosdb_kind
-            value: "GlobalDocumentDB"
-          - name: cosmosdb_offer_type
-            value: "Standard"
           - name: app_insights_name
             value: $(tf_app_insights_name_nonprod)
         strategy:
@@ -430,10 +422,6 @@ stages:
                       TF_VAR_create_cache: "${{ variables.create_cache }}",
                       TF_VAR_create_dns_record: "${{ variables.create_dns_record }}",
                       TF_VAR_create_cdn_endpoint: "${{ variables.create_cdn_endpoint }}",
-                      TF_VAR_cosmosdb_sql_container: "${{ variables.cosmosdb_sql_container }}",
-                      TF_VAR_cosmosdb_sql_container_partition_key: "${{ variables.cosmosdb_sql_container_partition_key }}",
-                      TF_VAR_cosmosdb_kind: "${{ variables.cosmosdb_kind }}",
-                      TF_VAR_cosmosdb_offer_type: "${{ variables.cosmosdb_offer_type }}",
                       TF_VAR_app_insights_name: "${{ variables.app_insights_name }}",
                     }
                     terraform_output_commands: |
@@ -450,12 +438,6 @@ stages:
           vmImage: $(pool_vm_image)
         environment: ${{ variables.domain }}-dev
         variables:
-          - name: cosmosdb_database_name
-            value: "$[ dependencies.AppInfraDev.outputs['AppInfraDev.tfoutputs.cosmosdb_database_name'] ]"
-          - name: cosmosdb_endpoint
-            value: "$[ dependencies.AppInfraDev.outputs['AppInfraDev.tfoutputs.cosmosdb_endpoint'] ]"
-          - name: cosmosdb_primary_master_key
-            value: "$[ dependencies.AppInfraDev.outputs['AppInfraDev.tfoutputs.cosmosdb_primary_master_key'] ]"
           - name: app_insights_instrumentation_key
             value: "$[ dependencies.AppInfraDev.outputs['AppInfraDev.tfoutputs.app_insights_instrumentation_key'] ]"
           - name: resource_def_name
@@ -511,12 +493,7 @@ stages:
                           k8s_app_path: "${{ variables.k8s_app_path }}",
                           log_level: "Debug",
                           k8s_image: '${{ variables.k8s_docker_registry_nonprod }}/${{ variables.docker_image_name }}:${{ variables.docker_image_tag }}',
-                          # Unused currently
-                          aadpodidentitybinding: stacks-webapp-identity,
                           app_insights_key: "$(app_insights_instrumentation_key)",
-                          cosmosdb_key: "$(cosmosdb_primary_master_key)",
-                          cosmosdb_endpoint: "$(cosmosdb_endpoint)",
-                          cosmosdb_name: "$(cosmosdb_database_name)",
                         },
                         additional_args: "-no-empty",
                       },
@@ -593,21 +570,13 @@ stages:
           - name: resource_group_location
             value: "$(region)"
           - name: create_cosmosdb
-            value: true
+            value: false
           - name: create_cache
             value: false
           - name: create_dns_record
             value: true
           - name: create_cdn_endpoint
             value: false
-          - name: cosmosdb_sql_container
-            value: "Menu"
-          - name: cosmosdb_sql_container_partition_key
-            value: "/id"
-          - name: cosmosdb_kind
-            value: "GlobalDocumentDB"
-          - name: cosmosdb_offer_type
-            value: "Standard"
         strategy:
           runOnce:
             deploy:
@@ -661,10 +630,6 @@ stages:
                       TF_VAR_create_cache: "${{ variables.create_cache }}",
                       TF_VAR_create_dns_record: "${{ variables.create_dns_record }}",
                       TF_VAR_create_cdn_endpoint: "${{ variables.create_cdn_endpoint }}",
-                      TF_VAR_cosmosdb_sql_container: "${{ variables.cosmosdb_sql_container }}",
-                      TF_VAR_cosmosdb_sql_container_partition_key: "${{ variables.cosmosdb_sql_container_partition_key }}",
-                      TF_VAR_cosmosdb_kind: "${{ variables.cosmosdb_kind }}",
-                      TF_VAR_cosmosdb_offer_type: "${{ variables.cosmosdb_offer_type }}",
                       TF_VAR_app_insights_name: "${{ variables.app_insights_name }}",
                     }
                     terraform_output_commands: |
@@ -722,12 +687,6 @@ stages:
           vmImage: $(pool_vm_image)
         environment: ${{ variables.domain }}-prod
         variables:
-          - name: cosmosdb_database_name
-            value: "$[ dependencies.AppInfraProd.outputs['AppInfraProd.tfoutputs.cosmosdb_database_name'] ]"
-          - name: cosmosdb_endpoint
-            value: "$[ dependencies.AppInfraProd.outputs['AppInfraProd.tfoutputs.cosmosdb_endpoint'] ]"
-          - name: cosmosdb_primary_master_key
-            value: "$[ dependencies.AppInfraProd.outputs['AppInfraProd.tfoutputs.cosmosdb_primary_master_key'] ]"
           - name: app_insights_instrumentation_key
             value: "$[ dependencies.AppInfraProd.outputs['AppInfraProd.tfoutputs.app_insights_instrumentation_key'] ]"
           - name: resource_def_name
@@ -783,11 +742,7 @@ stages:
                           k8s_app_path: "${{ variables.k8s_app_path }}",
                           log_level: "Debug",
                           k8s_image: '${{ variables.k8s_docker_registry_prod }}/${{ variables.docker_image_name }}:${{ variables.docker_image_tag }}',
-                          aadpodidentitybinding: stacks-webapp-identity,
                           app_insights_key: "$(app_insights_instrumentation_key)",
-                          cosmosdb_key: "$(cosmosdb_primary_master_key)",
-                          cosmosdb_endpoint: "$(cosmosdb_endpoint)",
-                          cosmosdb_name: "$(cosmosdb_database_name)",
                         },
                         additional_args: "-no-empty",
                       },
