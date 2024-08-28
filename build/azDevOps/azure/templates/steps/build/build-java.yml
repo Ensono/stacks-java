@@ -184,7 +184,7 @@ steps:
       targetType: inline
       script: |
         . /opt/microsoft/powershell/7/Microsoft.PowerShell_profile.ps1
-        cp "${{ parameters.repo_root_dir }}/build/azDevOps/azure/coverage/"* .
+        Copy-Item -Path "${{ parameters.repo_root_dir }}/build/azDevOps/azure/coverage/*" -Destination . -Recurse
         npm ci
         ./node_modules/.bin/gulp inline-css-images
         ./node_modules/.bin/gulp inline-sources
