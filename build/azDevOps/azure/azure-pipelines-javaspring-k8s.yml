@@ -1,5 +1,4 @@
-############################################################################################################################## This is a generated file which includes some replacements.                                                                #
-# It is still very much recommended to go through this and ensure all variables are correct for your business/domain        #
+############################################################################################################################## This is a generated file which includes some replacements.                                                                ## It is still very much recommended to go through this and ensure all variables are correct for your business/domain        #
 # All variables are defined in a global scope.                                                                              #
 # All Terraform produced resource names are using a labels module ensuring a predictable naming convention                  #
 # E.g.: variables for company, project, stage and domain will produce a name of `$company-$project-$stage-$domain`          #
@@ -33,15 +32,15 @@ resources:
     # Container for Java Build and Testing
     # Container for Sonar Scanner
     - container: azul_java
-      image: ensonostackseuweirdfmu.azurecr.io/ensono/eir-java:1.1.218
+      image: ensono/eir-java:1.1.220
     # Container for inlining Jacoco assets as Azure DevOps strips them
     # https://github.com/microsoft/azure-pipelines-tasks/issues/3027
     - container: node
-      image: ensonostackseuweirdfmu.azurecr.io/ensono/eir-nodejs:1.1.218
+      image: ensono/eir-nodejs:1.1.220
     # Container for Kubernetes Deployment
-    # Container for Terraform deployments
+    # Container for Terraform Deployment
     - container: k8s_deploy
-      image: ensonostackseuweirdfmu.azurecr.io/ensono/eir-infrastructure:1.1.218
+      image: ensono/eir-infrastructure:1.1.220
 
 variables:
   - template: azuredevops-vars.yml
