@@ -183,6 +183,7 @@ steps:
     inputs:
       targetType: inline
       script: |
+        . /opt/microsoft/powershell/7/Microsoft.PowerShell_profile.ps1
         cp "${{ parameters.repo_root_dir }}/build/azDevOps/azure/coverage/"* .
         npm ci
         ./node_modules/.bin/gulp inline-css-images
