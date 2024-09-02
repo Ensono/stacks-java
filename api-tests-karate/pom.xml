@@ -16,7 +16,7 @@
         <karate.version>1.4.1</karate.version>
         <cucumber.reporting.version>5.8.2</cucumber.reporting.version>
         <maven-checkstyle-plugin.version>3.4.0</maven-checkstyle-plugin.version>
-        <puppycrawl-tools-checkstyle.version>10.17.0</puppycrawl-tools-checkstyle.version>
+        <puppycrawl-tools-checkstyle.version>10.18.1</puppycrawl-tools-checkstyle.version>
         <spotbugs-maven-plugin.version>4.8.6.2</spotbugs-maven-plugin.version>
         <spotbugs.version>4.8.6</spotbugs.version>
         <owasp-dependency-check-plugin.version>10.0.3</owasp-dependency-check-plugin.version>
