@@ -37,7 +37,7 @@
         <byte.buddy.version>1.14.18</byte.buddy.version>
         <springfox.swagger2.version>3.0.0</springfox.swagger2.version>
         <springfox.swagger-ui.version>3.0.0</springfox.swagger-ui.version>
-        <guava.version>33.2.1-jre</guava.version>
+        <guava.version>33.3.0-jre</guava.version>
         <json.version>20240303</json.version>
         <netty.codec.http.version>4.1.112.Final</netty.codec.http.version>
         <netty.codec.http2.version>4.1.112.Final</netty.codec.http2.version>
