@@ -58,7 +58,7 @@
         <fmt-maven-plugin.version>2.13</fmt-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.4.0</maven-checkstyle-plugin.version>
         <maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>3.3.1</maven-failsafe-plugin.version>
+        <maven-failsafe-plugin.version>3.5.0</maven-failsafe-plugin.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <pact.provider-plugin.version>4.6.12</pact.provider-plugin.version>
         <maven-pmd-plugin.version>3.24.0</maven-pmd-plugin.version>
