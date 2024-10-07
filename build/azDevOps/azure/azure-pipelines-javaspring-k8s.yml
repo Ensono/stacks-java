@@ -1,6 +1,4 @@
-#############################################################################################################################
-# This is a generated file which includes some replacements.                                                                #
-# It is still very much recommended to go through this and ensure all variables are correct for your business/domain        #
+############################################################################################################################## This is a generated file which includes some replacements.                                                                ## It is still very much recommended to go through this and ensure all variables are correct for your business/domain        #
 # All variables are defined in a global scope.                                                                              #
 # All Terraform produced resource names are using a labels module ensuring a predictable naming convention                  #
 # E.g.: variables for company, project, stage and domain will produce a name of `$company-$project-$stage-$domain`          #
@@ -32,21 +30,17 @@ resources:
 
   containers:
     # Container for Java Build and Testing
+    # Container for Sonar Scanner
     - container: azul_java
-      image: amidostacks/runner-pwsh-java:0.4.48-stable
+      image: ensono/eir-java:1.1.251
     # Container for inlining Jacoco assets as Azure DevOps strips them
     # https://github.com/microsoft/azure-pipelines-tasks/issues/3027
     - container: node
-      image: node:20.16.0-bullseye-slim
-    # Container for Sonar Scanner
-    - container: sonar_scanner
-      image: amidostacks/runner-pwsh-dotnet:0.4.51-stable
+      image: ensono/eir-nodejs:1.1.251
     # Container for Kubernetes Deployment
+    # Container for Terraform Deployment
     - container: k8s_deploy
-      image: ensonostackseuweirdfmu.azurecr.io/ensono/eir-infrastructure:1.1.165
-    # Container for Terraform deployments
-    - container: terraform_custom
-      image: ensonostackseuweirdfmu.azurecr.io/ensono/eir-infrastructure:1.1.165
+      image: ensono/eir-infrastructure:1.1.251
 
 variables:
   - template: azuredevops-vars.yml
@@ -186,6 +180,7 @@ stages:
       - group: stacks-acr-creds
       - group: stacks-infra-credentials-nonprod
       - group: stacks-credentials-nonprod-kv
+      - group: sonar-credentials
       - group: stacks-java-api
     jobs:
       - job: ApiBuild
@@ -214,7 +209,7 @@ stages:
           - template: templates/steps/build/test-validate-terraform.yml
             parameters:
               pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
-              terraform_container: "terraform_custom"
+              terraform_container: "k8s_deploy"
               terraform_directory: "${{ variables.self_repo_tf_dir }}"
 
           # Builds the Java app and runs tests
@@ -270,12 +265,12 @@ stages:
               pullrequest_number: "$(pullrequest_number)"
               # Sonar
               sonar_enable: true
-              sonar_container: "sonar_scanner"
+              sonar_container: "azul_java"
               sonar_host_url: "https://sonarcloud.io"
               sonar_project_name: "$(SONAR_PROJECT_NAME)"
               sonar_project_key: "$(SONAR_PROJECT_KEY)"
               sonar_token: "$(SONAR_TOKEN)"
-              sonar_organisation: "$(SONAR_ORGANIZATION)"
+              sonar_organisation: "$(SONAR_ORGANISATION)"
               # Probably `GitHub` or `vsts`
               sonar_pullrequest_provider: "GitHub"
               sonar_remote_repo: "${{ variables.self_remote_repo }}"
@@ -346,7 +341,7 @@ stages:
         value: "$[ stageDependencies.Build.ApiBuild.outputs['build_attempt_number.BUILD_ATTEMPT_NUMBER'] ]"
     jobs:
       - deployment: AppInfraDev
-        container: terraform_custom
+        container: k8s_deploy
         pool:
           vmImage: $(pool_vm_image)
         environment: ${{ variables.domain }}-dev
@@ -382,7 +377,7 @@ stages:
                 - template: templates/steps/deploy/deploy-infra.yml
                   parameters:
                     pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
-                    docker_terraform_container: "terraform_custom"
+                    docker_terraform_container: "k8s_deploy"
                     # Azure Credentials (For Deploying)
                     azure_client_id: "$(ARM_CLIENT_ID)"
                     azure_client_secret: "$(ARM_CLIENT_SECRET)"
@@ -554,7 +549,7 @@ stages:
         value: "$[ stageDependencies.Build.ApiBuild.outputs['build_attempt_number.BUILD_ATTEMPT_NUMBER'] ]"
     jobs:
       - deployment: AppInfraProd
-        container: terraform_custom
+        container: k8s_deploy
         pool:
           vmImage: $(pool_vm_image)
         environment: ${{ variables.domain }}-prod
@@ -590,7 +585,7 @@ stages:
                 - template: templates/steps/deploy/deploy-infra.yml
                   parameters:
                     pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
-                    docker_terraform_container: "terraform_custom"
+                    docker_terraform_container: "k8s_deploy"
                     # Azure Credenitals (For Deploying)
                     azure_client_id: "$(ARM_CLIENT_ID)"
                     azure_client_secret: "$(ARM_CLIENT_SECRET)"
