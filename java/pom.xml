@@ -37,6 +37,7 @@
     <pact.version>3.5.24</pact.version>
     <spring.data.commons>3.3.4</spring.data.commons>
     <owasp-dependency-check-plugin.version>10.0.4</owasp-dependency-check-plugin.version>
+    <restassured.version>4.4.0</restassured.version>
 
     <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
     <pact.broker.url/>
@@ -243,6 +244,13 @@
           <artifactId>spring-data-commons</artifactId>
           <version>${spring.data.commons}</version>
       </dependency>
+
+    <!-- Test dependencies -->
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <scope>test</scope>
+    </dependency>
 
   </dependencies>
 
