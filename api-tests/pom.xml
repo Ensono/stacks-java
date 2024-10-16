@@ -13,8 +13,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <serenity.version>4.2.3</serenity.version>
         <serenity.maven.version>4.2.3</serenity.maven.version>
-        <cucumber.version>7.20.0</cucumber.version>
-        <logback.version>1.5.8</logback.version>
+        <cucumber.version>7.20.1</cucumber.version>
+        <logback.version>1.5.10</logback.version>
         <encoding>UTF-8</encoding>
         <parallel.tests>4</parallel.tests>
         <webdriver.base.url/>
@@ -34,14 +34,14 @@
         <junit-platform.version>1.11.2</junit-platform.version>
         <assertj.core.version>3.26.3</assertj.core.version>
         <hamcrest.version>3.0</hamcrest.version>
-        <byte.buddy.version>1.15.3</byte.buddy.version>
+        <byte.buddy.version>1.15.4</byte.buddy.version>
         <springfox.swagger2.version>3.0.0</springfox.swagger2.version>
         <springfox.swagger-ui.version>3.0.0</springfox.swagger-ui.version>
         <guava.version>33.3.1-jre</guava.version>
         <json.version>20240303</json.version>
         <netty.codec.http.version>4.1.114.Final</netty.codec.http.version>
-        <netty.codec.http2.version>4.1.112.Final</netty.codec.http2.version>
-        <netty.transport.native.epoll.version>4.1.112.Final</netty.transport.native.epoll.version>
+        <netty.codec.http2.version>4.1.114.Final</netty.codec.http2.version>
+        <netty.transport.native.epoll.version>4.1.114.Final</netty.transport.native.epoll.version>
         <httpclient5.version>5.4</httpclient5.version>
         <xerces.version>2.12.2</xerces.version>
         <commons.codec.version>1.17.1</commons.codec.version>
@@ -53,17 +53,17 @@
         <org.projectlombok.version>1.18.34</org.projectlombok.version>
 
         <!-- Maven plugins -->
-        <spotbugs-maven-plugin.version>4.8.6.2</spotbugs-maven-plugin.version>
+        <spotbugs-maven-plugin.version>4.8.6.4</spotbugs-maven-plugin.version>
         <owasp-dependency-check-plugin.version>10.0.4</owasp-dependency-check-plugin.version>
         <fmt-maven-plugin.version>2.13</fmt-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.5.0</maven-checkstyle-plugin.version>
-        <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.5.1</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>3.5.1</maven-failsafe-plugin.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <pact.provider-plugin.version>4.6.14</pact.provider-plugin.version>
-        <maven-pmd-plugin.version>3.24.0</maven-pmd-plugin.version>
+        <maven-pmd-plugin.version>3.25.0</maven-pmd-plugin.version>
         <findbugs-maven-plugin.version>3.0.5</findbugs-maven-plugin.version>
-        <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
+        <exec-maven-plugin.version>3.4.1</exec-maven-plugin.version>
     </properties>
 
     <dependencies>
