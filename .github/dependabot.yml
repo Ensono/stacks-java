@@ -14,8 +14,8 @@ updates:
       low-risk:
         applies-to: version-updates
         update-types:
-        - "minor"
-        - "patch"
+          - "minor"
+          - "patch"
 
   - package-ecosystem: npm
     directory: "/build/azDevOps/azure/coverage"
@@ -31,8 +31,8 @@ updates:
       low-risk:
         applies-to: version-updates
         update-types:
-        - "minor"
-        - "patch"
+          - "minor"
+          - "patch"
 
   - package-ecosystem: maven
     directory: "/api-tests"
@@ -48,8 +48,8 @@ updates:
       low-risk:
         applies-to: version-updates
         update-types:
-        - "minor"
-        - "patch"
+          - "minor"
+          - "patch"
 
   - package-ecosystem: terraform
     directory: "/deploy/azure/app/kube"
@@ -65,5 +65,5 @@ updates:
       low-risk:
         applies-to: version-updates
         update-types:
-        - "minor"
-        - "patch"
+          - "minor"
+          - "patch"
