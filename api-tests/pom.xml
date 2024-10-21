@@ -11,8 +11,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <serenity.version>4.2.3</serenity.version>
-        <serenity.maven.version>4.2.3</serenity.maven.version>
+        <serenity.version>4.2.6</serenity.version>
+        <serenity.maven.version>4.2.6</serenity.maven.version>
         <cucumber.version>7.20.1</cucumber.version>
         <logback.version>1.5.11</logback.version>
         <encoding>UTF-8</encoding>
@@ -34,7 +34,7 @@
         <junit-platform.version>1.11.2</junit-platform.version>
         <assertj.core.version>3.26.3</assertj.core.version>
         <hamcrest.version>3.0</hamcrest.version>
-        <byte.buddy.version>1.15.4</byte.buddy.version>
+        <byte.buddy.version>1.15.5</byte.buddy.version>
         <springfox.swagger2.version>3.0.0</springfox.swagger2.version>
         <springfox.swagger-ui.version>3.0.0</springfox.swagger-ui.version>
         <guava.version>33.3.1-jre</guava.version>
@@ -45,7 +45,7 @@
         <httpclient5.version>5.4</httpclient5.version>
         <xerces.version>2.12.2</xerces.version>
         <commons.codec.version>1.17.1</commons.codec.version>
-        <spring.web.version>6.1.13</spring.web.version>
+        <spring.web.version>6.1.14</spring.web.version>
         <freemarker.version>2.3.33</freemarker.version>
         <gson.version>2.11.0</gson.version>
         <rest-assured.version>5.5.0</rest-assured.version>
