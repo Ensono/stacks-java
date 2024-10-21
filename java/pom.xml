@@ -36,7 +36,7 @@
     <spring.cloud.dependencies.version>2022.0.4</spring.cloud.dependencies.version>
     <pact.version>3.5.24</pact.version>
     <spring.data.commons>3.3.4</spring.data.commons>
-    <owasp-dependency-check-plugin.version>10.0.4</owasp-dependency-check-plugin.version>
+    <owasp-dependency-check-plugin.version>11.0.0</owasp-dependency-check-plugin.version>
 
     <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
     <pact.broker.url/>
