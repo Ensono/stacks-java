@@ -52,7 +52,7 @@
     <org.projectlombok.version>1.18.36</org.projectlombok.version>
 
     <!-- Maven plugins -->
-    <spotbugs-maven-plugin.version>4.8.6.5</spotbugs-maven-plugin.version>
+    <spotbugs-maven-plugin.version>4.8.6.6</spotbugs-maven-plugin.version>
     <owasp-dependency-check-plugin.version>11.1.0</owasp-dependency-check-plugin.version>
     <fmt-maven-plugin.version>2.13</fmt-maven-plugin.version>
     <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
