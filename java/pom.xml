@@ -324,20 +324,20 @@
           </serviceProviders>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>com.coveo</groupId>
-        <artifactId>fmt-maven-plugin</artifactId>
-        <version>${fmt-maven-plugin.version}</version>
-        <configuration>
-          <displayFiles>true</displayFiles>
-          <verbose>true</verbose>
-          <filesNamePattern>.*\.java</filesNamePattern>
-          <additionalSourceDirectories/>
-          <skip>false</skip>
-          <skipSortingImports>false</skipSortingImports>
-          <style>google</style>
-        </configuration>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>com.coveo</groupId>-->
+<!--        <artifactId>fmt-maven-plugin</artifactId>-->
+<!--        <version>${fmt-maven-plugin.version}</version>-->
+<!--        <configuration>-->
+<!--          <displayFiles>true</displayFiles>-->
+<!--          <verbose>true</verbose>-->
+<!--          <filesNamePattern>.*\.java</filesNamePattern>-->
+<!--          <additionalSourceDirectories/>-->
+<!--          <skip>false</skip>-->
+<!--          <skipSortingImports>false</skipSortingImports>-->
+<!--          <style>google</style>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
@@ -466,7 +466,8 @@
         </executions>
         <configuration>
           <projectLocation>${prop.output.dir}</projectLocation>
-          <projectConfigFile>java/src/main/resources/templates/project-builder-config.json</projectConfigFile>
+          <projectConfigFile>src/main/resources/templates/project-builder-config.json</projectConfigFile>
+          <pomTemplateFile>src/main/resources/templates/template.mustache</pomTemplateFile>
         </configuration>
       </plugin>
 

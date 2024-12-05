@@ -18,24 +18,12 @@
   <description>Demo project for Java</description>
 
   <properties>
-    <stacks.core.api.version>1.0.5.11-RELEASE</stacks.core.api.version>
-    <stacks.core.commons.version>2.0.7</stacks.core.commons.version>
-
     <!-- Stacks features -->
     <aws.profile.name>no-aws</aws.profile.name>
     <azure.profile.name>no-azure</azure.profile.name>
 
-    <applicationinsights.version>2.6.4</applicationinsights.version>
-    <azure.springboot.version>4.0.0</azure.springboot.version>
-    <au.com.dius.pact-jvm-provider-spring.version>4.0.10</au.com.dius.pact-jvm-provider-spring.version>
-    <au.com.dius.pact.consumer-version>4.6.15</au.com.dius.pact.consumer-version>
-    <au.com.dius.pact.provider.maven-version>4.6.15</au.com.dius.pact.provider.maven-version>
-    <aws-java-sdk-s3.version>1.12.779</aws-java-sdk-s3.version>
-    <aspectjweaver.version>1.9.9.1</aspectjweaver.version>
     <exec-maven-plugin.version>3.5.0</exec-maven-plugin.version>
     <spring.cloud.dependencies.version>2022.0.4</spring.cloud.dependencies.version>
-    <pact.version>3.5.24</pact.version>
-    <spring.data.commons>3.4.0</spring.data.commons>
     <owasp-dependency-check-plugin.version>11.1.0</owasp-dependency-check-plugin.version>
     <junit-jupiter.version>5.11.3</junit-jupiter.version>
 
@@ -74,199 +62,26 @@
 
   <dependencies>
 
-    <!-- STACKS dependencies -->
-    <dependency>
-      <groupId>com.amido.stacks.modules</groupId>
-      <artifactId>stacks-core-api</artifactId>
-      <version>${stacks.core.api.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.aspectj</groupId>
-          <artifactId>aspectjweaver</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.amido.stacks.modules</groupId>
-      <artifactId>stacks-core-commons</artifactId>
-      <version>${stacks.core.commons.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-properties-migrator</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-bootstrap</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-config</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.yaml</groupId>
-          <artifactId>snakeyaml</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-annotations</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-jsr310</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.azure.spring</groupId>
-      <artifactId>azure-spring-boot</artifactId>
-      <version>${azure.springboot.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>net.minidev</groupId>
-          <artifactId>json-smart</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.microsoft.azure</groupId>
-      <artifactId>applicationinsights-spring-boot-starter</artifactId>
-      <version>${applicationinsights.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.microsoft.azure</groupId>
-      <artifactId>applicationinsights-logging-logback</artifactId>
-      <version>${applicationinsights.version}</version>
-      <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>ch.qos.logback</groupId>
-          <artifactId>logback-core</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>net.minidev</groupId>
-      <artifactId>json-smart</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.beust</groupId>
-      <artifactId>jcommander</artifactId>
-    </dependency>
-
-    <!-- Registering the Auth0 Dependency-->
-    <dependency>
-      <groupId>com.auth0</groupId>
-      <artifactId>auth0-spring-security-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.junit.vintage</groupId>
-          <artifactId>junit-vintage-engine</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>junit</groupId>
-          <artifactId>junit</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.vaadin.external.google</groupId>
-          <artifactId>android-json</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>au.com.dius</groupId>
-      <artifactId>pact-jvm-provider-spring</artifactId>
-      <version>${au.com.dius.pact-jvm-provider-spring.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>au.com.dius.pact</groupId>
-      <artifactId>consumer</artifactId>
-      <version>${au.com.dius.pact.consumer-version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.pitest</groupId>
-      <artifactId>pitest-parent</artifactId>
-      <type>pom</type>
-    </dependency>
-
-    <dependency>
-      <groupId>com.nimbusds</groupId>
-      <artifactId>oauth2-oidc-sdk</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.amazonaws</groupId>
-      <artifactId>aws-java-sdk-s3</artifactId>
-      <version>${aws-java-sdk-s3.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>jakarta.persistence</groupId>
-      <artifactId>jakarta.persistence-api</artifactId>
-    </dependency>
-      <dependency>
-          <groupId>org.springframework.data</groupId>
-          <artifactId>spring-data-commons</artifactId>
-          <version>${spring.data.commons}</version>
-      </dependency>
-
-
-     {{#dependencies}}
+    {{#dependencies}}
       <dependency>
         <groupId>{{groupId}}</groupId>
         <artifactId>{{artifactId}}</artifactId>
         {{#version}}
         <version>{{version}}</version>
         {{/version}}
+        {{#hasExclusions}}
+        <exclusions>
+          {{#exclusions}}
+          <exclusion>
+            <groupId>{{groupId}}</groupId>
+            <artifactId>{{artifactId}}</artifactId>
+          </exclusion>
+          {{/exclusions}}
+        </exclusions>
+        {{/hasExclusions}}
       </dependency>
-     {{/dependencies}}
 
+    {{/dependencies}}
   </dependencies>
 
   <build>
