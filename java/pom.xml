@@ -22,7 +22,10 @@
     <stacks.core.commons.version>2.0.7</stacks.core.commons.version>
 
     <!-- Stacks features -->
+    <prop.aws></prop.aws>
     <aws.profile.name>no-aws</aws.profile.name>
+
+    <prop.azure></prop.azure>
     <azure.profile.name>no-azure</azure.profile.name>
 
     <applicationinsights.version>2.6.4</applicationinsights.version>
@@ -39,6 +42,9 @@
     <owasp-dependency-check-plugin.version>11.1.0</owasp-dependency-check-plugin.version>
     <junit-jupiter.version>5.11.3</junit-jupiter.version>
 
+    <manifold.version>2024.1.38</manifold.version>
+    <fmt-maven-plugin.version>2.25</fmt-maven-plugin.version>
+
     <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
     <pact.broker.url/>
     <pact.broker.token/>
@@ -46,6 +52,8 @@
     <pact.api.protocol>http</pact.api.protocol>
     <pact.api.host>localhost</pact.api.host>
     <pact.api.port>9000</pact.api.port>
+
+    <prop.output.dir>../stacks-preprocessor-output</prop.output.dir>
   </properties>
 
   <dependencyManagement>
@@ -143,38 +151,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.azure.spring</groupId>
-      <artifactId>azure-spring-boot</artifactId>
-      <version>${azure.springboot.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>net.minidev</groupId>
-          <artifactId>json-smart</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.microsoft.azure</groupId>
-      <artifactId>applicationinsights-spring-boot-starter</artifactId>
-      <version>${applicationinsights.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.microsoft.azure</groupId>
-      <artifactId>applicationinsights-logging-logback</artifactId>
-      <version>${applicationinsights.version}</version>
-      <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>ch.qos.logback</groupId>
-          <artifactId>logback-core</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
       <groupId>net.minidev</groupId>
       <artifactId>json-smart</artifactId>
     </dependency>
@@ -251,6 +227,18 @@
           <artifactId>spring-data-commons</artifactId>
           <version>${spring.data.commons}</version>
       </dependency>
+
+    <dependency>
+      <groupId>systems.manifold</groupId>
+      <artifactId>manifold</artifactId>
+      <version>${manifold.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.spotify.fmt</groupId>
+      <artifactId>fmt-maven-plugin</artifactId>
+      <version>${fmt-maven-plugin.version}</version>
+    </dependency>
 
   </dependencies>
 
@@ -336,20 +324,20 @@
           </serviceProviders>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>com.coveo</groupId>
-        <artifactId>fmt-maven-plugin</artifactId>
-        <version>${fmt-maven-plugin.version}</version>
-        <configuration>
-          <displayFiles>true</displayFiles>
-          <verbose>true</verbose>
-          <filesNamePattern>.*\.java</filesNamePattern>
-          <additionalSourceDirectories/>
-          <skip>false</skip>
-          <skipSortingImports>false</skipSortingImports>
-          <style>google</style>
-        </configuration>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>com.coveo</groupId>-->
+<!--        <artifactId>fmt-maven-plugin</artifactId>-->
+<!--        <version>${fmt-maven-plugin.version}</version>-->
+<!--        <configuration>-->
+<!--          <displayFiles>true</displayFiles>-->
+<!--          <verbose>true</verbose>-->
+<!--          <filesNamePattern>.*\.java</filesNamePattern>-->
+<!--          <additionalSourceDirectories/>-->
+<!--          <skip>false</skip>-->
+<!--          <skipSortingImports>false</skipSortingImports>-->
+<!--          <style>google</style>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
@@ -423,6 +411,91 @@
           </outputFormats>
         </configuration>
       </plugin>
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <source>17</source>
+          <target>17</target>
+          <encoding>UTF-8</encoding>
+          <compilerArgs>
+            <!-- Configure manifold plugin -->
+            <arg>-Xplugin:Manifold</arg>
+            <arg>-Amanifold.source.target=${prop.output.dir}</arg>
+            <arg>${prop.aws}</arg>
+            <arg>${prop.azure}</arg>
+          </compilerArgs>
+          <!-- Add the processor path for the plugin -->
+          <annotationProcessorPaths>
+            <path>
+              <groupId>systems.manifold</groupId>
+              <artifactId>manifold-preprocessor</artifactId>
+              <version>${manifold.version}</version>
+            </path>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+
+
+      <plugin>
+        <groupId>com.ensono.stacks</groupId>
+        <artifactId>stacks-maven-plugin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>
+                stacks-clean-project
+              </goal>
+              <goal>
+                stacks-prepare-project
+              </goal>
+              <goal>
+                stacks-prepare-project-tests
+              </goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <projectLocation>${prop.output.dir}</projectLocation>
+          <projectConfigFile>src/main/resources/templates/project-builder-config.json</projectConfigFile>
+          <pomTemplateFile>src/main/resources/templates/template.mustache</pomTemplateFile>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.spotify.fmt</groupId>
+        <artifactId>fmt-maven-plugin</artifactId>
+        <version>${fmt-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>format</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <sourceDirectory>${prop.output.dir}/src/main/java</sourceDirectory>
+          <displayFiles>true</displayFiles>
+          <verbose>true</verbose>
+          <filesNamePattern>.*\.java</filesNamePattern>
+          <additionalSourceDirectories/>
+          <skip>false</skip>
+          <skipSortingImports>false</skipSortingImports>
+          <style>google</style>
+        </configuration>
+      </plugin>
+
+
     </plugins>
   </build>
 
@@ -432,29 +505,57 @@
 
     <profile>
       <id>aws</id>
-      <activation>
-        <file>
-          <exists>.</exists>
-        </file>
-      </activation>
       <properties>
+        <prop.aws>-AUSE_AWS=</prop.aws>
         <aws.profile.name>aws</aws.profile.name>
       </properties>
       <dependencies>
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk-s3</artifactId>
+          <version>${aws-java-sdk-s3.version}</version>
+        </dependency>
       </dependencies>
     </profile>
 
     <profile>
       <id>azure</id>
-      <activation>
-        <file>
-          <exists>.</exists>
-        </file>
-      </activation>
       <properties>
+        <prop.azure>-AUSE_AZURE=</prop.azure>
         <azure.profile.name>azure</azure.profile.name>
       </properties>
       <dependencies>
+        <dependency>
+          <groupId>com.azure.spring</groupId>
+          <artifactId>azure-spring-boot</artifactId>
+          <version>${azure.springboot.version}</version>
+          <exclusions>
+            <exclusion>
+              <groupId>net.minidev</groupId>
+              <artifactId>json-smart</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+
+        <dependency>
+          <groupId>com.microsoft.azure</groupId>
+          <artifactId>applicationinsights-spring-boot-starter</artifactId>
+          <version>${applicationinsights.version}</version>
+          <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+          <groupId>com.microsoft.azure</groupId>
+          <artifactId>applicationinsights-logging-logback</artifactId>
+          <version>${applicationinsights.version}</version>
+          <scope>runtime</scope>
+          <exclusions>
+            <exclusion>
+              <groupId>ch.qos.logback</groupId>
+              <artifactId>logback-core</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
       </dependencies>
     </profile>
 
@@ -518,7 +619,7 @@
             <version>${exec-maven-plugin.version}</version>
             <executions>
               <execution>
-                <id>Add execution rigths on bash scripts</id>
+                <id>Add execution rights on bash scripts</id>
                 <phase>process-resources</phase>
                 <goals>
                   <goal>exec</goal>

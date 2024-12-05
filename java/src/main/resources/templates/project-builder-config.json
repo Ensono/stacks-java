@@ -1,0 +1,18 @@
+{
+  "coreIncludes": [
+    "com/amido/stacks/workloads"
+  ],
+  "profileFilters": [],
+  "excludedGroupIds": [
+    "systems.manifold",
+    "com.github.spullara.mustache.java",
+    "com.spotify.fmt"
+  ],
+  "corePropertiesFile": "application.yml",
+  "additionalProperties": [
+    "AI-Agent.xml",
+    "logback-spring.xml",
+    "auth.properties"
+  ],
+  "outputPropertiesFile": "application.yml"
+}
