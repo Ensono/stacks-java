@@ -18,7 +18,7 @@
     <encoding>UTF-8</encoding>
     <parallel.tests>4</parallel.tests>
     <webdriver.base.url/>
-    <jackson.version>2.18.1</jackson.version>
+    <jackson.version>2.18.2</jackson.version>
     <java.version>17</java.version>
 
     <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
@@ -29,7 +29,7 @@
     <pact.jvm.consumer.version>4.0.10</pact.jvm.consumer.version>
     <pact.jvm.provider.junit.version>4.0.10</pact.jvm.provider.junit.version>
     <spotbugs.version>4.8.6</spotbugs.version>
-    <puppycrawl-tools-checkstyle.version>10.20.1</puppycrawl-tools-checkstyle.version>
+    <puppycrawl-tools-checkstyle.version>10.20.2</puppycrawl-tools-checkstyle.version>
     <junit-jupiter.version>5.11.3</junit-jupiter.version>
     <assertj.core.version>3.26.3</assertj.core.version>
     <hamcrest.version>3.0</hamcrest.version>
@@ -53,13 +53,13 @@
 
     <!-- Maven plugins -->
     <spotbugs-maven-plugin.version>4.8.6.6</spotbugs-maven-plugin.version>
-    <owasp-dependency-check-plugin.version>11.1.0</owasp-dependency-check-plugin.version>
+    <owasp-dependency-check-plugin.version>11.1.1</owasp-dependency-check-plugin.version>
     <fmt-maven-plugin.version>2.13</fmt-maven-plugin.version>
     <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
     <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>3.5.2</maven-failsafe-plugin.version>
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-    <pact.provider-plugin.version>4.6.15</pact.provider-plugin.version>
+    <pact.provider-plugin.version>4.6.16</pact.provider-plugin.version>
     <maven-pmd-plugin.version>3.26.0</maven-pmd-plugin.version>
     <findbugs-maven-plugin.version>3.0.5</findbugs-maven-plugin.version>
     <exec-maven-plugin.version>3.5.0</exec-maven-plugin.version>
