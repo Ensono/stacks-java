@@ -19,6 +19,17 @@
       "packages" : [
         "com/amido/stacks/dynamodb"
       ]
+    },
+    {
+      "id": "aws",
+      "packages" : [
+        "com/amido/stacks/aws"
+      ],
+      "propertiesFile": "application-aws.yml"
+    },
+    {
+      "id": "azure",
+      "propertiesFile": "application-azure.yml"
     }
   ],
   "excludedGroupIds": [

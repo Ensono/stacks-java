@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/** @author ArathyKrishna */
+/**
+ * @author ArathyKrishna
+ */
 public class CategoryHelper {
   public static List<Category> createCategories(int count) {
     List<Category> categoryList = new ArrayList<>();

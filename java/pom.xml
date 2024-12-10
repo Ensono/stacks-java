@@ -61,7 +61,7 @@
     <pact.api.host>localhost</pact.api.host>
     <pact.api.port>9000</pact.api.port>
 
-    <prop.output.dir>../stacks-preprocessor-output</prop.output.dir>
+    <prop.output.dir>../../stacks-preprocessor-output</prop.output.dir>
   </properties>
 
   <dependencyManagement>
@@ -436,6 +436,7 @@
             <arg>${prop.aws}</arg>
             <arg>${prop.azure}</arg>
             <arg>${prop.cosmosdb}</arg>
+            <arg>${prop.dynamodb}</arg>
           </compilerArgs>
           <!-- Add the processor path for the plugin -->
           <annotationProcessorPaths>
@@ -517,14 +518,103 @@
       <properties>
         <prop.aws>-AUSE_AWS=</prop.aws>
         <aws.profile.name>aws</aws.profile.name>
+        <spring.cloud.starter.aws.secrets.manager.config.version>2.4.4
+        </spring.cloud.starter.aws.secrets.manager.config.version>
+        <aws-java-sdk.version>1.12.579</aws-java-sdk.version>
+        <aws-xray-recorder-sdk.version>2.14.0</aws-xray-recorder-sdk.version>
+        <tomcat-embed.version>10.1.15</tomcat-embed.version>
       </properties>
+
       <dependencies>
+
+        <dependency>
+          <groupId>org.apache.tomcat.embed</groupId>
+          <artifactId>tomcat-embed-core</artifactId>
+          <version>${tomcat-embed.version}</version>
+        </dependency>
+
+        <!-- AWS SECRETS -->
+
+        <dependency>
+          <groupId>io.awspring.cloud</groupId>
+          <artifactId>spring-cloud-starter-aws-secrets-manager-config</artifactId>
+          <version>${spring.cloud.starter.aws.secrets.manager.config.version}</version>
+        </dependency>
+        <!-- AWS SECRETS -->
+
+        <!-- AWS sdk -->
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk-core</artifactId>
+          <version>${aws-java-sdk.version}</version>
+        </dependency>
+
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk-dynamodb</artifactId>
+          <version>${aws-java-sdk.version}</version>
+        </dependency>
+
         <dependency>
           <groupId>com.amazonaws</groupId>
           <artifactId>aws-java-sdk-s3</artifactId>
-          <version>${aws-java-sdk-s3.version}</version>
+          <version>${aws-java-sdk.version}</version>
+        </dependency>
+
+        <!-- XRAY -->
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-xray-recorder-sdk-spring</artifactId>
+          <version>${aws-xray-recorder-sdk.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-xray-recorder-sdk-metrics</artifactId>
+          <version>${aws-xray-recorder-sdk.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-xray-recorder-sdk-aws-sdk-instrumentor</artifactId>
+          <version>${aws-xray-recorder-sdk.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-xray-recorder-sdk-log4j</artifactId>
+          <version>${aws-xray-recorder-sdk.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-xray-recorder-sdk-apache-http</artifactId>
+          <version>${aws-xray-recorder-sdk.version}</version>
         </dependency>
       </dependencies>
+
+      <dependencyManagement>
+        <dependencies>
+          <dependency>
+            <groupId>io.awspring.cloud</groupId>
+            <artifactId>spring-cloud-aws-dependencies</artifactId>
+            <version>${spring.cloud.starter.aws.secrets.manager.config.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+          </dependency>
+          <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-bom</artifactId>
+            <version>${aws-java-sdk.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+          </dependency>
+
+          <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-xray-recorder-sdk-bom</artifactId>
+            <version>${aws-xray-recorder-sdk.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+          </dependency>
+        </dependencies>
+      </dependencyManagement>
     </profile>
 
     <profile>

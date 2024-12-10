@@ -3,7 +3,9 @@ package com.amido.stacks.workloads.util;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
-/** @author ArathyKrishna */
+/**
+ * @author ArathyKrishna
+ */
 public class TestHelper {
 
   public static String getBaseURL(int port) {

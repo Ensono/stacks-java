@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/** @author ArathyKrishna */
+/**
+ * @author ArathyKrishna
+ */
 public class ItemHelper {
 
   public static Item createItem(int counter) {
