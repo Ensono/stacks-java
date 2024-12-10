@@ -1,8 +1,26 @@
 {
   "coreIncludes": [
-    "com/amido/stacks/workloads"
+    "com/amido/stacks/workloads",
+    "com/amido/stacks/workloads/menu",
+    "com/amido/stacks/workloads/menu/api",
+    "com/amido/stacks/workloads/menu/domain",
+    "com/amido/stacks/workloads/menu/mappers",
+    "com/amido/stacks/workloads/menu/service"
   ],
-  "profileFilters": [],
+  "profileFilters": [
+    {
+      "id": "cosmosdb",
+      "packages" : [
+        "com/amido/stacks/cosmosdb"
+      ]
+    },
+    {
+      "id": "dynamodb",
+      "packages" : [
+        "com/amido/stacks/dynamodb"
+      ]
+    }
+  ],
   "excludedGroupIds": [
     "systems.manifold",
     "com.github.spullara.mustache.java",

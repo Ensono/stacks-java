@@ -23,10 +23,16 @@
 
     <!-- Stacks features -->
     <prop.aws></prop.aws>
-    <aws.profile.name>no-aws</aws.profile.name>
+    <aws.profile.name></aws.profile.name>
 
     <prop.azure></prop.azure>
-    <azure.profile.name>no-azure</azure.profile.name>
+    <azure.profile.name></azure.profile.name>
+
+    <prop.cosmosdb></prop.cosmosdb>
+    <profile.cosmosdb></profile.cosmosdb>
+
+    <prop.dynamodb></prop.dynamodb>
+    <profile.dynamodb></profile.dynamodb>
 
     <applicationinsights.version>2.6.4</applicationinsights.version>
     <azure.springboot.version>4.0.0</azure.springboot.version>
@@ -41,6 +47,8 @@
     <spring.data.commons>3.4.0</spring.data.commons>
     <owasp-dependency-check-plugin.version>11.1.0</owasp-dependency-check-plugin.version>
     <junit-jupiter.version>5.11.3</junit-jupiter.version>
+    <azure-spring-cosmos.version>5.6.0</azure-spring-cosmos.version>
+    <spring.data.dynamodb.version>5.2.5</spring.data.dynamodb.version>
 
     <manifold.version>2024.1.38</manifold.version>
     <fmt-maven-plugin.version>2.25</fmt-maven-plugin.version>
@@ -427,6 +435,7 @@
             <arg>-Amanifold.source.target=${prop.output.dir}</arg>
             <arg>${prop.aws}</arg>
             <arg>${prop.azure}</arg>
+            <arg>${prop.cosmosdb}</arg>
           </compilerArgs>
           <!-- Add the processor path for the plugin -->
           <annotationProcessorPaths>
@@ -555,6 +564,36 @@
               <artifactId>logback-core</artifactId>
             </exclusion>
           </exclusions>
+        </dependency>
+      </dependencies>
+    </profile>
+
+    <profile>
+      <id>cosmosdb</id>
+      <properties>
+        <prop.cosmosdb>-AUSE_COSMOSDB=</prop.cosmosdb>
+        <profile.cosmosdb>cosmosdb</profile.cosmosdb>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>com.azure</groupId>
+          <artifactId>azure-spring-data-cosmos</artifactId>
+          <version>${azure-spring-cosmos.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+
+    <profile>
+      <id>dynamodb</id>
+      <properties>
+        <prop.cosmosdb>-AUSE_DYNAMODB=</prop.cosmosdb>
+        <profile.cosmosdb>dynamodb</profile.cosmosdb>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>io.github.boostchicken</groupId>
+          <artifactId>spring-data-dynamodb</artifactId>
+          <version>${spring.data.dynamodb.version}</version>
         </dependency>
       </dependencies>
     </profile>
