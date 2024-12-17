@@ -40,25 +40,47 @@
     <pact.api.port>9000</pact.api.port>
   </properties>
 
-  <dependencyManagement>
-    <dependencies>
-      <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies -->
-      <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-dependencies</artifactId>
-        <version>${spring.cloud.dependencies.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.junit</groupId>
-        <artifactId>junit-bom</artifactId>
-        <version>${junit-jupiter.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+    <dependencyManagement>
+      <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies -->
+        <dependency>
+          <groupId>org.springframework.cloud</groupId>
+          <artifactId>spring-cloud-dependencies</artifactId>
+          <version>${spring.cloud.dependencies.version}</version>
+          <type>pom</type>
+          <scope>import</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.junit</groupId>
+          <artifactId>junit-bom</artifactId>
+          <version>${junit-jupiter.version}</version>
+          <type>pom</type>
+          <scope>import</scope>
+        </dependency>
+        <dependency>
+          <groupId>io.awspring.cloud</groupId>
+          <artifactId>spring-cloud-aws-dependencies</artifactId>
+          <version>${spring.cloud.starter.aws.secrets.manager.config.version}</version>
+          <type>pom</type>
+          <scope>import</scope>
+        </dependency>
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk-bom</artifactId>
+          <version>${aws-java-sdk.version}</version>
+          <type>pom</type>
+          <scope>import</scope>
+        </dependency>
+
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-xray-recorder-sdk-bom</artifactId>
+          <version>${aws-xray-recorder-sdk.version}</version>
+          <type>pom</type>
+          <scope>import</scope>
+        </dependency>
+      </dependencies>
+    </dependencyManagement>
 
   <dependencies>
 
