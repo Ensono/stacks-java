@@ -1,30 +1,36 @@
 {
   "coreIncludes": [
-    "com/amido/stacks/core",
-    "com/amido/stacks/workloads",
-    "com/amido/stacks/workloads/menu",
-    "com/amido/stacks/workloads/menu/api",
-    "com/amido/stacks/workloads/menu/domain",
-    "com/amido/stacks/workloads/menu/mappers",
-    "com/amido/stacks/workloads/menu/service"
+    "**/com/amido/stacks/core/**/*.java"
+    "**/com/amido/stacks/workloads/*.java",
+    "**/com/amido/stacks/workloads/menu/*.java",
+    "**/com/amido/stacks/workloads/menu/api/**/*.java",
+    "**/com/amido/stacks/workloads/menu/domain/*.java",
+    "**/com/amido/stacks/workloads/menu/mappers/*.java",
+    "**/com/amido/stacks/workloads/menu/service/*/*.java"
+  ],
+  "coreTestIncludes" : [
+    "**/com/amido/stacks/workloads/actuator/ActuatorTest.java",
+    "**/com/amido/stacks/workloads/menu/**/*Test.java",
+    "**/com/amido/stacks/workloads/util/TestHelper.java",
+    "**/com/amido/stacks/workloads/menu/domain/*Helper.java"
   ],
   "profileFilters": [
     {
       "id": "cosmosdb",
-      "packages" : [
-        "com/amido/stacks/cosmosdb"
+      "includes" : [
+        "**/com/amido/stacks/cosmosdb/**/*.java"
       ]
     },
     {
       "id": "dynamodb",
-      "packages" : [
-        "com/amido/stacks/dynamodb"
+      "includes" : [
+        "**/com/amido/stacks/dynamodb/**/*.java"
       ]
     },
     {
       "id": "aws",
-      "packages" : [
-        "com/amido/stacks/aws"
+      "includes" : [
+        "**/com/amido/stacks/aws/**/*.java"
       ],
       "propertiesFile": "application-aws.yml"
     },
