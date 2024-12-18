@@ -18,8 +18,6 @@
   <description>Demo project for Java</description>
 
   <properties>
-    <stacks.core.api.version>1.0.5.11-RELEASE</stacks.core.api.version >
-    <stacks.core.commons.version>2.0.7</stacks.core.commons.version>
 
     <!-- Stacks features -->
     <prop.aws></prop.aws>
@@ -36,6 +34,7 @@
 
     <applicationinsights.version>2.6.4</applicationinsights.version>
     <azure.springboot.version>4.0.0</azure.springboot.version>
+    <spring-context.version></spring-context.version>
     <au.com.dius.pact-jvm-provider-spring.version>4.0.10</au.com.dius.pact-jvm-provider-spring.version>
     <au.com.dius.pact.consumer.version>4.6.15</au.com.dius.pact.consumer.version>
     <au.com.dius.pact.provider.version>4.6.15</au.com.dius.pact.provider.version>
@@ -154,13 +153,9 @@
     </dependency>
 -->
 
-
-
-
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
-        <version>${spring-context.version}</version>
       </dependency>
 
     <dependency>

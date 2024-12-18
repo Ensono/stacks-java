@@ -1,6 +1,6 @@
 {
   "coreIncludes": [
-    "**/com/amido/stacks/core/**/*.java"
+    "**/com/amido/stacks/core/**/*.java",
     "**/com/amido/stacks/workloads/*.java",
     "**/com/amido/stacks/workloads/menu/*.java",
     "**/com/amido/stacks/workloads/menu/api/**/*.java",

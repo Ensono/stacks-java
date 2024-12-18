@@ -1,21 +1,5 @@
     <!-- STACKS dependencies -->
-    <dependency>
-      <groupId>com.amido.stacks.modules</groupId>
-      <artifactId>stacks-core-api</artifactId>
-      <version>${stacks.core.api.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.aspectj</groupId>
-          <artifactId>aspectjweaver</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
 
-    <dependency>
-      <groupId>com.amido.stacks.modules</groupId>
-      <artifactId>stacks-core-commons</artifactId>
-      <version>${stacks.core.commons.version}</version>
-    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -47,6 +31,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        <version>${springdoc.openapi.version}</version>
     </dependency>
 
     <dependency>
