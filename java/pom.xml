@@ -5,9 +5,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.amido.stacks.modules</groupId>
+    <groupId>com.ensono.stacks.modules</groupId>
     <artifactId>stacks-modules-parent</artifactId>
-    <version>3.0.26-RELEASE</version>
+    <version>3.0.52</version>
   </parent>
 
   <groupId>com.amido.stacks.workloads</groupId>
@@ -44,6 +44,8 @@
     <exec-maven-plugin.version>3.5.0</exec-maven-plugin.version>
     <spring.cloud.dependencies.version>2022.0.4</spring.cloud.dependencies.version>
     <pact.version>3.5.24</pact.version>
+    
+    <springdoc.openapi.version>2.2.0</springdoc.openapi.version>
     <spring.data.commons.version>3.4.0</spring.data.commons.version>
     <owasp-dependency-check-plugin.version>11.1.0</owasp-dependency-check-plugin.version>
     <junit-jupiter.version>5.11.3</junit-jupiter.version>
@@ -113,7 +115,26 @@
 
   <dependencies>
 
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        <version>${springdoc.openapi.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.auth0</groupId>
+        <artifactId>auth0-spring-security-api</artifactId>
+      </dependency>
+
+
     <!-- STACKS dependencies -->
+    <!--
     <dependency>
       <groupId>com.amido.stacks.modules</groupId>
       <artifactId>stacks-core-api</artifactId>
@@ -131,6 +152,16 @@
       <artifactId>stacks-core-commons</artifactId>
       <version>${stacks.core.commons.version}</version>
     </dependency>
+-->
+
+
+
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${spring-context.version}</version>
+      </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -506,13 +537,22 @@
             </path>
             <path>
               <groupId>org.projectlombok</groupId>
+              <artifactId>lombok-mapstruct-binding</artifactId>
+              <version>${org.mapstruct.binding.version}</version>
+            </path>
+            <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>${org.mapstruct.version}</version>
+            </path>
+            <path>
+              <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
               <version>${lombok.version}</version>
             </path>
           </annotationProcessorPaths>
         </configuration>
       </plugin>
-
 
       <plugin>
         <groupId>com.ensono.stacks</groupId>

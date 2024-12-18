@@ -1,5 +1,6 @@
 {
   "coreIncludes": [
+    "com/amido/stacks/core",
     "com/amido/stacks/workloads",
     "com/amido/stacks/workloads/menu",
     "com/amido/stacks/workloads/menu/api",
@@ -33,6 +34,8 @@
     }
   ],
   "excludedGroupIds": [
+    "com.amido.stacks.modules",
+    "com.ensono.stacks.modules",
     "systems.manifold",
     "com.github.spullara.mustache.java",
     "com.spotify.fmt"
