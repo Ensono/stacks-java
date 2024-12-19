@@ -22,7 +22,6 @@
     {{#versionProperties}}
       {{{.}}}
     {{/versionProperties}}
-
     <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
     <pact.broker.url/>
     <pact.broker.token/>
@@ -36,9 +35,7 @@
     <dependencies>
     {{> core/coreManagedDependencies}}
 
-    {{#aws}}
-        {{> aws/awsManagedDependencies}}
-    {{/aws}}
+    {{#aws}}{{> aws/awsManagedDependencies}}{{/aws}}
     </dependencies>
   </dependencyManagement>
 
@@ -46,21 +43,11 @@
   <dependencies>
     {{> core/coreDependencies}}
 
-    {{#aws}}
-        {{> aws/awsDependencies}}
-    {{/aws}}
+    {{#aws}}{{> aws/awsDependencies}}{{/aws}}
 
-    {{#azure}}
-        {{> azure/azureDependencies}}
-    {{/azure}}
+    {{#dynamodb}}{{> dynamodb/dynamodbDependencies}}{{/dynamodb}}
 
-    {{#dynamodb}}
-        {{> dynamodb/dynamodbDependencies}}
-    {{/dynamodb}}
-
-    {{#cosmosdb}}
-        {{> cosmosdb/cosmosdbDependencies}}
-    {{/cosmosdb}}
+    {{#cosmosdb}}{{> cosmosdb/cosmosdbDependencies}}{{/cosmosdb}}
   </dependencies>
 
   <build>
