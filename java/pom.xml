@@ -27,14 +27,13 @@
     <azure.profile.name></azure.profile.name>
 
     <prop.cosmosdb></prop.cosmosdb>
-    <profile.cosmosdb></profile.cosmosdb>
+    <profile.cosmosdb.name></profile.cosmosdb.name>
 
     <prop.dynamodb></prop.dynamodb>
-    <profile.dynamodb></profile.dynamodb>
+    <profile.dynamodb.name></profile.dynamodb.name>
 
     <applicationinsights.version>2.6.4</applicationinsights.version>
     <azure.springboot.version>4.0.0</azure.springboot.version>
-    <spring-context.version></spring-context.version>
     <au.com.dius.pact-jvm-provider-spring.version>4.0.10</au.com.dius.pact-jvm-provider-spring.version>
     <au.com.dius.pact.consumer.version>4.6.15</au.com.dius.pact.consumer.version>
     <au.com.dius.pact.provider.version>4.6.15</au.com.dius.pact.provider.version>
@@ -53,11 +52,6 @@
 
     <manifold.version>2024.1.38</manifold.version>
     <fmt-maven-plugin.version>2.25</fmt-maven-plugin.version>
-
-    <spring.cloud.starter.aws.secrets.manager.config.version>2.4.4
-    </spring.cloud.starter.aws.secrets.manager.config.version>
-    <aws-java-sdk.version>1.12.579</aws-java-sdk.version>
-    <aws-xray-recorder-sdk.version>2.14.0</aws-xray-recorder-sdk.version>
 
     <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
     <pact.broker.url/>
@@ -84,28 +78,6 @@
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
         <version>${junit-jupiter.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>io.awspring.cloud</groupId>
-        <artifactId>spring-cloud-aws-dependencies</artifactId>
-        <version>${spring.cloud.starter.aws.secrets.manager.config.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.amazonaws</groupId>
-        <artifactId>aws-java-sdk-bom</artifactId>
-        <version>${aws-java-sdk.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>com.amazonaws</groupId>
-        <artifactId>aws-xray-recorder-sdk-bom</artifactId>
-        <version>${aws-xray-recorder-sdk.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -472,7 +444,6 @@
         </configuration>
       </plugin>
 
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -575,8 +546,6 @@
           <style>google</style>
         </configuration>
       </plugin>
-
-
     </plugins>
   </build>
 
@@ -662,32 +631,31 @@
         </dependency>
       </dependencies>
 
-<!--      <dependencyManagement>-->
-<!--        <dependencies>-->
-<!--          <dependency>-->
-<!--            <groupId>io.awspring.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-aws-dependencies</artifactId>-->
-<!--            <version>${spring.cloud.starter.aws.secrets.manager.config.version}</version>-->
-<!--            <type>pom</type>-->
-<!--            <scope>import</scope>-->
-<!--          </dependency>-->
-<!--          <dependency>-->
-<!--            <groupId>com.amazonaws</groupId>-->
-<!--            <artifactId>aws-java-sdk-bom</artifactId>-->
-<!--            <version>${aws-java-sdk.version}</version>-->
-<!--            <type>pom</type>-->
-<!--            <scope>import</scope>-->
-<!--          </dependency>-->
-
-<!--          <dependency>-->
-<!--            <groupId>com.amazonaws</groupId>-->
-<!--            <artifactId>aws-xray-recorder-sdk-bom</artifactId>-->
-<!--            <version>${aws-xray-recorder-sdk.version}</version>-->
-<!--            <type>pom</type>-->
-<!--            <scope>import</scope>-->
-<!--          </dependency>-->
-<!--        </dependencies>-->
-<!--      </dependencyManagement>-->
+      <dependencyManagement>
+        <dependencies>
+          <dependency>
+            <groupId>io.awspring.cloud</groupId>
+            <artifactId>spring-cloud-aws-dependencies</artifactId>
+            <version>${spring.cloud.starter.aws.secrets.manager.config.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+          </dependency>
+          <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-bom</artifactId>
+            <version>${aws-java-sdk.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+          </dependency>
+          <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-xray-recorder-sdk-bom</artifactId>
+            <version>${aws-xray-recorder-sdk.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+          </dependency>
+        </dependencies>
+      </dependencyManagement>
     </profile>
 
     <profile>
@@ -715,7 +683,7 @@
       <id>cosmosdb</id>
       <properties>
         <prop.cosmosdb>-AUSE_COSMOSDB=</prop.cosmosdb>
-        <profile.cosmosdb>cosmosdb</profile.cosmosdb>
+        <profile.cosmosdb.name>cosmosdb</profile.cosmosdb.name>
 
         <azure-spring-data-cosmos.version>5.6.0</azure-spring-data-cosmos.version>
       </properties>
@@ -731,8 +699,8 @@
     <profile>
       <id>dynamodb</id>
       <properties>
-        <prop.cosmosdb>-AUSE_DYNAMODB=</prop.cosmosdb>
-        <profile.cosmosdb>dynamodb</profile.cosmosdb>
+        <prop.dynamodb>-AUSE_DYNAMODB=</prop.dynamodb>
+        <profile.dynamodb.name>dynamodb</profile.dynamodb.name>
       </properties>
       <dependencies>
         <dependency>
