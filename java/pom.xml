@@ -5,12 +5,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.amido.stacks.modules</groupId>
+    <groupId>com.ensono.stacks.modules</groupId>
     <artifactId>stacks-modules-parent</artifactId>
-    <version>3.0.26-RELEASE</version>
+    <version>3.0.52</version>
   </parent>
 
-  <groupId>com.amido.stacks.workloads</groupId>
+  <groupId>com.ensono.stacks.workloads</groupId>
   <artifactId>stacks-api</artifactId>
   <version>1.0.0</version>
 
@@ -18,26 +18,40 @@
   <description>Demo project for Java</description>
 
   <properties>
-    <stacks.core.api.version>1.0.5.11-RELEASE</stacks.core.api.version>
-    <stacks.core.commons.version>2.0.7</stacks.core.commons.version>
 
     <!-- Stacks features -->
-    <aws.profile.name>no-aws</aws.profile.name>
-    <azure.profile.name>no-azure</azure.profile.name>
+    <prop.aws></prop.aws>
+    <aws.profile.name></aws.profile.name>
+
+    <prop.azure></prop.azure>
+    <azure.profile.name></azure.profile.name>
+
+    <prop.cosmosdb></prop.cosmosdb>
+    <profile.cosmosdb.name></profile.cosmosdb.name>
+
+    <prop.dynamodb></prop.dynamodb>
+    <profile.dynamodb.name></profile.dynamodb.name>
 
     <applicationinsights.version>2.6.4</applicationinsights.version>
     <azure.springboot.version>4.0.0</azure.springboot.version>
     <au.com.dius.pact-jvm-provider-spring.version>4.0.10</au.com.dius.pact-jvm-provider-spring.version>
-    <au.com.dius.pact.consumer-version>4.6.15</au.com.dius.pact.consumer-version>
-    <au.com.dius.pact.provider.maven-version>4.6.15</au.com.dius.pact.provider.maven-version>
+    <au.com.dius.pact.consumer.version>4.6.15</au.com.dius.pact.consumer.version>
+    <au.com.dius.pact.provider.version>4.6.15</au.com.dius.pact.provider.version>
     <aws-java-sdk-s3.version>1.12.779</aws-java-sdk-s3.version>
     <aspectjweaver.version>1.9.9.1</aspectjweaver.version>
     <exec-maven-plugin.version>3.5.0</exec-maven-plugin.version>
     <spring.cloud.dependencies.version>2022.0.4</spring.cloud.dependencies.version>
     <pact.version>3.5.24</pact.version>
-    <spring.data.commons>3.4.0</spring.data.commons>
+    
+    <springdoc.openapi.version>2.2.0</springdoc.openapi.version>
+    <spring.data.commons.version>3.4.0</spring.data.commons.version>
     <owasp-dependency-check-plugin.version>11.1.0</owasp-dependency-check-plugin.version>
     <junit-jupiter.version>5.11.3</junit-jupiter.version>
+
+    <spring.data.dynamodb.version>5.2.5</spring.data.dynamodb.version>
+
+    <manifold.version>2024.1.38</manifold.version>
+    <fmt-maven-plugin.version>2.25</fmt-maven-plugin.version>
 
     <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
     <pact.broker.url/>
@@ -46,6 +60,8 @@
     <pact.api.protocol>http</pact.api.protocol>
     <pact.api.host>localhost</pact.api.host>
     <pact.api.port>9000</pact.api.port>
+
+    <prop.output.dir>../../stacks-preprocessor-output</prop.output.dir>
   </properties>
 
   <dependencyManagement>
@@ -69,24 +85,16 @@
   </dependencyManagement>
 
   <dependencies>
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>${springdoc.openapi.version}</version>
+    </dependency>
 
     <!-- STACKS dependencies -->
     <dependency>
-      <groupId>com.amido.stacks.modules</groupId>
-      <artifactId>stacks-core-api</artifactId>
-      <version>${stacks.core.api.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.aspectj</groupId>
-          <artifactId>aspectjweaver</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.amido.stacks.modules</groupId>
-      <artifactId>stacks-core-commons</artifactId>
-      <version>${stacks.core.commons.version}</version>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
     </dependency>
 
     <dependency>
@@ -220,7 +228,7 @@
     <dependency>
       <groupId>au.com.dius.pact</groupId>
       <artifactId>consumer</artifactId>
-      <version>${au.com.dius.pact.consumer-version}</version>
+      <version>${au.com.dius.pact.consumer.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -249,8 +257,20 @@
       <dependency>
           <groupId>org.springframework.data</groupId>
           <artifactId>spring-data-commons</artifactId>
-          <version>${spring.data.commons}</version>
+          <version>${spring.data.commons.version}</version>
       </dependency>
+
+    <dependency>
+      <groupId>systems.manifold</groupId>
+      <artifactId>manifold</artifactId>
+      <version>${manifold.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.spotify.fmt</groupId>
+      <artifactId>fmt-maven-plugin</artifactId>
+      <version>${fmt-maven-plugin.version}</version>
+    </dependency>
 
   </dependencies>
 
@@ -261,7 +281,7 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>${spring.boot.version}</version>
         <configuration>
-          <mainClass>com.amido.stacks.workloads.Application</mainClass>
+          <mainClass>com.ensono.stacks.workloads.Application</mainClass>
         </configuration>
         <executions>
           <execution>
@@ -319,7 +339,7 @@
       <plugin>
         <groupId>au.com.dius.pact.provider</groupId>
         <artifactId>maven</artifactId>
-        <version>${au.com.dius.pact.provider.maven-version}</version>
+        <version>${au.com.dius.pact.provider.version}</version>
         <configuration>
           <pactBrokerUrl>${pact.broker.url}</pactBrokerUrl>
           <pactBrokerToken>${pact.broker.token}</pactBrokerToken>
@@ -336,20 +356,20 @@
           </serviceProviders>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>com.coveo</groupId>
-        <artifactId>fmt-maven-plugin</artifactId>
-        <version>${fmt-maven-plugin.version}</version>
-        <configuration>
-          <displayFiles>true</displayFiles>
-          <verbose>true</verbose>
-          <filesNamePattern>.*\.java</filesNamePattern>
-          <additionalSourceDirectories/>
-          <skip>false</skip>
-          <skipSortingImports>false</skipSortingImports>
-          <style>google</style>
-        </configuration>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>com.coveo</groupId>-->
+<!--        <artifactId>fmt-maven-plugin</artifactId>-->
+<!--        <version>${fmt-maven-plugin.version}</version>-->
+<!--        <configuration>-->
+<!--          <displayFiles>true</displayFiles>-->
+<!--          <verbose>true</verbose>-->
+<!--          <filesNamePattern>.*\.java</filesNamePattern>-->
+<!--          <additionalSourceDirectories/>-->
+<!--          <skip>false</skip>-->
+<!--          <skipSortingImports>false</skipSortingImports>-->
+<!--          <style>google</style>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
@@ -423,6 +443,109 @@
           </outputFormats>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <source>17</source>
+          <target>17</target>
+          <encoding>UTF-8</encoding>
+          <compilerArgs>
+            <!-- Configure manifold plugin -->
+            <arg>-Xplugin:Manifold</arg>
+            <arg>-Amanifold.source.target=${prop.output.dir}</arg>
+            <arg>${prop.aws}</arg>
+            <arg>${prop.azure}</arg>
+            <arg>${prop.cosmosdb}</arg>
+            <arg>${prop.dynamodb}</arg>
+          </compilerArgs>
+          <!-- Add the processor path for the plugin -->
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>${org.mapstruct.version}</version>
+            </path>
+            <path>
+              <groupId>systems.manifold</groupId>
+              <artifactId>manifold-preprocessor</artifactId>
+              <version>${manifold.version}</version>
+            </path>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok-mapstruct-binding</artifactId>
+              <version>${org.mapstruct.binding.version}</version>
+            </path>
+            <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>${org.mapstruct.version}</version>
+            </path>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok-mapstruct-binding</artifactId>
+              <version>0.2.0</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.ensono.stacks</groupId>
+        <artifactId>stacks-maven-plugin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>
+                stacks-clean-project
+              </goal>
+              <goal>
+                stacks-prepare-project
+              </goal>
+              <goal>
+                stacks-prepare-project-tests
+              </goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <projectLocation>${prop.output.dir}</projectLocation>
+          <projectConfigFile>src/main/resources/templates/project-builder-config.json</projectConfigFile>
+          <pomTemplateFile>src/main/resources/templates/</pomTemplateFile>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.spotify.fmt</groupId>
+        <artifactId>fmt-maven-plugin</artifactId>
+        <version>${fmt-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>format</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <sourceDirectory>${prop.output.dir}/src/main/java</sourceDirectory>
+          <displayFiles>true</displayFiles>
+          <verbose>true</verbose>
+          <filesNamePattern>.*\.java</filesNamePattern>
+          <additionalSourceDirectories/>
+          <skip>false</skip>
+          <skipSortingImports>false</skipSortingImports>
+          <style>google</style>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
@@ -432,29 +555,159 @@
 
     <profile>
       <id>aws</id>
-      <activation>
-        <file>
-          <exists>.</exists>
-        </file>
-      </activation>
       <properties>
+        <prop.aws>-AUSE_AWS=</prop.aws>
         <aws.profile.name>aws</aws.profile.name>
+
+        <spring.cloud.starter.aws.secrets.manager.config.version>2.4.4
+        </spring.cloud.starter.aws.secrets.manager.config.version>
+        <aws-java-sdk.version>1.12.579</aws-java-sdk.version>
+        <aws-xray-recorder-sdk.version>2.14.0</aws-xray-recorder-sdk.version>
+        <tomcat-embed.version>10.1.15</tomcat-embed.version>
+
       </properties>
+
       <dependencies>
+
+        <dependency>
+          <groupId>org.apache.tomcat.embed</groupId>
+          <artifactId>tomcat-embed-core</artifactId>
+          <version>${tomcat-embed.version}</version>
+        </dependency>
+
+        <!-- AWS SECRETS -->
+
+        <dependency>
+          <groupId>io.awspring.cloud</groupId>
+          <artifactId>spring-cloud-starter-aws-secrets-manager-config</artifactId>
+          <version>${spring.cloud.starter.aws.secrets.manager.config.version}</version>
+        </dependency>
+        <!-- AWS SECRETS -->
+
+        <!-- AWS sdk -->
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk-core</artifactId>
+          <version>${aws-java-sdk.version}</version>
+        </dependency>
+
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk-dynamodb</artifactId>
+          <version>${aws-java-sdk.version}</version>
+        </dependency>
+
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk-s3</artifactId>
+          <version>${aws-java-sdk.version}</version>
+        </dependency>
+
+        <!-- XRAY -->
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-xray-recorder-sdk-spring</artifactId>
+          <version>${aws-xray-recorder-sdk.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-xray-recorder-sdk-metrics</artifactId>
+          <version>${aws-xray-recorder-sdk.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-xray-recorder-sdk-aws-sdk-instrumentor</artifactId>
+          <version>${aws-xray-recorder-sdk.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-xray-recorder-sdk-log4j</artifactId>
+          <version>${aws-xray-recorder-sdk.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-xray-recorder-sdk-apache-http</artifactId>
+          <version>${aws-xray-recorder-sdk.version}</version>
+        </dependency>
       </dependencies>
+
+      <dependencyManagement>
+        <dependencies>
+          <dependency>
+            <groupId>io.awspring.cloud</groupId>
+            <artifactId>spring-cloud-aws-dependencies</artifactId>
+            <version>${spring.cloud.starter.aws.secrets.manager.config.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+          </dependency>
+          <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-bom</artifactId>
+            <version>${aws-java-sdk.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+          </dependency>
+          <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-xray-recorder-sdk-bom</artifactId>
+            <version>${aws-xray-recorder-sdk.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+          </dependency>
+        </dependencies>
+      </dependencyManagement>
     </profile>
 
     <profile>
       <id>azure</id>
-      <activation>
-        <file>
-          <exists>.</exists>
-        </file>
-      </activation>
       <properties>
+        <prop.azure>-AUSE_AZURE=</prop.azure>
         <azure.profile.name>azure</azure.profile.name>
       </properties>
       <dependencies>
+        <dependency>
+          <groupId>com.azure.spring</groupId>
+          <artifactId>azure-spring-boot</artifactId>
+          <version>${azure.springboot.version}</version>
+          <exclusions>
+            <exclusion>
+              <groupId>net.minidev</groupId>
+              <artifactId>json-smart</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+      </dependencies>
+    </profile>
+
+    <profile>
+      <id>cosmosdb</id>
+      <properties>
+        <prop.cosmosdb>-AUSE_COSMOSDB=</prop.cosmosdb>
+        <profile.cosmosdb.name>cosmosdb</profile.cosmosdb.name>
+
+        <azure-spring-data-cosmos.version>5.6.0</azure-spring-data-cosmos.version>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>com.azure</groupId>
+          <artifactId>azure-spring-data-cosmos</artifactId>
+          <version>${azure-spring-data-cosmos.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+
+    <profile>
+      <id>dynamodb</id>
+      <properties>
+        <prop.dynamodb>-AUSE_DYNAMODB=</prop.dynamodb>
+        <profile.dynamodb.name>dynamodb</profile.dynamodb.name>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>io.github.boostchicken</groupId>
+          <artifactId>spring-data-dynamodb</artifactId>
+          <version>${spring.data.dynamodb.version}</version>
+        </dependency>
       </dependencies>
     </profile>
 
@@ -518,7 +771,7 @@
             <version>${exec-maven-plugin.version}</version>
             <executions>
               <execution>
-                <id>Add execution rigths on bash scripts</id>
+                <id>Add execution rights on bash scripts</id>
                 <phase>process-resources</phase>
                 <goals>
                   <goal>exec</goal>
