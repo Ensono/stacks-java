@@ -10,7 +10,7 @@
     <version>3.0.52</version>
   </parent>
 
-  <groupId>com.amido.stacks.workloads</groupId>
+  <groupId>com.ensono.stacks.workloads</groupId>
   <artifactId>stacks-api</artifactId>
   <version>1.0.0</version>
 
@@ -281,7 +281,7 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>${spring.boot.version}</version>
         <configuration>
-          <mainClass>com.amido.stacks.workloads.Application</mainClass>
+          <mainClass>com.ensono.stacks.workloads.Application</mainClass>
         </configuration>
         <executions>
           <execution>

@@ -1,36 +1,36 @@
 {
   "coreIncludes": [
-    "**/com/amido/stacks/core/**/*.java",
-    "**/com/amido/stacks/workloads/*.java",
-    "**/com/amido/stacks/workloads/menu/*.java",
-    "**/com/amido/stacks/workloads/menu/api/**/*.java",
-    "**/com/amido/stacks/workloads/menu/domain/*.java",
-    "**/com/amido/stacks/workloads/menu/mappers/*.java",
-    "**/com/amido/stacks/workloads/menu/service/*/*.java"
+    "**/com/ensono/stacks/core/**/*.java",
+    "**/com/ensono/stacks/workloads/*.java",
+    "**/com/ensono/stacks/workloads/menu/*.java",
+    "**/com/ensono/stacks/workloads/menu/api/**/*.java",
+    "**/com/ensono/stacks/workloads/menu/domain/*.java",
+    "**/com/ensono/stacks/workloads/menu/mappers/*.java",
+    "**/com/ensono/stacks/workloads/menu/service/*/*.java"
   ],
   "coreTestIncludes" : [
-    "**/com/amido/stacks/workloads/actuator/ActuatorTest.java",
-    "**/com/amido/stacks/workloads/menu/**/*Test.java",
-    "**/com/amido/stacks/workloads/util/TestHelper.java",
-    "**/com/amido/stacks/workloads/menu/domain/*Helper.java"
+    "**/com/ensono/stacks/workloads/actuator/ActuatorTest.java",
+    "**/com/ensono/stacks/workloads/menu/**/*Test.java",
+    "**/com/ensnon/stacks/workloads/util/TestHelper.java",
+    "**/com/ensono/stacks/workloads/menu/domain/*Helper.java"
   ],
   "profileFilters": [
     {
       "id": "cosmosdb",
       "includes" : [
-        "**/com/amido/stacks/cosmosdb/**/*.java"
+        "**/com/ensono/stacks/cosmosdb/**/*.java"
       ]
     },
     {
       "id": "dynamodb",
       "includes" : [
-        "**/com/amido/stacks/dynamodb/**/*.java"
+        "**/com/ensono/stacks/dynamodb/**/*.java"
       ]
     },
     {
       "id": "aws",
       "includes" : [
-        "**/com/amido/stacks/aws/**/*.java"
+        "**/com/ensono/stacks/aws/**/*.java"
       ],
       "propertiesFile": "application-aws.yml"
     },
@@ -40,7 +40,7 @@
     }
   ],
   "excludedGroupIds": [
-    "com.amido.stacks.modules",
+    "com.ensono.stacks.modules",
     "com.ensono.stacks.modules",
     "systems.manifold",
     "com.github.spullara.mustache.java",
