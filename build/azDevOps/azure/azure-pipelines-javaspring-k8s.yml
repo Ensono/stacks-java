@@ -118,7 +118,7 @@ variables:
 
   # DEFAULT IMAGE RUNNER
   - name: pool_vm_image
-    value: ubuntu-20.04
+    value: ubuntu-24.04
 
   # Maven
   - name: maven_cache_directory
