@@ -28,10 +28,10 @@
     <pact.jvm.consumer.junit.version>4.0.10</pact.jvm.consumer.junit.version>
     <pact.jvm.consumer.version>4.0.10</pact.jvm.consumer.version>
     <pact.jvm.provider.junit.version>4.0.10</pact.jvm.provider.junit.version>
-    <spotbugs.version>4.9.3</spotbugs.version>
+    <spotbugs.version>4.9.4</spotbugs.version>
     <puppycrawl-tools-checkstyle.version>10.26.1</puppycrawl-tools-checkstyle.version>
     <junit-jupiter.version>5.13.4</junit-jupiter.version>
-    <assertj.core.version>3.27.3</assertj.core.version>
+    <assertj.core.version>3.27.4</assertj.core.version>
     <hamcrest.version>3.0</hamcrest.version>
     <byte.buddy.version>1.17.6</byte.buddy.version>
     <springfox.swagger2.version>3.0.0</springfox.swagger2.version>
