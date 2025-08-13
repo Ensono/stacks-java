@@ -1,0 +1,9 @@
+About Stacks:
+.......
+
+.Architecture
+[%collapsible%open]
+====
+xref:introduction.adoc[Architecture docs]
+====
+
