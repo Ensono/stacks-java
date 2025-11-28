@@ -21,6 +21,10 @@
     <stacks.core.api.version>1.0.5.11-RELEASE</stacks.core.api.version>
     <stacks.core.commons.version>2.0.7</stacks.core.commons.version>
 
+    <!-- Override Jackson version from parent POM (2.20 is invalid, must use 2.20.x) -->
+    <jackson-bom.version>2.20.1</jackson-bom.version>
+    <jackson.version>2.20.1</jackson.version>
+
     <!-- Stacks features -->
     <aws.profile.name>no-aws</aws.profile.name>
     <azure.profile.name>no-azure</azure.profile.name>
@@ -38,7 +42,7 @@
     <spring.data.commons>3.5.2</spring.data.commons>
     <owasp-dependency-check-plugin.version>12.1.3</owasp-dependency-check-plugin.version>
     <junit-jupiter.version>5.13.4</junit-jupiter.version>
-    <jackson.datatype.version>3.0.0-rc2</jackson.datatype.version>
+    <jackson-datatype.version>2.20.1</jackson-datatype.version>
 
     <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
     <pact.broker.url/>
@@ -51,6 +55,20 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- Jackson BOM to ensure consistent versions across all Jackson modules -->
+      <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>${jackson-bom.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <!-- jackson-annotations uses different versioning (2.20 not 2.20.x) -->
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>2.20</version>
+      </dependency>
       <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies -->
       <dependency>
         <groupId>org.springframework.cloud</groupId>
@@ -140,7 +158,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jsr310</artifactId>
-      <version>${jackson.datatype.version}</version>
+      <!-- Version managed by Jackson BOM -->
     </dependency>
 
     <dependency>
