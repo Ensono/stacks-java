@@ -467,9 +467,12 @@
             <artifactId>dependency-check-maven</artifactId>
             <version>${owasp-dependency-check-plugin.version}</version>
             <configuration>
-              <!-- Disable OSS Index analyzer to avoid 401 rate limit errors -->
-              <!-- Credentials can be configured via ossIndexServerId in settings.xml -->
-              <ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
+              <!-- NVD API Key - pass via -DnvdApiKey=xxx -->
+              <nvdApiKey>${nvdApiKey}</nvdApiKey>
+              <!-- OSS Index credentials - pass via -DossIndexUsername=xxx -DossIndexPassword=xxx -->
+              <ossindexAnalyzerEnabled>true</ossindexAnalyzerEnabled>
+              <ossIndexAnalyzerUsername>${ossIndexUsername}</ossIndexAnalyzerUsername>
+              <ossIndexAnalyzerPassword>${ossIndexPassword}</ossIndexAnalyzerPassword>
             </configuration>
             <executions>
               <execution>

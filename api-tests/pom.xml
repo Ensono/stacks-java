@@ -381,6 +381,14 @@
             <groupId>org.owasp</groupId>
             <artifactId>dependency-check-maven</artifactId>
             <version>${owasp-dependency-check-plugin.version}</version>
+            <configuration>
+              <!-- NVD API Key - pass via -DnvdApiKey=xxx -->
+              <nvdApiKey>${nvdApiKey}</nvdApiKey>
+              <!-- OSS Index credentials - pass via -DossIndexUsername=xxx -DossIndexPassword=xxx -->
+              <ossindexAnalyzerEnabled>true</ossindexAnalyzerEnabled>
+              <ossIndexAnalyzerUsername>${ossIndexUsername}</ossIndexAnalyzerUsername>
+              <ossIndexAnalyzerPassword>${ossIndexPassword}</ossIndexAnalyzerPassword>
+            </configuration>
             <executions>
               <execution>
                 <goals>
