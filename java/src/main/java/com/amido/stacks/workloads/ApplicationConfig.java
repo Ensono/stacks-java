@@ -6,6 +6,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
@@ -20,6 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration("mySecurityConfig")
 @EnableWebSecurity
 @Order(Ordered.HIGHEST_PRECEDENCE)
+@Profile("!test")
 public class ApplicationConfig {
 
   private static final String ALLOWED_ORIGINS = "enosono.com";
