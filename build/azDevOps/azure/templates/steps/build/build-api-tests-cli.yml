@@ -84,7 +84,8 @@ steps:
               -DossIndexUsername="${OSS_INDEX_USERNAME}" \
               -DossIndexPassword="${OSS_INDEX_PASSWORD}" \
               -DfailBuildOnCVSS=$([[ "${{ parameters.vulnerability_scan_fail_build_on_detection }}" == "true" ]] && echo "0" || echo "11") \
-              -DskipTests=true
+              -DskipTests=true \
+              -Dgpg.skip=true
           workingDirectory: "${{ parameters.functional_test_project_root_dir }}"
         env:
           LC_ALL: "C.UTF-8"
