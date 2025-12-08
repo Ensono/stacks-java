@@ -186,7 +186,7 @@ stages:
       - group: stacks-credentials-nonprod-kv
       - group: sonar-credentials
       - group: stacks-java-api
-      - group: stacks-java-owasp-key
+      - group: stacks-java-owasp-keys
     jobs:
       - job: ApiBuild
         pool:
