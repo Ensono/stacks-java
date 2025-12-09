@@ -38,6 +38,7 @@
     <spring.data.commons>3.5.2</spring.data.commons>
     <owasp-dependency-check-plugin.version>12.1.9</owasp-dependency-check-plugin.version>
     <junit-jupiter.version>5.13.4</junit-jupiter.version>
+    <junit-platform.version>1.13.4</junit-platform.version>
 
     <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
     <pact.broker.url/>
@@ -397,7 +398,22 @@
           <dependency>
             <groupId>org.pitest</groupId>
             <artifactId>pitest-junit5-plugin</artifactId>
-            <version>0.15</version>
+            <version>1.2.1</version>
+          </dependency>
+          <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${junit-platform.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-engine</artifactId>
+            <version>${junit-platform.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-commons</artifactId>
+            <version>${junit-platform.version}</version>
           </dependency>
         </dependencies>
         <executions>

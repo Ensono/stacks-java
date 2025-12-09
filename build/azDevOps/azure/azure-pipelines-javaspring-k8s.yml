@@ -517,7 +517,7 @@ stages:
                       },
                     ]
 
-                - template: templates/steps/deploy/deploy-post-deploy-tests.yml
+                - template: templates/steps/deploy/deploy-post-deploy-tests-cucumber.yml
                   parameters:
                     environment: "$(Environment.ShortName)"
                     pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
@@ -526,6 +526,7 @@ stages:
                     functional_test_artefact_download_location: "${{ variables.functional_test_artefact_download_location }}"
                     functional_test_base_url: "${{ variables.functional_test_base_url }}"
                     maven_cache_directory: "${{ variables.maven_cache_directory }}"
+                    maven_allowed_post_deploy_test_tags: "${{ variables.maven_allowed_post_deploy_test_tags }}"
                     maven_ignored_post_deploy_test_tags: "${{ variables.maven_ignored_post_deploy_test_tags }}"
                     maven_post_deploy_html_report_directory: "${{ variables.maven_post_deploy_html_report_directory }}"
                     docker_java_container: "${{ variables.docker_java_image }}"
@@ -766,7 +767,7 @@ stages:
                       },
                     ]
 
-                - template: templates/steps/deploy/deploy-post-deploy-tests.yml
+                - template: templates/steps/deploy/deploy-post-deploy-tests-cucumber.yml
                   parameters:
                     environment: "$(Environment.ShortName)"
                     pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
@@ -775,6 +776,7 @@ stages:
                     functional_test_artefact_download_location: "${{ variables.functional_test_artefact_download_location }}"
                     functional_test_base_url: "${{ variables.functional_test_base_url }}"
                     maven_cache_directory: "${{ variables.maven_cache_directory }}"
+                    maven_allowed_post_deploy_test_tags: "${{ variables.maven_allowed_post_deploy_test_tags }}"
                     maven_ignored_post_deploy_test_tags: "${{ variables.maven_ignored_post_deploy_test_tags }}"
                     maven_post_deploy_html_report_directory: "${{ variables.maven_post_deploy_html_report_directory }}"
                     docker_java_container: "${{ variables.docker_java_image }}"

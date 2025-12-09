@@ -6,6 +6,7 @@ parameters:
   functional_test_artefact_download_location: ""
   functional_test_base_url: ""
   maven_cache_directory: ""
+  maven_allowed_post_deploy_test_tags: "Functional | Smoke | Performance"
   default_cucumber_filter_tags: "@Functional or @Smoke or @Performance and not @Ignore"
   maven_ignored_post_deploy_test_tags: ""
   maven_post_deploy_html_report_directory: ""
@@ -13,7 +14,32 @@ parameters:
   docker_java_container: ""
   auth0_credentials: {}
 steps:
-  - template: ./deploy-post-deploy-tests-serenity.yml
+  - ${{ if eq(parameters.functional_test, true) }}:
+      - task: Bash@3
+        displayName: "Translate: Post-Deploy Test Tags"
+        inputs:
+          targetType: "inline"
+          script: |
+            set -euo pipefail
+
+            converter="$(Build.SourcesDirectory)/build/azDevOps/azure/scripts/convert-junit-tags-to-cucumber.bash"
+            allowed_tags="${{ parameters.maven_allowed_post_deploy_test_tags }}"
+            ignored_tags="${{ parameters.maven_ignored_post_deploy_test_tags }}"
+
+            if [ ! -f "${converter}" ]; then
+              echo "Converter script not found at ${converter}" >&2
+              exit 1
+            fi
+
+            converted_tags=$(bash "${converter}" "${allowed_tags}" "${ignored_tags}")
+
+            if [ -n "${converted_tags}" ]; then
+              echo "Computed cucumber.filter.tags='${converted_tags}'"
+              echo "##vso[task.setvariable variable=cucumber.filter.tags]${converted_tags}"
+            else
+              echo "No cucumber.filter.tags calculated; defaults will be used"
+            fi
+  - template: ./deploy-post-deploy-tests.yml
     parameters:
       environment: "${{ parameters.environment }}"
       pipeline_scripts_directory: "${{ parameters.pipeline_scripts_directory }}"
@@ -25,5 +51,6 @@ steps:
       default_cucumber_filter_tags: "${{ parameters.default_cucumber_filter_tags }}"
       maven_ignored_post_deploy_test_tags: "${{ parameters.maven_ignored_post_deploy_test_tags }}"
       maven_post_deploy_html_report_directory: "${{ parameters.maven_post_deploy_html_report_directory }}"
+      maven_post_deploy_failsafe_reports_directory: "${{ parameters.maven_post_deploy_failsafe_reports_directory }}"
       docker_java_container: "${{ parameters.docker_java_container }}"
       auth0_credentials: "${{ parameters.auth0_credentials }}"
