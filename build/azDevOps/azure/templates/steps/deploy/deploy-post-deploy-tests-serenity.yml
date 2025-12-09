@@ -54,7 +54,9 @@ steps:
             fi
 
             m2_location="${M2_LOCATION:-./.m2}"
-            export BASE_URL
+
+            base_url="${FUNCTIONAL_TEST_BASE_URL:-${BASE_URL:-}}"
+            export BASE_URL="${base_url}"
 
             declare -a mvn_args
             mvn_args=(
@@ -73,7 +75,7 @@ steps:
           container: ${{ parameters.docker_java_container }}
         displayName: "Post-Deploy Test: Run Functional Tests"
         env:
-          BASE_URL: "${{ parameters.functional_test_base_url }}"
+          FUNCTIONAL_TEST_BASE_URL: "${{ parameters.functional_test_base_url }}"
           CUCUMBER_FILTER_TAGS: "$(cucumber.filter.tags)"
           DEFAULT_CUCUMBER_TAGS: "${{ parameters.default_cucumber_filter_tags }}"
           M2_LOCATION: "${{ parameters.maven_cache_directory }}"
