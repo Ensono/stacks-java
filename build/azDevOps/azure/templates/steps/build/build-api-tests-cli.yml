@@ -117,6 +117,8 @@ steps:
             -Y "${{ parameters.maven_ignored_post_deploy_test_tags }}"
             -Z "${{ parameters.maven_cache_directory }}"
           workingDirectory: "${{ parameters.functional_test_project_root_dir }}"
+        env:
+          MAVEN_ARGS_APPEND: "-Duntagged.test.check=true"
         target:
           container: ${{ parameters.docker_build_container }}
         displayName: "Maven: Invalid Test Tag Check (${{ parameters.project_type }})"
