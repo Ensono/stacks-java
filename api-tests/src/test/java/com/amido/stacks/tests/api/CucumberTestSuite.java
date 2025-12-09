@@ -11,10 +11,10 @@ import org.junit.platform.suite.api.Suite;
 
 @Suite
 @IncludeEngines("cucumber")
+@ConfigurationParameter(key = FEATURES_PROPERTY_NAME, value = "classpath:cucumber/features")
 @ConfigurationParameter(
-    key = FEATURES_PROPERTY_NAME, value = "classpath:cucumber/features")
-@ConfigurationParameter(
-    key = GLUE_PROPERTY_NAME, value = "com.amido.stacks.tests.api.stepdefinitions")
+    key = GLUE_PROPERTY_NAME,
+    value = "com.amido.stacks.tests.api.stepdefinitions")
 @ConfigurationParameter(
     key = FILTER_TAGS_PROPERTY_NAME,
     value = "@Functional or @Smoke or @Performance and not @Ignore")
