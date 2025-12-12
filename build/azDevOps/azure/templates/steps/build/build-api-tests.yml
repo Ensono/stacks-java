@@ -18,7 +18,7 @@ parameters:
   nvd_api_key: ""
   oss_index_username: ""
   oss_index_password: ""
-  vulnerability_scan_fail_build_on_detection: true
+  maximum_cvss_to_fail_build: 11
   vulnerability_scan_database_directory: ""
   project_type: ""
 
@@ -44,6 +44,6 @@ steps:
       nvd_api_key: "${{ parameters.nvd_api_key }}"
       oss_index_username: "${{ parameters.oss_index_username }}"
       oss_index_password: "${{ parameters.oss_index_password }}"
-      vulnerability_scan_fail_build_on_detection: "${{ parameters.vulnerability_scan_fail_build_on_detection }}"
+      maximum_cvss_to_fail_build: "${{ parameters.maximum_cvss_to_fail_build }}"
       vulnerability_scan_database_directory: "${{ parameters.vulnerability_scan_database_directory }}"
       project_type: "${{ parameters.project_type }}"

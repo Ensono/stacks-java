@@ -18,7 +18,7 @@ parameters:
   nvd_api_key: ""
   oss_index_username: ""
   oss_index_password: ""
-  vulnerability_scan_fail_build_on_detection: true
+  maximum_cvss_to_fail_build: 11
   vulnerability_scan_database_directory: ""
   project_type: ""
 
@@ -83,9 +83,10 @@ steps:
               -DnvdApiKey="${NVD_API_KEY}" \
               -DossIndexUsername="${OSS_INDEX_USERNAME}" \
               -DossIndexPassword="${OSS_INDEX_PASSWORD}" \
-              -DfailBuildOnCVSS=$([[ "${{ parameters.vulnerability_scan_fail_build_on_detection }}" == "true" ]] && echo "0" || echo "11") \
+              -DfailBuildOnCVSS="${{ parameters.maximum_cvss_to_fail_build }}" \
               -DskipTests=true \
               -Dgpg.skip=true
+              
           workingDirectory: "${{ parameters.functional_test_project_root_dir }}"
         env:
           LC_ALL: "C.UTF-8"

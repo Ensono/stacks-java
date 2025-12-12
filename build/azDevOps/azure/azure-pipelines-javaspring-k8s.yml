@@ -147,8 +147,8 @@ variables:
     value: "$(OSS_EMAIL)"
   - name: oss_index_password
     value: "$(OSS_API_KEY)"
-  - name: vulnerability_scan_fail_build_on_detection
-    value: false
+  - name: maximum_cvss_to_fail_build
+    value: 11 # Set to 11 to disable failing the build we should reduce this over time
   - name: vulnerability_scan_database_directory
     value: ${{ variables.self_repo_dir }}/.vulnerability-database
 
@@ -234,7 +234,7 @@ stages:
               nvd_api_key: "${{ variables.nvd_api_key }}"
               oss_index_username: "${{ variables.oss_index_username }}"
               oss_index_password: "${{ variables.oss_index_password }}"
-              vulnerability_scan_fail_build_on_detection: "${{ variables.vulnerability_scan_fail_build_on_detection }}"
+              maximum_cvss_to_fail_build: "${{ variables.maximum_cvss_to_fail_build }}"
               vulnerability_scan_database_directory: "${{ variables.vulnerability_scan_database_directory }}"
               project_type: "${{ variables.java_project_type }}"
 
@@ -259,7 +259,7 @@ stages:
               nvd_api_key: "${{ variables.nvd_api_key }}"
               oss_index_username: "${{ variables.oss_index_username }}"
               oss_index_password: "${{ variables.oss_index_password }}"
-              vulnerability_scan_fail_build_on_detection: "${{ variables.vulnerability_scan_fail_build_on_detection }}"
+              maximum_cvss_to_fail_build: "${{ variables.maximum_cvss_to_fail_build }}"
               vulnerability_scan_database_directory: "${{ variables.vulnerability_scan_database_directory }}"
               project_type: "${{ variables.functional_test_project_type }}"
 
