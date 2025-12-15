@@ -148,7 +148,7 @@ variables:
   - name: oss_index_password
     value: "$(OSS_API_KEY)"
   - name: maximum_cvss_to_fail_build
-    value: 11 # Set to 11 to disable failing the build we should reduce this over time
+    value: 11  # Set to 11 to disable failing the build we should reduce this over time
   - name: vulnerability_scan_database_directory
     value: ${{ variables.self_repo_dir }}/.vulnerability-database
 

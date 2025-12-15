@@ -86,7 +86,7 @@ steps:
               -DfailBuildOnCVSS="${{ parameters.maximum_cvss_to_fail_build }}" \
               -DskipTests=true \
               -Dgpg.skip=true
-              
+
           workingDirectory: "${{ parameters.functional_test_project_root_dir }}"
         env:
           LC_ALL: "C.UTF-8"
