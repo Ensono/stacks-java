@@ -20,7 +20,7 @@
     <webdriver.base.url/>
     <jackson.version>2.19.2</jackson.version>
     <java.version>17</java.version>
-    <cucumber.filter.tags>@Functional or @Smoke or @Performance and not @Ignore</cucumber.filter.tags>
+    <cucumber.filter.tags>(@Functional or @Smoke or @Performance) and not @Ignore</cucumber.filter.tags>
 
     <!-- Set 'pact.broker.url' and 'pact.broker.token' -->
     <pact.broker.url/>
