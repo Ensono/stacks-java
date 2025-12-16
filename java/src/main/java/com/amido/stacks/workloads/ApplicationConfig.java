@@ -24,7 +24,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Profile("!test")
 public class ApplicationConfig {
 
-  private static final String ALLOWED_ORIGINS = "enosono.com";
+  private static final String ALLOWED_ORIGINS = "ensono.com";
   private static final String V1_MENU_ENDPOINT = "/v1/menu";
   private static final String V1_MENU = "/v1/menu/**";
   private static final String V2_MENU_ENDPOINT = "/v2/menu";
