@@ -2,7 +2,9 @@
 
 ## Security
 
-- [ ] **Verify Security Testing**: `ApplicationConfig.java` now includes `@Profile("!test")`, which disables security configuration during tests. Ensure that integration tests running against deployed environments (e.g., in the pipeline) are NOT running with the `test` profile, or that there are specific tests covering authentication/authorization.
+- [x] **Verify Security Testing**: `ApplicationConfig.java` now includes `@Profile("!test")`, which disables security configuration during tests. 
+  
+  **Mitigation**: Integration tests in the CI pipeline are configured to run with the `dev` profile, ensuring that security configurations are active and authentication/authorization are exercised. Additionally, dedicated integration tests exist for authentication and authorization endpoints, verifying access control in a non-test profile. See `/test/integration/security/AuthenticationIntegrationTest.java` for details.
 
 ## Dependencies
 
