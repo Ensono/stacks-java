@@ -211,6 +211,7 @@ When using CosmosDB Emulator, export its certificate and pass via JVM args:
 
 ### Code Formatting Failures
 If build fails on format check: `./mvnw fmt:format` before committing. Auto-formatting is enforced.
+Always run the formatter over every module that has modified files (e.g., `./mvnw fmt:format` in `java/` and `api-tests/`) before pushing or opening a PR to avoid fmt check failures.
 
 ### Missing Parent POM
 If Maven can't resolve `stacks-modules-parent`, install it locally:
