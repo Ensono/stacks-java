@@ -15,4 +15,5 @@ import org.junit.platform.suite.api.Suite;
 @Suite
 @IncludeEngines("cucumber")
 @ConfigurationParameter(key = FEATURES_PROPERTY_NAME, value = "classpath:cucumber/features")
-public class CucumberTestSuite {}
+public class CucumberTestSuite {
+}
