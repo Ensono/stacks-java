@@ -8,13 +8,13 @@ To customise the namespaces and create an application for your company please vi
 
 ### Running the application locally
 
-1. ## Clone one of the Java projects to your local machine from one of the following repos:
+1. Clone one of the Java projects to your local machine from one of the following repos:
 
    1. Simple web API: [stacks-java repository](https://github.com/Ensono/stacks-java)
    2. Web API with CQRS: [stacks-java-cqrs repository](https://github.com/Ensono/stacks-java-cqrs)
    3. Web API with CQRS and events: [stacks-java-cqrs-events repository](https://github.com/Ensono/stacks-java-cqrs-events)
 
-2. ## Build and run the application
+2. Build and run the application
 
    Note that at a minimum [Java 17](https://adoptopenjdk.net/) should be installed.
 
@@ -34,7 +34,7 @@ To customise the namespaces and create an application for your company please vi
 
    For instructions on how to customise the project for your company please look in the [Scaffolding](https://stacks.ensono.com/docs/workloads/common/backend/java/scaffolding_java) section
 
-3. ## Verify that the application has started
+3. Verify that the application has started
 
    Browse to [http://localhost:9000/v1/menu](http://localhost:9000/v1/menu). This should return a valid JSON response.
 

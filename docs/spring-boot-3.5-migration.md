@@ -20,14 +20,15 @@ Change Spring Boot version to one of the following versions [3.0.x, 3.1.x].
 Update `spring.cloud.dependencies.version` to a version compatible with Spring Boot 3.5.x:
 
 | Spring Boot Version | Compatible Spring Cloud Version |
-|---------------------|--------------------------------|
-| 3.0.x, 3.1.x        | 2022.0.x (Kilburn)             |
-| 3.2.x               | 2023.0.x (Leyton)              |
-| 3.3.x, 3.4.x        | 2024.0.x                       |
-| 3.5.x               | 2025.0.x (when available)      |
+| ------------------- | ------------------------------- |
+| 3.0.x, 3.1.x        | 2022.0.x (Kilburn)              |
+| 3.2.x               | 2023.0.x (Leyton)               |
+| 3.3.x, 3.4.x        | 2024.0.x                        |
+| 3.5.x               | 2025.0.x                        |
 
 **Workaround (current):**  
 Projects can disable the compatibility verifier in `application-test.yml`:
+
 ```yaml
 spring:
   cloud:
@@ -45,8 +46,8 @@ spring:
 Spring Boot 3.5.x has stricter validation for Spring Security filter chains. Multiple `SecurityFilterChain` beans matching "any request" now throw an error:
 
 ```
-UnreachableFilterChainException: A filter chain that matches any request 
-[...ApplicationConfig...] has already been configured, which means that this 
+UnreachableFilterChainException: A filter chain that matches any request
+[...ApplicationConfig...] has already been configured, which means that this
 filter chain [...ApplicationNoSecurity...] will never get invoked.
 ```
 
@@ -62,7 +63,7 @@ public class ApplicationConfig {
     // ...
 }
 
-// Test security config - only active in test profile  
+// Test security config - only active in test profile
 @Configuration
 @EnableWebSecurity
 @Profile("test")
@@ -81,7 +82,7 @@ public class ApplicationNoSecurity {
 Spring Boot 3.5.x has stricter bean resolution when multiple beans of the same type exist through inheritance:
 
 ```
-NoUniqueBeanDefinitionException: expected single matching bean but found 2: 
+NoUniqueBeanDefinitionException: expected single matching bean but found 2:
 menuService, menuServiceV2
 ```
 
@@ -159,12 +160,12 @@ Enable resource filtering in `pom.xml`:
 
 Until the parent POM is updated, the following workarounds have been applied:
 
-| Issue | Workaround | File |
-|-------|------------|------|
-| Spring Cloud incompatibility | Disabled compatibility verifier | `src/test/resources/application-test.yml` |
-| Security filter chain conflict | Added `@Profile("!test")` | `ApplicationConfig.java` |
-| Bean resolution conflict | Added `@Primary` | `MenuService.java` |
-| Resource filtering | Added filtering config | `pom.xml` |
+| Issue                          | Workaround                      | File                                      |
+|--------------------------------|---------------------------------|-------------------------------------------|
+| Spring Cloud incompatibility   | Disabled compatibility verifier | `src/test/resources/application-test.yml` |
+| Security filter chain conflict | Added `@Profile("!test")`       | `ApplicationConfig.java`                  |
+| Bean resolution conflict       | Added `@Primary`                | `MenuService.java`                        |
+| Resource filtering             | Added filtering config          | `pom.xml`                                 |
 
 ## Testing Verification
 
