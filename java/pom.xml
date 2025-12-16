@@ -7,7 +7,7 @@
   <parent>
     <groupId>com.ensono.stacks.modules</groupId>
     <artifactId>stacks-modules-parent</artifactId>
-    <version>3.0.107</version>
+    <version>3.0.111</version>
   </parent>
 
   <groupId>com.amido.stacks.workloads</groupId>
