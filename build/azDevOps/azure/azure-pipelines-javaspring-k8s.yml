@@ -141,8 +141,6 @@ variables:
     value: true
   - name: vulnerability_scan_report
     value: "target/dependency-check-report.html"
-  - name: nvd_api_key
-    value: "$(NVD_API_KEY)"
   - name: oss_index_username
     value: "$(OSS_EMAIL)"
   - name: oss_index_password
@@ -231,7 +229,7 @@ stages:
               docker_build_container: "${{ variables.docker_java_image }}"
               # Vulnerability Scanning
               vulnerability_scan: "${{ variables.vulnerability_scan }}"
-              nvd_api_key: "${{ variables.nvd_api_key }}"
+              nvd_api_key: "$(NVD_API_KEY)"
               oss_index_username: "${{ variables.oss_index_username }}"
               oss_index_password: "${{ variables.oss_index_password }}"
               maximum_cvss_to_fail_build: "${{ variables.maximum_cvss_to_fail_build }}"
@@ -256,7 +254,7 @@ stages:
               docker_build_container: "${{ variables.docker_java_image }}"
               # Vulnerability Scan
               vulnerability_scan: "${{ variables.vulnerability_scan }}"
-              nvd_api_key: "${{ variables.nvd_api_key }}"
+              nvd_api_key: "$(NVD_API_KEY)"
               oss_index_username: "${{ variables.oss_index_username }}"
               oss_index_password: "${{ variables.oss_index_password }}"
               maximum_cvss_to_fail_build: "${{ variables.maximum_cvss_to_fail_build }}"
@@ -513,7 +511,7 @@ stages:
                       {
                         name: "deploy/${{ variables.resource_def_name }}",
                         namespace: "${{ variables.namespace }}",
-                        timeout: "120s",
+                        timeout: "300s",
                       },
                     ]
 
@@ -763,7 +761,7 @@ stages:
                       {
                         name: "deploy/${{ variables.resource_def_name }}",
                         namespace: "${{ variables.namespace }}",
-                        timeout: "120s",
+                        timeout: "300s",
                       },
                     ]
 

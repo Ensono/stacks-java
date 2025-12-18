@@ -148,6 +148,7 @@ spec:
         environment: ${environment}
     spec:
       dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
       containers:
         - name: api
           # this we need to pass from the pipeline to the deployment steps
@@ -201,11 +202,12 @@ spec:
             successThreshold: 1
             timeoutSeconds: 25
           readinessProbe:
-            failureThreshold: 10
+            failureThreshold: 6
             httpGet:
               path: /health
               port: 9000
               scheme: HTTP
-            periodSeconds: 30
+            initialDelaySeconds: 15
+            periodSeconds: 10
             successThreshold: 1
-            timeoutSeconds: 25
+            timeoutSeconds: 5
