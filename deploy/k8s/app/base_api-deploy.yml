@@ -148,7 +148,7 @@ spec:
         environment: ${environment}
     spec:
       dnsPolicy: ClusterFirst
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 60
       containers:
         - name: api
           # this we need to pass from the pipeline to the deployment steps
@@ -183,6 +183,10 @@ spec:
               value: ${k8s_app_path}
             - name: LOG_LEVEL
               value: ${log_level}
+            - name: SERVER_SHUTDOWN
+              value: graceful
+            - name: SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE
+              value: 30s
             - name: AZURE_APPLICATION_INSIGHTS_INSTRUMENTATION_KEY
               valueFrom:
                 secretKeyRef:
@@ -211,3 +215,7 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 5
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 10"]

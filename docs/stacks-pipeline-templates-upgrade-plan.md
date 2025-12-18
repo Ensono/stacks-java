@@ -58,3 +58,14 @@ Goal: make the shared `stacks-pipeline-templates` package work out-of-the-box wi
 
 - Ship a minor version bump with the new defaults and docs.
 - Provide an upgrade checklist for consumers: update template version, add `cucumber.properties`, adopt suite annotation pattern, optionally add the cleanup listener.
+
+## 10. Deployment Rollout Stability (Dec 2025)
+
+- Increased Kubernetes rollout wait from 120s to 300s for Dev/Prod in the consumer pipeline to reduce rollout-status timeouts when old pods terminate.
+- Tuned API Deployment manifests to improve readiness and termination:
+  - Added `terminationGracePeriodSeconds: 60` and a short `preStop` sleep (10s) to drain connections.
+  - Enabled Spring Boot graceful shutdown via env: `SERVER_SHUTDOWN=graceful`, `SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE=30s`.
+  - Readiness probe adjusted to smaller intervals with an initial delay for faster availability.
+- Removed cyclic variable indirection for NVD credentials: pass `$(NVD_API_KEY)` directly into OWASP steps.
+
+These changes aim to prevent `kubectl rollout status` timeouts that reported "1 old replicas are pending termination" during single-replica updates.
