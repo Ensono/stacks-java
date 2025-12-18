@@ -8,7 +8,6 @@ metadata:
     app.kubernetes.io/part-of: ${project}
 
 ---
-
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -50,7 +49,6 @@ spec:
         - ${tls_domain}
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -84,7 +82,6 @@ spec:
   sessionAffinity: None
 
 ---
-
 apiVersion: v1
 kind: Secret
 metadata:
@@ -95,7 +92,6 @@ stringData:
   app_insights: ${app_insights_key}
 
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -218,4 +214,4 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: ["/bin/sh","-c","sleep 10"]
+                command: ["/bin/sh", "-c", "sleep 10"]
