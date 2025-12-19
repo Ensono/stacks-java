@@ -20,6 +20,10 @@ public final class UntaggedTestCleanupListener implements LauncherSessionListene
   private static final String ALLOW_EMPTY_SUITES_PROPERTY = "junit.platform.suite.allowEmptySuites";
   private static final String UNTAGGED_CHECK_PROPERTY = "untagged.test.check";
 
+  // Matches Cucumber tag identifiers in a boolean tag expression while excluding the boolean
+  // operators "not", "and" and "or". This assumes tags start with a letter and then contain only
+  // letters, digits, underscores or hyphens; custom tags with other special characters will not
+  // be matched and therefore will not be prefixed with "@".
   private static final Pattern TAG_TOKEN =
       Pattern.compile("\\b(?!(?:not|and|or)\\b)([A-Za-z][A-Za-z0-9_-]*)\\b");
 
