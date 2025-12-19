@@ -16,23 +16,16 @@ RUN ls -la /root/.m2/repository
 RUN ./mvnw dependency:go-offline --quiet \
     && ./mvnw process-resources --quiet \
     && ./mvnw clean package -Dmaven.default-test.skip=true -Dmaven.test.skip=true -DskipTests --no-transfer-progress --quiet \
-    && mkdir -p extracted && find target -maxdepth 1 -type f -name '*.jar' ! -name '*-javadoc.jar' ! -name '*-sources.jar' -exec java -Djarmode=layertools -jar {} extract --destination extracted \;
+    && find target -maxdepth 1 -type f -name '*.jar' ! -name '*-javadoc.jar' ! -name '*-sources.jar' -exec cp {} app.jar \;
 
 
 FROM azul/zulu-openjdk-alpine:17-jre
 
 VOLUME /tmp
 
-ARG DEPENDENCY=/workspace/app/extracted
+# Use the standard Spring Boot launcher; avoid hardcoded classpaths that depend on layer layout.
+COPY --from=build /workspace/app/app.jar /app/app.jar
 
-COPY --from=build ${DEPENDENCY}/dependencies/ ./
-RUN true
-COPY --from=build ${DEPENDENCY}/spring-boot-loader/ ./
-RUN true
-COPY --from=build ${DEPENDENCY}/snapshot-dependencies/ ./
-RUN true
-COPY --from=build ${DEPENDENCY}/application/ ./
-
-ENTRYPOINT ["java","-cp","spring-boot-loader/spring-boot-loader.jar:dependencies/*:snapshot-dependencies/*:application","org.springframework.boot.loader.JarLauncher"]
+ENTRYPOINT ["java","-jar","/app/app.jar"]
 
 EXPOSE 9000
