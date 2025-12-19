@@ -61,6 +61,7 @@ steps:
             declare -a mvn_args
             mvn_args=(
               "failsafe:integration-test"
+              "failsafe:verify"
               "--no-transfer-progress"
               "-Dmaven.repo.local=${m2_location}"
             )
