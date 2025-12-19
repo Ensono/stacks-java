@@ -43,8 +43,8 @@ def check_dependency(group_id, artifact_id, current_version, previous_version):
     print(f"Top 5 versions: {versions[:5]}")
 
 if __name__ == "__main__":
-    # Serenity: 4.2.34 (downgraded from) -> 4.2.26 (stable version)
-    check_dependency("net.serenity-bdd", "serenity-core", "4.2.26", "4.2.34")
+    # Serenity: 4.3.4 (current) vs 4.2.26 (previous)
+    check_dependency("net.serenity-bdd", "serenity-core", "4.3.4", "4.2.26")
     
-    # Cucumber: 7.27.0 (downgraded from) -> 7.22.2 (stable version)
-    check_dependency("io.cucumber", "cucumber-java", "7.22.2", "7.27.0")
+    # Cucumber: 7.33.0 (current) vs 7.22.2 (previous)
+    check_dependency("io.cucumber", "cucumber-java", "7.33.0", "7.22.2")
