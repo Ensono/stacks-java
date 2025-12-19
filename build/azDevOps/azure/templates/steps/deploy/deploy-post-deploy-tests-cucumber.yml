@@ -22,7 +22,7 @@ steps:
           script: |
             set -euo pipefail
 
-            converter="$(Build.SourcesDirectory)/build/azDevOps/azure/scripts/convert-junit-tags-to-cucumber.bash"
+            converter="$(Build.SourcesDirectory)/stacks-java/build/azDevOps/azure/scripts/convert-junit-tags-to-cucumber.bash"
             allowed_tags="${{ parameters.maven_allowed_post_deploy_test_tags }}"
             ignored_tags="${{ parameters.maven_ignored_post_deploy_test_tags }}"
 
