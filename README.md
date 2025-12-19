@@ -9,13 +9,12 @@ To customise the namespaces and create an application for your company please vi
 ### Running the application locally
 
 1. Clone one of the Java projects to your local machine from one of the following repos:
-   ---
-    1. Simple web API: [stacks-java repository](https://github.com/Ensono/stacks-java)
-    2. Web API with CQRS: [stacks-java-cqrs repository](https://github.com/Ensono/stacks-java-cqrs)
-    3. Web API with CQRS and events: [stacks-java-cqrs-events repository](https://github.com/Ensono/stacks-java-cqrs-events)
+
+   1. Simple web API: [stacks-java repository](https://github.com/Ensono/stacks-java)
+   2. Web API with CQRS: [stacks-java-cqrs repository](https://github.com/Ensono/stacks-java-cqrs)
+   3. Web API with CQRS and events: [stacks-java-cqrs-events repository](https://github.com/Ensono/stacks-java-cqrs-events)
 
 2. Build and run the application
-   ---
 
    Note that at a minimum [Java 17](https://adoptopenjdk.net/) should be installed.
 
@@ -23,25 +22,26 @@ To customise the namespaces and create an application for your company please vi
 
    For Unix:
 
-    ```bash
-    ./mvnw spring-boot:run
-    ```
+   ```bash
+   ./mvnw spring-boot:run
+   ```
 
    For Windows:
 
-    ```bash
-    mvnw.cmd spring-boot:run
-    ```
+   ```bash
+   mvnw.cmd spring-boot:run
+   ```
 
    For instructions on how to customise the project for your company please look in the [Scaffolding](https://stacks.ensono.com/docs/workloads/common/backend/java/scaffolding_java) section
+
 3. Verify that the application has started
-   ---
+
    Browse to [http://localhost:9000/v1/menu](http://localhost:9000/v1/menu). This should return a valid JSON response.
 
    The application configuration uses Swagger/OAS3 to represent the API endpoints. The Swagger UI can be viewed by directing your
    browser to [http://localhost:9000/swagger/index.html](http://localhost:9000/swagger/index.html).
-   
-   **Note**: This version of the application doesn't use any persistence, so the responses are mocked 
+
+   **Note**: This version of the application doesn't use any persistence, so the responses are mocked
 
 ### Authorization
 
@@ -83,9 +83,9 @@ These parameters are used to verify that the JWT supplied in the Authorization h
 
 From the `<PROJECT-NAME>/java` folder, build a Docker image using e.g. the command below:
 
-   ```bash
-   docker build --tag stacks:1.0 .
-   ```
+```bash
+docker build --tag stacks:1.0 .
+```
 
 This uses the `Dockerfile` in this folder to generate the Docker image.
 
@@ -93,8 +93,8 @@ If you have an `.m2` directory in the `java/` folder, the Docker build will atte
 
 Once the Docker image is created, you can then run a Docker container based on this image using e.g.
 
-   ```bash
-   docker run -p 9000:9000 -e AZURE_APPLICATION_INSIGHTS_INSTRUMENTATION_KEY -e AZURE_COSMOSDB_KEY stacks:1.0
-   ```
+```bash
+docker run -p 9000:9000 -e AZURE_APPLICATION_INSIGHTS_INSTRUMENTATION_KEY -e AZURE_COSMOSDB_KEY stacks:1.0
+```
 
 which passes in the two required environment variables from your own environment.

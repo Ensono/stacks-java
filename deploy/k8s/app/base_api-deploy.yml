@@ -8,7 +8,6 @@ metadata:
     app.kubernetes.io/part-of: ${project}
 
 ---
-
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -50,7 +49,6 @@ spec:
         - ${tls_domain}
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -84,7 +82,6 @@ spec:
   sessionAffinity: None
 
 ---
-
 apiVersion: v1
 kind: Secret
 metadata:
@@ -95,7 +92,6 @@ stringData:
   app_insights: ${app_insights_key}
 
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -148,6 +144,7 @@ spec:
         environment: ${environment}
     spec:
       dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 60
       containers:
         - name: api
           # this we need to pass from the pipeline to the deployment steps
@@ -182,6 +179,10 @@ spec:
               value: ${k8s_app_path}
             - name: LOG_LEVEL
               value: ${log_level}
+            - name: SERVER_SHUTDOWN
+              value: graceful
+            - name: SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE
+              value: 30s
             - name: AZURE_APPLICATION_INSIGHTS_INSTRUMENTATION_KEY
               valueFrom:
                 secretKeyRef:
@@ -201,11 +202,16 @@ spec:
             successThreshold: 1
             timeoutSeconds: 25
           readinessProbe:
-            failureThreshold: 10
+            failureThreshold: 6
             httpGet:
               path: /health
               port: 9000
               scheme: HTTP
-            periodSeconds: 30
+            initialDelaySeconds: 15
+            periodSeconds: 10
             successThreshold: 1
-            timeoutSeconds: 25
+            timeoutSeconds: 5
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]

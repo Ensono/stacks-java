@@ -3,12 +3,15 @@
   "license": "Apache-2.0",
   "repository": "N/A",
   "engines": {
-    "node": ">=20.16.0 <21"
+    "node": ">=20.16.0"
   },
   "devDependencies": {
     "gulp": "^5.0.1",
     "gulp-inline-source": "^4.0.0",
     "gulp-postcss": "^10.0.0",
     "postcss-image-inliner": "^7.0.1"
+  },
+  "overrides": {
+    "inline-source": "^8.0.3"
   }
 }

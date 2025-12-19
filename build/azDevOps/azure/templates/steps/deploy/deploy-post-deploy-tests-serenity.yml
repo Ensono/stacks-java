@@ -6,6 +6,7 @@ parameters:
   functional_test_artefact_download_location: ""
   functional_test_base_url: ""
   maven_cache_directory: ""
+  default_cucumber_filter_tags: "@Functional or @Smoke or @Performance and not @Ignore"
   maven_ignored_post_deploy_test_tags: ""
   maven_post_deploy_html_report_directory: ""
   maven_post_deploy_failsafe_reports_directory: ""
@@ -37,17 +38,48 @@ steps:
       # Note: Don't forget to update the `maven_allowed_post_deploy_test_tags` in the root pipeline file.
       - task: Bash@3
         inputs:
-          filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-post-deploy-tagged-test-run.bash"
-          arguments: >
-            -a "Functional"
-            -b "${{ parameters.functional_test_base_url }}"
-            -Y "${{ parameters.maven_ignored_post_deploy_test_tags }}"
-            -Z "${{ parameters.maven_cache_directory }}"
+          targetType: "inline"
+          script: |
+            set -euo pipefail
+
+            cucumber_tags="${CUCUMBER_FILTER_TAGS:-}"
+            if [ -z "${cucumber_tags}" ]; then
+              cucumber_tags="${DEFAULT_CUCUMBER_TAGS:-}"
+            fi
+
+            if [ -n "${cucumber_tags}" ]; then
+              echo "Using cucumber.filter.tags='${cucumber_tags}'"
+            else
+              echo "No cucumber.filter.tags supplied; running full suite"
+            fi
+
+            m2_location="${M2_LOCATION:-./.m2}"
+
+            base_url="${FUNCTIONAL_TEST_BASE_URL:-${BASE_URL:-}}"
+            export BASE_URL="${base_url}"
+
+            declare -a mvn_args
+            mvn_args=(
+              "failsafe:integration-test"
+              "failsafe:verify"
+              "--no-transfer-progress"
+              "-Dmaven.repo.local=${m2_location}"
+            )
+
+            if [ -n "${cucumber_tags}" ]; then
+              mvn_args+=("-Dcucumber.filter.tags=${cucumber_tags}")
+            fi
+
+            ./mvnw "${mvn_args[@]}"
           workingDirectory: "${{ parameters.functional_test_artefact_download_location }}"
         target:
           container: ${{ parameters.docker_java_container }}
         displayName: "Post-Deploy Test: Run Functional Tests"
         env:
+          FUNCTIONAL_TEST_BASE_URL: "${{ parameters.functional_test_base_url }}"
+          CUCUMBER_FILTER_TAGS: "$(cucumber.filter.tags)"
+          DEFAULT_CUCUMBER_TAGS: "${{ parameters.default_cucumber_filter_tags }}"
+          M2_LOCATION: "${{ parameters.maven_cache_directory }}"
           ${{ each var in parameters.auth0_credentials }}:
             ${{ var.key }}: ${{ var.value }}
 
