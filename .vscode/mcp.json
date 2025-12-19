@@ -21,6 +21,15 @@
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "@azure-devops/mcp", "${input:ado_org}"]
+    },
+    "azure": {
+      "command": "npx",
+      "args": ["-y", "@azure/mcp@latest", "server", "start"]
+    },
+    "aks": {
+      "type": "stdio",
+      "command": "aks-mcp",
+      "args": ["--transport", "stdio"]
     }
   }
 }

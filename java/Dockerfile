@@ -33,6 +33,6 @@ COPY --from=build ${DEPENDENCY}/snapshot-dependencies/ ./
 RUN true
 COPY --from=build ${DEPENDENCY}/application/ ./
 
-ENTRYPOINT ["java","org.springframework.boot.loader.JarLauncher"]
+ENTRYPOINT ["java","-cp","spring-boot-loader/spring-boot-loader.jar:dependencies/*:snapshot-dependencies/*:application","org.springframework.boot.loader.JarLauncher"]
 
 EXPOSE 9000
