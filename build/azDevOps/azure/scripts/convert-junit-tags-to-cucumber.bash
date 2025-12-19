@@ -12,9 +12,15 @@ trim() {
 }
 
 to_cucumber_tags() {
-  local raw="$1"
-  local -n target_ref=$2
+  local raw="${1-}"
+  local target_name="${2-}"
 
+  if [[ -z "$target_name" ]] || ! [[ "$target_name" =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]]; then
+    printf 'Error: to_cucumber_tags requires a valid variable name as second argument\n' >&2
+    return 1
+  fi
+
+  local -n target_ref="$target_name"
   IFS='|' read -r -a entries <<<"$raw"
   for entry in "${entries[@]}"; do
     local cleaned
