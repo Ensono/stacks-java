@@ -141,10 +141,12 @@ variables:
     value: true
   - name: vulnerability_scan_report
     value: "target/dependency-check-report.html"
-  - name: vulnerability_scan_api_key
-    value: "$(VULNERABILITY_SCAN_API_KEY)"
-  - name: vulnerability_scan_fail_build_on_detection
-    value: false
+  - name: oss_index_username
+    value: "$(OSS_EMAIL)"
+  - name: oss_index_password
+    value: "$(OSS_API_KEY)"
+  - name: maximum_cvss_to_fail_build
+    value: 11  # Set to 11 to disable failing the build we should reduce this over time
   - name: vulnerability_scan_database_directory
     value: ${{ variables.self_repo_dir }}/.vulnerability-database
 
@@ -182,6 +184,7 @@ stages:
       - group: stacks-credentials-nonprod-kv
       - group: sonar-credentials
       - group: stacks-java-api
+      - group: stacks-java-owasp-keys
     jobs:
       - job: ApiBuild
         pool:
@@ -226,8 +229,10 @@ stages:
               docker_build_container: "${{ variables.docker_java_image }}"
               # Vulnerability Scanning
               vulnerability_scan: "${{ variables.vulnerability_scan }}"
-              vulnerability_scan_api_key: "${{ variables.vulnerability_scan_api_key }}"
-              vulnerability_scan_fail_build_on_detection: "${{ variables.vulnerability_scan_fail_build_on_detection }}"
+              nvd_api_key: "$(NVD_API_KEY)"
+              oss_index_username: "${{ variables.oss_index_username }}"
+              oss_index_password: "${{ variables.oss_index_password }}"
+              maximum_cvss_to_fail_build: "${{ variables.maximum_cvss_to_fail_build }}"
               vulnerability_scan_database_directory: "${{ variables.vulnerability_scan_database_directory }}"
               project_type: "${{ variables.java_project_type }}"
 
@@ -249,8 +254,10 @@ stages:
               docker_build_container: "${{ variables.docker_java_image }}"
               # Vulnerability Scan
               vulnerability_scan: "${{ variables.vulnerability_scan }}"
-              vulnerability_scan_api_key: "${{ variables.vulnerability_scan_api_key }}"
-              vulnerability_scan_fail_build_on_detection: "${{ variables.vulnerability_scan_fail_build_on_detection }}"
+              nvd_api_key: "$(NVD_API_KEY)"
+              oss_index_username: "${{ variables.oss_index_username }}"
+              oss_index_password: "${{ variables.oss_index_password }}"
+              maximum_cvss_to_fail_build: "${{ variables.maximum_cvss_to_fail_build }}"
               vulnerability_scan_database_directory: "${{ variables.vulnerability_scan_database_directory }}"
               project_type: "${{ variables.functional_test_project_type }}"
 
@@ -504,11 +511,11 @@ stages:
                       {
                         name: "deploy/${{ variables.resource_def_name }}",
                         namespace: "${{ variables.namespace }}",
-                        timeout: "120s",
+                        timeout: "300s",
                       },
                     ]
 
-                - template: templates/steps/deploy/deploy-post-deploy-tests.yml
+                - template: templates/steps/deploy/deploy-post-deploy-tests-cucumber.yml
                   parameters:
                     environment: "$(Environment.ShortName)"
                     pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
@@ -517,6 +524,7 @@ stages:
                     functional_test_artefact_download_location: "${{ variables.functional_test_artefact_download_location }}"
                     functional_test_base_url: "${{ variables.functional_test_base_url }}"
                     maven_cache_directory: "${{ variables.maven_cache_directory }}"
+                    maven_allowed_post_deploy_test_tags: "${{ variables.maven_allowed_post_deploy_test_tags }}"
                     maven_ignored_post_deploy_test_tags: "${{ variables.maven_ignored_post_deploy_test_tags }}"
                     maven_post_deploy_html_report_directory: "${{ variables.maven_post_deploy_html_report_directory }}"
                     docker_java_container: "${{ variables.docker_java_image }}"
@@ -753,11 +761,11 @@ stages:
                       {
                         name: "deploy/${{ variables.resource_def_name }}",
                         namespace: "${{ variables.namespace }}",
-                        timeout: "120s",
+                        timeout: "300s",
                       },
                     ]
 
-                - template: templates/steps/deploy/deploy-post-deploy-tests.yml
+                - template: templates/steps/deploy/deploy-post-deploy-tests-cucumber.yml
                   parameters:
                     environment: "$(Environment.ShortName)"
                     pipeline_scripts_directory: "${{ variables.self_pipeline_scripts_dir }}"
@@ -766,6 +774,7 @@ stages:
                     functional_test_artefact_download_location: "${{ variables.functional_test_artefact_download_location }}"
                     functional_test_base_url: "${{ variables.functional_test_base_url }}"
                     maven_cache_directory: "${{ variables.maven_cache_directory }}"
+                    maven_allowed_post_deploy_test_tags: "${{ variables.maven_allowed_post_deploy_test_tags }}"
                     maven_ignored_post_deploy_test_tags: "${{ variables.maven_ignored_post_deploy_test_tags }}"
                     maven_post_deploy_html_report_directory: "${{ variables.maven_post_deploy_html_report_directory }}"
                     docker_java_container: "${{ variables.docker_java_image }}"

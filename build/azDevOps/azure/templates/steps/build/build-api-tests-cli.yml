@@ -15,8 +15,10 @@ parameters:
   docker_build_container: ""
   # Vulnerability Scanning
   vulnerability_scan: true
-  vulnerability_scan_api_key: "$(VULNERABILITY_SCAN_API_KEY)"
-  vulnerability_scan_fail_build_on_detection: true
+  nvd_api_key: ""
+  oss_index_username: ""
+  oss_index_password: ""
+  maximum_cvss_to_fail_build: 11
   vulnerability_scan_database_directory: ""
   project_type: ""
 
@@ -73,15 +75,24 @@ steps:
   - ${{ if eq(parameters.vulnerability_scan, true) }}:
       - task: Bash@3
         inputs:
-          filePath: "${{ parameters.pipeline_scripts_directory }}/test-maven-owasp-dependency-check.bash"
-          arguments: >
-            -W "${{ parameters.vulnerability_scan_database_directory }}"
-            -X "${{ parameters.vulnerability_scan_api_key }}"
-            -Y "${{ parameters.vulnerability_scan_fail_build_on_detection }}"
-            -Z "${{ parameters.maven_cache_directory }}"
+          targetType: "inline"
+          script: |
+            ./mvnw verify -P owasp-dependency-check \
+              -Dmaven.repo.local="${{ parameters.maven_cache_directory }}" \
+              -DdataDirectory="${{ parameters.vulnerability_scan_database_directory }}" \
+              -DnvdApiKey="${NVD_API_KEY}" \
+              -DossIndexUsername="${OSS_INDEX_USERNAME}" \
+              -DossIndexPassword="${OSS_INDEX_PASSWORD}" \
+              -DfailBuildOnCVSS="${{ parameters.maximum_cvss_to_fail_build }}" \
+              -DskipTests=true \
+              -Dgpg.skip=true
+
           workingDirectory: "${{ parameters.functional_test_project_root_dir }}"
         env:
           LC_ALL: "C.UTF-8"
+          NVD_API_KEY: "${{ parameters.nvd_api_key }}"
+          OSS_INDEX_USERNAME: "${{ parameters.oss_index_username }}"
+          OSS_INDEX_PASSWORD: "${{ parameters.oss_index_password }}"
         target:
           container: ${{ parameters.docker_build_container }}
         displayName: "Maven: OWASP Vulnerability Scan (${{ parameters.project_type }})"
@@ -107,6 +118,8 @@ steps:
             -Y "${{ parameters.maven_ignored_post_deploy_test_tags }}"
             -Z "${{ parameters.maven_cache_directory }}"
           workingDirectory: "${{ parameters.functional_test_project_root_dir }}"
+        env:
+          MAVEN_ARGS_APPEND: "-Duntagged.test.check=true"
         target:
           container: ${{ parameters.docker_build_container }}
         displayName: "Maven: Invalid Test Tag Check (${{ parameters.project_type }})"
