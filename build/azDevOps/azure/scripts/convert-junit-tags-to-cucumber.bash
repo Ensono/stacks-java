@@ -16,7 +16,7 @@ to_cucumber_tags() {
   local target_name="${2-}"
 
   if [[ -z "$target_name" ]] || ! [[ "$target_name" =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]]; then
-    printf 'Error: to_cucumber_tags requires a valid variable name as second argument\n' >&2
+    printf 'Error: to_cucumber_tags requires a valid Bash variable name as second argument (must start with letter or underscore, followed by alphanumeric characters or underscores)\n' >&2
     return 1
   fi
 
