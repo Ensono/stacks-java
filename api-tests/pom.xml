@@ -18,7 +18,7 @@
     <encoding>UTF-8</encoding>
     <parallel.tests>4</parallel.tests>
     <webdriver.base.url/>
-    <jackson.version>2.20</jackson.version>
+    <jackson-bom.version>2.20.1</jackson-bom.version>
     <java.version>17</java.version>
     <cucumber.filter.tags>(@Functional or @Smoke or @Performance) and not @Ignore</cucumber.filter.tags>
 
@@ -68,6 +68,14 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- Jackson BOM must be imported FIRST to take precedence -->
+      <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>${jackson-bom.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
@@ -249,17 +257,17 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
-      <version>${jackson.version}</version>
+      <!-- Version managed by Jackson BOM -->
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
+      <!-- Version managed by Jackson BOM -->
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
-      <version>${jackson.version}</version>
+      <!-- Version managed by Jackson BOM (correctly uses 2.20, not 2.20.1) -->
     </dependency>
     <dependency>
       <groupId>io.netty</groupId>
