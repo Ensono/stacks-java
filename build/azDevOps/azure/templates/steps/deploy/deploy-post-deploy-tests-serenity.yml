@@ -58,6 +58,9 @@ steps:
             base_url="${FUNCTIONAL_TEST_BASE_URL:-${BASE_URL:-}}"
             export BASE_URL="${base_url}"
 
+            # Diagnostic output: print the BASE_URL used for functional tests
+            echo "[diagnostic] Post-Deploy Test BASE_URL=${BASE_URL}"
+
             declare -a mvn_args
             mvn_args=(
               "failsafe:integration-test"
