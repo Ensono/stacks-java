@@ -86,3 +86,7 @@ variables:
     value: ensonostacks
   - name: github_org
     value: $(company)
+
+  # Eirctl
+  - name: EirctlVersion
+    value: 0.9.11

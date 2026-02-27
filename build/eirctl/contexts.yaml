@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Ensono/eirctl/main/schemas/schema_v1.json
+#
+# Containerized execution contexts for stacks-java.
+#
+# buildenv    — Java build, test, sonar-scanner (matches pipeline's azul_java container)
+# infrastructure — Docker image builds, K8s deploys, Terraform (matches pipeline's k8s_deploy container)
+#
+# Maven cache is bind-mounted from the host workspace so that artefacts persist across runs.
+# Override M2_CACHE_DIR to change the host path (default: ./.m2).
+# For CI agents without workspace persistence, set M2_VOLUME to a named Docker volume instead.
+#
+# Shell: Uses bash (not pwsh) because all commands use bash syntax for variable
+# expansion (${VAR:-default}), and mvnw is a shell script. Both container images
+# include bash at /usr/bin/bash.
+#
+
+contexts:
+  buildenv:
+    container:
+      name: ensono/eir-java:1.1.251
+      shell: bash
+      shell_args:
+        - -c
+      volumes:
+        - "${M2_CACHE_DIR:-./.m2}:/root/.m2"
+    envfile:
+      exclude:
+        - home
+        - path
+        - tmpdir
+        - java_home
+        - java_opts
+        - maven_home
+        - m2_home
+
+  infrastructure:
+    container:
+      name: ensono/eir-infrastructure:1.1.251
+      shell: bash
+      shell_args:
+        - -c
+    envfile:
+      exclude:
+        - home
+        - path
+        - tmpdir
+        - java_home

@@ -1,0 +1,525 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Ensono/eirctl/main/schemas/schema_v1.json
+#
+# Task library for stacks-java.
+#
+# Convention:
+#   - Tasks prefixed with "api-" operate in the api-tests project (dir: java → ../api-tests).
+#   - All Maven tasks forward M2_CACHE_DIR (default ./.m2) via -Dmaven.repo.local.
+#   - THREADS (default 4) controls parallel test execution.
+#
+# Environment variables consumed from CI:
+#   NVD_API_KEY, OSS_EMAIL, OSS_API_KEY          — OWASP dependency-check
+#   SONAR_PROJECT_KEY, SONAR_PROJECT_NAME,
+#   SONAR_TOKEN, SONAR_ORGANISATION,
+#   SONAR_HOST_URL, BUILD_NUMBER                  — SonarCloud
+#   SOURCE_BRANCH_REF, TARGET_BRANCH_REF,
+#   PULLREQUEST_NUMBER, SONAR_PR_PROVIDER,
+#   SONAR_REMOTE_REPO                             — Sonar PR decoration
+#
+
+tasks:
+  # ──────────────────────────────────────────────
+  #  Java project tasks (working dir: java/)
+  # ──────────────────────────────────────────────
+
+  clean:
+    context: buildenv
+    description: Clean build outputs
+    dir: java
+    command:
+      - ./mvnw clean -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2} --no-transfer-progress
+
+  cache-warm:
+    context: buildenv
+    description: Download all dependencies to populate the Maven cache
+    dir: java
+    command:
+      - ./mvnw dependency:go-offline -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2} --no-transfer-progress
+
+  build:
+    context: buildenv
+    description: Build and install the Java application into the local repo
+    dir: java
+    command:
+      - >-
+        ./mvnw clean install
+        -Dgpg.skip=true
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  build-skip-tests:
+    context: buildenv
+    description: Build the Java application without running tests
+    dir: java
+    command:
+      - >-
+        ./mvnw clean install -DskipTests
+        -Dgpg.skip=true
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  test:
+    context: buildenv
+    description: Run unit, component, and integration tests
+    dir: java
+    command:
+      - >-
+        ./mvnw test
+        -Dgroups="Unit | Component | Integration"
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  integration-test:
+    context: buildenv
+    description: Run the full verify lifecycle (includes integration tests and PITest)
+    dir: java
+    command:
+      - >-
+        ./mvnw verify
+        -Dgpg.skip=true
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  verify:
+    context: buildenv
+    description: Alias for integration-test — runs full verify lifecycle
+    dir: java
+    command:
+      - >-
+        ./mvnw verify
+        -Dgpg.skip=true
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  format:
+    context: buildenv
+    description: Format Java source code using Google Java Style
+    dir: java
+    command:
+      - >-
+        ./mvnw fmt:format
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  format-check:
+    context: buildenv
+    description: Check code formatting without modifying files (fails on violations)
+    dir: java
+    command:
+      - >-
+        ./mvnw fmt:check
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  checkstyle:
+    context: buildenv
+    description: Run Checkstyle analysis (google_checks.xml)
+    dir: java
+    command:
+      - >-
+        ./mvnw checkstyle:check
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  spotbugs:
+    context: buildenv
+    description: Run SpotBugs static analysis
+    dir: java
+    command:
+      - >-
+        ./mvnw spotbugs:check
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  pitest:
+    context: buildenv
+    description: Run PITest mutation testing
+    dir: java
+    command:
+      - >-
+        ./mvnw test-compile org.pitest:pitest-maven:mutationCoverage
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  security-scan:
+    context: buildenv
+    description: Run OWASP dependency-check vulnerability scan
+    dir: java
+    command:
+      - >-
+        ./mvnw verify -P owasp-dependency-check
+        -Dgpg.skip=true
+        -DnvdApiKey=${NVD_API_KEY:-}
+        -DossIndexUsername=${OSS_EMAIL:-}
+        -DossIndexPassword=${OSS_API_KEY:-}
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  sonar:
+    context: buildenv
+    description: Run SonarCloud branch analysis using the sonar-scanner CLI
+    dir: java
+    command:
+      - >-
+        sonar-scanner
+        -Dsonar.host.url=${SONAR_HOST_URL:-https://sonarcloud.io}
+        -Dsonar.projectKey=${SONAR_PROJECT_KEY}
+        -Dsonar.projectName=${SONAR_PROJECT_NAME}
+        -Dsonar.projectVersion=${BUILD_NUMBER:-0.0.0}
+        -Dsonar.token=${SONAR_TOKEN}
+        -Dsonar.organization=${SONAR_ORGANISATION}
+        -Dsonar.branch.name=${SOURCE_BRANCH_REF}
+    required:
+      env:
+        - SONAR_PROJECT_KEY
+        - SONAR_PROJECT_NAME
+        - SONAR_TOKEN
+        - SONAR_ORGANISATION
+        - SOURCE_BRANCH_REF
+
+  sonar-pr:
+    context: buildenv
+    description: Run SonarCloud pull request analysis using the sonar-scanner CLI
+    dir: java
+    command:
+      - >-
+        sonar-scanner
+        -Dsonar.host.url=${SONAR_HOST_URL:-https://sonarcloud.io}
+        -Dsonar.projectKey=${SONAR_PROJECT_KEY}
+        -Dsonar.projectName=${SONAR_PROJECT_NAME}
+        -Dsonar.projectVersion=${BUILD_NUMBER:-0.0.0}
+        -Dsonar.token=${SONAR_TOKEN}
+        -Dsonar.organization=${SONAR_ORGANISATION}
+        -Dsonar.pullrequest.key=${PULLREQUEST_NUMBER}
+        -Dsonar.pullrequest.branch=${SOURCE_BRANCH_REF}
+        -Dsonar.pullrequest.base=${TARGET_BRANCH_REF}
+        -Dsonar.pullrequest.provider=${SONAR_PR_PROVIDER:-GitHub}
+        -Dsonar.pullrequest.github.repository=${SONAR_REMOTE_REPO}
+    required:
+      env:
+        - SONAR_PROJECT_KEY
+        - SONAR_PROJECT_NAME
+        - SONAR_TOKEN
+        - SONAR_ORGANISATION
+        - PULLREQUEST_NUMBER
+        - SOURCE_BRANCH_REF
+        - TARGET_BRANCH_REF
+        - SONAR_REMOTE_REPO
+
+  dependency-tree:
+    context: buildenv
+    description: Display the Maven dependency tree
+    dir: java
+    command:
+      - >-
+        ./mvnw dependency:tree
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  # ──────────────────────────────────────────────
+  #  Cloud scenario tasks (replace run_scenario.sh / deploy_scenario.sh)
+  #
+  #  Note: Maven -P flag cannot reliably deactivate profiles with
+  #  file-based activation (<activation><file><exists>.</exists></file>),
+  #  so all tasks use property overrides instead. These are purely runtime
+  #  — no source files are modified (unlike the old shell scripts).
+  # ──────────────────────────────────────────────
+
+  run-azure:
+    context: buildenv
+    description: Run the application with Azure cloud profile only
+    dir: java
+    command:
+      - >-
+        ./mvnw spring-boot:run
+        -Dazure.profile.name=azure
+        -Daws.profile.name=no-aws
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+
+  run-aws:
+    context: buildenv
+    description: Run the application with AWS cloud profile only
+    dir: java
+    command:
+      - >-
+        ./mvnw spring-boot:run
+        -Daws.profile.name=aws
+        -Dazure.profile.name=no-azure
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+
+  run-all-clouds:
+    context: buildenv
+    description: Run the application with both Azure and AWS profiles
+    dir: java
+    command:
+      - >-
+        ./mvnw spring-boot:run
+        -Dazure.profile.name=azure
+        -Daws.profile.name=aws
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+
+  package-azure:
+    context: buildenv
+    description: Package the application for Azure deployment (no tests)
+    dir: java
+    command:
+      - >-
+        ./mvnw clean package -DskipTests
+        -Dazure.profile.name=azure
+        -Daws.profile.name=no-aws
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  package-aws:
+    context: buildenv
+    description: Package the application for AWS deployment (no tests)
+    dir: java
+    command:
+      - >-
+        ./mvnw clean package -DskipTests
+        -Daws.profile.name=aws
+        -Dazure.profile.name=no-azure
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  # ──────────────────────────────────────────────
+  #  Docker
+  # ──────────────────────────────────────────────
+
+  docker-build:
+    context: infrastructure
+    description: Build the Docker image (azul/zulu-openjdk-alpine:17)
+    dir: java
+    command:
+      - >-
+        docker build
+        --tag ${DOCKER_IMAGE_NAME:-stacks-java-api}:${DOCKER_IMAGE_TAG:-latest}
+        .
+
+  # ──────────────────────────────────────────────
+  #  Validation (YAML lint, Terraform)
+  # ──────────────────────────────────────────────
+
+  yaml-lint:
+    context: infrastructure
+    description: Lint all YAML files against yamllint configuration
+    command:
+      - >-
+        yamllint
+        -c ${YAMLLINT_CONFIG_FILE:-yamllint.conf}
+        ${YAMLLINT_SCAN_DIRECTORY:-.}
+
+  terraform-format-check:
+    context: infrastructure
+    description: Check Terraform formatting
+    dir: deploy/azure/app/kube
+    command:
+      - terraform fmt -check -recursive -diff
+
+  terraform-validate:
+    context: infrastructure
+    description: Validate Terraform configuration
+    dir: deploy/azure/app/kube
+    command:
+      - terraform init -backend=false && terraform validate
+
+  # ──────────────────────────────────────────────
+  #  API Tests (working dir: api-tests/)
+  # ──────────────────────────────────────────────
+
+  api-clean:
+    context: buildenv
+    description: Clean API test build outputs
+    dir: api-tests
+    command:
+      - ./mvnw clean -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2} --no-transfer-progress
+
+  api-build:
+    context: buildenv
+    description: Compile API tests and download dependencies
+    dir: api-tests
+    command:
+      - >-
+        ./mvnw clean compile test-compile
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  api-test-functional:
+    context: buildenv
+    description: Run functional and smoke API tests (excludes @Ignore)
+    dir: api-tests
+    command:
+      - >-
+        ./mvnw verify
+        -Dcucumber.filter.tags="(@Functional or @Smoke or @Performance) and not @Ignore"
+        -Dthreads=${THREADS:-4}
+        -Dserenity.threads=${THREADS:-4}
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  api-test-smoke:
+    context: buildenv
+    description: Run smoke tests only
+    dir: api-tests
+    command:
+      - >-
+        ./mvnw verify
+        -Dcucumber.filter.tags="@Smoke and not @Ignore"
+        -Dthreads=${THREADS:-4}
+        -Dserenity.threads=${THREADS:-4}
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  api-test-performance:
+    context: buildenv
+    description: Run performance tests only
+    dir: api-tests
+    command:
+      - >-
+        ./mvnw verify
+        -Dcucumber.filter.tags="@Performance and not @Ignore"
+        -Dthreads=${THREADS:-4}
+        -Dserenity.threads=${THREADS:-4}
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  api-test-untagged-check:
+    context: buildenv
+    description: Verify no tests exist without recognised tags
+    dir: api-tests
+    command:
+      - >-
+        ./mvnw verify
+        -Dcucumber.filter.tags="not (@Functional or @Smoke or @Performance or @Ignore)"
+        -Dthreads=${THREADS:-4}
+        -Dserenity.threads=${THREADS:-4}
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  # ──────────────────────────────────────────────
+  #  API Tests — format & quality (same gates as java project)
+  # ──────────────────────────────────────────────
+
+  api-format:
+    context: buildenv
+    description: Format API test source code using Google Java Style
+    dir: api-tests
+    command:
+      - >-
+        ./mvnw fmt:format
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  api-format-check:
+    context: buildenv
+    description: Check API test code formatting (fails on violations)
+    dir: api-tests
+    command:
+      - >-
+        ./mvnw fmt:check
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+  api-security-scan:
+    context: buildenv
+    description: Run OWASP dependency-check on API tests project
+    dir: api-tests
+    command:
+      - >-
+        ./mvnw verify -P owasp-dependency-check
+        -DnvdApiKey=${NVD_API_KEY:-}
+        -DossIndexUsername=${OSS_EMAIL:-}
+        -DossIndexPassword=${OSS_API_KEY:-}
+        -Dmaven.repo.local=${M2_CACHE_DIR:-./.m2}
+        --no-transfer-progress
+
+# ──────────────────────────────────────────────
+#  Pipelines — chained task execution
+# ──────────────────────────────────────────────
+
+pipelines:
+  # Full CI build matching the Azure DevOps Build stage
+  ci-build:
+    - task: format-check
+      name: Format Check
+      allow_failure: false
+
+    - task: build
+      name: Build Azure
+      depends_on:
+        - Format Check
+      env:
+        AZURE_PROFILE_NAME: azure
+        AWS_PROFILE_NAME: no-aws
+
+    - task: build
+      name: Build AWS
+      depends_on:
+        - Format Check
+      env:
+        AZURE_PROFILE_NAME: no-azure
+        AWS_PROFILE_NAME: aws
+
+    - task: test
+      name: Unit Tests
+      depends_on:
+        - Build Azure
+        - Build AWS
+
+    - task: integration-test
+      name: Integration Tests
+      depends_on:
+        - Unit Tests
+
+    - task: security-scan
+      name: Security Scan
+      depends_on:
+        - Integration Tests
+
+    - task: sonar
+      name: Sonar Analysis
+      depends_on:
+        - Integration Tests
+
+    - task: api-build
+      name: API Tests Build
+      depends_on:
+        - Integration Tests
+
+    - task: api-test-functional
+      name: API Functional Tests
+      depends_on:
+        - API Tests Build
+
+  # Quality gate — parallel static analysis checks
+  quality-gate:
+    - task: format-check
+      name: Format Check
+      allow_failure: false
+
+    - task: checkstyle
+      name: Checkstyle
+
+    - task: spotbugs
+      name: SpotBugs
+
+    - task: pitest
+      name: Mutation Testing
+
+    - task: security-scan
+      name: Security Scan
+
+  # Quick local development loop
+  local-dev:
+    - task: build-skip-tests
+      name: Build (skip tests)
+
+    - task: cache-warm
+      name: Warm Cache
+      depends_on:
+        - Build (skip tests)
+
+    - task: run-azure
+      name: Run Azure
+      depends_on:
+        - Warm Cache
