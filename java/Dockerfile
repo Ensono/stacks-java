@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:17.0.9 as build
+FROM azul/zulu-openjdk-alpine:17.0.18 as build
 WORKDIR /workspace/app
 
 # Copy the m2 directory if it exists to re-use an external cache.
