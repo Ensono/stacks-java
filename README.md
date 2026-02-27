@@ -98,3 +98,92 @@ docker run -p 9000:9000 -e AZURE_APPLICATION_INSIGHTS_INSTRUMENTATION_KEY -e AZU
 ```
 
 which passes in the two required environment variables from your own environment.
+
+## Using eirctl for Task Automation
+
+This project uses [eirctl](https://github.com/Ensono/eirctl) for containerized build, test, and quality gate automation. Tasks run inside the same container images used in CI (`ensono/eir-java:1.1.251`), ensuring consistent results between local and pipeline builds.
+
+### Install eirctl
+
+```bash
+# Download and install (Linux AMD64)
+wget https://github.com/Ensono/eirctl/releases/download/0.9.7/eirctl-linux-amd64 -O /tmp/eirctl
+chmod +x /tmp/eirctl
+sudo mv /tmp/eirctl /usr/local/bin/eirctl
+
+# Verify
+eirctl --version
+```
+
+### Common Tasks
+
+```bash
+# Build the application (compile, test, install to local repo)
+eirctl build
+
+# Build without running tests
+eirctl build-skip-tests
+
+# Run tests with tag filtering
+eirctl test
+
+# Format code (Google Java Style)
+eirctl format
+
+# Check formatting without modifying files
+eirctl format-check
+
+# Run OWASP dependency vulnerability scan
+eirctl security-scan
+
+# Run SonarCloud analysis (requires SONAR_* env vars)
+eirctl sonar
+
+# Build and run with Azure profile
+eirctl run-azure
+
+# Build and run with AWS profile
+eirctl run-aws
+```
+
+### API Tests
+
+```bash
+# Compile API tests
+eirctl api-build
+
+# Run functional tests
+eirctl api-test-functional
+
+# Run smoke tests only
+eirctl api-test-smoke
+```
+
+### Pipelines
+
+```bash
+# Full CI build pipeline (format → build → test → security → sonar → api-tests)
+eirctl run pipeline ci-build
+
+# Parallel quality gate checks (format, checkstyle, spotbugs, pitest, security)
+eirctl run pipeline quality-gate
+
+# Quick local development loop (build → cache → run)
+eirctl run pipeline local-dev
+
+# View pipeline dependency graph
+eirctl graph ci-build
+```
+
+### List All Available Tasks
+
+```bash
+eirctl list
+```
+
+### Troubleshooting
+
+- **Docker required**: eirctl tasks run in containers — ensure Docker is installed and running.
+- **Maven cache**: The `.m2` directory in the project root is bind-mounted into containers. First builds download all dependencies; subsequent runs use the cache.
+- **Permission denied**: If Docker commands fail with permission errors, ensure your user is in the `docker` group (`sudo usermod -aG docker $USER`).
+- **Container image pull**: First run will pull `ensono/eir-java:1.1.251` (~1GB). Subsequent runs use the cached image.

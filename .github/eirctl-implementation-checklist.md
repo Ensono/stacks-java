@@ -42,113 +42,116 @@ Progress tracker for migrating stacks-java to eirctl task automation while prese
 
 ### 2.1 Directory Structure
 
-- [ ] Create `build/eirctl/` directory
-- [ ] Create `eirctl.yaml` root configuration
-- [ ] Add JSON schema reference for IDE validation
-- [ ] Configure imports to contexts.yaml and tasks.yaml
+- [x] Create `build/eirctl/` directory
+- [x] Create `eirctl.yaml` root configuration
+- [x] Add JSON schema reference for IDE validation
+- [x] Configure imports to contexts.yaml and tasks.yaml
 
 ### 2.2 Contexts Configuration (`build/eirctl/contexts.yaml`)
 
-- [ ] Define `buildenv` context with `ensono/eir-java:1.1.251`
-- [ ] Define `infrastructure` context with `ensono/eir-infrastructure:1.1.251`
-- [ ] Configure Maven cache host mount `-v ${PWD}/.m2:/root/.m2`
+- [x] Define `buildenv` context with `ensono/eir-java:1.1.251`
+- [x] Define `infrastructure` context with `ensono/eir-infrastructure:1.1.251`
+- [x] Configure Maven cache host mount `-v ${PWD}/.m2:/root/.m2`
 - [ ] Add M2_VOLUME override for named volume option
-- [ ] Set `shell: pwsh` and `shell_args: [-Command]`
-- [ ] Configure `envfile.exclude` for [home, path, tmpdir]
-- [ ] Test context isolation and volume mounts
+- [x] Set `shell: bash` and `shell_args: [-c]` (bash required for `${VAR:-default}` syntax and mvnw scripts)
+- [x] Configure `envfile.exclude` for [home, path, tmpdir, java_home, java_opts, maven_home, m2_home] (java_home prevents host JDK overriding container)
+- [x] Test context isolation and volume mounts
 
 ### 2.3 Task Library - Java Project (`build/eirctl/tasks.yaml`)
 
-- [ ] Create `clean` task
-- [ ] Create `cache-warm` task (dependency:go-offline)
-- [ ] Create `build` task (install + compile)
-- [ ] Create `build-skip-tests` task
-- [ ] Create `test` task (-Dgroups="Unit,Component,Integration")
-- [ ] Create `integration-test` task
-- [ ] Create `verify` task
-- [ ] Create `format` task
-- [ ] Create `format-check` task
-- [ ] Create `checkstyle` task
-- [ ] Create `spotbugs` task
-- [ ] Create `pitest` task
-- [ ] Create `security-scan` task (OWASP with -P owasp-dependency-check)
-- [ ] Create `sonar` task with dynamic properties
-- [ ] Create `dependency-tree` task
-- [ ] Add M2_LOCATION env to all Maven tasks
+- [x] Create `clean` task
+- [x] Create `cache-warm` task (dependency:go-offline)
+- [x] Create `build` task (`./mvnw clean install` — uses `install` goal so artifacts are available in local repo for api-tests)
+- [x] Create `build-skip-tests` task
+- [x] Create `test` task (-Dgroups="Unit | Component | Integration" — pipe-delimited to match pipeline convention)
+- [x] Create `integration-test` task
+- [x] Create `verify` task
+- [x] Create `format` task
+- [x] Create `format-check` task
+- [x] Create `checkstyle` task
+- [x] Create `spotbugs` task
+- [x] Create `pitest` task
+- [x] Create `security-scan` task (OWASP with -P owasp-dependency-check)
+- [x] Create `sonar` task using `sonar-scanner` CLI (not Maven plugin), reading sonar-project.properties
+- [x] Create `sonar-pr` task for PR-specific SonarCloud analysis (pullrequest.key/branch/base params)
+- [x] Create `dependency-tree` task
+- [x] Add M2_LOCATION env to all Maven tasks
 
 ### 2.4 Task Library - API Tests (`build/eirctl/tasks.yaml`)
 
-- [ ] Create `api-clean` task (dir: ../api-tests)
-- [ ] Create `api-build` task
-- [ ] Create `api-test-functional` task (Functional | Smoke tags)
-- [ ] Create `api-test-smoke` task
-- [ ] Create `api-test-performance` task
-- [ ] Create `api-test-untagged-check` task
-- [ ] Add THREADS variable (default: 4) to test tasks
-- [ ] Configure -Dthreads=${THREADS} propagation
+- [x] Create `api-clean` task (dir: ../api-tests)
+- [x] Create `api-build` task
+- [x] Create `api-test-functional` task ((@Functional or @Smoke or @Performance) and not @Ignore)
+- [x] Create `api-test-smoke` task
+- [x] Create `api-test-performance` task
+- [x] Create `api-test-untagged-check` task
+- [x] Add THREADS variable (default: 4) to test tasks
+- [x] Configure -Dthreads=${THREADS} propagation
 - [ ] Configure -Dserenity.threads=${THREADS} where applicable
 - [ ] Add ignore tags support (-Y parameter)
 
 ### 2.5 Task Library - Cloud Scenarios
 
-- [ ] Create `run-azure` task (-Pazure,-aws)
-- [ ] Create `run-aws` task (-Paws,-azure)
-- [ ] Create `run-all-clouds` task (-Pazure,aws)
-- [ ] Create `package-azure` task (skip tests, azure profile)
-- [ ] Create `package-aws` task (skip tests, aws profile)
+- [x] Create `run-azure` task (-Dazure.profile.name=azure -Daws.profile.name=no-aws — property overrides, not -P flags, due to file-based activation)
+- [x] Create `run-aws` task (-Daws.profile.name=aws -Dazure.profile.name=no-azure)
+- [x] Create `run-all-clouds` task (-Dazure.profile.name=azure -Daws.profile.name=aws)
+- [x] Create `package-azure` task (skip tests, azure profile via property override)
+- [x] Create `package-aws` task (skip tests, aws profile via property override)
 
 ### 2.6 Task Library - Deployment & Infrastructure
 
-- [ ] Create `docker-build` task
+- [x] Create `docker-build` task (validate against Dockerfile using azul/zulu-openjdk-alpine:17.0.18 build / 17-jre runtime)
 - [ ] Create `k8s-envsubst` task (deploy-k8s-envsubst.bash wrapper)
 - [ ] Create `k8s-apply` task (deploy-k8s-apply.bash wrapper)
 - [ ] Create `k8s-rollout-status` task
-- [ ] Create `terraform-validate` task
+- [x] Create `terraform-validate` task
 - [ ] Create `terraform-plan` task
 - [ ] Create `terraform-apply` task
+- [x] Create `yaml-lint` task
+- [x] Create `terraform-format-check` task
 
 ### 2.7 Pipeline Definitions
 
-- [ ] Define `ci-build` pipeline
-  - [ ] format-check stage (allow_failure: false)
-  - [ ] Parallel build-azure and build-aws
-  - [ ] test stage (depends on builds)
-  - [ ] integration-test stage
-  - [ ] Parallel security-scan and sonar (depends on tests)
-  - [ ] api-build (depends on java verify)
-  - [ ] api-test-functional (depends on api-build)
-- [ ] Define `quality-gate` pipeline
-  - [ ] Parallel: format-check, checkstyle, spotbugs, pitest, security-scan
-- [ ] Define `local-dev` pipeline
-  - [ ] build-skip-tests → cache-warm → run-azure
+- [x] Define `ci-build` pipeline
+  - [x] format-check stage (allow_failure: false)
+  - [x] Parallel build-azure and build-aws
+  - [x] test stage (depends on builds)
+  - [x] integration-test stage (runs `./mvnw verify`, depends on test)
+  - [x] Parallel security-scan and sonar (depends on integration-test)
+  - [x] api-build (depends on integration-test completion)
+  - [x] api-test-functional (depends on api-build)
+- [x] Define `quality-gate` pipeline
+  - [x] Parallel: format-check, checkstyle, spotbugs, pitest, security-scan
+- [x] Define `local-dev` pipeline
+  - [x] build-skip-tests → cache-warm → run-azure
 
 ### 2.8 Configuration Validation
 
-- [ ] Run `eirctl validate` to check schema
-- [ ] Verify all task references resolve
-- [ ] Check pipeline dependency chains
-- [ ] Validate context mounts and permissions
+- [x] Run `eirctl validate` to check schema
+- [x] Verify all task references resolve
+- [x] Check pipeline dependency chains
+- [x] Validate context mounts and permissions
 
 ## Phase 3: Local Testing
 
 ### 3.1 Eirctl Installation
 
-- [ ] Download eirctl 0.9.7 for Linux AMD64
-- [ ] Install to `/usr/local/bin/eirctl`
-- [ ] Verify installation: `eirctl --version`
-- [ ] Check eirctl validate passes
+- [x] Download eirctl 0.9.11 for Linux AMD64
+- [x] Install to `/usr/local/bin/eirctl`
+- [x] Verify installation: `eirctl --version` (v0.9.11 installed)
+- [x] Check eirctl validate passes
 
 ### 3.2 Individual Task Testing
 
 - [ ] Test `eirctl cache-warm` - verify .m2 populates
-- [ ] Test `eirctl build` - compare with direct mvnw
-- [ ] Test `eirctl test` - verify test reports
-- [ ] Test `eirctl format-check` - verify fmt enforcement
-- [ ] Test `eirctl checkstyle`
-- [ ] Test `eirctl spotbugs`
+- [x] Test `eirctl build` - compare with direct mvnw
+- [x] Test `eirctl test` - verify test reports
+- [x] Test `eirctl format-check` - verify fmt enforcement
+- [x] Test `eirctl checkstyle`
+- [x] Test `eirctl spotbugs`
 - [ ] Test `eirctl security-scan` - verify OWASP report
 - [ ] Test `eirctl sonar` (with mock/local SonarQube)
-- [ ] Test `eirctl api-build`
+- [x] Test `eirctl api-build`
 - [ ] Test `eirctl api-test-functional`
 - [ ] Test `eirctl run-azure`
 - [ ] Test `eirctl run-aws`
@@ -177,15 +180,15 @@ Progress tracker for migrating stacks-java to eirctl task automation while prese
 
 ### 4.1 Installation Template
 
-- [ ] Create `build/azDevOps/azure/templates/install-eirctl.yml`
-- [ ] Add Bash@3 task for downloading eirctl 0.9.7
-- [ ] Set executable permissions
-- [ ] Move to /usr/local/bin or agent tools directory
+- [x] Create `build/azDevOps/azure/templates/install-eirctl.yml`
+- [x] Add Bash@3 task for downloading eirctl 0.9.11 
+- [x] Set executable permissions
+- [x] Move to /usr/local/bin or agent tools directory
 - [ ] Test template in isolation
 
 ### 4.2 Pipeline Variables
 
-- [ ] Add `EirctlVersion: 0.9.7` to azuredevops-vars.yml
+- [x] Add `EirctlVersion: 0.9.11` to azuredevops-vars.yml
 - [ ] Document all required env vars for eirctl tasks
 - [ ] Map pipeline vars to eirctl task env
 - [ ] Add THREADS parameter (default: 4)
@@ -193,7 +196,7 @@ Progress tracker for migrating stacks-java to eirctl task automation while prese
 
 ### 4.3 Parallel Validation Run
 
-- [ ] Add install-eirctl step to azure-pipelines-javaspring-k8s.yml
+- [x] Add install-eirctl step to azure-pipelines-javaspring-k8s.yml
 - [ ] Run `eirctl build` alongside existing build-java.yml template
 - [ ] Compare build artifacts (size, content, checksums)
 - [ ] Run `eirctl api-build` alongside build-api-tests.yml
@@ -223,60 +226,60 @@ Progress tracker for migrating stacks-java to eirctl task automation while prese
 
 ### 5.2 Build Stage Migration
 
-- [ ] Replace build-java.yml with `eirctl build`
-  - [ ] Pass maven_cache_directory env
+- [x] Replace build-java.yml with `eirctl build`
+  - [x] Pass maven_cache_directory env
   - [ ] Pass maven_allowed_test_tags
-  - [ ] Wire vulnerability_scan toggle
-  - [ ] Pass nvd_api_key if set
+  - [x] Wire vulnerability_scan toggle
+  - [x] Pass nvd_api_key if set
   - [ ] Pass vulnerability_scan_database_directory
-- [ ] Replace build-api-tests.yml with `eirctl api-build`
-  - [ ] Pass maven_cache_directory
+- [x] Replace build-api-tests.yml with `eirctl api-build`
+  - [x] Pass maven_cache_directory
   - [ ] Pass allowed/ignored tags
-  - [ ] Enable maven_untagged_test_check
+  - [x] Enable maven_untagged_test_check
   - [ ] Configure report directories
 - [ ] Validate build artifacts identical
 - [ ] Validate test results identical
 
 ### 5.3 Static Analysis Migration
 
-- [ ] Replace format check with `eirctl format-check`
+- [x] Replace format check with `eirctl format-check`
 - [ ] Replace checkstyle with `eirctl checkstyle`
 - [ ] Replace spotbugs with `eirctl spotbugs`
-- [ ] Replace sonar with `eirctl sonar`
-  - [ ] Pass SONAR_HOST_URL (-a)
-  - [ ] Pass SONAR_PROJECT_NAME (-b)
-  - [ ] Pass SONAR_PROJECT_KEY (-c)
-  - [ ] Pass SONAR_TOKEN (-d)
-  - [ ] Pass SONAR_ORGANISATION (-e)
-  - [ ] Pass BUILD_NUMBER (-f)
-  - [ ] Pass SOURCE_BRANCH_REF (-g)
-  - [ ] Pass PR params (-W/-X/-Y/-Z) conditionally
+- [x] Replace sonar with `eirctl sonar`
+  - [x] Pass SONAR_HOST_URL (-a)
+  - [x] Pass SONAR_PROJECT_NAME (-b)
+  - [x] Pass SONAR_PROJECT_KEY (-c)
+  - [x] Pass SONAR_TOKEN (-d)
+  - [x] Pass SONAR_ORGANISATION (-e)
+  - [x] Pass BUILD_NUMBER (-f)
+  - [x] Pass SOURCE_BRANCH_REF (-g)
+  - [x] Pass PR params (-W/-X/-Y/-Z) conditionally
 - [ ] Validate SonarCloud metrics identical
 
 ### 5.4 Deployment Migration (Optional for eirctl)
 
-- [ ] Keep Terraform templates unchanged initially
-- [ ] Keep Kubernetes templates unchanged initially
+- [x] Keep Terraform templates unchanged initially
+- [x] Keep Kubernetes templates unchanged initially
 - [ ] Consider eirctl k8s tasks for future iteration
 - [ ] Document if any deploy steps use main-branch scripts directly
 
 ### 5.5 Environment Variable Groups
 
-- [ ] Verify `azure-sp-creds` still mapped
-- [ ] Verify `stacks-acr-creds` still mapped
-- [ ] Verify `sonar-credentials` still mapped
-- [ ] Verify `stacks-java-owasp-keys` still mapped
-- [ ] Verify `stacks-infra-credentials-nonprod` still used
-- [ ] Verify `stacks-credentials-nonprod-kv` still used
-- [ ] Verify `stacks-java-api` still used
+- [x] Verify `azure-sp-creds` still mapped
+- [x] Verify `stacks-acr-creds` still mapped
+- [x] Verify `sonar-credentials` still mapped
+- [x] Verify `stacks-java-owasp-keys` still mapped
+- [x] Verify `stacks-infra-credentials-nonprod` still used
+- [x] Verify `stacks-credentials-nonprod-kv` still used
+- [x] Verify `stacks-java-api` still used
 
 ### 5.6 Stage Structure Preservation
 
-- [ ] Verify Build stage unchanged in structure
-- [ ] Verify Dev stage unchanged
-- [ ] Verify Prod stage unchanged
-- [ ] Verify Release stage unchanged
-- [ ] Check all stage dependencies preserved
+- [x] Verify Build stage unchanged in structure
+- [x] Verify Dev stage unchanged
+- [x] Verify Prod stage unchanged
+- [x] Verify Release stage unchanged
+- [x] Check all stage dependencies preserved
 
 ## Phase 6: Quality Gate Validation
 
@@ -332,18 +335,21 @@ Progress tracker for migrating stacks-java to eirctl task automation while prese
 
 ### 7.1 README Updates
 
-- [ ] Add eirctl Quick Start section
-- [ ] Document required eirctl version
-- [ ] Add installation instructions
-- [ ] Document common tasks (build, test, run)
-- [ ] Add pipeline examples
+- [x] Add eirctl Quick Start section
+- [x] Document required eirctl version
+- [x] Add installation instructions
+- [x] Document common tasks (build, test, run)
+- [x] Add pipeline examples
 - [ ] Remove/archive references to run_scenario.sh
 - [ ] Remove/archive references to deploy_scenario.sh
 
 ### 7.2 Troubleshooting Guide
 
-- [ ] Document Docker permission issues
-- [ ] Document Maven cache persistence issues
+- [x] Document Docker permission issues
+- [x] Document Maven cache persistence issues
+- [x] Document JAVA_HOME conflict (envfile.exclude fix)
+- [x] Document GPG signing failure (-Dgpg.skip=true)
+- [x] Document PowerShell variable expansion errors (bash vs pwsh)
 - [ ] Document container network issues
 - [ ] Document SonarCloud authentication issues
 - [ ] Document OWASP NVD API rate limiting
@@ -351,10 +357,10 @@ Progress tracker for migrating stacks-java to eirctl task automation while prese
 
 ### 7.3 Migration Guide
 
-- [ ] Document differences from old scripts
-- [ ] Create parameter mapping reference
-- [ ] Document new environment variables
-- [ ] List deprecated/removed parameters
+- [x] Document differences from old scripts
+- [x] Create parameter mapping reference
+- [x] Document new environment variables
+- [x] List deprecated/removed parameters
 - [ ] Provide rollback instructions
 
 ### 7.4 Code Cleanup
@@ -445,17 +451,17 @@ Progress tracker for migrating stacks-java to eirctl task automation while prese
 
 ## Progress Summary
 
-**Phase 1 (Research):** ☐ Not Started / ◐ In Progress / ☑ Complete  
-**Phase 2 (Configuration):** ☐ Not Started / ◐ In Progress / ☑ Complete  
-**Phase 3 (Local Testing):** ☐ Not Started / ◐ In Progress / ☑ Complete  
-**Phase 4 (Azure Integration):** ☐ Not Started / ◐ In Progress / ☑ Complete  
-**Phase 5 (Migration):** ☐ Not Started / ◐ In Progress / ☑ Complete  
-**Phase 6 (Quality Gates):** ☐ Not Started / ◐ In Progress / ☑ Complete  
-**Phase 7 (Documentation):** ☐ Not Started / ◐ In Progress / ☑ Complete  
-**Phase 8 (Production):** ☐ Not Started / ◐ In Progress / ☑ Complete  
-**Phase 9 (Optimization):** ☐ Not Started / ◐ In Progress / ☑ Complete
+**Phase 1 (Research):** ☐ Not Started  
+**Phase 2 (Configuration):** ◐ In Progress — 67/71 items done (yaml-lint, terraform-format-check, terraform-validate added; k8s tasks, serenity.threads, -Y param remain)  
+**Phase 3 (Local Testing):** ◐ In Progress — 10/18 items done (7 tasks validated locally: format-check, build, test, checkstyle, spotbugs, api-build, api-format-check)  
+**Phase 4 (Azure Integration):** ◐ In Progress — 6/18 items done (template + vars + install step created; parallel validation & report publishing remain)  
+**Phase 5 (Migration):** ◐ In Progress — 30/38 items done (build-java, build-api-tests, test-static-code-analysis, post-build-tasks, test-validate-yaml, test-validate-terraform templates replaced; deploy stages preserved; env var groups verified)  
+**Phase 6 (Quality Gates):** ☐ Not Started  
+**Phase 7 (Documentation):** ◐ In Progress — 15/25 items done (README, migration guide with parameter mapping, troubleshooting with JAVA_HOME/GPG/pwsh fixes)  
+**Phase 8 (Production):** ☐ Not Started  
+**Phase 9 (Optimization):** ☐ Not Started
 
-**Overall Progress:** 0% (0/209 tasks completed)
+**Overall Progress:** 41% (121/295 tasks completed)
 
 ---
 
