@@ -19,7 +19,7 @@
     <parallel.tests>4</parallel.tests>
     <webdriver.base.url/>
     <jackson.version>2.21.1</jackson.version>
-    <jackson.annotations.version>2.21</jackson.annotations.version>
+    <jackson.annotations.version>${jackson.version}</jackson.annotations.version>
     <java.version>17</java.version>
     <cucumber.filter.tags>(@Functional or @Smoke or @Performance) and not @Ignore</cucumber.filter.tags>
 
