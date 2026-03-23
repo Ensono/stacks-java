@@ -11,7 +11,7 @@ parameters:
   - name: runVulnerabilityScan
     displayName: Run OWASP Dependency Check
     type: boolean
-    default: false
+    default: true
 
 pr:
   - master
@@ -234,7 +234,7 @@ stages:
               # Docker
               docker_build_container: "${{ variables.docker_java_image }}"
               # Vulnerability Scanning
-              vulnerability_scan: "${{ variables.vulnerability_scan }}"
+              vulnerability_scan: ${{ variables.vulnerability_scan }}
               nvd_api_key: "$(NVD_API_KEY)"
               oss_index_username: "${{ variables.oss_index_username }}"
               oss_index_password: "${{ variables.oss_index_password }}"
@@ -259,7 +259,7 @@ stages:
               # Docker
               docker_build_container: "${{ variables.docker_java_image }}"
               # Vulnerability Scan
-              vulnerability_scan: "${{ variables.vulnerability_scan }}"
+              vulnerability_scan: ${{ variables.vulnerability_scan }}
               nvd_api_key: "$(NVD_API_KEY)"
               oss_index_username: "${{ variables.oss_index_username }}"
               oss_index_password: "${{ variables.oss_index_password }}"
@@ -321,7 +321,7 @@ stages:
               functional_test: ${{ variables.functional_test }}
               functional_test_artefact_name: "${{ variables.functional_test_artefact_name }}"
               functional_test_artefact_path: "${{ variables.functional_test_artefact_path }}"
-              vulnerability_scan: "${{ variables.vulnerability_scan }}"
+              vulnerability_scan: ${{ variables.vulnerability_scan }}
               vulnerability_scan_report: "${{ variables.vulnerability_scan_report }}"
               java_project_type: "${{ variables.java_project_type }}"
               functional_test_project_type: "${{ variables.functional_test_project_type }}"

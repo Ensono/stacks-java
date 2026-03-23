@@ -163,7 +163,7 @@ Until the parent POM is updated, the following workarounds have been applied:
 - Spring Cloud incompatibility: pin the BOM to `2024.0.3` and avoid Spring bootstrapping in mapper unit tests. Files: `java/pom.xml`, `java/src/test/java/com/amido/stacks/workloads/menu/mappers/DomainToDtoMapperMapstructTest.java`
 - Security filter chain conflict: added `@Profile("!test")`. File: `ApplicationConfig.java`
 - Bean resolution conflict: added `@Primary`. File: `MenuService.java`
-- Resource filtering: added filtering config. File: `pom.xml`
+- Resource filtering: recommended to add filtering config in the parent POM; not yet applied in `java/pom.xml`.
 
 ## Testing Verification
 

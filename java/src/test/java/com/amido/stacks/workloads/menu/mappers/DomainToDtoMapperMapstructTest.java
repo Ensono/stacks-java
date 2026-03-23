@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.UUID;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @Tag("Unit")
 class DomainToDtoMapperMapstructTest {
@@ -31,13 +30,8 @@ class DomainToDtoMapperMapstructTest {
   DomainToDtoMapperMapstructTest() {
     itemMapper = new ItemMapperImpl();
 
-    CategoryMapperImpl categoryMapperImpl = new CategoryMapperImpl();
-    ReflectionTestUtils.setField(categoryMapperImpl, "itemMapper", itemMapper);
-    categoryMapper = categoryMapperImpl;
-
-    MenuMapperImpl menuMapperImpl = new MenuMapperImpl();
-    ReflectionTestUtils.setField(menuMapperImpl, "categoryMapper", categoryMapper);
-    menuMapper = menuMapperImpl;
+    categoryMapper = new CategoryMapperImpl(itemMapper);
+    menuMapper = new MenuMapperImpl(categoryMapper);
 
     searchMenuResultItemMapper = new SearchMenuResultItemMapperImpl();
   }
