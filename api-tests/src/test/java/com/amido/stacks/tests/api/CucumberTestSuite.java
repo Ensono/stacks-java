@@ -19,5 +19,7 @@ import org.junit.platform.suite.api.Suite;
 @DisabledIfSystemProperty(named = "untagged.test.check", matches = "true")
 @IncludeEngines("cucumber")
 @ConfigurationParameter(key = FEATURES_PROPERTY_NAME, value = "classpath:cucumber/features")
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.amido.stacks.tests.api.stepdefinitions")
+@ConfigurationParameter(
+    key = GLUE_PROPERTY_NAME,
+    value = "com.amido.stacks.tests.api.stepdefinitions")
 public class CucumberTestSuite {}
