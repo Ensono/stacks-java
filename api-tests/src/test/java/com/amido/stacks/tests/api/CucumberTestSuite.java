@@ -1,6 +1,7 @@
 package com.amido.stacks.tests.api;
 
 import static io.cucumber.junit.platform.engine.Constants.FEATURES_PROPERTY_NAME;
+import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
@@ -18,4 +19,7 @@ import org.junit.platform.suite.api.Suite;
 @DisabledIfSystemProperty(named = "untagged.test.check", matches = "true")
 @IncludeEngines("cucumber")
 @ConfigurationParameter(key = FEATURES_PROPERTY_NAME, value = "classpath:cucumber/features")
+@ConfigurationParameter(
+    key = GLUE_PROPERTY_NAME,
+    value = "com.amido.stacks.tests.api.stepdefinitions")
 public class CucumberTestSuite {}
