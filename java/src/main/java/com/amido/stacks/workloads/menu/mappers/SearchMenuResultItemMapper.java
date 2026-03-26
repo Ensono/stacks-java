@@ -5,10 +5,21 @@ import com.amido.stacks.core.mapping.MapperUtils;
 import com.amido.stacks.workloads.menu.api.v1.dto.response.SearchMenuResultItem;
 import com.amido.stacks.workloads.menu.domain.Menu;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValueCheckStrategy;
 
 @Mapper(
     componentModel = "spring",
-    uses = {MapperUtils.class, CategoryMapper.class},
+    uses = {MapperUtils.class},
     nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-public interface SearchMenuResultItemMapper extends BaseMapper<SearchMenuResultItem, Menu> {}
+public interface SearchMenuResultItemMapper extends BaseMapper<SearchMenuResultItem, Menu> {
+
+  @Override
+  @Mapping(target = "categories", ignore = true)
+  Menu fromDto(SearchMenuResultItem dto);
+
+  @Override
+  @Mapping(target = "categories", ignore = true)
+  void updateFromDto(SearchMenuResultItem dto, @MappingTarget Menu menu);
+}

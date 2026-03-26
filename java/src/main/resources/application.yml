@@ -6,6 +6,9 @@ spring:
 
   application:
     name: stacks-api
+  cloud:
+    compatibility-verifier:
+      enabled: false
   data:
     rest:
       detection-strategy: annotated

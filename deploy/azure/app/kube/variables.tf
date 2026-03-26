@@ -63,6 +63,12 @@ variable "app_gateway_frontend_ip_name" {
   type = string
 }
 
+variable "app_gateway_resource_group_name" {
+  type        = string
+  description = "Resource group containing the Application Gateway public IP"
+  default     = ""
+}
+
 variable "dns_record" {
   type = string
 }
@@ -136,4 +142,10 @@ variable "cosmosdb_offer_type" {
 variable "app_insights_name" {
   type        = string
   description = "app insights name for key retriaval in memory"
+}
+
+variable "app_insights_resource_group_name" {
+  type        = string
+  description = "Resource group containing the Application Insights instance"
+  default     = ""
 }

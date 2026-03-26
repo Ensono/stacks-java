@@ -15,30 +15,26 @@ import java.util.Collections;
 import java.util.UUID;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 @Tag("Unit")
-@SpringBootTest(
-    classes = {
-      MenuMapper.class,
-      MenuMapperImpl.class,
-      CategoryMapper.class,
-      CategoryMapperImpl.class,
-      ItemMapper.class,
-      ItemMapperImpl.class,
-      SearchMenuResultItemMapper.class,
-      SearchMenuResultItemMapperImpl.class
-    })
 class DomainToDtoMapperMapstructTest {
 
-  @Autowired private MenuMapper menuMapper;
+  private final MenuMapper menuMapper;
 
-  @Autowired private CategoryMapper categoryMapper;
+  private final CategoryMapper categoryMapper;
 
-  @Autowired private ItemMapper itemMapper;
+  private final ItemMapper itemMapper;
 
-  @Autowired private SearchMenuResultItemMapper searchMenuResultItemMapper;
+  private final SearchMenuResultItemMapper searchMenuResultItemMapper;
+
+  DomainToDtoMapperMapstructTest() {
+    itemMapper = new ItemMapperImpl();
+
+    categoryMapper = new CategoryMapperImpl(itemMapper);
+    menuMapper = new MenuMapperImpl(categoryMapper);
+
+    searchMenuResultItemMapper = new SearchMenuResultItemMapperImpl();
+  }
 
   @Test
   void menuToMenuDto() {
