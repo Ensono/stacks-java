@@ -108,7 +108,7 @@ For each unresolved comment, categorize as:
 | Category          | Action Required                          |
 | ----------------- | ---------------------------------------- |
 | **Code Change**   | Modify source file at specified location |
-| **Documentation** | Update docs, comments, or Rustdoc        |
+| **Documentation** | Update docs, comments, or Javadoc        |
 | **Test Addition** | Add or modify test cases                 |
 | **Clarification** | Reply with explanation (no code change)  |
 | **Out of Scope**  | Mark for follow-up issue creation        |
@@ -123,7 +123,7 @@ Create a structured todo list:
   "comments": [
     {
       "id": "thread_id",
-      "path": "src/lib.rs",
+      "path": "java/pom.xml",
       "line": 42,
       "category": "Code Change",
       "summary": "Add error handling for edge case",
@@ -148,9 +148,9 @@ For each comment requiring code changes:
    - If the fix requires new tests, add them first (Red-Green-Refactor)
 
 3. **Validate the change**:
-   - Run `cargo fmt` to ensure formatting
-   - Run `cargo clippy` to check for warnings
-   - Run relevant tests: `cargo test --workspace`
+   - Run `./mvnw fmt:format` in each modified Maven module (for example `java/` and `api-tests/`) to keep formatting checks green
+   - Run relevant module tests such as `./mvnw test` or `./mvnw verify` in `java/` and `api-tests/`
+   - If the change touches the Azure coverage tooling, run `npm ci` and the relevant validation command in `build/azDevOps/azure/coverage/`
 
 4. **Prepare reply text** for each addressed comment:
 
@@ -293,7 +293,7 @@ Output a summary:
 
 | Commit  | Files                | Comments Addressed |
 | ------- | -------------------- | ------------------ |
-| abc1234 | src/lib.rs           | #1, #3             |
+| abc1234 | java/pom.xml         | #1, #3             |
 | def5678 | tests/integration.rs | #2                 |
 
 ### Review Submission
@@ -334,7 +334,7 @@ Agent:
 1. Fetching PR #26 details...
 2. Found 3 unresolved review threads
 3. Categorizing comments:
-   - Comment 1: Code change needed in src/routing.rs:142
+   - Comment 1: Code change needed in java/pom.xml:36
    - Comment 2: Documentation update in docs/USAGE.md
    - Comment 3: Clarification question (will reply)
 4. Implementing fixes...
@@ -368,4 +368,3 @@ git push origin HEAD
 # Re-request review after addressing comments
 gh pr edit <number> --add-reviewer <username>
 ```
-

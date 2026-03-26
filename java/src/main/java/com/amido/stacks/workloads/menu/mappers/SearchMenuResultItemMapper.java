@@ -17,9 +17,9 @@ public interface SearchMenuResultItemMapper extends BaseMapper<SearchMenuResultI
 
   @Override
   @Mapping(target = "categories", ignore = true)
-  Menu fromDto(SearchMenuResultItem arg0);
+  Menu fromDto(SearchMenuResultItem dto);
 
   @Override
   @Mapping(target = "categories", ignore = true)
-  void updateFromDto(SearchMenuResultItem arg0, @MappingTarget Menu arg1);
+  void updateFromDto(SearchMenuResultItem dto, @MappingTarget Menu menu);
 }

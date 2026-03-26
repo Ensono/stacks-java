@@ -17,17 +17,15 @@ Change Spring Boot version to one of the following versions [3.0.x, 3.1.x].
 ```
 
 **Required Fix in Parent POM:**  
-Update `spring.cloud.dependencies.version` to a version compatible with Spring Boot 3.5.x:
+Update `spring.cloud.dependencies.version` to a release train that Spring Boot 3.5.x accepts without disabling the verifier:
 
-| Spring Boot Version | Compatible Spring Cloud Version |
-| ------------------- | ------------------------------- |
-| 3.0.x, 3.1.x        | 2022.0.x (Kilburn)              |
-| 3.2.x               | 2023.0.x (Leyton)               |
-| 3.3.x, 3.4.x        | 2024.0.x                        |
-| 3.5.x               | 2024.0.x in this repository     |
+- Spring Boot 3.0.x / 3.1.x: Spring Cloud 2022.0.x (Kilburn)
+- Spring Boot 3.2.x: Spring Cloud 2023.0.x (Leyton)
+- Spring Boot 3.3.x / 3.4.x: Spring Cloud 2024.0.x
+- Spring Boot 3.5.x: this repository is temporarily pinned to Spring Cloud 2024.0.3 and disables the compatibility verifier until upstream support catches up
 
 **Workaround (current):**  
-Projects can disable the compatibility verifier in `application-test.yml`:
+This repository currently disables the compatibility verifier in `application.yml` so the application can start while the parent POM and Spring Cloud release train catch up:
 
 ```yaml
 spring:
@@ -36,7 +34,7 @@ spring:
       enabled: false
 ```
 
-**Action Required:** Keep this repository on Spring Cloud 2024.0.x while it remains on the current parent POM and Spring Boot 3.5.x line. This repository now uses Spring Cloud 2024.0.3 because Spring Cloud 2025.1.1 pulled in `spring-cloud-config-client 5.0.1`, which is not compatible with the Spring Framework 6.2.x line provided by the current parent.
+**Action Required:** Move this repository to a Spring Cloud train that passes the compatibility verifier with Spring Boot 3.5.x, then remove the global `spring.cloud.compatibility-verifier.enabled=false` workaround. The repo is currently pinned to `2024.0.3`, which still requires the verifier workaround at runtime.
 
 ---
 
@@ -160,7 +158,7 @@ Enable resource filtering in `pom.xml`:
 
 Until the parent POM is updated, the following workarounds have been applied:
 
-- Spring Cloud incompatibility: pin the BOM to `2024.0.3` and avoid Spring bootstrapping in mapper unit tests. Files: `java/pom.xml`, `java/src/test/java/com/amido/stacks/workloads/menu/mappers/DomainToDtoMapperMapstructTest.java`
+- Spring Cloud incompatibility: pin the BOM to `2024.0.3` and disable the compatibility verifier globally until an officially compatible train is available. Files: `java/pom.xml`, `java/src/main/resources/application.yml`
 - Security filter chain conflict: added `@Profile("!test")`. File: `ApplicationConfig.java`
 - Bean resolution conflict: added `@Primary`. File: `MenuService.java`
 - Resource filtering: recommended to add filtering config in the parent POM; not yet applied in `java/pom.xml`.

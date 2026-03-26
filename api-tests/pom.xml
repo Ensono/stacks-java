@@ -18,7 +18,7 @@
     <encoding>UTF-8</encoding>
     <parallel.tests>4</parallel.tests>
     <webdriver.base.url/>
-    <jackson-bom.version>2.20.1</jackson-bom.version>
+    <jackson-bom.version>2.21.1</jackson-bom.version>
     <java.version>17</java.version>
     <cucumber.filter.tags>(@Functional or @Smoke or @Performance) and not @Ignore</cucumber.filter.tags>
 
