@@ -34,6 +34,7 @@ variables:
 
   # AKS-integrated deployment values now come from Azure DevOps Library variable groups
   # created by stacks-infrastructure-aks, for example stacks-dev-outputs/stacks-prod-outputs.
+  # Those groups must provide aks_cluster_name and aks_resource_group_name.
   # Keep repo-local defaults here only for values that are static across environments.
 
   # Container registry configuration

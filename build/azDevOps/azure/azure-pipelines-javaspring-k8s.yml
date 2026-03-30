@@ -458,9 +458,9 @@ stages:
             value: "${{ variables.dns_name }}.${{ variables.base_domain_nonprod }}"
           - name: functional_test_base_url
             value: "https://${{ variables.dns_pointer }}${{ variables.k8s_app_path }}"
-          - name: aks_cluster_resourcegroup
+          - name: deploy_aks_cluster_resourcegroup
             value: $(aks_resource_group_name)
-          - name: aks_cluster_name
+          - name: deploy_aks_cluster_name
             value: $(aks_cluster_name)
           - name: app_name
             value: "java-api"
@@ -510,8 +510,8 @@ stages:
                     azure_client_secret: "$(ARM_CLIENT_SECRET)"
                     azure_tenant_id: "$(ARM_TENANT_ID)"
                     azure_subscription_id: "$(ARM_SUBSCRIPTION_ID)"
-                    aks_cluster_resourcegroup: "${{ variables.aks_cluster_resourcegroup }}"
-                    aks_cluster_name: "${{ variables.aks_cluster_name }}"
+                    aks_cluster_resourcegroup: "${{ variables.deploy_aks_cluster_resourcegroup }}"
+                    aks_cluster_name: "${{ variables.deploy_aks_cluster_name }}"
                     # Used to do a `kubectl rollout status`
                     deployments: [
                       {
@@ -707,9 +707,9 @@ stages:
             value: "${{ variables.dns_name }}.${{ variables.base_domain_prod }}"
           - name: functional_test_base_url
             value: "https://${{ variables.dns_pointer }}/${{ variables.k8s_app_path }}"
-          - name: aks_cluster_resourcegroup
+          - name: deploy_aks_cluster_resourcegroup
             value: $(aks_resource_group_name)
-          - name: aks_cluster_name
+          - name: deploy_aks_cluster_name
             value: $(aks_cluster_name)
           - name: app_name
             value: "java-api"
@@ -759,8 +759,8 @@ stages:
                     azure_client_secret: "$(ARM_CLIENT_SECRET)"
                     azure_tenant_id: "$(ARM_TENANT_ID)"
                     azure_subscription_id: "$(ARM_SUBSCRIPTION_ID)"
-                    aks_cluster_resourcegroup: "${{ variables.aks_cluster_resourcegroup }}"
-                    aks_cluster_name: "${{ variables.aks_cluster_name }}"
+                    aks_cluster_resourcegroup: "${{ variables.deploy_aks_cluster_resourcegroup }}"
+                    aks_cluster_name: "${{ variables.deploy_aks_cluster_name }}"
                     # Used to do a `kubectl rollout status`
                     deployments: [
                       {
