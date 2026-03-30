@@ -1,0 +1,12 @@
+target/
+build/
+.git/
+.gitignore
+.dockerignore
+Dockerfile*
+*.log
+.env*
+.idea/
+.classpath
+.project
+.settings/

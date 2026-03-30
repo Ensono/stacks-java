@@ -11,8 +11,8 @@ parameters:
   - name: runVulnerabilityScan
     displayName: Run OWASP Dependency Check
     type: boolean
-    # Default on to preserve the existing security posture; opt out explicitly if a non-default branch flow requires it.
-    default: true
+    # Default off due to NVD API slowdown causing repeated failed builds
+    default: false
 
 pr:
   - master

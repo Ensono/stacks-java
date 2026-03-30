@@ -9,32 +9,25 @@ The `stacks-modules-parent:3.0.98` brings in Spring Boot 3.5.7, which introduces
 ### 1. Spring Cloud Version Incompatibility
 
 **Problem:**  
-The current Spring Cloud version (`2022.0.4`) is incompatible with Spring Boot 3.5.7.
+Earlier Spring Cloud release trains are incompatible with Spring Boot 3.5.7.
 
 ```text
 Spring Boot [3.5.7] is not compatible with this Spring Cloud release train.
 Change Spring Boot version to one of the following versions [3.0.x, 3.1.x].
 ```
 
-**Required Fix in Parent POM:**  
+**Required Fix in Parent POM or Project Override:**  
 Update `spring.cloud.dependencies.version` to a release train that Spring Boot 3.5.x accepts without disabling the verifier:
 
 - Spring Boot 3.0.x / 3.1.x: Spring Cloud 2022.0.x (Kilburn)
 - Spring Boot 3.2.x: Spring Cloud 2023.0.x (Leyton)
 - Spring Boot 3.3.x / 3.4.x: Spring Cloud 2024.0.x
-- Spring Boot 3.5.x: this repository is temporarily pinned to Spring Cloud 2024.0.3 and disables the compatibility verifier until upstream support catches up
+- Spring Boot 3.5.x: Spring Cloud 2025.0.x
 
-**Workaround (current):**  
-This repository currently disables the compatibility verifier in `application.yml` so the application can start while the parent POM and Spring Cloud release train catch up:
+**Implemented project fix:**  
+This repository now aligns the Java module to `spring-cloud-dependencies` `2025.0.1`, removes `spring-cloud-starter-bootstrap`, replaces `spring-cloud-starter-config` with `spring-cloud-context`, and keeps the Spring compatibility verifier enabled in both runtime and test configuration.
 
-```yaml
-spring:
-  cloud:
-    compatibility-verifier:
-      enabled: false
-```
-
-**Action Required:** Move this repository to a Spring Cloud train that passes the compatibility verifier with Spring Boot 3.5.x, then remove the global `spring.cloud.compatibility-verifier.enabled=false` workaround. The repo is currently pinned to `2024.0.3`, which still requires the verifier workaround at runtime.
+**Action Required:** Keep the verifier enabled and treat any future incompatibility as a dependency-alignment issue rather than a configuration override.
 
 ---
 
@@ -142,8 +135,9 @@ Enable resource filtering in `pom.xml`:
 ### Critical (Must Fix)
 
 1. **Update Spring Cloud version** to be compatible with Spring Boot 3.5.x
-   - Current: `2022.0.4`
-   - Required: `2024.0.x` or `2025.0.x` when available
+
+- Implemented in this repository: `2025.0.1`
+- Keep future updates on the 3.5.x-compatible Spring Cloud line
 
 ### Recommended (Should Add)
 
@@ -154,11 +148,11 @@ Enable resource filtering in `pom.xml`:
    - Bean resolution changes for inheritance hierarchies
    - Profile annotation requirements for conditional configurations
 
-### Temporary Workarounds Applied in stacks-java
+### Project State in stacks-java
 
-Until the parent POM is updated, the following workarounds have been applied:
+The following Spring Boot 3.5.x mitigations now apply in this repository:
 
-- Spring Cloud incompatibility: pin the BOM to `2024.0.3` and disable the compatibility verifier globally until an officially compatible train is available. Files: `java/pom.xml`, `java/src/main/resources/application.yml`
+- Spring Cloud compatibility: pin the BOM to `2025.0.1`, remove the global verifier override, and retain only `spring-cloud-context` for refresh-scope support. Files: `java/pom.xml`, `java/src/main/resources/application.yml`, `java/src/test/resources/application-test.yml`
 - Security filter chain conflict: added `@Profile("!test")`. File: `ApplicationConfig.java`
 - Bean resolution conflict: added `@Primary`. File: `MenuService.java`
 - Resource filtering: recommended to add filtering config in the parent POM; not yet applied in `java/pom.xml`.

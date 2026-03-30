@@ -13,16 +13,40 @@ parameters:
   functional_test_project_type: ""
 
 steps:
-  - task: PublishTestResults@2
-    condition: always()
-    displayName: "Publish Test Results"
-
-  - task: PublishCodeCoverageResults@1
+  - task: Bash@3
     condition: always()
     inputs:
-      codeCoverageTool: "JaCoCo"
+      targetType: inline
+      script: |
+        if compgen -G "${{ parameters.project_root_dir }}/target/surefire-reports/TEST-*.xml" > /dev/null; then
+          echo "##vso[task.setvariable variable=java_test_results_found]true"
+        else
+          echo "##vso[task.setvariable variable=java_test_results_found]false"
+        fi
+
+        if [[ -f "${{ parameters.project_root_dir }}/target/site/jacoco/jacoco.xml" ]]; then
+          echo "##vso[task.setvariable variable=java_coverage_found]true"
+        else
+          echo "##vso[task.setvariable variable=java_coverage_found]false"
+        fi
+    displayName: "Detect Build Reports"
+
+  - task: PublishTestResults@2
+    condition: and(always(), eq(variables['java_test_results_found'], 'true'))
+    inputs:
+      testResultsFormat: "JUnit"
+      searchFolder: "${{ parameters.project_root_dir }}/target/surefire-reports"
+      testResultsFiles: "TEST-*.xml"
+      mergeTestResults: true
+      testRunTitle: "${{ parameters.java_project_type }} Unit Tests"
+    displayName: "Publish Java Test Results"
+
+  - task: PublishCodeCoverageResults@2
+    condition: and(always(), eq(variables['java_coverage_found'], 'true'))
+    inputs:
       summaryFileLocation: "${{ parameters.project_root_dir }}/target/site/jacoco/jacoco.xml"
-      reportDirectory: "${{ parameters.project_root_dir }}/target/site/jacoco-inline"
+      pathToSources: "${{ parameters.project_root_dir }}/src/main/java"
+      failIfCoverageEmpty: false
     displayName: "Publish JaCoCo Coverage Results"
 
   # Publish Vulnerability Artefacts if required
