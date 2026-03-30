@@ -44,6 +44,7 @@ steps:
   - task: PublishCodeCoverageResults@2
     condition: and(always(), eq(variables['java_coverage_found'], 'true'))
     inputs:
+      codeCoverageTool: "JaCoCo"
       summaryFileLocation: "${{ parameters.project_root_dir }}/target/site/jacoco/jacoco.xml"
       pathToSources: "${{ parameters.project_root_dir }}/src/main/java"
       failIfCoverageEmpty: false
