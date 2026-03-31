@@ -707,7 +707,7 @@ stages:
           - name: dns_pointer
             value: "${{ variables.dns_name }}.${{ variables.base_domain_prod }}"
           - name: functional_test_base_url
-            value: "https://${{ variables.dns_pointer }}/${{ variables.k8s_app_path }}"
+            value: "https://${{ variables.dns_pointer }}${{ variables.k8s_app_path }}"
           - name: deploy_aks_cluster_resourcegroup
             value: $(aks_resource_group_name)
           - name: deploy_aks_cluster_name

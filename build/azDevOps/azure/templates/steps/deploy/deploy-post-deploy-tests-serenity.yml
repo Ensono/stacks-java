@@ -60,6 +60,13 @@ steps:
             export BASE_URL="${base_url}"
             relax_https_validation="${RELAX_HTTPS_VALIDATION:-false}"
 
+            echo "Resolved BASE_URL='${BASE_URL}'"
+            echo "Resolved status endpoint='${BASE_URL%/}/health'"
+            if [ -n "${OAUTH_TOKEN_URL:-}" ]; then
+              echo "Resolved OAUTH_TOKEN_URL='${OAUTH_TOKEN_URL}'"
+            fi
+            echo "Relaxed HTTPS validation='${relax_https_validation}'"
+
             declare -a mvn_args
             mvn_args=(
               "failsafe:integration-test"
