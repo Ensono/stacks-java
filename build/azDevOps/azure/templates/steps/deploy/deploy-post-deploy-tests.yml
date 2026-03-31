@@ -5,6 +5,7 @@ parameters:
   functional_test_artefact_name: ""
   functional_test_artefact_download_location: ""
   functional_test_base_url: ""
+  functional_test_relax_https_validation: false
   maven_cache_directory: ""
   default_cucumber_filter_tags: "@Functional or @Smoke or @Performance and not @Ignore"
   maven_ignored_post_deploy_test_tags: ""
@@ -21,6 +22,7 @@ steps:
       functional_test_artefact_name: "${{ parameters.functional_test_artefact_name }}"
       functional_test_artefact_download_location: "${{ parameters.functional_test_artefact_download_location }}"
       functional_test_base_url: "${{ parameters.functional_test_base_url }}"
+      functional_test_relax_https_validation: ${{ parameters.functional_test_relax_https_validation }}
       maven_cache_directory: "${{ parameters.maven_cache_directory }}"
       default_cucumber_filter_tags: "${{ parameters.default_cucumber_filter_tags }}"
       maven_ignored_post_deploy_test_tags: "${{ parameters.maven_ignored_post_deploy_test_tags }}"

@@ -529,6 +529,7 @@ stages:
                     functional_test_artefact_name: "${{ variables.functional_test_artefact_name }}"
                     functional_test_artefact_download_location: "${{ variables.functional_test_artefact_download_location }}"
                     functional_test_base_url: "${{ variables.functional_test_base_url }}"
+                    functional_test_relax_https_validation: ${{ variables.functional_test_relax_https_validation }}
                     maven_cache_directory: "${{ variables.maven_cache_directory }}"
                     maven_allowed_post_deploy_test_tags: "${{ variables.maven_allowed_post_deploy_test_tags }}"
                     maven_ignored_post_deploy_test_tags: "${{ variables.maven_ignored_post_deploy_test_tags }}"
@@ -778,6 +779,7 @@ stages:
                     functional_test_artefact_name: "${{ variables.functional_test_artefact_name }}"
                     functional_test_artefact_download_location: "${{ variables.functional_test_artefact_download_location }}"
                     functional_test_base_url: "${{ variables.functional_test_base_url }}"
+                    functional_test_relax_https_validation: ${{ variables.functional_test_relax_https_validation }}
                     maven_cache_directory: "${{ variables.maven_cache_directory }}"
                     maven_allowed_post_deploy_test_tags: "${{ variables.maven_allowed_post_deploy_test_tags }}"
                     maven_ignored_post_deploy_test_tags: "${{ variables.maven_ignored_post_deploy_test_tags }}"

@@ -65,3 +65,5 @@ variables:
     value: ensonostacks
   - name: github_org
     value: $(company)
+  - name: functional_test_relax_https_validation
+    value: false

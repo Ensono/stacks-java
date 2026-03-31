@@ -5,6 +5,7 @@ parameters:
   functional_test_artefact_name: ""
   functional_test_artefact_download_location: ""
   functional_test_base_url: ""
+  functional_test_relax_https_validation: false
   maven_cache_directory: ""
   default_cucumber_filter_tags: "@Functional or @Smoke or @Performance and not @Ignore"
   maven_ignored_post_deploy_test_tags: ""
@@ -57,6 +58,7 @@ steps:
 
             base_url="${FUNCTIONAL_TEST_BASE_URL:-${BASE_URL:-}}"
             export BASE_URL="${base_url}"
+            relax_https_validation="${RELAX_HTTPS_VALIDATION:-false}"
 
             declare -a mvn_args
             mvn_args=(
@@ -64,6 +66,7 @@ steps:
               "failsafe:verify"
               "--no-transfer-progress"
               "-Dmaven.repo.local=${m2_location}"
+              "-Drelax.https.validation=${relax_https_validation}"
             )
 
             if [ -n "${cucumber_tags}" ]; then
@@ -77,6 +80,7 @@ steps:
         displayName: "Post-Deploy Test: Run Functional Tests"
         env:
           FUNCTIONAL_TEST_BASE_URL: "${{ parameters.functional_test_base_url }}"
+          RELAX_HTTPS_VALIDATION: "${{ parameters.functional_test_relax_https_validation }}"
           CUCUMBER_FILTER_TAGS: "$(cucumber.filter.tags)"
           DEFAULT_CUCUMBER_TAGS: "${{ parameters.default_cucumber_filter_tags }}"
           M2_LOCATION: "${{ parameters.maven_cache_directory }}"
