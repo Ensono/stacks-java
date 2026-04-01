@@ -141,7 +141,7 @@ variable "cosmosdb_offer_type" {
 ##########################
 variable "app_insights_name" {
   type        = string
-  description = "app insights name for key retriaval in memory"
+  description = "app insights name for key retrieval in memory"
 }
 
 variable "app_insights_resource_group_name" {

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `stacks-modules-parent:3.0.98` brings in Spring Boot 3.5.7, which introduces several breaking changes and compatibility issues that need to be addressed either in the parent POM or in downstream projects.
+The `stacks-modules-parent` baseline used by this repository brings in Spring Boot 3.5.7, which introduces several breaking changes and compatibility issues that need to be addressed either in the parent POM or in downstream projects.
 
 ## Issues Identified
 
