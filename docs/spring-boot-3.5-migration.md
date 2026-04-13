@@ -2,41 +2,32 @@
 
 ## Overview
 
-The `stacks-modules-parent:3.0.98` brings in Spring Boot 3.5.7, which introduces several breaking changes and compatibility issues that need to be addressed either in the parent POM or in downstream projects.
+The `stacks-modules-parent` baseline used by this repository brings in Spring Boot 3.5.7, which introduces several breaking changes and compatibility issues that need to be addressed either in the parent POM or in downstream projects.
 
 ## Issues Identified
 
 ### 1. Spring Cloud Version Incompatibility
 
 **Problem:**  
-The current Spring Cloud version (`2022.0.4`) is incompatible with Spring Boot 3.5.7.
+Earlier Spring Cloud release trains are incompatible with Spring Boot 3.5.7.
 
-```
+```text
 Spring Boot [3.5.7] is not compatible with this Spring Cloud release train.
 Change Spring Boot version to one of the following versions [3.0.x, 3.1.x].
 ```
 
-**Required Fix in Parent POM:**  
-Update `spring.cloud.dependencies.version` to a version compatible with Spring Boot 3.5.x:
+**Required Fix in Parent POM or Project Override:**  
+Update `spring.cloud.dependencies.version` to a release train that Spring Boot 3.5.x accepts without disabling the verifier:
 
-| Spring Boot Version | Compatible Spring Cloud Version |
-| ------------------- | ------------------------------- |
-| 3.0.x, 3.1.x        | 2022.0.x (Kilburn)              |
-| 3.2.x               | 2023.0.x (Leyton)               |
-| 3.3.x, 3.4.x        | 2024.0.x                        |
-| 3.5.x               | 2025.0.x                        |
+- Spring Boot 3.0.x / 3.1.x: Spring Cloud 2022.0.x (Kilburn)
+- Spring Boot 3.2.x: Spring Cloud 2023.0.x (Leyton)
+- Spring Boot 3.3.x / 3.4.x: Spring Cloud 2024.0.x
+- Spring Boot 3.5.x: Spring Cloud 2025.0.x
 
-**Workaround (current):**  
-Projects can disable the compatibility verifier in `application-test.yml`:
+**Implemented project fix:**  
+This repository now aligns the Java module to `spring-cloud-dependencies` `2025.0.1`, removes `spring-cloud-starter-bootstrap`, replaces `spring-cloud-starter-config` with `spring-cloud-context`, and keeps the Spring compatibility verifier enabled in both runtime and test configuration.
 
-```yaml
-spring:
-  cloud:
-    compatibility-verifier:
-      enabled: false
-```
-
-**Action Required:** Update parent POM to use Spring Cloud 2024.0.x or later (once 2025.0.x is available for Spring Boot 3.5.x support).
+**Action Required:** Keep the verifier enabled and treat any future incompatibility as a dependency-alignment issue rather than a configuration override.
 
 ---
 
@@ -45,7 +36,7 @@ spring:
 **Problem:**  
 Spring Boot 3.5.x has stricter validation for Spring Security filter chains. Multiple `SecurityFilterChain` beans matching "any request" now throw an error:
 
-```
+```text
 UnreachableFilterChainException: A filter chain that matches any request
 [...ApplicationConfig...] has already been configured, which means that this
 filter chain [...ApplicationNoSecurity...] will never get invoked.
@@ -81,7 +72,7 @@ public class ApplicationNoSecurity {
 **Problem:**  
 Spring Boot 3.5.x has stricter bean resolution when multiple beans of the same type exist through inheritance:
 
-```
+```text
 NoUniqueBeanDefinitionException: expected single matching bean but found 2:
 menuService, menuServiceV2
 ```
@@ -111,7 +102,7 @@ public class MenuServiceV2 extends MenuService {
 **Problem:**  
 Property placeholders like `@aws.profile.name@` in `application.yml` are not being replaced because Maven resource filtering is not enabled by default.
 
-```
+```text
 Profile '@aws.profile.name@' must start and end with a letter or digit
 ```
 
@@ -144,28 +135,27 @@ Enable resource filtering in `pom.xml`:
 ### Critical (Must Fix)
 
 1. **Update Spring Cloud version** to be compatible with Spring Boot 3.5.x
-   - Current: `2022.0.4`
-   - Required: `2024.0.x` or `2025.0.x` when available
+
+- Implemented in this repository: `2025.0.1`
+- Keep future updates on the 3.5.x-compatible Spring Cloud line
 
 ### Recommended (Should Add)
 
-2. **Add default resource filtering configuration** so child projects don't need to configure it manually
+1. **Add default resource filtering configuration** so child projects don't need to configure it manually
 
-3. **Update documentation** to note the following breaking changes for downstream projects:
+2. **Update documentation** to note the following breaking changes for downstream projects:
    - Security filter chain mutual exclusivity requirements
    - Bean resolution changes for inheritance hierarchies
    - Profile annotation requirements for conditional configurations
 
-### Temporary Workarounds Applied in stacks-java
+### Project State in stacks-java
 
-Until the parent POM is updated, the following workarounds have been applied:
+The following Spring Boot 3.5.x mitigations now apply in this repository:
 
-| Issue                          | Workaround                      | File                                      |
-|--------------------------------|---------------------------------|-------------------------------------------|
-| Spring Cloud incompatibility   | Disabled compatibility verifier | `src/test/resources/application-test.yml` |
-| Security filter chain conflict | Added `@Profile("!test")`       | `ApplicationConfig.java`                  |
-| Bean resolution conflict       | Added `@Primary`                | `MenuService.java`                        |
-| Resource filtering             | Added filtering config          | `pom.xml`                                 |
+- Spring Cloud compatibility: pin the BOM to `2025.0.1`, remove the global verifier override, and retain only `spring-cloud-context` for refresh-scope support. Files: `java/pom.xml`, `java/src/main/resources/application.yml`, `java/src/test/resources/application-test.yml`
+- Security filter chain conflict: added `@Profile("!test")`. File: `ApplicationConfig.java`
+- Bean resolution conflict: added `@Primary`. File: `MenuService.java`
+- Resource filtering: recommended to add filtering config in the parent POM; not yet applied in `java/pom.xml`.
 
 ## Testing Verification
 

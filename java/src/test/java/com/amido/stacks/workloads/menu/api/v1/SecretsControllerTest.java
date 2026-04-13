@@ -7,6 +7,7 @@ import com.amido.stacks.workloads.util.TestHelper;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -39,6 +40,9 @@ class SecretsControllerTest {
 
   @Autowired private TestRestTemplate testRestTemplate;
 
+  @Value("${spring.cloud.compatibility-verifier.enabled:true}")
+  private boolean compatibilityVerifierEnabled;
+
   @Test
   void shouldReturnValidSecrets() {
     // Given
@@ -51,5 +55,10 @@ class SecretsControllerTest {
     // Then
     then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     then(response.getBody()).isEqualTo("Secrets -> SEC1, SEC2, SEC3, SEC4");
+  }
+
+  @Test
+  void shouldKeepCompatibilityVerifierEnabled() {
+    then(compatibilityVerifierEnabled).isTrue();
   }
 }

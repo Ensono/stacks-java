@@ -46,7 +46,7 @@ spec:
                   number: 80
   tls:
     - hosts:
-        - ${tls_domain}
+        - ${dns_pointer}
 
 ---
 apiVersion: v1

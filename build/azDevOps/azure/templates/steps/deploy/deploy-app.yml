@@ -51,6 +51,30 @@ steps:
 
   - task: Bash@3
     inputs:
+      targetType: inline
+      script: |
+        set -euo pipefail
+
+        aks_resource_group='${{ parameters.aks_cluster_resourcegroup }}'
+        aks_cluster_name='${{ parameters.aks_cluster_name }}'
+        runtime_expression_prefix='$('
+        template_expression_prefix="$(printf '$%s' '{{')"
+
+        if [[ -z "${aks_resource_group}" || -z "${aks_cluster_name}" ]]; then
+          echo "Missing required AKS deployment inputs. Ensure the Azure DevOps Library variable groups (for example stacks-dev-outputs or stacks-prod-outputs) expose aks_resource_group_name and aks_cluster_name." >&2
+          exit 1
+        fi
+
+        if [[ "${aks_resource_group}" == *"${runtime_expression_prefix}"* || "${aks_resource_group}" == *"${template_expression_prefix}"* || "${aks_cluster_name}" == *"${runtime_expression_prefix}"* || "${aks_cluster_name}" == *"${template_expression_prefix}"* ]]; then
+          echo "AKS deployment inputs were not expanded before template execution. Check that the stage variable groups are loaded and authorized, and that aks_resource_group_name and aks_cluster_name are set." >&2
+          echo "Resolved aks_resource_group_name='${aks_resource_group}'" >&2
+          echo "Resolved aks_cluster_name='${aks_cluster_name}'" >&2
+          exit 1
+        fi
+    displayName: "Validate: AKS Deployment Inputs"
+
+  - task: Bash@3
+    inputs:
       filePath: "${{ parameters.pipeline_scripts_directory }}/util-azure-aks-login.bash"
       arguments: >
         -a "${{ parameters.aks_cluster_resourcegroup }}"
