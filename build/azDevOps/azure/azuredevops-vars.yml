@@ -32,31 +32,10 @@ variables:
   - name: tf_state_key
     value: stacks-api-java
 
-  # TF Variables
-  # --nonprod
-  - name: tf_app_insights_name_nonprod
-    value: ed-stacks-nonprod-euw-core
-  - name: tf_app_gateway_frontend_ip_name_nonprod
-    value: ed-stacks-nonprod-euw-core
-  - name: tf_core_resource_group_nonprod
-    value: ed-stacks-nonprod-euw-core
-
-  # --prod
-  - name: tf_app_insights_name_prod
-    value: ed-stacks-prod-euw-core
-  - name: tf_app_gateway_frontend_ip_name_prod
-    value: ed-stacks-prod-euw-core
-  - name: tf_core_resource_group_prod
-    value: ed-stacks-prod-euw-core
-
-  # Kubernetes configuration
-  # --nonprod
-  - name: kubernetes_clustername_nonprod
-    value: ed-stacks-nonprod-euw-core
-
-  # --prod
-  - name: kubernetes_clustername_prod
-    value: ed-stacks-prod-euw-core
+  # AKS-integrated deployment values now come from Azure DevOps Library variable groups
+  # created by stacks-infrastructure-aks, for example stacks-dev-outputs/stacks-prod-outputs.
+  # Those groups must provide aks_cluster_name and aks_resource_group_name.
+  # Keep repo-local defaults here only for values that are static across environments.
 
   # Container registry configuration
   - name: docker_container_registry_name_nonprod
@@ -86,3 +65,5 @@ variables:
     value: ensonostacks
   - name: github_org
     value: $(company)
+  - name: functional_test_relax_https_validation
+    value: false
