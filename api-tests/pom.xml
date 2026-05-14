@@ -39,10 +39,10 @@
     <springfox.swagger-ui.version>3.0.0</springfox.swagger-ui.version>
     <guava.version>33.5.0-jre</guava.version>
     <json.version>20250517</json.version>
-    <netty.codec.http.version>4.2.10.Final</netty.codec.http.version>
-    <netty.codec.http2.version>4.2.10.Final</netty.codec.http2.version>
-    <netty.transport.native.epoll.version>4.2.10.Final</netty.transport.native.epoll.version>
-    <httpclient5.version>5.6</httpclient5.version>
+    <netty.codec.http.version>4.2.13.Final</netty.codec.http.version>
+    <netty.codec.http2.version>4.2.13.Final</netty.codec.http2.version>
+    <netty.transport.native.epoll.version>4.2.13.Final</netty.transport.native.epoll.version>
+    <httpclient5.version>5.6.1</httpclient5.version>
     <xerces.version>2.12.2</xerces.version>
     <commons.codec.version>1.21.0</commons.codec.version>
     <spring.web.version>6.2.9</spring.web.version>
