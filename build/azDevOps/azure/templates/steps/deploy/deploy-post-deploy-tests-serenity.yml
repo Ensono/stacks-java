@@ -80,7 +80,15 @@ steps:
               mvn_args+=("-Dcucumber.filter.tags=${cucumber_tags}")
             fi
 
-            ./mvnw "${mvn_args[@]}"
+            declare -a mvn_cmd
+            if command -v mvn >/dev/null 2>&1; then
+              mvn_cmd=(mvn)
+            else
+              mvn_cmd=(./mvnw)
+            fi
+
+            echo "Using Maven command='${mvn_cmd[*]}'"
+            "${mvn_cmd[@]}" "${mvn_args[@]}"
           workingDirectory: "${{ parameters.functional_test_artefact_download_location }}"
         target:
           container: ${{ parameters.docker_java_container }}
