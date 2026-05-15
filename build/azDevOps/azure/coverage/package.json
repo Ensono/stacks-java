@@ -3,15 +3,16 @@
   "license": "Apache-2.0",
   "repository": "N/A",
   "engines": {
-    "node": ">=20.16.0"
+    "node": ">=24"
   },
   "devDependencies": {
-    "gulp": "^5.0.1",
-    "gulp-inline-source": "^4.0.0",
-    "gulp-postcss": "^10.0.0",
-    "postcss-image-inliner": "^7.0.1"
+    "gulp": "5.0.1",
+    "gulp-inline-source": "4.0.0",
+    "gulp-postcss": "10.0.0",
+    "postcss-image-inliner": "7.0.1"
   },
   "overrides": {
-    "inline-source": "^8.0.3"
+    "inline-source": "^8.0.3",
+    "postcss": "^8.5.10"
   }
 }
