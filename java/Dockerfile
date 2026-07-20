@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:17.0.9 as build
+FROM azul/zulu-openjdk-alpine:26.0.1 as build
 WORKDIR /workspace/app
 
 # Copy the m2 directory if it exists to re-use an external cache.
@@ -19,7 +19,7 @@ RUN ./mvnw dependency:go-offline --quiet \
     && find target -maxdepth 1 -type f -name '*.jar' ! -name '*-javadoc.jar' ! -name '*-sources.jar' -exec cp {} app.jar \;
 
 
-FROM azul/zulu-openjdk-alpine:17-jre
+FROM azul/zulu-openjdk-alpine:26-jre
 
 VOLUME /tmp
 
